@@ -15,7 +15,6 @@ class ExampleRootContentView: UIView {
   static func instantiate() -> ExampleRootContentView {
     let bundle = Bundle(for: self)
     return bundle.loadNibNamed("ExampleRootContentView", owner: nil, options: nil)!.first as! ExampleRootContentView
-  }
-  
+  }  
 
 }

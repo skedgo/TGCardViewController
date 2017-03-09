@@ -20,7 +20,7 @@ class ExampleRootCard : TGPlainCard {
   
   @objc
   func addChildTapped(sender: Any) {
-    let child = TGPlainCard(title: "Child")
+    let child = ExampleChildCard()
     controller?.push(child)
   }
   

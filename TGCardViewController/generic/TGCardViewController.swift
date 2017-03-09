@@ -23,7 +23,7 @@ class TGCardViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    // Do any additional setup after loading the view.
+    stickyBarHeightConstraint.constant = 0
   }
 
   override func didReceiveMemoryWarning() {
@@ -68,17 +68,26 @@ class TGCardViewController: UIViewController {
 
   // MARK: - Sticky bar at the top
   
+  var isShowingSticky: Bool {
+    return self.stickyBarHeightConstraint.constant > 0
+  }
+  
   func showStickyBar(animated: Bool) {
-    UIView.animate(withDuration: 0.25) {
-      self.stickyBarHeightConstraint.constant = 50
+    stickyBarHeightConstraint.constant = 50
+    view.setNeedsUpdateConstraints()
+
+    UIView.animate(withDuration: animated ? 0.25 : 0) {
+      self.view.layoutIfNeeded()
     }
   }
   
   func hideStickyBar(animated: Bool) {
-    UIView.animate(withDuration: 0.25) {
-      self.stickyBarHeightConstraint.constant = 0
+    self.stickyBarHeightConstraint.constant = 0
+    view.setNeedsUpdateConstraints()
+
+    UIView.animate(withDuration: animated ? 0.25 : 0) {
+      self.view.layoutIfNeeded()
     }
   }
-  
 
 }
