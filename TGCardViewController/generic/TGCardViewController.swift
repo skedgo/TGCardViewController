@@ -37,19 +37,33 @@ class TGCardViewController: UIViewController {
   fileprivate var cards = [TGCard]()
   
   func push(_ card: TGCard, animated: Bool = true) {
-    cards.append(card)
+    var top = card
     
-    let view = card.buildView()
+    top.controller = self
+    cards.append(top)
+    
+    let view = top.buildView(showClose: cards.count > 1)
+    view.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: cardWrapper.frame.size)
+    view.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+    
     cardWrapper.addSubview(view)
   }
   
   func pop(animated: Bool = true) {
-    guard cards.count > 0 else {
+    guard var top = cards.last, let topView = cardWrapper.subviews.last else {
       print("Nothing to pop")
       return
     }
     
+    top.controller = nil
     cards.remove(at: cards.count - 1)
+    
+    topView.removeFromSuperview()
+  }
+  
+  @objc
+  func closeTapped(sender: Any) {
+    pop()
   }
 
   // MARK: - Sticky bar at the top

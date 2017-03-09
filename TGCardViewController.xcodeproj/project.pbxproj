@@ -20,6 +20,9 @@
 		3ACA74B11E71763C00408678 /* TGPlainCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA74B01E71763C00408678 /* TGPlainCardView.xib */; };
 		3ACA74B31E71765400408678 /* TGPlainCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74B21E71765400408678 /* TGPlainCardView.swift */; };
 		3ACA74B51E717C2F00408678 /* TGCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74B41E717C2F00408678 /* TGCardView.swift */; };
+		3ACA74B71E719A5900408678 /* ExampleRootCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74B61E719A5900408678 /* ExampleRootCard.swift */; };
+		3ACA74B91E719B2300408678 /* ExampleRootContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA74B81E719B2300408678 /* ExampleRootContentView.xib */; };
+		3ACA74BB1E719B5F00408678 /* ExampleRootContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74BA1E719B5F00408678 /* ExampleRootContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +53,9 @@
 		3ACA74B01E71763C00408678 /* TGPlainCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TGPlainCardView.xib; path = generic/TGPlainCardView.xib; sourceTree = "<group>"; };
 		3ACA74B21E71765400408678 /* TGPlainCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGPlainCardView.swift; path = generic/TGPlainCardView.swift; sourceTree = "<group>"; };
 		3ACA74B41E717C2F00408678 /* TGCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCardView.swift; path = generic/TGCardView.swift; sourceTree = "<group>"; };
+		3ACA74B61E719A5900408678 /* ExampleRootCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleRootCard.swift; sourceTree = "<group>"; };
+		3ACA74B81E719B2300408678 /* ExampleRootContentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleRootContentView.xib; sourceTree = "<group>"; };
+		3ACA74BA1E719B5F00408678 /* ExampleRootContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleRootContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +100,9 @@
 				3ACA74A31E716C7F00408678 /* generic */,
 				3ACA74831E716AFC00408678 /* AppDelegate.swift */,
 				3ACA74851E716AFC00408678 /* ExampleCardViewController.swift */,
+				3ACA74B61E719A5900408678 /* ExampleRootCard.swift */,
+				3ACA74BA1E719B5F00408678 /* ExampleRootContentView.swift */,
+				3ACA74B81E719B2300408678 /* ExampleRootContentView.xib */,
 				3ACA74871E716AFC00408678 /* Main.storyboard */,
 				3ACA748A1E716AFC00408678 /* Assets.xcassets */,
 				3ACA748C1E716AFC00408678 /* LaunchScreen.storyboard */,
@@ -214,6 +223,7 @@
 				3ACA74B11E71763C00408678 /* TGPlainCardView.xib in Resources */,
 				3ACA748B1E716AFC00408678 /* Assets.xcassets in Resources */,
 				3ACA74891E716AFC00408678 /* Main.storyboard in Resources */,
+				3ACA74B91E719B2300408678 /* ExampleRootContentView.xib in Resources */,
 				3ACA74AF1E71718800408678 /* TGCardViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,9 +244,11 @@
 			files = (
 				3ACA74B31E71765400408678 /* TGPlainCardView.swift in Sources */,
 				3ACA74AB1E716EFE00408678 /* TGPlainCard.swift in Sources */,
+				3ACA74B71E719A5900408678 /* ExampleRootCard.swift in Sources */,
 				3ACA74A91E716ED600408678 /* TGCard.swift in Sources */,
 				3ACA74861E716AFC00408678 /* ExampleCardViewController.swift in Sources */,
 				3ACA74A61E716CB900408678 /* TGCardViewController.swift in Sources */,
+				3ACA74BB1E719B5F00408678 /* ExampleRootContentView.swift in Sources */,
 				3ACA74B51E717C2F00408678 /* TGCardView.swift in Sources */,
 				3ACA74841E716AFC00408678 /* AppDelegate.swift in Sources */,
 			);

@@ -8,7 +8,9 @@
 
 import UIKit
 
-struct TGPlainCard : TGCard {
+class TGPlainCard : TGCard {
+  weak var controller: TGCardViewController?
+  
   let title: String
   let subtitle: String?
   let contentView: UIView?
@@ -19,9 +21,9 @@ struct TGPlainCard : TGCard {
     self.contentView = contentView
   }
   
-  func buildView() -> UIView {
+  func buildView(showClose: Bool) -> TGCardView {
     let view = TGPlainCardView.instantiate()
-    view.configure(with: self, showClose: true)
+    view.configure(with: self, showClose: showClose)
     return view
   }
 }

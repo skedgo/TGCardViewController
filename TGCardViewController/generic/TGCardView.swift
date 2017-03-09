@@ -8,8 +8,8 @@
 
 import UIKit
 
-protocol TGCardView {
+class TGCardView: UIView {
   
-  var closeButton: UIButton! { get }
+  @IBOutlet weak var closeButton: UIButton!
   
 }

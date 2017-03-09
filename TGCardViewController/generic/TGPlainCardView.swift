@@ -8,11 +8,10 @@
 
 import UIKit
 
-class TGPlainCardView: UIView {
+class TGPlainCardView: TGCardView {
 
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var subtitleLabel: UILabel!
-  @IBOutlet weak var closeButton: UIButton!
 
   @IBOutlet weak var scrollView: UIScrollView!
   
@@ -26,7 +25,10 @@ class TGPlainCardView: UIView {
     subtitleLabel.text = card.subtitle
     
     closeButton.isHidden = !showClose
-
-    // TODO: Add scroll view content
+    
+    if let content = card.contentView {
+      scrollView.addSubview(content)
+      scrollView.contentSize = content.frame.size
+    }
   }
 }

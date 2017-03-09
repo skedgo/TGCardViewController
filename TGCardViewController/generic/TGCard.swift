@@ -8,11 +8,28 @@
 
 import UIKit
 
+/// A card representing the content currently displayed
 protocol TGCard {
+  
+  /// The card controller currently displaying the card
+  ///
+  /// Set by the card controller itself
+  weak var controller: TGCardViewController? { get set }
+  
+  /// Localised title of the card
   var title: String { get }
+  
+  /// Localised optional subtitle of the card
   var subtitle: String? { get }
   
+  /// The content to display on the card below title + subtitle
+  ///
+  /// Can be large as it will get embedded in a scroll view.
+  /// Can have interactive elements.
   var contentView: UIView? { get }
   
-  func buildView() -> UIView
+  /// Builds the card view to represent the card
+  ///
+  /// - Returns: Card view configured with the content of this card
+  func buildView(showClose: Bool) -> TGCardView
 }

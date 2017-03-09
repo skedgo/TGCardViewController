@@ -23,8 +23,7 @@ class ExampleCardViewController: TGCardViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    push(TGPlainCard(title: "Root"), animated: false)
-    push(TGPlainCard(title: "Child"), animated: false)
+    push(ExampleRootCard(), animated: false)
   }
 
   override func didReceiveMemoryWarning() {
