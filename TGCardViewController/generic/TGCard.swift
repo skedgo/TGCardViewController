@@ -32,4 +32,35 @@ protocol TGCard {
   ///
   /// - Returns: Card view configured with the content of this card
   func buildView(showClose: Bool) -> TGCardView
+  
+  /// Called just before the card becomes visible
+  ///
+  /// Called when card gets pushed onto a card
+  /// controller, or the controller itself becomes
+  /// visible.
+  ///
+  /// - Parameter animated: If it'll be animated
+  func willAppear(animated: Bool)
+  
+  /// Called when the card became visible
+  ///
+  /// - seeAlso: Notes in `willAppear`
+  ///
+  /// - Parameter animated: If it was animated
+  func didAppear(animated: Bool)
+  
+  /// Called just before the card disappears
+  ///
+  /// Called when card gets popped from a card
+  /// controller, or the controller itself disappears.
+  ///
+  /// - Parameter animated: If it'll be animated
+  func willDisappear(animated: Bool)
+  
+  /// Called when the card disappared
+  ///
+  /// - seeAlso: Notes in `willDisappear`
+  ///
+  /// - Parameter animated: If it was animated
+  func didDisappear(animated: Bool)
 }

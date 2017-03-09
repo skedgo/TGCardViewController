@@ -15,15 +15,44 @@ class TGCardViewController: UIViewController {
   @IBOutlet weak var stickyBar: UIView!
   @IBOutlet weak var mapView: MKMapView!
   @IBOutlet weak var cardWrapper: UIView!
+  weak var cardShadowView: UIView?
   
   // Dynamic constraints
   @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperHeightConstraint: NSLayoutConstraint!
   
+  fileprivate var isVisible = false
+  
   override func viewDidLoad() {
     super.viewDidLoad()
 
     stickyBarHeightConstraint.constant = 0
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    cards.last?.willAppear(animated: animated)
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    
+    cards.last?.didAppear(animated: animated)
+    isVisible = true
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    cards.last?.willDisappear(animated: animated)
+    isVisible = false
+  }
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    
+    cards.last?.didDisappear(animated: animated)
   }
 
   override func didReceiveMemoryWarning() {
@@ -36,29 +65,107 @@ class TGCardViewController: UIViewController {
   
   fileprivate var cards = [TGCard]()
   
+  fileprivate let animationDuration = 0.4
+  
   func push(_ card: TGCard, animated: Bool = true) {
     var top = card
-    
+
+    // Updating card logic and informing of transition
+    let oldTop = cards.last
+    let notify = isVisible
+    if notify {
+      oldTop?.willDisappear(animated: animated)
+      top.willAppear(animated: animated)
+    }
     top.controller = self
     cards.append(top)
     
-    let view = top.buildView(showClose: cards.count > 1)
-    view.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: cardWrapper.frame.size)
-    view.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+    // Create the new view
+    let cardView = top.buildView(showClose: cards.count > 1)
+    cardView.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     
-    cardWrapper.addSubview(view)
+    // We animate the view coming in from the bottom
+    // we also temporarily insert a shadow view below if there's already a card
+    cardView.frame = cardWrapper.bounds
+    if animated {
+      cardView.frame.origin.y = cardWrapper.frame.maxY
+    }
+    
+    cardWrapper.addSubview(cardView)
+    
+    func whenDone(completed: Bool) {
+      self.cardShadowView?.removeFromSuperview()
+      if notify {
+        oldTop?.didDisappear(animated: animated)
+        top.didAppear(animated: animated)
+      }
+    }
+    
+    if animated {
+      if oldTop != nil {
+        let shadow = UIView(frame: cardWrapper.bounds)
+        shadow.backgroundColor = .black
+        shadow.alpha = 0
+        cardWrapper.insertSubview(shadow, belowSubview: cardView)
+        cardShadowView = shadow
+      }
+      
+      UIView.animate(withDuration: animationDuration, animations: {
+        cardView.frame = self.cardWrapper.bounds
+        self.cardShadowView?.alpha = 0.15
+      }, completion: whenDone)
+      
+    } else {
+      whenDone(completed: true)
+    }
   }
   
   func pop(animated: Bool = true) {
-    guard var top = cards.last, let topView = cardWrapper.subviews.last else {
+    guard var top = cards.last, let topView = cardWrapper.subviews.last as? TGCardView else {
       print("Nothing to pop")
       return
     }
     
-    top.controller = nil
+    // Updating card logic and informing of transitions
+    let newTop: TGCard? = cards.count > 0 ? cards[cards.count - 1] : nil
+    let notify = isVisible
+    if notify {
+      newTop?.willAppear(animated: animated)
+      top.willDisappear(animated: animated)
+    }
+
+    // We update the stack immediately to allow calling this many times
+    // while we're still animating without issues
     cards.remove(at: cards.count - 1)
     
-    topView.removeFromSuperview()
+    // Clean-up when we're done. If we're not animated, that's all that's necessary
+    func whenDone(completed: Bool) {
+      top.controller = nil
+      if notify {
+        top.didDisappear(animated: animated)
+        newTop?.didAppear(animated: animated)
+      }
+      topView.removeFromSuperview()
+      self.cardShadowView?.removeFromSuperview()
+    }
+    guard animated else { whenDone(completed: true); return }
+    
+    // We animate the view moving back down to the bottom
+    // we also temporarily insert a shadow view again, if there's a card below
+    
+    if newTop != nil {
+      let shadow = UIView(frame: cardWrapper.bounds)
+      shadow.backgroundColor = .black
+      shadow.alpha = 0.15
+      cardWrapper.insertSubview(shadow, belowSubview: topView)
+      cardShadowView = shadow
+    }
+    
+    UIView.animate(withDuration: animationDuration, animations: {
+      topView.frame.origin.y = self.cardWrapper.frame.maxY
+      self.cardShadowView?.alpha = 0
+    }, completion: whenDone)
+    
   }
   
   @objc

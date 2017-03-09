@@ -26,4 +26,12 @@ class TGPlainCard : TGCard {
     view.configure(with: self, showClose: showClose)
     return view
   }
+  
+  func willAppear(animated: Bool) { }
+  
+  func didAppear(animated: Bool) { }
+  
+  func willDisappear(animated: Bool) { }
+  
+  func didDisappear(animated: Bool) { }
 }
