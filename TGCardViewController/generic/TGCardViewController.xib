@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TGCardViewController" customModule="TGCardViewController" customModuleProvider="target">
+            <connections>
+                <outlet property="cardWrapper" destination="Bui-Tf-j0O" id="iBg-Zp-UqS"/>
+                <outlet property="cardWrapperHeightConstraint" destination="ent-Qk-bIE" id="5DL-HD-DWl"/>
+                <outlet property="mapView" destination="zI8-lz-Md7" id="L17-S0-R0b"/>
+                <outlet property="stickyBar" destination="Byv-0L-fUC" id="IUC-BW-Xzs"/>
+                <outlet property="stickyBarHeightConstraint" destination="ldy-Yi-l63" id="L6M-kY-s9F"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="TLR-7d-g6q"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Byv-0L-fUC">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="ldy-Yi-l63"/>
+                    </constraints>
+                </view>
+                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7">
+                    <rect key="frame" x="0.0" y="50" width="375" height="617"/>
+                </mapView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O">
+                    <rect key="frame" x="0.0" y="567" width="375" height="100"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="100" id="ent-Qk-bIE"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Byv-0L-fUC" secondAttribute="trailing" id="1YK-c2-p4c"/>
+                <constraint firstItem="Bui-Tf-j0O" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ECl-Ky-irh"/>
+                <constraint firstItem="Byv-0L-fUC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="EOu-ey-pt2"/>
+                <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" id="FPF-Ef-IC5"/>
+                <constraint firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="OZ1-xY-4Wu"/>
+                <constraint firstItem="Byv-0L-fUC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="PF4-tz-hcK"/>
+                <constraint firstAttribute="bottom" secondItem="Bui-Tf-j0O" secondAttribute="bottom" id="R7R-nG-fcF"/>
+                <constraint firstAttribute="trailing" secondItem="zI8-lz-Md7" secondAttribute="trailing" id="S9W-2K-Wn5"/>
+                <constraint firstAttribute="bottom" secondItem="zI8-lz-Md7" secondAttribute="bottom" id="VDp-KC-oIA"/>
+                <constraint firstItem="zI8-lz-Md7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lmI-Os-WBc"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TGPlainCardView" customModule="TGCardViewController" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="shr-2r-Hk0">
+                    <rect key="frame" x="8" y="8" width="359" height="44"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="4Ms-pS-oUj">
+                            <rect key="frame" x="0.0" y="0.0" width="329" height="44"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lyt-Iu-uGp">
+                                    <rect key="frame" x="0.0" y="0.0" width="329" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kRV-RD-D8g">
+                                    <rect key="frame" x="0.0" y="23.5" width="329" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S0E-UZ-jgN">
+                            <rect key="frame" x="337" y="0.0" width="22" height="44"/>
+                        </button>
+                    </subviews>
+                </stackView>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
+                    <rect key="frame" x="0.0" y="52" width="375" height="348"/>
+                </scrollView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="shr-2r-Hk0" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="0Hh-G1-frl"/>
+                <constraint firstAttribute="bottom" secondItem="Dar-6n-Caw" secondAttribute="bottom" id="9qt-6W-ali"/>
+                <constraint firstAttribute="trailing" secondItem="Dar-6n-Caw" secondAttribute="trailing" id="EeC-BN-kQR"/>
+                <constraint firstItem="Dar-6n-Caw" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="GxS-7a-gUP"/>
+                <constraint firstItem="shr-2r-Hk0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="MTl-am-fJM"/>
+                <constraint firstAttribute="trailing" secondItem="shr-2r-Hk0" secondAttribute="trailing" constant="8" id="bfo-bI-ghd"/>
+                <constraint firstItem="Dar-6n-Caw" firstAttribute="top" secondItem="shr-2r-Hk0" secondAttribute="bottom" id="s4R-ts-121"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="closeButton" destination="S0E-UZ-jgN" id="PTX-DA-6fw"/>
+                <outlet property="scrollView" destination="Dar-6n-Caw" id="1AT-AH-grU"/>
+                <outlet property="subtitleLabel" destination="kRV-RD-D8g" id="R5H-Wp-wVu"/>
+                <outlet property="titleLabel" destination="lyt-Iu-uGp" id="k6b-lP-IhG"/>
+            </connections>
+            <point key="canvasLocation" x="33.5" y="81"/>
+        </view>
+    </objects>
+</document>
