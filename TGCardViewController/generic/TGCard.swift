@@ -27,6 +27,9 @@ protocol TGCard {
   /// Can be large as it will get embedded in a scroll view.
   /// Can have interactive elements.
   var contentView: UIView? { get }
+
+  /// The manager that handles the content of the map for this card
+  var mapManager: TGMapManager? { get }
   
   /// Builds the card view to represent the card
   ///

@@ -7,13 +7,20 @@
 //
 
 import UIKit
+import MapKit
 
 class ExampleChildCard : TGPlainCard {
   
   init() {
     let content = ExampleChildContentView.instantiate()
     
-    super.init(title: "Child", subtitle: "With sticky button", contentView: content)
+    let sydney = MKPointAnnotation()
+    sydney.coordinate = CLLocationCoordinate2DMake(-33.86, 151.21)
+    
+    let mapManager = TGMapManager()
+    mapManager.annotations = [sydney]
+    
+    super.init(title: "Child", subtitle: "With sticky button", contentView: content, mapManager: mapManager)
     
     content.showStickyButton.addTarget(self, action: #selector(showStickyTapped(sender:)), for: .touchUpInside)
   }

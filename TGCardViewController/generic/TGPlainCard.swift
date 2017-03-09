@@ -14,11 +14,13 @@ class TGPlainCard : TGCard {
   let title: String
   let subtitle: String?
   let contentView: UIView?
+  let mapManager: TGMapManager?
   
-  init(title: String, subtitle: String? = nil, contentView: UIView? = nil) {
+  init(title: String, subtitle: String? = nil, contentView: UIView? = nil, mapManager: TGMapManager? = nil) {
     self.title = title
     self.subtitle = subtitle
     self.contentView = contentView
+    self.mapManager = mapManager
   }
   
   func buildView(showClose: Bool) -> TGCardView {

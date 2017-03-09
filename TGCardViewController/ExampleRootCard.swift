@@ -7,13 +7,20 @@
 //
 
 import UIKit
+import MapKit
 
 class ExampleRootCard : TGPlainCard {
   
   init() {
     let content = ExampleRootContentView.instantiate()
     
-    super.init(title: "Root", contentView: content)
+    let nuremberg = MKPointAnnotation()
+    nuremberg.coordinate = CLLocationCoordinate2DMake(49.45, 11.08)
+    
+    let mapManager = TGMapManager()
+    mapManager.annotations = [nuremberg]
+    
+    super.init(title: "Root", contentView: content, mapManager: mapManager)
 
     content.addChildButton.addTarget(self, action: #selector(addChildTapped(sender:)), for: .touchUpInside)
   }

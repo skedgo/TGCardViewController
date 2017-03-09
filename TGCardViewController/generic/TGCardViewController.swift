@@ -80,6 +80,9 @@ class TGCardViewController: UIViewController {
     top.controller = self
     cards.append(top)
     
+    oldTop?.mapManager?.cleanUp(mapView)
+    top.mapManager?.takeCharge(of: mapView)
+    
     // Create the new view
     let cardView = top.buildView(showClose: cards.count > 1)
     cardView.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
@@ -127,12 +130,15 @@ class TGCardViewController: UIViewController {
     }
     
     // Updating card logic and informing of transitions
-    let newTop: TGCard? = cards.count > 0 ? cards[cards.count - 1] : nil
+    let newTop: TGCard? = cards.count > 1 ? cards[cards.count - 2] : nil
     let notify = isVisible
     if notify {
       newTop?.willAppear(animated: animated)
       top.willDisappear(animated: animated)
     }
+    
+    top.mapManager?.cleanUp(mapView)
+    newTop?.mapManager?.takeCharge(of: mapView)
 
     // We update the stack immediately to allow calling this many times
     // while we're still animating without issues
