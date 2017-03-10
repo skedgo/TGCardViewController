@@ -13,7 +13,7 @@
             <connections>
                 <outlet property="cardWrapper" destination="Bui-Tf-j0O" id="iBg-Zp-UqS"/>
                 <outlet property="cardWrapperHeightConstraint" destination="eCP-YV-wYQ" id="kaG-gR-XfG"/>
-                <outlet property="cardWrapperTopConstraint" destination="ZQf-5G-R5n" id="mx6-Us-yLi"/>
+                <outlet property="cardWrapperTopConstraint" destination="VeR-iZ-Y1g" id="t6S-rQ-9ls"/>
                 <outlet property="mapView" destination="zI8-lz-Md7" id="L17-S0-R0b"/>
                 <outlet property="stickyBar" destination="Byv-0L-fUC" id="IUC-BW-Xzs"/>
                 <outlet property="stickyBarHeightConstraint" destination="ldy-Yi-l63" id="L6M-kY-s9F"/>
@@ -50,7 +50,7 @@
                 <constraint firstItem="Byv-0L-fUC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="PF4-tz-hcK"/>
                 <constraint firstAttribute="trailing" secondItem="zI8-lz-Md7" secondAttribute="trailing" id="S9W-2K-Wn5"/>
                 <constraint firstAttribute="bottom" secondItem="zI8-lz-Md7" secondAttribute="bottom" id="VDp-KC-oIA"/>
-                <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="567" id="ZQf-5G-R5n"/>
+                <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" constant="517" id="VeR-iZ-Y1g"/>
                 <constraint firstItem="Bui-Tf-j0O" firstAttribute="height" secondItem="zI8-lz-Md7" secondAttribute="height" constant="-50" id="eCP-YV-wYQ"/>
                 <constraint firstItem="zI8-lz-Md7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lmI-Os-WBc"/>
             </constraints>

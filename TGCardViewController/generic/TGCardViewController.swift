@@ -290,7 +290,9 @@ class TGCardViewController: UIViewController {
   }
   
   func showStickyBar(animated: Bool) {
-    stickyBarHeightConstraint.constant = 50
+    let stickyHeight: CGFloat = 50
+    
+    stickyBarHeightConstraint.constant = stickyHeight
     view.setNeedsUpdateConstraints()
 
     UIView.animate(withDuration: animated ? 0.25 : 0) {
