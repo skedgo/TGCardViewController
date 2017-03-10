@@ -24,12 +24,18 @@ class ExampleRootCard : TGPlainCard {
     super.init(title: "Root", contentView: content, mapManager: mapManager)
 
     content.addChildButton.addTarget(self, action: #selector(addChildTapped(sender:)), for: .touchUpInside)
+    content.showTableButton.addTarget(self, action: #selector(showTableTapped(sender:)), for: .touchUpInside)
   }
   
   @objc
   func addChildTapped(sender: Any) {
-    let child = ExampleChildCard()
-    controller?.push(child)
+    controller?.push(ExampleChildCard())
   }
+
+  @objc
+  func showTableTapped(sender: Any) {
+    controller?.push(ExampleTableCard())
+  }
+  
   
 }

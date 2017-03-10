@@ -12,8 +12,16 @@ class TGPlainCard : TGCard {
   weak var controller: TGCardViewController?
   
   let title: String
+
+  /// Localised optional subtitle of the card
   let subtitle: String?
+
+  /// The content to display on the card below title + subtitle
+  ///
+  /// Can be large as it will get embedded in a scroll view.
+  /// Can have interactive elements.
   let contentView: UIView?
+
   let mapManager: TGMapManager?
   
   init(title: String, subtitle: String? = nil, contentView: UIView? = nil, mapManager: TGMapManager? = nil) {

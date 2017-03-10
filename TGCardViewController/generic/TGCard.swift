@@ -19,15 +19,6 @@ protocol TGCard {
   /// Localised title of the card
   var title: String { get }
   
-  /// Localised optional subtitle of the card
-  var subtitle: String? { get }
-  
-  /// The content to display on the card below title + subtitle
-  ///
-  /// Can be large as it will get embedded in a scroll view.
-  /// Can have interactive elements.
-  var contentView: UIView? { get }
-
   /// The manager that handles the content of the map for this card
   var mapManager: TGMapManager? { get }
   
