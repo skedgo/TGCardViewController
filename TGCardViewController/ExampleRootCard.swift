@@ -19,6 +19,7 @@ class ExampleRootCard : TGPlainCard {
     
     let mapManager = TGMapManager()
     mapManager.annotations = [nuremberg]
+    mapManager.preferredZoomLevel = .country
     
     super.init(title: "Root", contentView: content, mapManager: mapManager)
 

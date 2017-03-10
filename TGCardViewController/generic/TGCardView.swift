@@ -10,6 +10,9 @@ import UIKit
 
 class TGCardView: UIView {
   
+  /// Each card view needs a close button, which the card controller
+  /// will add itself as a target to in order to pop the current card
+  /// from the stack.
   @IBOutlet weak var closeButton: UIButton!
   
 }

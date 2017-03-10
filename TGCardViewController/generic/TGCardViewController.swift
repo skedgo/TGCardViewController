@@ -15,7 +15,7 @@ class TGCardViewController: UIViewController {
   @IBOutlet weak var stickyBar: UIView!
   @IBOutlet weak var mapView: MKMapView!
   @IBOutlet weak var cardWrapper: UIView!
-  weak var cardShadowView: UIView?
+  fileprivate weak var cardShadowView: UIView?
   
   // Dynamic constraints
   @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!

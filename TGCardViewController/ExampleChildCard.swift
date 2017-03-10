@@ -19,6 +19,7 @@ class ExampleChildCard : TGPlainCard {
     
     let mapManager = TGMapManager()
     mapManager.annotations = [sydney]
+    mapManager.preferredZoomLevel = .city
     
     super.init(title: "Child", subtitle: "With sticky button", contentView: content, mapManager: mapManager)
     
