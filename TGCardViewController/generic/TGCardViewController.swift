@@ -67,6 +67,14 @@ class TGCardViewController: UIViewController {
   
   fileprivate let animationDuration = 0.4
   
+  fileprivate var cardOverlap: CGFloat {
+    return cardWrapperHeightConstraint.constant
+  }
+  
+  fileprivate var mapEdgePadding: UIEdgeInsets {
+    return UIEdgeInsets(top: 0, left: 0, bottom: cardOverlap, right: 0)
+  }
+  
   func push(_ card: TGCard, animated: Bool = true) {
     var top = card
 
@@ -81,7 +89,7 @@ class TGCardViewController: UIViewController {
     cards.append(top)
     
     oldTop?.mapManager?.cleanUp(mapView)
-    top.mapManager?.takeCharge(of: mapView)
+    top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
     
     // Create the new view
     let cardView = top.buildView(showClose: cards.count > 1)
@@ -138,7 +146,7 @@ class TGCardViewController: UIViewController {
     }
     
     top.mapManager?.cleanUp(mapView)
-    newTop?.mapManager?.takeCharge(of: mapView)
+    newTop?.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
 
     // We update the stack immediately to allow calling this many times
     // while we're still animating without issues

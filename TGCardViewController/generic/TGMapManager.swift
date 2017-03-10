@@ -26,13 +26,11 @@ class TGMapManager {
     }
   }
   
-  /// Edge padding of the map view, e.g., if parts of the map view is
-  /// obscured by other views, this should be set accordingly.
-  var edgePadding: UIEdgeInsets = .zero
-  
   /// How zoomed in/out the map should be when displaying the
   /// content the first time.
   var preferredZoomLevel: Zoom = .city
+  
+  fileprivate var edgePadding: UIEdgeInsets = .zero
   
   fileprivate weak var mapView: MKMapView?
   
@@ -44,13 +42,19 @@ class TGMapManager {
   ///
   /// - Parameters:
   ///   - mapView: Map view to take charge of
+  ///   - edgePadding: Edge padding of the map view, e.g., if parts of the map view is
+  /// obscured by other views.
   ///   - animated: If adding content should be animated
-  func takeCharge(of mapView: MKMapView, animated: Bool = true) {
+  func takeCharge(of mapView: MKMapView, edgePadding: UIEdgeInsets = .zero, animated: Bool = true) {
     self.mapView = mapView
+    self.edgePadding = edgePadding
+    
     mapView.addAnnotations(annotations)
     
-    mapView.showAnnotations(annotations, animated: false)
-    mapView.setZoomLevel(preferredZoomLevel.rawValue, edgePadding: edgePadding, animated: animated)
+    mapView.showAnnotations(annotations,
+                            minimumZoomLevel: preferredZoomLevel.rawValue,
+                            edgePadding: edgePadding,
+                            animated: animated)
   }
   
   /// Cleanes up the map view, removing the map manager's content
@@ -74,6 +78,28 @@ class TGMapManager {
 
 extension MKMapView {
   
+  func showAnnotations(_ annotations: [MKAnnotation], minimumZoomLevel: Double, edgePadding: UIEdgeInsets = .zero, animated: Bool) {
+    
+    let annotationRect = annotations.reduce(MKMapRectNull) { acc, annotation in
+      let point = MKMapPointForCoordinate(annotation.coordinate)
+      let miniRect = MKMapRect(origin: point, size: MKMapSize(width: 1, height: 1))
+      return MKMapRectUnion(acc, miniRect)
+    }
+    
+    var mapRect = mapRectThatFits(annotationRect, edgePadding: edgePadding)
+    
+    if zoomLevel(of: mapRect) < minimumZoomLevel {
+      let center = MKMapPoint(x: MKMapRectGetMidX(mapRect), y: MKMapRectGetMidY(mapRect))
+      mapRect = self.mapRect(forZoomLevel: minimumZoomLevel, centeredOn: center)
+    }
+    
+    setVisibleMapRect(mapRect, edgePadding: edgePadding, animated: animated)
+  }
+  
+}
+
+extension MKMapView {
+  
   var zoomLevel: Double {
     get {
       return zoomLevel(of: visibleMapRect)
@@ -84,7 +110,8 @@ extension MKMapView {
   }
   
   func setZoomLevel(_ zoomLevel: Double, edgePadding: UIEdgeInsets = .zero, animated: Bool) {
-    let mapRect = self.mapRect(forZoomLevel: zoomLevel)
+    let center = MKMapPointForCoordinate(centerCoordinate)
+    let mapRect = self.mapRect(forZoomLevel: zoomLevel, centeredOn: center)
     setVisibleMapRect(mapRect, edgePadding: edgePadding, animated: animated)
   }
   
@@ -92,8 +119,7 @@ extension MKMapView {
     return log(mapRect.size.width / Double(frame.height)) / log(2) + 1
   }
   
-  fileprivate func mapRect(forZoomLevel zoomLevel: Double) -> MKMapRect {
-    let center = MKMapPointForCoordinate(centerCoordinate)
+  fileprivate func mapRect(forZoomLevel zoomLevel: Double, centeredOn center: MKMapPoint) -> MKMapRect {
     
     let ratio = pow(2, zoomLevel - 1)
     
