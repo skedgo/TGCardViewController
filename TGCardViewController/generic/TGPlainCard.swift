@@ -17,6 +17,8 @@ class TGPlainCard : TGCard {
   let mapManager: TGMapManager?
   
   init(title: String, subtitle: String? = nil, contentView: UIView? = nil, mapManager: TGMapManager? = nil) {
+    assert(!(contentView is UIScrollView), "This card is not meant for content views that are itself scrolling. Use `TGTableCardView` instead.")
+    
     self.title = title
     self.subtitle = subtitle
     self.contentView = contentView

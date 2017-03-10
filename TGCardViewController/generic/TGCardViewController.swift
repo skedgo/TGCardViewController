@@ -20,27 +20,33 @@ class TGCardViewController: UIViewController {
   // Dynamic constraints
   @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperTopConstraint: NSLayoutConstraint!
-  
+  @IBOutlet weak var cardWrapperHeightConstraint: NSLayoutConstraint!
+
   fileprivate var isVisible = false
   
   fileprivate var topCardView: TGCardView? {
     return cardWrapper.subviews.last as? TGCardView
   }
 
+  fileprivate static let MinMapSpace: CGFloat = 50
   
   // MARK: - UIViewController
   
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    stickyBarHeightConstraint.constant = 0
-    
+    // Panner for dragging cards up and down
     let panGesture = UIPanGestureRecognizer()
     panGesture.addTarget(self, action: #selector(handle))
     panGesture.delegate = self
     cardWrapper.addGestureRecognizer(panGesture)
-    
+
+    // Hide sticky bar at first
+    stickyBarHeightConstraint.constant = 0
+
+    // Extend card at first
     cardWrapperTopConstraint.constant = extendedMinY
+    cardWrapperHeightConstraint.constant = extendedMinY * -1
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -226,7 +232,7 @@ class TGCardViewController: UIViewController {
       value += navigationBar.frame.height
     }
     
-    value += 50
+    value += TGCardViewController.MinMapSpace
     
     return value
   }
