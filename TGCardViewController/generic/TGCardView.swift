@@ -15,4 +15,11 @@ class TGCardView: UIView {
   /// from the stack.
   @IBOutlet weak var closeButton: UIButton!
   
+
+  
+  /// Each card view needs a scroll view where the main content of the
+  /// card goes. The card controller need access to it, in order to
+  /// handling dragging the card up and down.
+  @IBOutlet weak var scrollView: UIScrollView!
+  
 }

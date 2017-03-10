@@ -14,7 +14,6 @@ class TGPlainCardView: TGCardView {
   @IBOutlet weak var subtitleLabel: UILabel!
 
   @IBOutlet weak var contentView: UIView!
-  @IBOutlet weak var scrollView: UIScrollView!
   
   static func instantiate() -> TGPlainCardView {
     let bundle = Bundle(for: self)

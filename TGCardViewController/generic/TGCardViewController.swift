@@ -19,14 +19,28 @@ class TGCardViewController: UIViewController {
   
   // Dynamic constraints
   @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!
-  @IBOutlet weak var cardWrapperHeightConstraint: NSLayoutConstraint!
+  @IBOutlet weak var cardWrapperTopConstraint: NSLayoutConstraint!
   
   fileprivate var isVisible = false
+  
+  fileprivate var topCardView: TGCardView? {
+    return cardWrapper.subviews.last as? TGCardView
+  }
+
+  
+  // MARK: - UIViewController
   
   override func viewDidLoad() {
     super.viewDidLoad()
 
     stickyBarHeightConstraint.constant = 0
+    
+    let panGesture = UIPanGestureRecognizer()
+    panGesture.addTarget(self, action: #selector(handle))
+    panGesture.delegate = self
+    cardWrapper.addGestureRecognizer(panGesture)
+    
+    cardWrapperTopConstraint.constant = extendedMinY
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -68,7 +82,7 @@ class TGCardViewController: UIViewController {
   fileprivate let animationDuration = 0.4
   
   fileprivate var cardOverlap: CGFloat {
-    return cardWrapperHeightConstraint.constant
+    return mapView.frame.height - cardWrapper.frame.minY
   }
   
   fileprivate var mapEdgePadding: UIEdgeInsets {
@@ -132,7 +146,7 @@ class TGCardViewController: UIViewController {
   }
   
   func pop(animated: Bool = true) {
-    guard var top = cards.last, let topView = cardWrapper.subviews.last as? TGCardView else {
+    guard var top = cards.last, let topView = topCardView else {
       print("Nothing to pop")
       return
     }
@@ -186,7 +200,63 @@ class TGCardViewController: UIViewController {
   func closeTapped(sender: Any) {
     pop()
   }
+  
+  
+  // MARK: - Dragging the card up and down
+  
+  fileprivate var extendedMinY: CGFloat {
+    var value: CGFloat = UIApplication.shared.statusBarFrame.height
+    
+    if let navigationBar = navigationController?.navigationBar {
+      value += navigationBar.frame.height
+    }
+    
+    value += 50
+    
+    return value
+  }
+  
+  fileprivate var collapsedMinY: CGFloat {
+    return UIScreen.main.bounds.height * 4 / 5
+  }
+  
+  fileprivate var topCardScrollView: UIScrollView? {
+    return topCardView?.scrollView
+  }
+  
+  @objc
+  fileprivate func handle(_ recogniser: UIPanGestureRecognizer) {
+    let translation = recogniser.translation(in: cardWrapper)
+    let velocity = recogniser.velocity(in: cardWrapper)
+    
+    let y = cardWrapper.frame.minY
+    if (y + translation.y >= extendedMinY) && (y + translation.y <= collapsedMinY) {
+      cardWrapper.frame.origin.y = y + translation.y
+      recogniser.setTranslation(.zero, in: cardWrapper)
+    }
+    
+    if recogniser.state == .ended {
+      var duration =  velocity.y < 0 ? Double((y - extendedMinY) / -velocity.y) : Double((collapsedMinY - y) / velocity.y )
+      
+      duration = duration > 1.3 ? 1 : duration
+      
+      UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
+        if velocity.y >= 0 {
+          self.cardWrapper.frame.origin.y = self.collapsedMinY
+        } else {
+          // Going up
+          self.cardWrapper.frame.origin.y = self.extendedMinY
+        }
+        
+      }, completion: { _ in
+        if ( velocity.y < 0 ) {
+          self.topCardScrollView?.isScrollEnabled = true
+        }
+      })
+    }
+  }
 
+  
   // MARK: - Sticky bar at the top
   
   var isShowingSticky: Bool {
@@ -211,4 +281,26 @@ class TGCardViewController: UIViewController {
     }
   }
 
+}
+
+
+extension TGCardViewController: UIGestureRecognizerDelegate {
+  
+  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    
+    guard let scrollView = topCardScrollView else { return false }
+    
+    let gesture = (gestureRecognizer as! UIPanGestureRecognizer)
+    let direction = gesture.velocity(in: cardWrapper).y
+    
+    let y = cardWrapper.frame.minY
+    if (y == extendedMinY && scrollView.contentOffset.y == 0 && direction > 0) || (y == collapsedMinY) {
+      scrollView.isScrollEnabled = false
+    } else {
+      scrollView.isScrollEnabled = true
+    }
+    
+    return false
+  }
+  
 }
