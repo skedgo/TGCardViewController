@@ -13,6 +13,7 @@ class TGPlainCardView: TGCardView {
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var subtitleLabel: UILabel!
 
+  @IBOutlet weak var contentView: UIView!
   @IBOutlet weak var scrollView: UIScrollView!
   
   static func instantiate() -> TGPlainCardView {
@@ -27,8 +28,12 @@ class TGPlainCardView: TGCardView {
     closeButton.isHidden = !showClose
     
     if let content = card.contentView {
-      scrollView.addSubview(content)
-      scrollView.contentSize = content.frame.size
+      content.translatesAutoresizingMaskIntoConstraints = false
+      contentView.addSubview(content)
+      content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+      content.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+      contentView.trailingAnchor.constraint(equalTo: content.trailingAnchor).isActive = true
+      contentView.bottomAnchor.constraint(equalTo: content.bottomAnchor).isActive = true
     }
   }
 }
