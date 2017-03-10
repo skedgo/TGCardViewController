@@ -12,20 +12,73 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ExampleChildContentView" customModule="TGCardViewController" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="971"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SpL-pl-dGo">
+                <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SpL-pl-dGo">
                     <rect key="frame" x="16" y="20" width="93" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Toggle Sticky"/>
                 </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="miC-Fv-7h9">
+                    <rect key="frame" x="16" y="58" width="343" height="905"/>
+                    <mutableString key="text">Who rides there so late through the night dark and drear?
+The father it is, with his infant so dear;
+He holdeth the boy tightly clasp'd in his arm,
+He holdeth him safely, he keepeth him warm.
+
+"My son, wherefore seek'st thou thy face thus to hide?"
+"Look, father, the Erl-King is close by our side!
+Dost see not the Erl-King, with crown and with train?"
+"My son, 'tis the mist rising over the plain."
+
+"Oh, come, thou dear infant! oh come thou with me!
+For many a game I will play there with thee;
+On my strand, lovely flowers their blossoms unfold,
+My mother shall grace thee with garments of gold."
+
+"My father, my father, and dost thou not hear
+The words that the Erl-King now breathes in mine ear?"
+"Be calm, dearest child, 'tis thy fancy deceives;
+'Tis the sad wind that sighs through the withering leaves."
+
+"Wilt go, then, dear infant, wilt go with me there?
+My daughters shall tend thee with sisterly care;
+My daughters by night their glad festival keep,
+They'll dance thee, and rock thee, and sing thee to sleep."
+
+"My father, my father, and dost thou not see,
+How the Erl-King his daughters has brought here for me?"
+"My darling, my darling, I see it aright,
+'Tis the aged grey willows deceiving thy sight."
+
+"I love thee, I'm charm'd by thy beauty, dear boy!
+And if thou'rt unwilling, then force I'll employ."
+"My father, my father, he seizes me fast,
+For sorely the Erl-King has hurt me at last."
+
+The father now gallops, with terror half wild,
+He grasps in his arms the poor shuddering child;
+He reaches his courtyard with toil and with dread, –
+The child in his arms finds he motionless, dead.</mutableString>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="0.13725490200000001" green="0.69411764710000001" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="miC-Fv-7h9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="IuK-Hf-Zgg"/>
+                <constraint firstItem="SpL-pl-dGo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="TJW-te-ZkI"/>
+                <constraint firstAttribute="trailing" secondItem="miC-Fv-7h9" secondAttribute="trailing" constant="16" id="YMl-Xn-hwv"/>
+                <constraint firstAttribute="bottom" secondItem="miC-Fv-7h9" secondAttribute="bottom" constant="8" id="b27-ev-qpJ"/>
+                <constraint firstItem="miC-Fv-7h9" firstAttribute="top" secondItem="SpL-pl-dGo" secondAttribute="bottom" constant="8" id="cJG-iK-m2X"/>
+                <constraint firstItem="SpL-pl-dGo" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="r6F-Vn-Kho"/>
+            </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <connections>
                 <outlet property="showStickyButton" destination="SpL-pl-dGo" id="HXx-2p-NeW"/>
             </connections>
+            <point key="canvasLocation" x="33.5" y="54.5"/>
         </view>
     </objects>
 </document>
