@@ -250,7 +250,7 @@ class TGCardViewController: UIViewController {
       recogniser.setTranslation(.zero, in: cardWrapper)
       cardWrapperTopConstraint.constant = y + translation.y
       view.setNeedsUpdateConstraints()
-      view.updateConstraintsIfNeeded()
+      view.layoutIfNeeded()
     }
     
     // Additionally, when we're done and there's a velocity, we'll
