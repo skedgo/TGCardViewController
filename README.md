@@ -53,7 +53,7 @@ Card types:
 Card styles:
 
 - [x] Rounded corners to cards
-- [ ] Grab handle for cards
+- [x] Grab handle for cards
 - [ ] Nice close button
 - [ ] Title and subtitle styling
 - [ ] Add mini drop shadow to card views
