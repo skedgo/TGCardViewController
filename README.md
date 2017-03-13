@@ -52,7 +52,7 @@ Card types:
 
 Card styles:
 
-- [ ] Rounded corners to cards
+- [x] Rounded corners to cards
 - [ ] Grab handle for cards
 - [ ] Nice close button
 - [ ] Title and subtitle styling
