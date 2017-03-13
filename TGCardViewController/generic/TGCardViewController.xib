@@ -16,9 +16,13 @@
                 <outlet property="cardWrapper" destination="Bui-Tf-j0O" id="iBg-Zp-UqS"/>
                 <outlet property="cardWrapperHeightConstraint" destination="eCP-YV-wYQ" id="kaG-gR-XfG"/>
                 <outlet property="cardWrapperTopConstraint" destination="c3z-yd-wMy" id="mgK-Wh-1wi"/>
+                <outlet property="fixedCardWrapperTopConstraint" destination="Jiv-F0-LaE" id="djj-GQ-nZ5"/>
                 <outlet property="mapView" destination="zI8-lz-Md7" id="L17-S0-R0b"/>
+                <outlet property="statusBarBlurHeightConstraint" destination="e6J-1w-2rr" id="nz7-n1-G6e"/>
+                <outlet property="statusBarBlurView" destination="hZy-nx-c0N" id="v21-d4-wie"/>
                 <outlet property="stickyBar" destination="Byv-0L-fUC" id="IUC-BW-Xzs"/>
-                <outlet property="stickyBarHeightConstraint" destination="ldy-Yi-l63" id="L6M-kY-s9F"/>
+                <outlet property="stickyBarHeightConstraint" destination="mDM-Ed-YiJ" id="hJq-UR-rJw"/>
+                <outlet property="stickyBarTopConstraint" destination="PF4-tz-hcK" id="pG5-du-PtG"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="TLR-7d-g6q"/>
             </connections>
         </placeholder>
@@ -27,18 +31,18 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Byv-0L-fUC">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                <view contentMode="scaleToFill" verticalHuggingPriority="252" translatesAutoresizingMaskIntoConstraints="NO" id="Byv-0L-fUC">
+                    <rect key="frame" x="0.0" y="-50" width="375" height="50"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="50" id="ldy-Yi-l63"/>
+                        <constraint firstAttribute="height" constant="50" id="mDM-Ed-YiJ"/>
                     </constraints>
                 </view>
                 <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7">
-                    <rect key="frame" x="0.0" y="50" width="375" height="617"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                 </mapView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O">
-                    <rect key="frame" x="0.0" y="567" width="375" height="567"/>
+                    <rect key="frame" x="0.0" y="517" width="375" height="617"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gfu-9d-rLl" userLabel="Card handle wrapper">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
@@ -68,18 +72,46 @@
                         <constraint firstItem="gfu-9d-rLl" firstAttribute="top" secondItem="Bui-Tf-j0O" secondAttribute="top" id="xeT-zD-jRj"/>
                     </constraints>
                 </view>
+                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hZy-nx-c0N">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Dt1-tF-s3W">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RYd-EA-KGp">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" id="hBs-pu-lyI">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <vibrancyEffect>
+                                    <blurEffect style="light"/>
+                                </vibrancyEffect>
+                            </visualEffectView>
+                        </subviews>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="e6J-1w-2rr"/>
+                    </constraints>
+                    <blurEffect style="light"/>
+                </visualEffectView>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="Byv-0L-fUC" secondAttribute="trailing" id="1YK-c2-p4c"/>
                 <constraint firstItem="Bui-Tf-j0O" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ECl-Ky-irh"/>
                 <constraint firstItem="Byv-0L-fUC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="EOu-ey-pt2"/>
                 <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" id="FPF-Ef-IC5"/>
+                <constraint firstItem="hZy-nx-c0N" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Gm7-jT-54V"/>
+                <constraint firstAttribute="trailing" secondItem="hZy-nx-c0N" secondAttribute="trailing" id="IG1-gn-mU5"/>
+                <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" relation="lessThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-100" id="Jiv-F0-LaE"/>
                 <constraint firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="OZ1-xY-4Wu"/>
-                <constraint firstItem="Byv-0L-fUC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="PF4-tz-hcK"/>
+                <constraint firstItem="Byv-0L-fUC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="-50" id="PF4-tz-hcK"/>
                 <constraint firstAttribute="trailing" secondItem="zI8-lz-Md7" secondAttribute="trailing" id="S9W-2K-Wn5"/>
                 <constraint firstAttribute="bottom" secondItem="zI8-lz-Md7" secondAttribute="bottom" id="VDp-KC-oIA"/>
-                <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" constant="517" id="c3z-yd-wMy"/>
+                <constraint firstItem="hZy-nx-c0N" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="a3I-dx-f1J"/>
+                <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" priority="750" constant="517" id="c3z-yd-wMy"/>
                 <constraint firstItem="Bui-Tf-j0O" firstAttribute="height" secondItem="zI8-lz-Md7" secondAttribute="height" constant="-50" id="eCP-YV-wYQ"/>
                 <constraint firstItem="zI8-lz-Md7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lmI-Os-WBc"/>
             </constraints>
