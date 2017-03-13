@@ -47,6 +47,8 @@ class TGCardViewController: UIViewController {
     // Extend card at first
     cardWrapperTopConstraint.constant = extendedMinY
     cardWrapperHeightConstraint.constant = extendedMinY * -1
+    
+    roundCard()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -207,7 +209,6 @@ class TGCardViewController: UIViewController {
     pop()
   }
   
-  
   // MARK: - Dragging the card up and down
 
   fileprivate enum Direction {
@@ -222,8 +223,6 @@ class TGCardViewController: UIViewController {
       }
     }
   }
-  
-  
   
   fileprivate var extendedMinY: CGFloat {
     var value: CGFloat = UIApplication.shared.statusBarFrame.height
@@ -307,6 +306,13 @@ class TGCardViewController: UIViewController {
     UIView.animate(withDuration: animated ? 0.25 : 0) {
       self.view.layoutIfNeeded()
     }
+  }
+  
+  // MARK: - Styling
+  
+  fileprivate func roundCard() {
+    cardWrapper.layer.cornerRadius = 10
+    cardWrapper.clipsToBounds = true
   }
 
 }
