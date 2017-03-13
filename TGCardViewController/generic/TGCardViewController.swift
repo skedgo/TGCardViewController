@@ -88,7 +88,7 @@ class TGCardViewController: UIViewController {
     // the correct frame size for the card wrapper, from which
     // the shadow was constructed.
     if !isShadowInserted {
-      addShadow()
+//      addShadow()
       isShadowInserted = true
     }
   }
