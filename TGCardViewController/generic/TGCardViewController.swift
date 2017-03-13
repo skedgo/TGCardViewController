@@ -17,6 +17,10 @@ class TGCardViewController: UIViewController {
   @IBOutlet weak var cardWrapper: UIView!
   fileprivate weak var cardShadowView: UIView?
   
+  // Card grab handle
+  @IBOutlet weak var cardHandle: UIView!
+  @IBOutlet weak var cardHandleWrapper: UIView!
+  
   // Dynamic constraints
   @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperTopConstraint: NSLayoutConstraint!
@@ -97,6 +101,14 @@ class TGCardViewController: UIViewController {
     return UIEdgeInsets(top: 0, left: 0, bottom: cardOverlap, right: 0)
   }
   
+  fileprivate var cardHandleHeight: CGFloat {
+    return cardHandleWrapper.frame.height
+  }
+  
+  fileprivate var cardViewAnimatedEndFrame: CGRect {
+    return CGRect(x: 0, y: cardHandleHeight, width: cardWrapper.frame.width, height: cardWrapper.frame.height - cardHandleHeight)
+  }
+  
   func push(_ card: TGCard, animated: Bool = true) {
     var top = card
 
@@ -119,7 +131,8 @@ class TGCardViewController: UIViewController {
     
     // We animate the view coming in from the bottom
     // we also temporarily insert a shadow view below if there's already a card
-    cardView.frame = cardWrapper.bounds
+    cardView.frame = cardViewAnimatedEndFrame
+    
     if animated {
       cardView.frame.origin.y = cardWrapper.frame.maxY
     }
@@ -144,7 +157,7 @@ class TGCardViewController: UIViewController {
       }
       
       UIView.animate(withDuration: animationDuration, animations: {
-        cardView.frame = self.cardWrapper.bounds
+        cardView.frame = self.cardViewAnimatedEndFrame
         self.cardShadowView?.alpha = 0.15
       }, completion: whenDone)
       
@@ -311,12 +324,12 @@ class TGCardViewController: UIViewController {
   // MARK: - Styling
   
   fileprivate func roundCard() {
+    cardHandle.layer.cornerRadius = 3
     cardWrapper.layer.cornerRadius = 10
     cardWrapper.clipsToBounds = true
   }
 
 }
-
 
 extension TGCardViewController: UIGestureRecognizerDelegate {
   
