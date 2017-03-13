@@ -163,16 +163,24 @@ class TGCardViewController: UIViewController {
     if animated {
       if oldTop != nil {
         let shadow = UIView(frame: cardWrapper.bounds)
+        shadow.frame.size.height += 50 // for bounciness
         shadow.backgroundColor = .black
         shadow.alpha = 0
         cardWrapper.insertSubview(shadow, belowSubview: cardView)
         cardShadowView = shadow
       }
       
-      UIView.animate(withDuration: animationDuration, animations: {
-        cardView.frame = self.cardViewAnimatedEndFrame
-        self.cardShadowView?.alpha = 0.15
-      }, completion: whenDone)
+      UIView.animate(
+        withDuration: animationDuration,
+        delay: 0,
+        usingSpringWithDamping: 0.75,
+        initialSpringVelocity: 0,
+        options: [.curveEaseInOut],
+        animations: {
+          cardView.frame = self.cardViewAnimatedEndFrame
+          self.cardShadowView?.alpha = 0.15
+        },
+        completion: whenDone)
       
     } else {
       whenDone(completed: true)
@@ -223,10 +231,17 @@ class TGCardViewController: UIViewController {
       cardShadowView = shadow
     }
     
-    UIView.animate(withDuration: animationDuration, animations: {
-      topView.frame.origin.y = self.cardWrapper.frame.maxY
-      self.cardShadowView?.alpha = 0
-    }, completion: whenDone)
+    UIView.animate(
+      withDuration: animationDuration * 1.25,
+      delay: 0,
+      usingSpringWithDamping: 1,
+      initialSpringVelocity: 0,
+      options: [.curveEaseInOut],
+      animations: {
+        topView.frame.origin.y = self.cardWrapper.frame.maxY
+        self.cardShadowView?.alpha = 0
+      },
+      completion: whenDone)
     
   }
   
@@ -321,12 +336,19 @@ class TGCardViewController: UIViewController {
     
     stickyBarHeightConstraint.constant = stickyHeight
     stickyBarTopConstraint.constant = 0
-    
     view.setNeedsUpdateConstraints()
 
-    UIView.animate(withDuration: animated ? 0.25 : 0) {
-      self.view.layoutIfNeeded()
-    }
+    UIView.animate(
+      withDuration: animated ? 0.35 : 0,
+      delay: 0,
+      usingSpringWithDamping: 0.75,
+      initialSpringVelocity: 0,
+      options: [.curveEaseOut],
+      animations: {
+        self.view.layoutIfNeeded()
+      },
+      completion: nil
+    )
   }
   
   func hideStickyBar(animated: Bool) {
@@ -335,13 +357,20 @@ class TGCardViewController: UIViewController {
     stickyBarTopConstraint.constant = stickyHeight * -1
     view.setNeedsUpdateConstraints()
 
-    UIView.animate(withDuration: animated ? 0.25 : 0, animations: {
-      self.view.layoutIfNeeded()
-    
-    }, completion: { finished in
-      guard finished else { return }
-      self.stickyBar.subviews.forEach { $0.removeFromSuperview() }
-    })
+    UIView.animate(
+      withDuration: animated ? 0.35 : 0,
+      delay: 0,
+      usingSpringWithDamping: 0.75,
+      initialSpringVelocity: 0,
+      options: [.curveEaseIn],
+      animations: {
+        self.view.layoutIfNeeded()
+      },
+      completion: { finished in
+        guard finished else { return }
+        self.stickyBar.subviews.forEach { $0.removeFromSuperview() }
+      }
+    )
   }
   
   fileprivate func overwriteStickyBarContent(with content: UIView) {
