@@ -11,25 +11,42 @@ import UIKit
 import MapKit
 
 class TGCardViewController: UIViewController {
+  
+  fileprivate enum Constants {
+    /// The minimum number of points between the status bar and the
+    /// top of the card to keep a bit of the map always showing through.
+    fileprivate static let minMapSpace: CGFloat = 50
+    
+    /// The minimum number of points from the top of the card to the
+    /// bottom of the screen to make sure a bit of the card is always
+    /// visible.
+    fileprivate static let minCardOverlap: CGFloat = 100
+    
+    fileprivate static let pushAnimationDuration = 0.4
+  }
 
   @IBOutlet weak var stickyBar: UIView!
   @IBOutlet weak var mapView: MKMapView!
   @IBOutlet weak var cardWrapper: UIView!
   fileprivate weak var cardShadowView: UIView?
+  @IBOutlet weak var statusBarBlurView: UIVisualEffectView!
   
   // Dynamic constraints
   @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!
+  @IBOutlet weak var stickyBarTopConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperTopConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperHeightConstraint: NSLayoutConstraint!
+  @IBOutlet weak var statusBarBlurHeightConstraint: NSLayoutConstraint!
 
+  // Constraints to ensure cards don't get hidden
+  @IBOutlet weak var fixedCardWrapperTopConstraint: NSLayoutConstraint!
+  
   fileprivate var isVisible = false
   
   fileprivate var topCardView: TGCardView? {
     return cardWrapper.subviews.last as? TGCardView
   }
 
-  fileprivate static let MinMapSpace: CGFloat = 50
-  
   // MARK: - UIViewController
   
   override func viewDidLoad() {
@@ -41,12 +58,17 @@ class TGCardViewController: UIViewController {
     panGesture.delegate = self
     cardWrapper.addGestureRecognizer(panGesture)
 
+    // Setting up additional constraints
+    fixedCardWrapperTopConstraint.constant = Constants.minCardOverlap * -1
+    cardWrapperHeightConstraint.constant = extendedMinY * -1
+    
     // Hide sticky bar at first
-    stickyBarHeightConstraint.constant = 0
+    hideStickyBar(animated: false)
 
     // Extend card at first
     cardWrapperTopConstraint.constant = extendedMinY
-    cardWrapperHeightConstraint.constant = extendedMinY * -1
+    
+    roundCard()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -86,6 +108,13 @@ class TGCardViewController: UIViewController {
       isShadowInserted = true
     }
   }
+  
+  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    super.traitCollectionDidChange(previousTraitCollection)
+    
+    statusBarBlurHeightConstraint.constant = UIApplication.shared.statusBarFrame.height
+    cardWrapperHeightConstraint.constant = extendedMinY * -1
+  }
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
@@ -96,8 +125,6 @@ class TGCardViewController: UIViewController {
   // MARK: - Cards
   
   fileprivate var cards = [TGCard]()
-  
-  fileprivate let animationDuration = 0.4
   
   fileprivate var cardOverlap: CGFloat {
     return mapView.frame.height - cardWrapper.frame.minY
@@ -152,16 +179,24 @@ class TGCardViewController: UIViewController {
     if animated {
       if oldTop != nil {
         let shadow = UIView(frame: cardWrapper.bounds)
+        shadow.frame.size.height += 50 // for bounciness
         shadow.backgroundColor = .black
         shadow.alpha = 0
         cardWrapper.insertSubview(shadow, belowSubview: cardView)
         cardShadowView = shadow
       }
       
-      UIView.animate(withDuration: animationDuration, animations: {
-        cardView.frame = self.cardViewAnimatedEndFrame
-        self.cardShadowView?.alpha = 0.15
-      }, completion: whenDone)
+      UIView.animate(
+        withDuration: Constants.pushAnimationDuration,
+        delay: 0,
+        usingSpringWithDamping: 0.75,
+        initialSpringVelocity: 0,
+        options: [.curveEaseInOut],
+        animations: {
+          cardView.frame = self.cardViewAnimatedEndFrame
+          self.cardShadowView?.alpha = 0.15
+        },
+        completion: whenDone)
       
     } else {
       whenDone(completed: true)
@@ -212,10 +247,17 @@ class TGCardViewController: UIViewController {
       cardShadowView = shadow
     }
     
-    UIView.animate(withDuration: animationDuration, animations: {
-      topView.frame.origin.y = self.cardWrapper.frame.maxY
-      self.cardShadowView?.alpha = 0
-    }, completion: whenDone)
+    UIView.animate(
+      withDuration: Constants.pushAnimationDuration * 1.25,
+      delay: 0,
+      usingSpringWithDamping: 1,
+      initialSpringVelocity: 0,
+      options: [.curveEaseInOut],
+      animations: {
+        topView.frame.origin.y = self.cardWrapper.frame.maxY
+        self.cardShadowView?.alpha = 0
+      },
+      completion: whenDone)
     
   }
   
@@ -246,13 +288,13 @@ class TGCardViewController: UIViewController {
       value += navigationBar.frame.height
     }
     
-    value += TGCardViewController.MinMapSpace
+    value += Constants.minMapSpace
     
     return value
   }
   
   fileprivate var collapsedMinY: CGFloat {
-    return UIScreen.main.bounds.height * 4 / 5
+    return view.frame.height - Constants.minCardOverlap
   }
   
   fileprivate var topCardScrollView: UIScrollView? {
@@ -300,27 +342,62 @@ class TGCardViewController: UIViewController {
   // MARK: - Sticky bar at the top
   
   var isShowingSticky: Bool {
-    return self.stickyBarHeightConstraint.constant > 0
+    return self.stickyBarTopConstraint.constant > -1
   }
   
-  func showStickyBar(animated: Bool) {
-    let stickyHeight: CGFloat = 50
+  func showStickyBar(content: UIView, animated: Bool) {
+    let stickyHeight = content.frame.height
+    
+    overwriteStickyBarContent(with: content)
     
     stickyBarHeightConstraint.constant = stickyHeight
+    stickyBarTopConstraint.constant = 0
     view.setNeedsUpdateConstraints()
 
-    UIView.animate(withDuration: animated ? 0.25 : 0) {
-      self.view.layoutIfNeeded()
-    }
+    UIView.animate(
+      withDuration: animated ? 0.35 : 0,
+      delay: 0,
+      usingSpringWithDamping: 0.75,
+      initialSpringVelocity: 0,
+      options: [.curveEaseOut],
+      animations: {
+        self.view.layoutIfNeeded()
+      },
+      completion: nil
+    )
   }
   
   func hideStickyBar(animated: Bool) {
-    self.stickyBarHeightConstraint.constant = 0
+    let stickyHeight = stickyBarHeightConstraint.constant
+    
+    stickyBarTopConstraint.constant = stickyHeight * -1
     view.setNeedsUpdateConstraints()
 
-    UIView.animate(withDuration: animated ? 0.25 : 0) {
-      self.view.layoutIfNeeded()
-    }
+    UIView.animate(
+      withDuration: animated ? 0.35 : 0,
+      delay: 0,
+      usingSpringWithDamping: 0.75,
+      initialSpringVelocity: 0,
+      options: [.curveEaseIn],
+      animations: {
+        self.view.layoutIfNeeded()
+      },
+      completion: { finished in
+        guard finished else { return }
+        self.stickyBar.subviews.forEach { $0.removeFromSuperview() }
+      }
+    )
+  }
+  
+  fileprivate func overwriteStickyBarContent(with content: UIView) {
+    stickyBar.subviews.forEach { $0.removeFromSuperview() }
+    
+    content.translatesAutoresizingMaskIntoConstraints = false
+    stickyBar.addSubview(content)
+    content.leadingAnchor.constraint(equalTo: stickyBar.leadingAnchor).isActive = true
+    content.trailingAnchor.constraint(equalTo: stickyBar.trailingAnchor).isActive = true
+    content.topAnchor.constraint(equalTo: stickyBar.topAnchor).isActive = true
+    content.bottomAnchor.constraint(equalTo: stickyBar.bottomAnchor).isActive = true
   }
   
   // MARK: - Styling

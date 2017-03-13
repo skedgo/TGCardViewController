@@ -20,19 +20,22 @@ Behaviour:
 	- [x] Animation: Slide back down; fading out black view on card below with alpha from 25% to 0%
 	- [x] Pass on appearance callbacks appropriately to involved cards
 - Cards are draggable
-	- [x] Snap to collapsed and extended (extended still shows a bit of the map on top)
+	- [ ] Snap to collapsed (only title), peaking (near half-way showing both map and card content), extended (still shows a bit of the map on top, but darkened)
 	- [x] Cards can be dragged up and down anywhere on the card
 	- [ ] When scrolling to the top and keeping to scroll, start dragging card
+	- [ ] Tap title when collapsed: go to peaking
+	- [ ] Tap title when peaking: go to extended
+	- [x] Tap title when extended: do nothing
 - Sticky bar at the top
-	- [ ] Set content rather than just showing
-	- [ ] Cross-fade content if it was showing already and there’s new content
+	- [x] Set content rather than just showing (!1)
+	- [x] Cross-fade content if it was showing already and there’s new content (!1)
 	- [x] Fix bug: expand card => toggle sticky => card should move down not keep top fixed
 
 Styles:
 
-- [ ] Animation curve for push and pop
-- [ ] Blurry view under status bar (like Maps app)
-- [ ] When rotating device and card is collapsed, make sure card ends up in correct position
+- [x] Animation curve for push and pop (!1)
+- [x] Blurry view under status bar (like Maps app) (!1)
+- [x] When rotating device and card is collapsed, make sure card ends up in correct position (!1)
 
 ### 2. Card content and gestures
 
@@ -65,11 +68,17 @@ Map content:
 
 - [x] Cards can optionally have map content
 - [x] When showing the content, the insets should be respected to account for the card overlapping the map
-- [ ] If there’s no map content: Show card scrolled up and always snap back up when trying to show the map
+- [ ] If there’s no map content: Show card always extended and don't allow dragging it down (or just snap back up when using tries)
 
 Map widget:
 
-- [ ] Add
+- [ ] Optional widget such as a search bar or the from/to/at widget that floats on top of the map
+- [ ] Map content properly considers that the widget is there (map content and map controls such as the compass)
+- [ ] When dragging up the card the widget scrolls away to the top
+
+Map buttons:
+
+- [ ] Optional list of buttons that float on the right above the card (when collapsed)
 
 ### 4. Large screens (iPad + iPhone Plus in landscape)
 
