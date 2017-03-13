@@ -20,7 +20,7 @@ Behaviour:
 	- [x] Animation: Slide back down; fading out black view on card below with alpha from 25% to 0%
 	- [x] Pass on appearance callbacks appropriately to involved cards
 - Cards are draggable
-	- [.] Snap to collapsed (only title), peaking (near half-way showing both map and card content), extended (still shows a bit of the map on top, but darkened)
+	- [ ] Snap to collapsed (only title), peaking (near half-way showing both map and card content), extended (still shows a bit of the map on top, but darkened)
 	- [x] Cards can be dragged up and down anywhere on the card
 	- [ ] When scrolling to the top and keeping to scroll, start dragging card
 	- [ ] Tap title when collapsed: go to peaking
