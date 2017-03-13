@@ -70,7 +70,13 @@ Map content:
 
 Map widget:
 
-- [ ] Add
+- [ ] Optional widget such as a search bar or the from/to/at widget that floats on top of the map
+- [ ] Map content properly considers that the widget is there (map content and map controls such as the compass)
+- [ ] When dragging up the card the widget scroll away to the top
+
+Map buttons:
+
+- [ ] Optional list of buttons that float on the right above the card (when collapsed)
 
 ### 4. Large screens (iPad + iPhone Plus in landscape)
 
