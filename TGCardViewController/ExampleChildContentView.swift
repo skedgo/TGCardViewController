@@ -11,6 +11,7 @@ import UIKit
 class ExampleChildContentView: UIView {
 
   @IBOutlet weak var showStickyButton: UIButton!
+  @IBOutlet weak var showStickyCreditsButton: UIButton!
   
   static func instantiate() -> ExampleChildContentView {
     let bundle = Bundle(for: self)
