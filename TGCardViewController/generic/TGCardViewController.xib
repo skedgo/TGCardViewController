@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -11,8 +11,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TGCardViewController" customModule="TGCardViewController" customModuleProvider="target">
             <connections>
-                <outlet property="cardHandle" destination="T6r-kO-QAO" id="3P5-nP-TgL"/>
-                <outlet property="cardHandleWrapper" destination="gfu-9d-rLl" id="FrZ-yj-2Ut"/>
                 <outlet property="cardWrapper" destination="Bui-Tf-j0O" id="iBg-Zp-UqS"/>
                 <outlet property="cardWrapperHeightConstraint" destination="eCP-YV-wYQ" id="kaG-gR-XfG"/>
                 <outlet property="cardWrapperTopConstraint" destination="c3z-yd-wMy" id="mgK-Wh-1wi"/>
@@ -39,34 +37,7 @@
                 </mapView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O">
                     <rect key="frame" x="0.0" y="567" width="375" height="567"/>
-                    <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gfu-9d-rLl" userLabel="Card handle wrapper">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
-                            <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T6r-kO-QAO" userLabel="Card handle">
-                                    <rect key="frame" x="162.5" y="8" width="50" height="5"/>
-                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="50" id="RBS-gh-uiL"/>
-                                        <constraint firstAttribute="height" constant="5" id="jAw-Td-ALQ"/>
-                                    </constraints>
-                                </view>
-                            </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <constraints>
-                                <constraint firstItem="T6r-kO-QAO" firstAttribute="top" secondItem="gfu-9d-rLl" secondAttribute="top" constant="8" id="E0r-eR-B9b"/>
-                                <constraint firstItem="T6r-kO-QAO" firstAttribute="centerY" secondItem="gfu-9d-rLl" secondAttribute="centerY" id="l59-ts-Z3E"/>
-                                <constraint firstItem="T6r-kO-QAO" firstAttribute="centerX" secondItem="gfu-9d-rLl" secondAttribute="centerX" id="phc-2M-h3j"/>
-                                <constraint firstAttribute="height" constant="21" id="z8u-Fj-owT"/>
-                            </constraints>
-                        </view>
-                    </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="trailing" secondItem="gfu-9d-rLl" secondAttribute="trailing" id="ILO-bq-80a"/>
-                        <constraint firstItem="gfu-9d-rLl" firstAttribute="leading" secondItem="Bui-Tf-j0O" secondAttribute="leading" id="vMG-x2-xd9"/>
-                        <constraint firstItem="gfu-9d-rLl" firstAttribute="top" secondItem="Bui-Tf-j0O" secondAttribute="top" id="xeT-zD-jRj"/>
-                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

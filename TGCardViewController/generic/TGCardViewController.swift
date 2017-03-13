@@ -17,10 +17,6 @@ class TGCardViewController: UIViewController {
   @IBOutlet weak var cardWrapper: UIView!
   fileprivate weak var cardShadowView: UIView?
   
-  // Card grab handle
-  @IBOutlet weak var cardHandle: UIView!
-  @IBOutlet weak var cardHandleWrapper: UIView!
-  
   // Dynamic constraints
   @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperTopConstraint: NSLayoutConstraint!
@@ -52,7 +48,7 @@ class TGCardViewController: UIViewController {
     cardWrapperTopConstraint.constant = extendedMinY
     cardWrapperHeightConstraint.constant = extendedMinY * -1
     
-    roundCard()
+//    roundCard()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -113,12 +109,8 @@ class TGCardViewController: UIViewController {
     return UIEdgeInsets(top: 0, left: 0, bottom: cardOverlap, right: 0)
   }
   
-  fileprivate var cardHandleHeight: CGFloat {
-    return cardHandleWrapper.frame.height
-  }
-  
   fileprivate var cardViewAnimatedEndFrame: CGRect {
-    return CGRect(x: 0, y: cardHandleHeight, width: cardWrapper.frame.width, height: cardWrapper.frame.height - cardHandleHeight)
+    return CGRect(x: 0, y: 0, width: cardWrapper.frame.width, height: cardWrapper.frame.height)
   }
   
   func push(_ card: TGCard, animated: Bool = true) {
@@ -338,7 +330,6 @@ class TGCardViewController: UIViewController {
   fileprivate var isShadowInserted = false
   
   fileprivate func roundCard() {
-    cardHandle.layer.cornerRadius = 3
     cardWrapper.layer.cornerRadius = 10
     cardWrapper.clipsToBounds = true
   }
