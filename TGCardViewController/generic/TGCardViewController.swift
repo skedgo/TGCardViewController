@@ -11,6 +11,17 @@ import UIKit
 import MapKit
 
 class TGCardViewController: UIViewController {
+  
+  enum Constants {
+    /// The minimum number of points between the status bar and the
+    /// top of the card to keep a bit of the map always showing through.
+    fileprivate static let MinMapSpace: CGFloat = 50
+    
+    /// The minimum number of points from the top of the card to the
+    /// bottom of the screen to make sure a bit of the card is always
+    /// visible.
+    fileprivate static let MinCardOverlap: CGFloat = 100
+  }
 
   @IBOutlet weak var stickyBar: UIView!
   @IBOutlet weak var mapView: MKMapView!
@@ -27,14 +38,15 @@ class TGCardViewController: UIViewController {
   @IBOutlet weak var cardWrapperTopConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperHeightConstraint: NSLayoutConstraint!
 
+  // Constraints to ensure cards don't get hidden
+  @IBOutlet weak var fixedCardWrapperTopConstraint: NSLayoutConstraint!
+  
   fileprivate var isVisible = false
   
   fileprivate var topCardView: TGCardView? {
     return cardWrapper.subviews.last as? TGCardView
   }
 
-  fileprivate static let MinMapSpace: CGFloat = 50
-  
   // MARK: - UIViewController
   
   override func viewDidLoad() {
@@ -46,6 +58,9 @@ class TGCardViewController: UIViewController {
     panGesture.delegate = self
     cardWrapper.addGestureRecognizer(panGesture)
 
+    // Setting up additional constraints
+    fixedCardWrapperTopConstraint.constant = Constants.MinCardOverlap * -1
+    
     // Hide sticky bar at first
     hideStickyBar(animated: false)
 
@@ -272,13 +287,13 @@ class TGCardViewController: UIViewController {
       value += navigationBar.frame.height
     }
     
-    value += TGCardViewController.MinMapSpace
+    value += Constants.MinMapSpace
     
     return value
   }
   
   fileprivate var collapsedMinY: CGFloat {
-    return UIScreen.main.bounds.height * 4 / 5
+    return view.frame.height - Constants.MinCardOverlap
   }
   
   fileprivate var topCardScrollView: UIScrollView? {

@@ -16,6 +16,7 @@
                 <outlet property="cardWrapper" destination="Bui-Tf-j0O" id="iBg-Zp-UqS"/>
                 <outlet property="cardWrapperHeightConstraint" destination="eCP-YV-wYQ" id="kaG-gR-XfG"/>
                 <outlet property="cardWrapperTopConstraint" destination="c3z-yd-wMy" id="mgK-Wh-1wi"/>
+                <outlet property="fixedCardWrapperTopConstraint" destination="Jiv-F0-LaE" id="djj-GQ-nZ5"/>
                 <outlet property="mapView" destination="zI8-lz-Md7" id="L17-S0-R0b"/>
                 <outlet property="stickyBar" destination="Byv-0L-fUC" id="IUC-BW-Xzs"/>
                 <outlet property="stickyBarHeightConstraint" destination="mDM-Ed-YiJ" id="hJq-UR-rJw"/>
@@ -102,12 +103,13 @@
                 <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" id="FPF-Ef-IC5"/>
                 <constraint firstItem="hZy-nx-c0N" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Gm7-jT-54V"/>
                 <constraint firstAttribute="trailing" secondItem="hZy-nx-c0N" secondAttribute="trailing" id="IG1-gn-mU5"/>
+                <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" relation="lessThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-100" id="Jiv-F0-LaE"/>
                 <constraint firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="OZ1-xY-4Wu"/>
                 <constraint firstItem="Byv-0L-fUC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="-50" id="PF4-tz-hcK"/>
                 <constraint firstAttribute="trailing" secondItem="zI8-lz-Md7" secondAttribute="trailing" id="S9W-2K-Wn5"/>
                 <constraint firstAttribute="bottom" secondItem="zI8-lz-Md7" secondAttribute="bottom" id="VDp-KC-oIA"/>
                 <constraint firstItem="hZy-nx-c0N" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="a3I-dx-f1J"/>
-                <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" constant="517" id="c3z-yd-wMy"/>
+                <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" priority="750" constant="517" id="c3z-yd-wMy"/>
                 <constraint firstItem="Bui-Tf-j0O" firstAttribute="height" secondItem="zI8-lz-Md7" secondAttribute="height" constant="-50" id="eCP-YV-wYQ"/>
                 <constraint firstItem="zI8-lz-Md7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lmI-Os-WBc"/>
             </constraints>
