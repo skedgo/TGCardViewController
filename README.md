@@ -23,6 +23,7 @@ Behaviour:
 	- [x] Snap to collapsed and extended (extended still shows a bit of the map on top)
 	- [x] Cards can be dragged up and down anywhere on the card
 	- [ ] When scrolling to the top and keeping to scroll, start dragging card
+	- [ ] Toggle from collapsed to extended state by tapping card (but don't intercept buttons on the card!)
 - Sticky bar at the top
 	- [ ] !1 - Set content rather than just showing
 	- [ ] !1 - Cross-fade content if it was showing already and there’s new content
