@@ -47,7 +47,7 @@ class TGCardViewController: UIViewController {
     cardWrapper.addGestureRecognizer(panGesture)
 
     // Hide sticky bar at first
-    stickyBarHeightConstraint.constant = 0
+    hideStickyBar(animated: false)
 
     // Extend card at first
     cardWrapperTopConstraint.constant = extendedMinY
