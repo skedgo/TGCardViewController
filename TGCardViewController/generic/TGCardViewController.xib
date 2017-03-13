@@ -18,7 +18,8 @@
                 <outlet property="cardWrapperTopConstraint" destination="c3z-yd-wMy" id="mgK-Wh-1wi"/>
                 <outlet property="mapView" destination="zI8-lz-Md7" id="L17-S0-R0b"/>
                 <outlet property="stickyBar" destination="Byv-0L-fUC" id="IUC-BW-Xzs"/>
-                <outlet property="stickyBarHeightConstraint" destination="ldy-Yi-l63" id="L6M-kY-s9F"/>
+                <outlet property="stickyBarHeightConstraint" destination="mDM-Ed-YiJ" id="hJq-UR-rJw"/>
+                <outlet property="stickyBarTopConstraint" destination="PF4-tz-hcK" id="pG5-du-PtG"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="TLR-7d-g6q"/>
             </connections>
         </placeholder>
@@ -27,18 +28,18 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Byv-0L-fUC">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                <view contentMode="scaleToFill" verticalHuggingPriority="252" translatesAutoresizingMaskIntoConstraints="NO" id="Byv-0L-fUC">
+                    <rect key="frame" x="0.0" y="-50" width="375" height="50"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="50" id="ldy-Yi-l63"/>
+                        <constraint firstAttribute="height" constant="50" id="mDM-Ed-YiJ"/>
                     </constraints>
                 </view>
                 <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7">
-                    <rect key="frame" x="0.0" y="50" width="375" height="617"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                 </mapView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O">
-                    <rect key="frame" x="0.0" y="567" width="375" height="567"/>
+                    <rect key="frame" x="0.0" y="517" width="375" height="617"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gfu-9d-rLl" userLabel="Card handle wrapper">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
@@ -76,7 +77,7 @@
                 <constraint firstItem="Byv-0L-fUC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="EOu-ey-pt2"/>
                 <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" id="FPF-Ef-IC5"/>
                 <constraint firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="OZ1-xY-4Wu"/>
-                <constraint firstItem="Byv-0L-fUC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="PF4-tz-hcK"/>
+                <constraint firstItem="Byv-0L-fUC" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="-50" id="PF4-tz-hcK"/>
                 <constraint firstAttribute="trailing" secondItem="zI8-lz-Md7" secondAttribute="trailing" id="S9W-2K-Wn5"/>
                 <constraint firstAttribute="bottom" secondItem="zI8-lz-Md7" secondAttribute="bottom" id="VDp-KC-oIA"/>
                 <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" constant="517" id="c3z-yd-wMy"/>

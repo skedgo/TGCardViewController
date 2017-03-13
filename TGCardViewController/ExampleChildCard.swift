@@ -26,6 +26,8 @@ class ExampleChildCard : TGPlainCard {
     content.showStickyButton.addTarget(self, action: #selector(showStickyTapped(sender:)), for: .touchUpInside)
   }
   
+  fileprivate lazy var image = ExampleChildStickyView.instantiate()
+  
   @objc
   func showStickyTapped(sender: Any) {
     guard let controller = controller else { return }
@@ -33,7 +35,7 @@ class ExampleChildCard : TGPlainCard {
     if controller.isShowingSticky {
       controller.hideStickyBar(animated: true)
     } else {
-      controller.showStickyBar(animated: true)
+      controller.showStickyBar(content: image, animated: true)
     }
   }
   

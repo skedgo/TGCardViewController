@@ -23,6 +23,7 @@ class TGCardViewController: UIViewController {
   
   // Dynamic constraints
   @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!
+  @IBOutlet weak var stickyBarTopConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperTopConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperHeightConstraint: NSLayoutConstraint!
 
@@ -310,13 +311,17 @@ class TGCardViewController: UIViewController {
   // MARK: - Sticky bar at the top
   
   var isShowingSticky: Bool {
-    return self.stickyBarHeightConstraint.constant > 0
+    return self.stickyBarTopConstraint.constant > -1
   }
   
-  func showStickyBar(animated: Bool) {
-    let stickyHeight: CGFloat = 50
+  func showStickyBar(content: UIView, animated: Bool) {
+    let stickyHeight = content.frame.height
+    
+    overwriteStickyBarContent(with: content)
     
     stickyBarHeightConstraint.constant = stickyHeight
+    stickyBarTopConstraint.constant = 0
+    
     view.setNeedsUpdateConstraints()
 
     UIView.animate(withDuration: animated ? 0.25 : 0) {
@@ -325,12 +330,29 @@ class TGCardViewController: UIViewController {
   }
   
   func hideStickyBar(animated: Bool) {
-    self.stickyBarHeightConstraint.constant = 0
+    let stickyHeight = stickyBarHeightConstraint.constant
+    
+    stickyBarTopConstraint.constant = stickyHeight * -1
     view.setNeedsUpdateConstraints()
 
-    UIView.animate(withDuration: animated ? 0.25 : 0) {
+    UIView.animate(withDuration: animated ? 0.25 : 0, animations: {
       self.view.layoutIfNeeded()
-    }
+    
+    }, completion: { finished in
+      guard finished else { return }
+      self.stickyBar.subviews.forEach { $0.removeFromSuperview() }
+    })
+  }
+  
+  fileprivate func overwriteStickyBarContent(with content: UIView) {
+    stickyBar.subviews.forEach { $0.removeFromSuperview() }
+    
+    content.translatesAutoresizingMaskIntoConstraints = false
+    stickyBar.addSubview(content)
+    content.leadingAnchor.constraint(equalTo: stickyBar.leadingAnchor).isActive = true
+    content.trailingAnchor.constraint(equalTo: stickyBar.trailingAnchor).isActive = true
+    content.topAnchor.constraint(equalTo: stickyBar.topAnchor).isActive = true
+    content.bottomAnchor.constraint(equalTo: stickyBar.bottomAnchor).isActive = true
   }
   
   // MARK: - Styling
