@@ -47,8 +47,6 @@ class TGCardViewController: UIViewController {
     // Extend card at first
     cardWrapperTopConstraint.constant = extendedMinY
     cardWrapperHeightConstraint.constant = extendedMinY * -1
-    
-//    roundCard()
   }
   
   override func viewWillAppear(_ animated: Bool) {
