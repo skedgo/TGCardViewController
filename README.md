@@ -56,7 +56,7 @@ Card styles:
 - [x] Grab handle for cards
 - [ ] Nice close button
 - [ ] Title and subtitle styling
-- [ ] Add mini drop shadow to card views
+- [x] Add mini drop shadow to card views
 - [ ] Bottom view
 
 ### 3. Map content
