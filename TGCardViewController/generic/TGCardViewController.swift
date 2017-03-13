@@ -80,6 +80,18 @@ class TGCardViewController: UIViewController {
     
     cards.last?.didDisappear(animated: animated)
   }
+  
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    
+    // Shados is added here because only at this point, we have
+    // the correct frame size for the card wrapper, from which
+    // the shadow was constructed.
+    if !isShadowInserted {
+      addShadow()
+      isShadowInserted = true
+    }
+  }
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
@@ -323,10 +335,26 @@ class TGCardViewController: UIViewController {
   
   // MARK: - Styling
   
+  fileprivate var isShadowInserted = false
+  
   fileprivate func roundCard() {
     cardHandle.layer.cornerRadius = 3
     cardWrapper.layer.cornerRadius = 10
     cardWrapper.clipsToBounds = true
+  }
+  
+  fileprivate func addShadow() {
+    let shadowFrame = cardWrapper.frame
+    let shadow = UIView(frame: shadowFrame)
+    shadow.isUserInteractionEnabled = true
+    shadow.layer.shadowColor = UIColor.black.cgColor
+    shadow.layer.shadowOffset = CGSize(width: 0, height: -1)
+    shadow.layer.shadowRadius = 5
+    shadow.layer.shadowOpacity = 0.3
+    shadow.layer.masksToBounds = false
+    shadow.clipsToBounds = false
+    cardWrapper.superview?.insertSubview(shadow, belowSubview: cardWrapper)
+    shadow.addSubview(cardWrapper)
   }
 
 }
