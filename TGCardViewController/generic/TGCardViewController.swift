@@ -12,15 +12,17 @@ import MapKit
 
 class TGCardViewController: UIViewController {
   
-  enum Constants {
+  fileprivate enum Constants {
     /// The minimum number of points between the status bar and the
     /// top of the card to keep a bit of the map always showing through.
-    fileprivate static let MinMapSpace: CGFloat = 50
+    fileprivate static let minMapSpace: CGFloat = 50
     
     /// The minimum number of points from the top of the card to the
     /// bottom of the screen to make sure a bit of the card is always
     /// visible.
-    fileprivate static let MinCardOverlap: CGFloat = 100
+    fileprivate static let minCardOverlap: CGFloat = 100
+    
+    fileprivate static let pushAnimationDuration = 0.4
   }
 
   @IBOutlet weak var stickyBar: UIView!
@@ -61,7 +63,7 @@ class TGCardViewController: UIViewController {
     cardWrapper.addGestureRecognizer(panGesture)
 
     // Setting up additional constraints
-    fixedCardWrapperTopConstraint.constant = Constants.MinCardOverlap * -1
+    fixedCardWrapperTopConstraint.constant = Constants.minCardOverlap * -1
     cardWrapperHeightConstraint.constant = extendedMinY * -1
     
     // Hide sticky bar at first
@@ -128,8 +130,6 @@ class TGCardViewController: UIViewController {
   
   fileprivate var cards = [TGCard]()
   
-  fileprivate let animationDuration = 0.4
-  
   fileprivate var cardOverlap: CGFloat {
     return mapView.frame.height - cardWrapper.frame.minY
   }
@@ -195,7 +195,7 @@ class TGCardViewController: UIViewController {
       }
       
       UIView.animate(
-        withDuration: animationDuration,
+        withDuration: Constants.pushAnimationDuration,
         delay: 0,
         usingSpringWithDamping: 0.75,
         initialSpringVelocity: 0,
@@ -256,7 +256,7 @@ class TGCardViewController: UIViewController {
     }
     
     UIView.animate(
-      withDuration: animationDuration * 1.25,
+      withDuration: Constants.pushAnimationDuration * 1.25,
       delay: 0,
       usingSpringWithDamping: 1,
       initialSpringVelocity: 0,
@@ -296,13 +296,13 @@ class TGCardViewController: UIViewController {
       value += navigationBar.frame.height
     }
     
-    value += Constants.MinMapSpace
+    value += Constants.minMapSpace
     
     return value
   }
   
   fileprivate var collapsedMinY: CGFloat {
-    return view.frame.height - Constants.MinCardOverlap
+    return view.frame.height - Constants.minCardOverlap
   }
   
   fileprivate var topCardScrollView: UIScrollView? {
