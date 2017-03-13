@@ -23,17 +23,17 @@ Behaviour:
 	- [x] Snap to collapsed and extended (extended still shows a bit of the map on top)
 	- [x] Cards can be dragged up and down anywhere on the card
 	- [ ] When scrolling to the top and keeping to scroll, start dragging card
-	- [ ] Toggle from collapsed to extended state by tapping card (but don't intercept buttons on the card!)
+	- [ ] Toggle from collapsed to extended state by tapping card title (but don't intercept close button press)
 - Sticky bar at the top
-	- [ ] !1 - Set content rather than just showing
-	- [ ] !1 - Cross-fade content if it was showing already and there’s new content
+	- [x] Set content rather than just showing (!1)
+	- [x] Cross-fade content if it was showing already and there’s new content (!1)
 	- [x] Fix bug: expand card => toggle sticky => card should move down not keep top fixed
 
 Styles:
 
-- [ ] !1 - Animation curve for push and pop
-- [ ] !1 - Blurry view under status bar (like Maps app)
-- [ ] !1 - When rotating device and card is collapsed, make sure card ends up in correct position
+- [x] Animation curve for push and pop (!1)
+- [x] Blurry view under status bar (like Maps app) (!1)
+- [x] When rotating device and card is collapsed, make sure card ends up in correct position (!1)
 
 ### 2. Card content and gestures
 
