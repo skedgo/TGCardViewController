@@ -27,6 +27,7 @@ class TGCardViewController: UIViewController {
   @IBOutlet weak var mapView: MKMapView!
   @IBOutlet weak var cardWrapper: UIView!
   fileprivate weak var cardShadowView: UIView?
+  @IBOutlet weak var statusBarBlurView: UIVisualEffectView!
   
   // Card grab handle
   @IBOutlet weak var cardHandle: UIView!
@@ -37,6 +38,7 @@ class TGCardViewController: UIViewController {
   @IBOutlet weak var stickyBarTopConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperTopConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperHeightConstraint: NSLayoutConstraint!
+  @IBOutlet weak var statusBarBlurHeightConstraint: NSLayoutConstraint!
 
   // Constraints to ensure cards don't get hidden
   @IBOutlet weak var fixedCardWrapperTopConstraint: NSLayoutConstraint!
@@ -60,13 +62,13 @@ class TGCardViewController: UIViewController {
 
     // Setting up additional constraints
     fixedCardWrapperTopConstraint.constant = Constants.MinCardOverlap * -1
+    cardWrapperHeightConstraint.constant = extendedMinY * -1
     
     // Hide sticky bar at first
     hideStickyBar(animated: false)
 
     // Extend card at first
     cardWrapperTopConstraint.constant = extendedMinY
-    cardWrapperHeightConstraint.constant = extendedMinY * -1
     
     roundCard()
   }
@@ -107,6 +109,13 @@ class TGCardViewController: UIViewController {
 //      addShadow()
       isShadowInserted = true
     }
+  }
+  
+  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    super.traitCollectionDidChange(previousTraitCollection)
+    
+    statusBarBlurHeightConstraint.constant = UIApplication.shared.statusBarFrame.height
+    cardWrapperHeightConstraint.constant = extendedMinY * -1
   }
 
   override func didReceiveMemoryWarning() {
