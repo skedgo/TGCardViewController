@@ -226,6 +226,7 @@ class TGCardViewController: UIViewController {
     // Create the new view
     let cardView = top.buildView(showClose: cards.count > 1)
     cardView.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+    cardView.scrollView?.isScrollEnabled = cardPosition == .extended
     
     // We animate the view coming in from the bottom
     // we also temporarily insert a shadow view below if there's already a card
