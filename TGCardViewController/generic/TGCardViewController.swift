@@ -320,7 +320,6 @@ class TGCardViewController: UIViewController {
     
     cardWrapperTopConstraint.constant = direction == .up ? extendedMinY : collapsedMinY
     view.setNeedsUpdateConstraints()
-    view.layoutIfNeeded()
     
     UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
       self.view.layoutIfNeeded()
