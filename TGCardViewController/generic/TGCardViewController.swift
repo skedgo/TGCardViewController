@@ -161,10 +161,6 @@ class TGCardViewController: UIViewController {
     return UIEdgeInsets(top: 0, left: 0, bottom: cardOverlap, right: 0)
   }
   
-  fileprivate var cardViewAnimatedEndFrame: CGRect {
-    return CGRect(x: 0, y: 0, width: cardWrapperContent.frame.width, height: cardWrapperContent.frame.height)
-  }
-  
   fileprivate func updateForNewTopCard() {
     let overlap = topCardView?.headerHeight ?? Constants.minCardOverlap
     fixedCardWrapperTopConstraint.constant = overlap * -1
@@ -199,13 +195,21 @@ class TGCardViewController: UIViewController {
     
     // We animate the view coming in from the bottom
     // we also temporarily insert a shadow view below if there's already a card
-    cardView.frame = cardViewAnimatedEndFrame
     
+    func cardViewAnimatedEndFrame() -> CGRect {
+      return CGRect(x: 0, y: 0, width: cardWrapperContent.frame.width, height: cardWrapperContent.frame.height)
+    }
+    cardView.frame = cardViewAnimatedEndFrame()
     if animated {
       cardView.frame.origin.y = cardWrapperContent.frame.maxY
     }
     
     cardWrapperContent.addSubview(cardView)
+    
+    if top.mapManager == nil {
+      cardWrapperTopConstraint.constant = extendedMinY
+      view.setNeedsUpdateConstraints()
+    }
     
     func whenDone(completed: Bool) {
       updateForNewTopCard()
@@ -233,12 +237,14 @@ class TGCardViewController: UIViewController {
         initialSpringVelocity: 0,
         options: [.curveEaseInOut],
         animations: {
-          cardView.frame = self.cardViewAnimatedEndFrame
+          self.view.layoutIfNeeded()
+          cardView.frame = cardViewAnimatedEndFrame()
           self.cardTransitionShadow?.alpha = 0.15
         },
         completion: whenDone)
       
     } else {
+      view.layoutIfNeeded()
       whenDone(completed: true)
     }
   }
