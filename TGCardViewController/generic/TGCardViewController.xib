@@ -11,8 +11,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TGCardViewController" customModule="TGCardViewController" customModuleProvider="target">
             <connections>
-                <outlet property="cardWrapper" destination="Bui-Tf-j0O" id="iBg-Zp-UqS"/>
+                <outlet property="cardWrapperContent" destination="aqL-1W-7nJ" id="T2a-3v-TNe"/>
                 <outlet property="cardWrapperHeightConstraint" destination="eCP-YV-wYQ" id="kaG-gR-XfG"/>
+                <outlet property="cardWrapperShadow" destination="Bui-Tf-j0O" id="NnX-nR-CBb"/>
                 <outlet property="cardWrapperTopConstraint" destination="c3z-yd-wMy" id="mgK-Wh-1wi"/>
                 <outlet property="fixedCardWrapperTopConstraint" destination="Jiv-F0-LaE" id="djj-GQ-nZ5"/>
                 <outlet property="mapView" destination="zI8-lz-Md7" id="L17-S0-R0b"/>
@@ -39,9 +40,21 @@
                 <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                 </mapView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O" userLabel="Card Wrapper Shadow">
                     <rect key="frame" x="0.0" y="517" width="375" height="617"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aqL-1W-7nJ" userLabel="Card Wrapper Content">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="617"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </view>
+                    </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="aqL-1W-7nJ" firstAttribute="leading" secondItem="Bui-Tf-j0O" secondAttribute="leading" id="DBu-TB-tJO"/>
+                        <constraint firstItem="aqL-1W-7nJ" firstAttribute="top" secondItem="Bui-Tf-j0O" secondAttribute="top" id="Sw2-mc-NvU"/>
+                        <constraint firstAttribute="bottom" secondItem="aqL-1W-7nJ" secondAttribute="bottom" id="Uys-KQ-RD8"/>
+                        <constraint firstAttribute="trailing" secondItem="aqL-1W-7nJ" secondAttribute="trailing" id="g07-Nl-Q8E"/>
+                    </constraints>
                 </view>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hZy-nx-c0N">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
