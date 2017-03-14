@@ -60,7 +60,7 @@ Card styles:
 - [ ] Nice close button
 - [ ] Title and subtitle styling
 - [ ] Add mini drop shadow to card views (!2)
-- [ ] Bottom view
+- [ ] Bottom view (i2)
 
 ### 3. Map content
 
