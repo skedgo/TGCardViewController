@@ -151,6 +151,12 @@ class TGCardViewController: UIViewController {
   }
   
   
+  /// The current amount of points of content at the top of the view
+  /// that's overlapping with the map. Includes status bar, if visible.
+  fileprivate var topOverlap: CGFloat {
+    return UIApplication.shared.statusBarFrame.height
+  }
+  
   
   /// The current amount of points that the card overlaps with the map
   fileprivate var cardOverlap: CGFloat {
@@ -158,8 +164,17 @@ class TGCardViewController: UIViewController {
     return mapView.frame.height - superview.frame.minY
   }
   
+  /// The current edge padding for the map that map managers should use
+  /// to determine the zoom and scroll position of the map.
+  ///
+  /// - Note: This is the card's overlap for the collapsed and peaking
+  ///         card positions, and capped at the peaking card position
+  ///         for the extended overlap (to avoid only having a tiny
+  ///         map area to work with).
   fileprivate var mapEdgePadding: UIEdgeInsets {
-    return UIEdgeInsets(top: 0, left: 0, bottom: cardOverlap, right: 0)
+    let maxOverlap = mapView.frame.height - peakY
+    let bottomOverlap = min(cardOverlap, maxOverlap)
+    return UIEdgeInsets(top: topOverlap, left: 0, bottom: bottomOverlap, right: 0)
   }
   
   fileprivate func updateForNewTopCard() {
