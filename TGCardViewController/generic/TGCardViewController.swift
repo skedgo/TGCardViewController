@@ -23,10 +23,13 @@ class TGCardViewController: UIViewController {
     fileprivate static let minCardOverlap: CGFloat = 100
     
     fileprivate static let pushAnimationDuration = 0.4
+    
+    fileprivate static let mapShadowVisibleAlpha: CGFloat = 0.25
   }
 
   @IBOutlet weak var stickyBar: UIView!
   @IBOutlet weak var mapView: MKMapView!
+  @IBOutlet weak var mapShadow: UIView!
   @IBOutlet weak var cardWrapperShadow: UIView!
   @IBOutlet weak var cardWrapperContent: UIView!
   fileprivate weak var cardTransitionShadow: UIView?
@@ -223,7 +226,7 @@ class TGCardViewController: UIViewController {
     oldTop?.mapManager?.cleanUp(mapView)
     top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
     
-    // Create the new view
+    // Create and configure the new view
     let cardView = top.buildView(showClose: cards.count > 1)
     cardView.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     cardView.scrollView?.isScrollEnabled = cardPosition == .extended
@@ -241,7 +244,8 @@ class TGCardViewController: UIViewController {
     
     cardWrapperContent.addSubview(cardView)
     
-    if top.mapManager == nil {
+    let forceExtended = (top.mapManager == nil)
+    if forceExtended {
       cardWrapperTopConstraint.constant = extendedMinY
       view.setNeedsUpdateConstraints()
     }
@@ -273,6 +277,9 @@ class TGCardViewController: UIViewController {
         options: [.curveEaseInOut],
         animations: {
           self.view.layoutIfNeeded()
+          if forceExtended {
+            self.mapShadow.alpha = Constants.mapShadowVisibleAlpha
+          }
           cardView.frame = cardViewAnimatedEndFrame()
           self.cardTransitionShadow?.alpha = 0.15
         },
@@ -280,6 +287,9 @@ class TGCardViewController: UIViewController {
       
     } else {
       view.layoutIfNeeded()
+      if forceExtended {
+        self.mapShadow.alpha = 0.15
+      }
       whenDone(completed: true)
     }
   }
@@ -407,12 +417,18 @@ class TGCardViewController: UIViewController {
     var duration = direction == .up
       ? Double((currentCardY - snapTo.y) / -velocity.y)
       : Double((snapTo.y - currentCardY) / velocity.y )
-    duration = duration > 1.3 ? 1 : duration
+
+    // We add a max to not make it super slow when there was
+    // barely any velocity.
+    // We add a min to it to make sure the alpha transition
+    // animates nicely and not too suddenly.
+    duration = min(max(duration, 0.25), 1.3)
     
     cardWrapperTopConstraint.constant = snapTo.y
     view.setNeedsUpdateConstraints()
     
     UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
+      self.mapShadow.alpha = (snapTo.position == .extended) ? Constants.mapShadowVisibleAlpha : 0
       self.view.layoutIfNeeded()
       
     }, completion: { _ in
@@ -441,6 +457,7 @@ class TGCardViewController: UIViewController {
       initialSpringVelocity: 0,
       options: [.curveEaseOut],
       animations: {
+        self.mapShadow.alpha = (animateTo.position == .extended) ? Constants.mapShadowVisibleAlpha : 0
         self.view.layoutIfNeeded()
     },
       completion: nil

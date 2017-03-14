@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -16,6 +16,7 @@
                 <outlet property="cardWrapperShadow" destination="Bui-Tf-j0O" id="NnX-nR-CBb"/>
                 <outlet property="cardWrapperTopConstraint" destination="c3z-yd-wMy" id="mgK-Wh-1wi"/>
                 <outlet property="fixedCardWrapperTopConstraint" destination="Jiv-F0-LaE" id="djj-GQ-nZ5"/>
+                <outlet property="mapShadow" destination="1uG-yl-0le" id="MAK-Ma-h0M"/>
                 <outlet property="mapView" destination="zI8-lz-Md7" id="L17-S0-R0b"/>
                 <outlet property="statusBarBlurHeightConstraint" destination="e6J-1w-2rr" id="nz7-n1-G6e"/>
                 <outlet property="statusBarBlurView" destination="hZy-nx-c0N" id="v21-d4-wie"/>
@@ -40,6 +41,10 @@
                 <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                 </mapView>
+                <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1uG-yl-0le">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O" userLabel="Card Wrapper Shadow">
                     <rect key="frame" x="0.0" y="517" width="375" height="617"/>
                     <subviews>
@@ -84,10 +89,12 @@
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="Byv-0L-fUC" secondAttribute="trailing" id="1YK-c2-p4c"/>
+                <constraint firstItem="1uG-yl-0le" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" id="CCQ-rk-DQ5"/>
                 <constraint firstItem="Bui-Tf-j0O" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ECl-Ky-irh"/>
                 <constraint firstItem="Byv-0L-fUC" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="EOu-ey-pt2"/>
                 <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" id="FPF-Ef-IC5"/>
                 <constraint firstItem="hZy-nx-c0N" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Gm7-jT-54V"/>
+                <constraint firstAttribute="trailing" secondItem="1uG-yl-0le" secondAttribute="trailing" id="Gne-na-g7y"/>
                 <constraint firstAttribute="trailing" secondItem="hZy-nx-c0N" secondAttribute="trailing" id="IG1-gn-mU5"/>
                 <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" relation="lessThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-100" id="Jiv-F0-LaE"/>
                 <constraint firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="OZ1-xY-4Wu"/>
@@ -96,7 +103,9 @@
                 <constraint firstAttribute="bottom" secondItem="zI8-lz-Md7" secondAttribute="bottom" id="VDp-KC-oIA"/>
                 <constraint firstItem="hZy-nx-c0N" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="a3I-dx-f1J"/>
                 <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="Byv-0L-fUC" secondAttribute="bottom" priority="750" constant="517" id="c3z-yd-wMy"/>
+                <constraint firstItem="1uG-yl-0le" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="drg-U2-D3P"/>
                 <constraint firstItem="Bui-Tf-j0O" firstAttribute="height" secondItem="zI8-lz-Md7" secondAttribute="height" constant="-50" id="eCP-YV-wYQ"/>
+                <constraint firstAttribute="bottom" secondItem="1uG-yl-0le" secondAttribute="bottom" id="jj9-QL-imt"/>
                 <constraint firstItem="zI8-lz-Md7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lmI-Os-WBc"/>
             </constraints>
             <point key="canvasLocation" x="33.5" y="53.5"/>
