@@ -176,7 +176,7 @@ class TGCardViewController: UIViewController {
     
     if animated {
       if oldTop != nil {
-        let shadow = UIView(frame: cardWrapper.bounds)
+        let shadow = TGCornerView(frame: cardWrapper.bounds)
         shadow.frame.size.height += 50 // for bounciness
         shadow.backgroundColor = .black
         shadow.alpha = 0
@@ -238,7 +238,7 @@ class TGCardViewController: UIViewController {
     // we also temporarily insert a shadow view again, if there's a card below
     
     if newTop != nil {
-      let shadow = UIView(frame: cardWrapper.bounds)
+      let shadow = TGCornerView(frame: cardWrapper.bounds)
       shadow.backgroundColor = .black
       shadow.alpha = 0.15
       cardWrapper.insertSubview(shadow, belowSubview: topView)
