@@ -120,7 +120,8 @@ class TGCardViewController: UIViewController {
   fileprivate var cards = [TGCard]()
   
   fileprivate var cardOverlap: CGFloat {
-    return mapView.frame.height - cardWrapperContent.frame.minY
+    guard let superview = cardWrapperContent.superview else { return 0 }
+    return mapView.frame.height - superview.frame.minY
   }
   
   fileprivate var mapEdgePadding: UIEdgeInsets {
