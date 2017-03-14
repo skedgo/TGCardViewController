@@ -154,7 +154,8 @@ class TGCardViewController: UIViewController {
   
   /// The current amount of points that the card overlaps with the map
   fileprivate var cardOverlap: CGFloat {
-    return mapView.frame.height - cardWrapperContent.frame.minY
+    guard let superview = cardWrapperContent.superview else { return 0 }
+    return mapView.frame.height - superview.frame.minY
   }
   
   fileprivate var mapEdgePadding: UIEdgeInsets {
