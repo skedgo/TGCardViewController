@@ -135,10 +135,10 @@ class TGCardViewController: UIViewController {
   fileprivate var cardPosition: CardPosition {
     let cardY = cardWrapperTopConstraint.constant
     
-    switch cardY {
-    case 0..<peakY:               return .extended
-    case peakY..<collapsedMinY:   return .peaking
-    default:                      return .collapsed
+    switch (cardY, traitCollection.verticalSizeClass) {
+    case (0..<peakY, _):                      return .extended
+    case (peakY..<collapsedMinY, .regular):   return .peaking
+    default:                                  return .collapsed
     }
   }
   
@@ -402,13 +402,18 @@ class TGCardViewController: UIViewController {
     let nextCardY = currentCardY + velocity.y / 5 // in a fraction of a second
     
     // Where we snap to depends on where the card currently is,
-    // the direction and speed at the end of the pan
+    // the direction and speed at the end of the pan. Also,
+    // we only go to peaking state, in regular size class.
     let snapTo: (position: CardPosition, y: CGFloat)
-    switch direction {
-    case .up where nextCardY < peakY :
+    switch (direction, traitCollection.verticalSizeClass) {
+    case (.up, .compact): fallthrough
+    case (.up, _) where nextCardY < peakY:
       snapTo = (.extended, extendedMinY)
-    case .down where nextCardY > peakY:
+
+    case (.down, .compact): fallthrough
+    case (.down, _) where nextCardY > peakY:
       snapTo = (.collapsed, collapsedMinY)
+
     default:
       snapTo = (.peaking, peakY)
     }
@@ -441,10 +446,11 @@ class TGCardViewController: UIViewController {
     
     let animateTo: (position: CardPosition, y: CGFloat)
     
-    switch cardPosition {
-    case .extended:   return // tapping when extended does nothing
-    case .peaking:    animateTo = (.extended, extendedMinY)
-    case .collapsed:  animateTo = (.peaking, peakY)
+    switch (cardPosition, traitCollection.verticalSizeClass) {
+    case (.extended, _):          return // tapping when extended does nothing
+    case (.peaking, _):           animateTo = (.extended, extendedMinY)
+    case (.collapsed, .regular):  animateTo = (.peaking, peakY)
+    case (.collapsed, _):         animateTo = (.extended, extendedMinY)
     }
     
     cardWrapperTopConstraint.constant = animateTo.y
