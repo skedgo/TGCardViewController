@@ -31,9 +31,10 @@
 		3ACA74C91E72FA5E00408678 /* TGTableCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74C81E72FA5E00408678 /* TGTableCardView.swift */; };
 		3ACA74CB1E72FA6E00408678 /* TGTableCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA74CA1E72FA6E00408678 /* TGTableCardView.xib */; };
 		3ACA74CD1E72FEAB00408678 /* ExampleTableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74CC1E72FEAB00408678 /* ExampleTableCard.swift */; };
-		D39107A51E76ABC20043B6B3 /* TGGrabHandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39107A41E76ABC20043B6B3 /* TGGrabHandleView.swift */; };
 		3AE839C61E76A9170035D9B0 /* ExampleChildStickyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AE839C51E76A9170035D9B0 /* ExampleChildStickyView.xib */; };
 		3AE839C81E76A92B0035D9B0 /* ExampleChildStickyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE839C71E76A92B0035D9B0 /* ExampleChildStickyView.swift */; };
+		D39107A51E76ABC20043B6B3 /* TGGrabHandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39107A41E76ABC20043B6B3 /* TGGrabHandleView.swift */; };
+		D39107A91E7775820043B6B3 /* TGCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39107A81E7775820043B6B3 /* TGCornerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,9 +76,10 @@
 		3ACA74C81E72FA5E00408678 /* TGTableCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGTableCardView.swift; path = generic/TGTableCardView.swift; sourceTree = "<group>"; };
 		3ACA74CA1E72FA6E00408678 /* TGTableCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TGTableCardView.xib; path = generic/TGTableCardView.xib; sourceTree = "<group>"; };
 		3ACA74CC1E72FEAB00408678 /* ExampleTableCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableCard.swift; sourceTree = "<group>"; };
-		D39107A41E76ABC20043B6B3 /* TGGrabHandleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGGrabHandleView.swift; sourceTree = "<group>"; };
 		3AE839C51E76A9170035D9B0 /* ExampleChildStickyView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleChildStickyView.xib; sourceTree = "<group>"; };
 		3AE839C71E76A92B0035D9B0 /* ExampleChildStickyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleChildStickyView.swift; sourceTree = "<group>"; };
+		D39107A41E76ABC20043B6B3 /* TGGrabHandleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGGrabHandleView.swift; sourceTree = "<group>"; };
+		D39107A81E7775820043B6B3 /* TGCornerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGCornerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +150,7 @@
 				3ACA74C61E72FA3900408678 /* TGTableCard.swift */,
 				3ACA74C81E72FA5E00408678 /* TGTableCardView.swift */,
 				3ACA74CA1E72FA6E00408678 /* TGTableCardView.xib */,
+				D39107A81E7775820043B6B3 /* TGCornerView.swift */,
 				D39107A41E76ABC20043B6B3 /* TGGrabHandleView.swift */,
 			);
 			name = generic;
@@ -294,6 +297,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D39107A91E7775820043B6B3 /* TGCornerView.swift in Sources */,
 				3ACA74C91E72FA5E00408678 /* TGTableCardView.swift in Sources */,
 				3ACA74C31E71A14600408678 /* ExampleChildContentView.swift in Sources */,
 				3ACA74C51E71D10E00408678 /* TGMapManager.swift in Sources */,
