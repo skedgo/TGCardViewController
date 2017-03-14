@@ -20,4 +20,7 @@ class TGCardView: TGCornerView {
   /// handling dragging the card up and down.
   @IBOutlet weak var scrollView: UIScrollView!
   
+  var headerHeight: CGFloat {
+    return scrollView.frame.minY
+  }
 }

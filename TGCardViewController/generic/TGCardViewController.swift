@@ -60,14 +60,14 @@ class TGCardViewController: UIViewController {
     cardWrapperContent.addGestureRecognizer(panGesture)
 
     // Setting up additional constraints
-    fixedCardWrapperTopConstraint.constant = Constants.minCardOverlap * -1
     cardWrapperHeightConstraint.constant = extendedMinY * -1
+    updateForNewTopCard()
     
     // Hide sticky bar at first
     hideStickyBar(animated: false)
 
     // Extend card at first
-    cardWrapperTopConstraint.constant = extendedMinY
+    cardWrapperTopConstraint.constant = collapsedMinY
     
     // Add a bit of a shadow behind card.
     cardWrapperShadow.layer.shadowColor = UIColor.black.cgColor
@@ -115,10 +115,38 @@ class TGCardViewController: UIViewController {
   }
   
   
-  // MARK: - Cards
+  // MARK: - Card positioning
   
-  fileprivate var cards = [TGCard]()
+  fileprivate enum CardPosition {
+    case extended
+    case peaking
+    case collapsed
+  }
   
+  fileprivate var extendedMinY: CGFloat {
+    var value: CGFloat = UIApplication.shared.statusBarFrame.height
+    
+    if let navigationBar = navigationController?.navigationBar {
+      value += navigationBar.frame.height
+    }
+    
+    value += Constants.minMapSpace
+    
+    return value
+  }
+  
+  fileprivate var collapsedMinY: CGFloat {
+    let overlap = topCardView?.headerHeight ?? Constants.minCardOverlap
+    return view.frame.height - overlap
+  }
+  
+  fileprivate var peakY: CGFloat {
+    return (collapsedMinY - extendedMinY) / 2
+  }
+  
+  
+  
+  /// The current amount of points that the card overlaps with the map
   fileprivate var cardOverlap: CGFloat {
     return mapView.frame.height - cardWrapperContent.frame.minY
   }
@@ -130,6 +158,18 @@ class TGCardViewController: UIViewController {
   fileprivate var cardViewAnimatedEndFrame: CGRect {
     return CGRect(x: 0, y: 0, width: cardWrapperContent.frame.width, height: cardWrapperContent.frame.height)
   }
+  
+  fileprivate func updateForNewTopCard() {
+    let overlap = topCardView?.headerHeight ?? Constants.minCardOverlap
+    fixedCardWrapperTopConstraint.constant = overlap * -1
+    view.setNeedsUpdateConstraints()
+    view.layoutIfNeeded()
+  }
+  
+  
+  // MARK: - Card stack management
+  
+  fileprivate var cards = [TGCard]()
   
   func push(_ card: TGCard, animated: Bool = true) {
     var top = card
@@ -162,11 +202,12 @@ class TGCardViewController: UIViewController {
     cardWrapperContent.addSubview(cardView)
     
     func whenDone(completed: Bool) {
-      self.cardTransitionShadow?.removeFromSuperview()
+      updateForNewTopCard()
       if notify {
         oldTop?.didDisappear(animated: animated)
         top.didAppear(animated: animated)
       }
+      self.cardTransitionShadow?.removeFromSuperview()
     }
     
     if animated {
@@ -226,6 +267,7 @@ class TGCardViewController: UIViewController {
       }
       topView.removeFromSuperview()
       self.cardTransitionShadow?.removeFromSuperview()
+      self.updateForNewTopCard()
     }
     guard animated else { whenDone(completed: true); return }
     
@@ -272,32 +314,6 @@ class TGCardViewController: UIViewController {
         self = .down
       }
     }
-  }
-  
-  fileprivate enum CardPosition {
-    case extended
-    case peaking
-    case collapsed
-  }
-  
-  fileprivate var extendedMinY: CGFloat {
-    var value: CGFloat = UIApplication.shared.statusBarFrame.height
-    
-    if let navigationBar = navigationController?.navigationBar {
-      value += navigationBar.frame.height
-    }
-    
-    value += Constants.minMapSpace
-    
-    return value
-  }
-  
-  fileprivate var collapsedMinY: CGFloat {
-    return view.frame.height - Constants.minCardOverlap
-  }
-  
-  fileprivate var peakY: CGFloat {
-    return (collapsedMinY - extendedMinY) / 2
   }
   
   fileprivate var topCardScrollView: UIScrollView? {
