@@ -67,8 +67,6 @@ class TGCardViewController: UIViewController {
 
     // Extend card at first
     cardWrapperTopConstraint.constant = extendedMinY
-    
-    roundCard()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -403,11 +401,6 @@ class TGCardViewController: UIViewController {
   // MARK: - Styling
   
   fileprivate var isShadowInserted = false
-  
-  fileprivate func roundCard() {
-    cardWrapper.layer.cornerRadius = 10
-    cardWrapper.clipsToBounds = true
-  }
   
   fileprivate func addShadow() {
     let shadowFrame = cardWrapper.frame
