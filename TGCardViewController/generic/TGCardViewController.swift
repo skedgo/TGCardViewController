@@ -129,6 +129,16 @@ class TGCardViewController: UIViewController {
     case collapsed
   }
   
+  fileprivate var cardPosition: CardPosition {
+    let cardY = cardWrapperTopConstraint.constant
+    
+    switch cardY {
+    case 0..<peakY:               return .extended
+    case peakY..<collapsedMinY:   return .peaking
+    default:                      return .collapsed
+    }
+  }
+  
   fileprivate var extendedMinY: CGFloat {
     var value: CGFloat = UIApplication.shared.statusBarFrame.height
     
@@ -163,6 +173,7 @@ class TGCardViewController: UIViewController {
     guard let superview = cardWrapperContent.superview else { return 0 }
     return mapView.frame.height - superview.frame.minY
   }
+
   
   /// The current edge padding for the map that map managers should use
   /// to determine the zoom and scroll position of the map.
@@ -177,6 +188,13 @@ class TGCardViewController: UIViewController {
     return UIEdgeInsets(top: topOverlap, left: 0, bottom: bottomOverlap, right: 0)
   }
   
+  
+  /// Needs to get called whenever a new top card has been added
+  ///
+  /// Adjusts the constraints as required, primarily the inequality
+  /// constraint on the card's top spacing to make sure the card
+  /// doesn't disappear when triggering the sticky bar or changing
+  /// trait collections.
   fileprivate func updateForNewTopCard() {
     let overlap = topCardView?.headerHeight ?? Constants.minCardOverlap
     fixedCardWrapperTopConstraint.constant = overlap * -1
@@ -404,17 +422,12 @@ class TGCardViewController: UIViewController {
   @objc
   fileprivate func handleTap(_ recogniser: UITapGestureRecognizer) {
     
-    let cardY = cardWrapperTopConstraint.constant
-    
     let animateTo: (position: CardPosition, y: CGFloat)
     
-    switch cardY {
-    case 0..<peakY:
-      return // it's near the top already, we don't animate down
-    case peakY..<collapsedMinY:
-      animateTo = (.extended, extendedMinY)
-    default:
-      animateTo = (.peaking, peakY)
+    switch cardPosition {
+    case .extended:   return // tapping when extended does nothing
+    case .peaking:    animateTo = (.extended, extendedMinY)
+    case .collapsed:  animateTo = (.peaking, peakY)
     }
     
     cardWrapperTopConstraint.constant = animateTo.y
