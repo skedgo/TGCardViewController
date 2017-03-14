@@ -55,11 +55,11 @@ Card types:
 
 Card styles:
 
-- [ ] Rounded corners to cards
-- [x] Grab handle for cards
+- [ ] Rounded corners to cards (!2)
+- [x] Grab handle for cards (!2)
 - [ ] Nice close button
 - [ ] Title and subtitle styling
-- [ ] Add mini drop shadow to card views
+- [ ] Add mini drop shadow to card views (!2)
 - [ ] Bottom view
 
 ### 3. Map content
