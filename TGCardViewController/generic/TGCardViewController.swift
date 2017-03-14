@@ -27,13 +27,10 @@ class TGCardViewController: UIViewController {
 
   @IBOutlet weak var stickyBar: UIView!
   @IBOutlet weak var mapView: MKMapView!
-  @IBOutlet weak var cardWrapper: UIView!
-  fileprivate weak var cardShadowView: UIView?
+  @IBOutlet weak var cardWrapperShadow: UIView!
+  @IBOutlet weak var cardWrapperContent: UIView!
+  fileprivate weak var cardTransitionShadow: UIView?
   @IBOutlet weak var statusBarBlurView: UIVisualEffectView!
-  
-  // Card grab handle
-  @IBOutlet weak var cardHandle: UIView!
-  @IBOutlet weak var cardHandleWrapper: UIView!
   
   // Dynamic constraints
   @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!
@@ -48,7 +45,7 @@ class TGCardViewController: UIViewController {
   fileprivate var isVisible = false
   
   fileprivate var topCardView: TGCardView? {
-    return cardWrapper.subviews.last as? TGCardView
+    return cardWrapperContent.subviews.last as? TGCardView
   }
 
   // MARK: - UIViewController
@@ -60,7 +57,7 @@ class TGCardViewController: UIViewController {
     let panGesture = UIPanGestureRecognizer()
     panGesture.addTarget(self, action: #selector(handle))
     panGesture.delegate = self
-    cardWrapper.addGestureRecognizer(panGesture)
+    cardWrapperContent.addGestureRecognizer(panGesture)
 
     // Setting up additional constraints
     fixedCardWrapperTopConstraint.constant = Constants.minCardOverlap * -1
@@ -72,7 +69,11 @@ class TGCardViewController: UIViewController {
     // Extend card at first
     cardWrapperTopConstraint.constant = extendedMinY
     
-    roundCard()
+    // Add a bit of a shadow behind card.
+    cardWrapperShadow.layer.shadowColor = UIColor.black.cgColor
+    cardWrapperShadow.layer.shadowOffset = CGSize(width: 0, height: -1)
+    cardWrapperShadow.layer.shadowRadius = 3
+    cardWrapperShadow.layer.shadowOpacity = 0.3
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -101,18 +102,6 @@ class TGCardViewController: UIViewController {
     cards.last?.didDisappear(animated: animated)
   }
   
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-    
-    // Shados is added here because only at this point, we have
-    // the correct frame size for the card wrapper, from which
-    // the shadow was constructed.
-    if !isShadowInserted {
-//      addShadow()
-      isShadowInserted = true
-    }
-  }
-  
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
     
@@ -131,19 +120,15 @@ class TGCardViewController: UIViewController {
   fileprivate var cards = [TGCard]()
   
   fileprivate var cardOverlap: CGFloat {
-    return mapView.frame.height - cardWrapper.frame.minY
+    return mapView.frame.height - cardWrapperContent.frame.minY
   }
   
   fileprivate var mapEdgePadding: UIEdgeInsets {
     return UIEdgeInsets(top: 0, left: 0, bottom: cardOverlap, right: 0)
   }
   
-  fileprivate var cardHandleHeight: CGFloat {
-    return cardHandleWrapper.frame.height
-  }
-  
   fileprivate var cardViewAnimatedEndFrame: CGRect {
-    return CGRect(x: 0, y: cardHandleHeight, width: cardWrapper.frame.width, height: cardWrapper.frame.height - cardHandleHeight)
+    return CGRect(x: 0, y: 0, width: cardWrapperContent.frame.width, height: cardWrapperContent.frame.height)
   }
   
   func push(_ card: TGCard, animated: Bool = true) {
@@ -171,13 +156,13 @@ class TGCardViewController: UIViewController {
     cardView.frame = cardViewAnimatedEndFrame
     
     if animated {
-      cardView.frame.origin.y = cardWrapper.frame.maxY
+      cardView.frame.origin.y = cardWrapperContent.frame.maxY
     }
     
-    cardWrapper.addSubview(cardView)
+    cardWrapperContent.addSubview(cardView)
     
     func whenDone(completed: Bool) {
-      self.cardShadowView?.removeFromSuperview()
+      self.cardTransitionShadow?.removeFromSuperview()
       if notify {
         oldTop?.didDisappear(animated: animated)
         top.didAppear(animated: animated)
@@ -186,12 +171,12 @@ class TGCardViewController: UIViewController {
     
     if animated {
       if oldTop != nil {
-        let shadow = UIView(frame: cardWrapper.bounds)
+        let shadow = TGCornerView(frame: cardWrapperContent.bounds)
         shadow.frame.size.height += 50 // for bounciness
         shadow.backgroundColor = .black
         shadow.alpha = 0
-        cardWrapper.insertSubview(shadow, belowSubview: cardView)
-        cardShadowView = shadow
+        cardWrapperContent.insertSubview(shadow, belowSubview: cardView)
+        cardTransitionShadow = shadow
       }
       
       UIView.animate(
@@ -202,7 +187,7 @@ class TGCardViewController: UIViewController {
         options: [.curveEaseInOut],
         animations: {
           cardView.frame = self.cardViewAnimatedEndFrame
-          self.cardShadowView?.alpha = 0.15
+          self.cardTransitionShadow?.alpha = 0.15
         },
         completion: whenDone)
       
@@ -240,7 +225,7 @@ class TGCardViewController: UIViewController {
         newTop?.didAppear(animated: animated)
       }
       topView.removeFromSuperview()
-      self.cardShadowView?.removeFromSuperview()
+      self.cardTransitionShadow?.removeFromSuperview()
     }
     guard animated else { whenDone(completed: true); return }
     
@@ -248,11 +233,11 @@ class TGCardViewController: UIViewController {
     // we also temporarily insert a shadow view again, if there's a card below
     
     if newTop != nil {
-      let shadow = UIView(frame: cardWrapper.bounds)
+      let shadow = TGCornerView(frame: cardWrapperContent.bounds)
       shadow.backgroundColor = .black
       shadow.alpha = 0.15
-      cardWrapper.insertSubview(shadow, belowSubview: topView)
-      cardShadowView = shadow
+      cardWrapperContent.insertSubview(shadow, belowSubview: topView)
+      cardTransitionShadow = shadow
     }
     
     UIView.animate(
@@ -262,8 +247,8 @@ class TGCardViewController: UIViewController {
       initialSpringVelocity: 0,
       options: [.curveEaseInOut],
       animations: {
-        topView.frame.origin.y = self.cardWrapper.frame.maxY
-        self.cardShadowView?.alpha = 0
+        topView.frame.origin.y = self.cardWrapperContent.frame.maxY
+        self.cardTransitionShadow?.alpha = 0
       },
       completion: whenDone)
     
@@ -311,13 +296,13 @@ class TGCardViewController: UIViewController {
   
   @objc
   fileprivate func handle(_ recogniser: UIPanGestureRecognizer) {
-    let translation = recogniser.translation(in: cardWrapper)
-    let velocity = recogniser.velocity(in: cardWrapper)
+    let translation = recogniser.translation(in: cardWrapperContent)
+    let velocity = recogniser.velocity(in: cardWrapperContent)
     let direction = Direction(ofVelocity: velocity)
     
     let y = cardWrapperTopConstraint.constant
     if (y + translation.y >= extendedMinY) && (y + translation.y <= collapsedMinY) {
-      recogniser.setTranslation(.zero, in: cardWrapper)
+      recogniser.setTranslation(.zero, in: cardWrapperContent)
       cardWrapperTopConstraint.constant = y + translation.y
       view.setNeedsUpdateConstraints()
       view.layoutIfNeeded()
@@ -408,30 +393,6 @@ class TGCardViewController: UIViewController {
     content.bottomAnchor.constraint(equalTo: stickyBar.bottomAnchor).isActive = true
   }
   
-  // MARK: - Styling
-  
-  fileprivate var isShadowInserted = false
-  
-  fileprivate func roundCard() {
-    cardHandle.layer.cornerRadius = 3
-    cardWrapper.layer.cornerRadius = 10
-    cardWrapper.clipsToBounds = true
-  }
-  
-  fileprivate func addShadow() {
-    let shadowFrame = cardWrapper.frame
-    let shadow = UIView(frame: shadowFrame)
-    shadow.isUserInteractionEnabled = true
-    shadow.layer.shadowColor = UIColor.black.cgColor
-    shadow.layer.shadowOffset = CGSize(width: 0, height: -1)
-    shadow.layer.shadowRadius = 5
-    shadow.layer.shadowOpacity = 0.3
-    shadow.layer.masksToBounds = false
-    shadow.clipsToBounds = false
-    cardWrapper.superview?.insertSubview(shadow, belowSubview: cardWrapper)
-    shadow.addSubview(cardWrapper)
-  }
-
 }
 
 extension TGCardViewController: UIGestureRecognizerDelegate {
@@ -440,7 +401,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     
     guard let scrollView = topCardScrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
     
-    let direction = Direction(ofVelocity: panner.velocity(in: cardWrapper))
+    let direction = Direction(ofVelocity: panner.velocity(in: cardWrapperContent))
     
     let y = cardWrapperTopConstraint.constant
     if (y == extendedMinY && scrollView.contentOffset.y == 0 && direction == .down) || (y == collapsedMinY) {
