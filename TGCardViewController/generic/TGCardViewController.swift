@@ -55,9 +55,15 @@ class TGCardViewController: UIViewController {
 
     // Panner for dragging cards up and down
     let panGesture = UIPanGestureRecognizer()
-    panGesture.addTarget(self, action: #selector(handle))
+    panGesture.addTarget(self, action: #selector(handlePan))
     panGesture.delegate = self
     cardWrapperContent.addGestureRecognizer(panGesture)
+    
+    // Tapper for tapping the title of the cards
+    let tapper = UITapGestureRecognizer()
+    tapper.addTarget(self, action: #selector(handleTap))
+    cardWrapperContent.addGestureRecognizer(tapper)
+    
 
     // Setting up additional constraints
     cardWrapperHeightConstraint.constant = extendedMinY * -1
@@ -321,7 +327,7 @@ class TGCardViewController: UIViewController {
   }
   
   @objc
-  fileprivate func handle(_ recogniser: UIPanGestureRecognizer) {
+  fileprivate func handlePan(_ recogniser: UIPanGestureRecognizer) {
     let translation = recogniser.translation(in: cardWrapperContent)
     let velocity = recogniser.velocity(in: cardWrapperContent)
     let direction = Direction(ofVelocity: velocity)
@@ -372,12 +378,45 @@ class TGCardViewController: UIViewController {
       self.topCardScrollView?.isScrollEnabled = snapTo.position == .extended
     })
   }
+  
+  @objc
+  fileprivate func handleTap(_ recogniser: UITapGestureRecognizer) {
+    
+    let cardY = cardWrapperTopConstraint.constant
+    
+    let animateTo: (position: CardPosition, y: CGFloat)
+    
+    switch cardY {
+    case 0..<peakY:
+      return // it's near the top already, we don't animate down
+    case peakY..<collapsedMinY:
+      animateTo = (.extended, extendedMinY)
+    default:
+      animateTo = (.peaking, peakY)
+    }
+    
+    cardWrapperTopConstraint.constant = animateTo.y
+    view.setNeedsUpdateConstraints()
+    
+    UIView.animate(
+      withDuration: 0.35,
+      delay: 0,
+      usingSpringWithDamping: 0.75,
+      initialSpringVelocity: 0,
+      options: [.curveEaseOut],
+      animations: {
+        self.view.layoutIfNeeded()
+    },
+      completion: nil
+    )
+  }
+  
 
   
   // MARK: - Sticky bar at the top
   
   var isShowingSticky: Bool {
-    return self.stickyBarTopConstraint.constant > -1
+    return stickyBarTopConstraint.constant > -1
   }
   
   func showStickyBar(content: UIView, animated: Bool) {
