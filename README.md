@@ -20,11 +20,11 @@ Behaviour:
 	- [x] Animation: Slide back down; fading out black view on card below with alpha from 25% to 0%
 	- [x] Pass on appearance callbacks appropriately to involved cards
 - Cards are draggable
-	- [ ] Snap to collapsed (only title), peaking (near half-way showing both map and card content), extended (still shows a bit of the map on top, but darkened)
+	- [ ] Snap to collapsed (only title), peaking (near half-way showing both map and card content), extended (still shows a bit of the map on top, but darkened) (!3)
 	- [x] Cards can be dragged up and down anywhere on the card
 	- [ ] When scrolling to the top and keeping to scroll, start dragging card
-	- [ ] Tap title when collapsed: go to peaking
-	- [ ] Tap title when peaking: go to extended
+	- [ ] Tap title when collapsed: go to peaking (!3)
+	- [ ] Tap title when peaking: go to extended (!3)
 	- [x] Tap title when extended: do nothing
 - Sticky bar at the top
 	- [x] Set content rather than just showing (!1)
@@ -60,7 +60,7 @@ Card styles:
 - [ ] Nice close button
 - [ ] Title and subtitle styling
 - [x] Add mini drop shadow to card views (!2)
-- [ ] Bottom view (i2)
+- [ ] Bottom view (!2)
 
 ### 3. Map content
 
@@ -68,7 +68,7 @@ Map content:
 
 - [x] Cards can optionally have map content
 - [x] When showing the content, the insets should be respected to account for the card overlapping the map
-- [ ] If there’s no map content: Show card always extended and don't allow dragging it down (or just snap back up when using tries)
+- [ ] If there’s no map content: Show card always extended and don't allow dragging it down (or just snap back up when using tries) (!3)
 
 Map widget:
 
