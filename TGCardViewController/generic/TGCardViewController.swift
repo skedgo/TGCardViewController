@@ -274,6 +274,12 @@ class TGCardViewController: UIViewController {
     }
   }
   
+  fileprivate enum CardPosition {
+    case extended
+    case peaking
+    case collapsed
+  }
+  
   fileprivate var extendedMinY: CGFloat {
     var value: CGFloat = UIApplication.shared.statusBarFrame.height
     
@@ -290,6 +296,10 @@ class TGCardViewController: UIViewController {
     return view.frame.height - Constants.minCardOverlap
   }
   
+  fileprivate var peakY: CGFloat {
+    return (collapsedMinY - extendedMinY) / 2
+  }
+  
   fileprivate var topCardScrollView: UIScrollView? {
     return topCardView?.scrollView
   }
@@ -300,34 +310,50 @@ class TGCardViewController: UIViewController {
     let velocity = recogniser.velocity(in: cardWrapperContent)
     let direction = Direction(ofVelocity: velocity)
     
-    let y = cardWrapperTopConstraint.constant
-    if (y + translation.y >= extendedMinY) && (y + translation.y <= collapsedMinY) {
+    let previousCardY = cardWrapperTopConstraint.constant
+    
+    // Reposition the card according to the pan as long as the user
+    // is dragging in the range of extended and collapsed
+    if (previousCardY + translation.y >= extendedMinY) && (previousCardY + translation.y <= collapsedMinY) {
       recogniser.setTranslation(.zero, in: cardWrapperContent)
-      cardWrapperTopConstraint.constant = y + translation.y
+      cardWrapperTopConstraint.constant = previousCardY + translation.y
       view.setNeedsUpdateConstraints()
       view.layoutIfNeeded()
     }
     
-    // Additionally, when we're done and there's a velocity, we'll
-    // animate snapping to the bottom or top
+    // Additionally, when the user is done panning, we'll snap the card
+    // to the appropriate state (extended, peaking, collapsed)
     guard recogniser.state == .ended else { return }
     
-    var duration = direction == .up
-      ? Double((y - extendedMinY) / -velocity.y)
-      : Double((collapsedMinY - y) / velocity.y )
+    let currentCardY = cardWrapperTopConstraint.constant
+    let nextCardY = currentCardY + velocity.y / 5 // in a fraction of a second
     
+    // Where we snap to depends on where the card currently is,
+    // the direction and speed at the end of the pan
+    let snapTo: (position: CardPosition, y: CGFloat)
+    switch direction {
+    case .up where nextCardY < peakY :
+      snapTo = (.extended, extendedMinY)
+    case .down where nextCardY > peakY:
+      snapTo = (.collapsed, collapsedMinY)
+    default:
+      snapTo = (.peaking, peakY)
+    }
+    
+    // Now we can animate to the new position
+    var duration = direction == .up
+      ? Double((currentCardY - snapTo.y) / -velocity.y)
+      : Double((snapTo.y - currentCardY) / velocity.y )
     duration = duration > 1.3 ? 1 : duration
     
-    cardWrapperTopConstraint.constant = direction == .up ? extendedMinY : collapsedMinY
+    cardWrapperTopConstraint.constant = snapTo.y
     view.setNeedsUpdateConstraints()
     
     UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
       self.view.layoutIfNeeded()
       
     }, completion: { _ in
-      if direction == .up {
-        self.topCardScrollView?.isScrollEnabled = true
-      }
+      self.topCardScrollView?.isScrollEnabled = snapTo.position == .extended
     })
   }
 
