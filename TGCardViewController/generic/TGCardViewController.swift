@@ -34,7 +34,7 @@ class TGCardViewController: UIViewController {
   @IBOutlet weak var cardWrapperContent: UIView!
   fileprivate weak var cardTransitionShadow: UIView?
   @IBOutlet weak var statusBarBlurView: UIVisualEffectView!
-  
+
   // Dynamic constraints
   @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var stickyBarTopConstraint: NSLayoutConstraint!
@@ -44,6 +44,8 @@ class TGCardViewController: UIViewController {
 
   // Constraints to ensure cards don't get hidden
   @IBOutlet weak var fixedCardWrapperTopConstraint: NSLayoutConstraint!
+
+  var panner: UIPanGestureRecognizer!
   
   fileprivate var isVisible = false
   
@@ -61,12 +63,13 @@ class TGCardViewController: UIViewController {
     panGesture.addTarget(self, action: #selector(handlePan))
     panGesture.delegate = self
     cardWrapperContent.addGestureRecognizer(panGesture)
+    panner = panGesture
     
     // Tapper for tapping the title of the cards
     let tapper = UITapGestureRecognizer()
     tapper.addTarget(self, action: #selector(handleTap))
+    tapper.delegate = self
     cardWrapperContent.addGestureRecognizer(tapper)
-    
 
     // Setting up additional constraints
     cardWrapperHeightConstraint.constant = extendedMinY * -1
@@ -213,7 +216,7 @@ class TGCardViewController: UIViewController {
   func push(_ card: TGCard, animated: Bool = true) {
     var top = card
 
-    // Updating card logic and informing of transition
+    // 1. Updating card logic and informing of transition
     let oldTop = cards.last
     let notify = isVisible
     if notify {
@@ -223,33 +226,36 @@ class TGCardViewController: UIViewController {
     top.controller = self
     cards.append(top)
     
+    // 2. Hand over the map
     oldTop?.mapManager?.cleanUp(mapView)
     top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
     
-    // Create and configure the new view
+    // 3. Create and configure the new view
     let cardView = top.buildView(showClose: cards.count > 1)
     cardView.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     cardView.scrollView?.isScrollEnabled = cardPosition == .extended
     
-    // We animate the view coming in from the bottom
-    // we also temporarily insert a shadow view below if there's already a card
-    
-    func cardViewAnimatedEndFrame() -> CGRect {
-      return CGRect(x: 0, y: 0, width: cardWrapperContent.frame.width, height: cardWrapperContent.frame.height)
-    }
-    cardView.frame = cardViewAnimatedEndFrame()
+    // 4. Animate the view coming in from the bottom, with temporary shadow underneath
+    cardView.frame = cardWrapperContent.bounds
     if animated {
       cardView.frame.origin.y = cardWrapperContent.frame.maxY
     }
     
     cardWrapperContent.addSubview(cardView)
     
+    // 5. Special handling of when the new top card has no map content
     let forceExtended = (top.mapManager == nil)
     if forceExtended {
       cardWrapperTopConstraint.constant = extendedMinY
       view.setNeedsUpdateConstraints()
     }
+    panner.isEnabled = !forceExtended
+    cardView.grabHandle.isHidden = forceExtended
     
+    /// Method to execute when card view is added and in its correct position,
+    /// i.e., when all animations are done.
+    ///
+    /// - Parameter completed: If animation completed
     func whenDone(completed: Bool) {
       updateForNewTopCard()
       if notify {
@@ -260,6 +266,8 @@ class TGCardViewController: UIViewController {
     }
     
     if animated {
+      // 6a. Do the animation
+      
       if oldTop != nil {
         let shadow = TGCornerView(frame: cardWrapperContent.bounds)
         shadow.frame.size.height += 50 // for bounciness
@@ -280,15 +288,16 @@ class TGCardViewController: UIViewController {
           if forceExtended {
             self.mapShadow.alpha = Constants.mapShadowVisibleAlpha
           }
-          cardView.frame = cardViewAnimatedEndFrame()
+          cardView.frame = self.cardWrapperContent.bounds
           self.cardTransitionShadow?.alpha = 0.15
         },
         completion: whenDone)
       
     } else {
+      // 6b. Finish up without animation
       view.layoutIfNeeded()
       if forceExtended {
-        self.mapShadow.alpha = 0.15
+        self.mapShadow.alpha = Constants.mapShadowVisibleAlpha
       }
       whenDone(completed: true)
     }
@@ -314,6 +323,10 @@ class TGCardViewController: UIViewController {
     // We update the stack immediately to allow calling this many times
     // while we're still animating without issues
     cards.remove(at: cards.count - 1)
+    
+    let forceExtended = (newTop?.mapManager == nil)
+    // TODO: Snap new top view back up if we force extended state?
+    panner.isEnabled = !forceExtended
     
     // Clean-up when we're done. If we're not animated, that's all that's necessary
     func whenDone(completed: Bool) {
@@ -536,6 +549,17 @@ class TGCardViewController: UIViewController {
 }
 
 extension TGCardViewController: UIGestureRecognizerDelegate {
+  
+  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    guard gestureRecognizer is UITapGestureRecognizer else { return true }
+    
+    // Only intercept any taps when in the collapsed states.
+    // This is so that the tapper doesn't interfere with, say, taps on a table view.
+    switch cardPosition {
+    case .collapsed, .peaking:  return true
+    case .extended:             return false
+    }
+  }
   
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     

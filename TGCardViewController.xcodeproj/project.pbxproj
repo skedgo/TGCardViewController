@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A59798B1E7955FE0065A5FF /* ExampleTableChildCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */; };
 		3ACA74841E716AFC00408678 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74831E716AFC00408678 /* AppDelegate.swift */; };
 		3ACA74861E716AFC00408678 /* ExampleCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74851E716AFC00408678 /* ExampleCardViewController.swift */; };
 		3ACA74891E716AFC00408678 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA74871E716AFC00408678 /* Main.storyboard */; };
@@ -48,6 +49,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableChildCard.swift; sourceTree = "<group>"; };
 		3ACA74801E716AFC00408678 /* TGCardViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TGCardViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3ACA74831E716AFC00408678 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3ACA74851E716AFC00408678 /* ExampleCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCardViewController.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 				3ACA74BA1E719B5F00408678 /* ExampleRootContentView.swift */,
 				3ACA74B81E719B2300408678 /* ExampleRootContentView.xib */,
 				3ACA74CC1E72FEAB00408678 /* ExampleTableCard.swift */,
+				3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */,
 			);
 			name = cards;
 			sourceTree = "<group>";
@@ -315,6 +318,7 @@
 				3ACA74CD1E72FEAB00408678 /* ExampleTableCard.swift in Sources */,
 				3ACA74841E716AFC00408678 /* AppDelegate.swift in Sources */,
 				D39107A51E76ABC20043B6B3 /* TGGrabHandleView.swift in Sources */,
+				3A59798B1E7955FE0065A5FF /* ExampleTableChildCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
