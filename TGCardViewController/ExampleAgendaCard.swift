@@ -16,10 +16,4 @@ class ExampleAgendaCard: TGAgendaCard {
     super.init(title: "Agenda", dataSource: source, delegate: source)
   }
   
-  override func buildView(showClose: Bool) -> TGCardView {
-    let view = TGAgendaCardView.newInstance()
-    view.configure(with: self, showClose: showClose)
-    return view
-  }
-  
 }
