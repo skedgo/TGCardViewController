@@ -133,13 +133,7 @@ class TGCardViewController: UIViewController {
   
   // MARK: - Card positioning
   
-  fileprivate enum CardPosition {
-    case extended
-    case peaking
-    case collapsed
-  }
-  
-  fileprivate var cardPosition: CardPosition {
+  fileprivate var cardPosition: TGCardPosition {
     let cardY = cardWrapperTopConstraint.constant
     
     switch (cardY, traitCollection.verticalSizeClass) {
@@ -249,62 +243,50 @@ class TGCardViewController: UIViewController {
     
     // 5. Special handling of when the new top card has no map content
     let forceExtended = (top.mapManager == nil)
-    if forceExtended {
-      cardWrapperTopConstraint.constant = extendedMinY
-      view.setNeedsUpdateConstraints()
-    }
     panner.isEnabled = !forceExtended
     cardView.grabHandle.isHidden = forceExtended
     
-    /// Method to execute when card view is added and in its correct position,
-    /// i.e., when all animations are done.
-    ///
-    /// - Parameter completed: If animation completed
-    func whenDone(completed: Bool) {
-      updateForNewTopCard()
-      if notify {
-        oldTop?.didDisappear(animated: animated)
-        top.didAppear(animated: animated)
-      }
-      self.cardTransitionShadow?.removeFromSuperview()
+    // 6. Determine and set new position
+    let animateTo: (position: TGCardPosition, y: CGFloat)
+    switch (top.defaultPosition, forceExtended, traitCollection.verticalSizeClass) {
+    case (_, true, _), (.extended, false, _): animateTo = (.extended, extendedMinY)
+    case (.peaking, false, .regular):         animateTo = (.peaking, peakY)
+    default:                                  animateTo = (.collapsed, collapsedMinY)
+    }
+    cardWrapperTopConstraint.constant = animateTo.y
+    view.setNeedsUpdateConstraints()
+    
+    // 7. Animate to the new position
+    if oldTop != nil && animated {
+      let shadow = TGCornerView(frame: cardWrapperContent.bounds)
+      shadow.frame.size.height += 50 // for bounciness
+      shadow.backgroundColor = .black
+      shadow.alpha = 0
+      cardWrapperContent.insertSubview(shadow, belowSubview: cardView)
+      cardTransitionShadow = shadow
     }
     
-    if animated {
-      // 6a. Do the animation
-      
-      if oldTop != nil {
-        let shadow = TGCornerView(frame: cardWrapperContent.bounds)
-        shadow.frame.size.height += 50 // for bounciness
-        shadow.backgroundColor = .black
-        shadow.alpha = 0
-        cardWrapperContent.insertSubview(shadow, belowSubview: cardView)
-        cardTransitionShadow = shadow
+    UIView.animate(
+      withDuration: animated ? Constants.pushAnimationDuration : 0,
+      delay: 0,
+      usingSpringWithDamping: 0.75,
+      initialSpringVelocity: 0,
+      options: [.curveEaseInOut],
+      animations: {
+        self.view.layoutIfNeeded()
+        self.mapShadow.alpha = animateTo.position == .extended ? Constants.mapShadowVisibleAlpha : 0
+        cardView.frame = self.cardWrapperContent.bounds
+        self.cardTransitionShadow?.alpha = 0.15
+      },
+      completion: { finished in
+        self.updateForNewTopCard()
+        if notify {
+          oldTop?.didDisappear(animated: animated)
+          top.didAppear(animated: animated)
+        }
+        self.cardTransitionShadow?.removeFromSuperview()
       }
-      
-      UIView.animate(
-        withDuration: Constants.pushAnimationDuration,
-        delay: 0,
-        usingSpringWithDamping: 0.75,
-        initialSpringVelocity: 0,
-        options: [.curveEaseInOut],
-        animations: {
-          self.view.layoutIfNeeded()
-          if forceExtended {
-            self.mapShadow.alpha = Constants.mapShadowVisibleAlpha
-          }
-          cardView.frame = self.cardWrapperContent.bounds
-          self.cardTransitionShadow?.alpha = 0.15
-        },
-        completion: whenDone)
-      
-    } else {
-      // 6b. Finish up without animation
-      view.layoutIfNeeded()
-      if forceExtended {
-        self.mapShadow.alpha = Constants.mapShadowVisibleAlpha
-      }
-      whenDone(completed: true)
-    }
+    )
   }
   
   fileprivate func cardWithView(atIndex index: Int) -> (card: TGCard, view: TGCardView)? {
@@ -422,7 +404,7 @@ class TGCardViewController: UIViewController {
   ///
   /// - Parameter velocity: Velocity of movement of card wrapper
   /// - Returns: Desired snap position and y
-  fileprivate func determineSnap(for velocity: CGPoint) -> (position: CardPosition, y: CGFloat) {
+  fileprivate func determineSnap(for velocity: CGPoint) -> (position: TGCardPosition, y: CGFloat) {
     
     let currentCardY = cardWrapperTopConstraint.constant
     let nextCardY = currentCardY + velocity.y / 5 // in a fraction of a second

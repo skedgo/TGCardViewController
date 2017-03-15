@@ -21,7 +21,7 @@ class ExampleRootCard : TGPlainCard {
     mapManager.annotations = [nuremberg]
     mapManager.preferredZoomLevel = .country
     
-    super.init(title: "Root", contentView: content, mapManager: mapManager)
+    super.init(title: "Root", contentView: content, mapManager: mapManager, position: .collapsed)
 
     content.addChildButton.addTarget(self, action: #selector(addChildTapped(sender:)), for: .touchUpInside)
     content.showTableButton.addTarget(self, action: #selector(showTableTapped(sender:)), for: .touchUpInside)
