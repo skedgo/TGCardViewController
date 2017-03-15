@@ -415,11 +415,6 @@ class TGCardViewController: UIViewController {
     }
   }
   
-  fileprivate var topCardScrollView: UIScrollView? {
-    return topCardView?.scrollView
-  }
-  
-  
   /// Determines where to snap the card wrapper to, considering its current
   /// location and the provided velocity.
   ///
@@ -506,14 +501,14 @@ class TGCardViewController: UIViewController {
       self.view.layoutIfNeeded()
       
     }, completion: { _ in
-      self.topCardScrollView?.isScrollEnabled = snapTo.position == .extended
+      self.topCardView?.scrollView?.isScrollEnabled = snapTo.position == .extended
     })
   }
   
   @objc
   fileprivate func handleTap(_ recogniser: UITapGestureRecognizer) {
     
-    let animateTo: (position: CardPosition, y: CGFloat)
+    let animateTo: (position: TGCardPosition, y: CGFloat)
     
     switch (cardPosition, traitCollection.verticalSizeClass) {
     case (.extended, _):          return // tapping when extended does nothing
@@ -619,7 +614,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
   
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     
-    guard let scrollView = topCardScrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+    guard let scrollView = topCardView?.scrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
     
     let direction = Direction(ofVelocity: panner.velocity(in: cardWrapperContent))
     

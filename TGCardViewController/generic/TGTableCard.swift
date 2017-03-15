@@ -34,12 +34,4 @@ class TGTableCard : TGCard {
     return view
   }
   
-  func willAppear(animated: Bool) { }
-  
-  func didAppear(animated: Bool) { }
-  
-  func willDisappear(animated: Bool) { }
-  
-  func didDisappear(animated: Bool) { }
-  
 }

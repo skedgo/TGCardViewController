@@ -58,3 +58,15 @@ protocol TGCard {
   /// - Parameter animated: If it was animated
   func didDisappear(animated: Bool)
 }
+
+extension TGCard {
+  
+  func willAppear(animated: Bool) { }
+  
+  func didAppear(animated: Bool) { }
+  
+  func willDisappear(animated: Bool) { }
+  
+  func didDisappear(animated: Bool) { }
+  
+}
