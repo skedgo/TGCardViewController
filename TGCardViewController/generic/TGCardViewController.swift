@@ -419,6 +419,50 @@ class TGCardViewController: UIViewController {
     return topCardView?.scrollView
   }
   
+  
+  /// Determines where to snap the card wrapper to, considering its current
+  /// location and the provided velocity.
+  ///
+  /// - note:  We only go to peaking state, in regular size class.
+  ///
+  /// - Parameter velocity: Velocity of movement of card wrapper
+  /// - Returns: Desired snap position and y
+  fileprivate func determineSnap(for velocity: CGPoint) -> (position: CardPosition, y: CGFloat) {
+    
+    let currentCardY = cardWrapperTopConstraint.constant
+    let nextCardY = currentCardY + velocity.y / 5 // in a fraction of a second
+    
+    // First we see if the card is close to a target snap position, then we use that
+    let delta: CGFloat = 22
+    switch (nextCardY, traitCollection.verticalSizeClass) {
+    case (extendedMinY - delta ..< extendedMinY + delta, _):
+      return (.extended, extendedMinY)
+    case (peakY - delta * 2 ..< peakY + delta * 2, .regular):
+      return (.peaking, peakY)
+    case (collapsedMinY - delta ..< collapsedMinY + delta, _):
+      return (.collapsed, collapsedMinY)
+    
+    default:
+      break // not near a target position
+    }
+    
+    // Otherwise we look into the direction and snap to the next one that way
+    let direction = Direction(ofVelocity: velocity)
+    switch (direction, traitCollection.verticalSizeClass) {
+    case (.up, .compact): fallthrough
+    case (.up, _) where nextCardY < peakY:
+      return (.extended, extendedMinY)
+      
+    case (.down, .compact): fallthrough
+    case (.down, _) where nextCardY > peakY:
+      return (.collapsed, collapsedMinY)
+      
+    default:
+      return (.peaking, peakY)
+    }
+    
+  }
+  
   @objc
   fileprivate func handlePan(_ recogniser: UIPanGestureRecognizer) {
     let translation = recogniser.translation(in: cardWrapperContent)
@@ -440,25 +484,8 @@ class TGCardViewController: UIViewController {
     // to the appropriate state (extended, peaking, collapsed)
     guard recogniser.state == .ended else { return }
     
+    let snapTo = determineSnap(for: velocity)
     let currentCardY = cardWrapperTopConstraint.constant
-    let nextCardY = currentCardY + velocity.y / 5 // in a fraction of a second
-    
-    // Where we snap to depends on where the card currently is,
-    // the direction and speed at the end of the pan. Also,
-    // we only go to peaking state, in regular size class.
-    let snapTo: (position: CardPosition, y: CGFloat)
-    switch (direction, traitCollection.verticalSizeClass) {
-    case (.up, .compact): fallthrough
-    case (.up, _) where nextCardY < peakY:
-      snapTo = (.extended, extendedMinY)
-
-    case (.down, .compact): fallthrough
-    case (.down, _) where nextCardY > peakY:
-      snapTo = (.collapsed, collapsedMinY)
-
-    default:
-      snapTo = (.peaking, peakY)
-    }
     
     // Now we can animate to the new position
     var duration = direction == .up
