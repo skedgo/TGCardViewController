@@ -14,24 +14,21 @@ class TGTableCard : TGCard {
   let title: String
   let subtitle: String?
   let mapManager: TGMapManager?
-  let bottomView: UIView?
 
   weak var tableViewDelegate: UITableViewDelegate?
   weak var tableViewDataSource: UITableViewDataSource?
   
-  init(title: String, subtitle: String? = nil, dataSource: UITableViewDataSource, delegate: UITableViewDelegate? = nil, bottomView: UIView? = nil, mapManager: TGMapManager? = nil) {
+  init(title: String, subtitle: String? = nil, dataSource: UITableViewDataSource, delegate: UITableViewDelegate? = nil, mapManager: TGMapManager? = nil) {
     
     self.title = title
     self.subtitle = subtitle
     self.mapManager = mapManager
-    self.bottomView = bottomView
     self.tableViewDataSource = dataSource
     self.tableViewDelegate = delegate
   }
   
   func buildView(showClose: Bool) -> TGCardView {
     let view = TGTableCardView.instantiate()
-    view.showBottomView(show: bottomView != nil)
     view.configure(with: self, showClose: showClose)
     return view
   }

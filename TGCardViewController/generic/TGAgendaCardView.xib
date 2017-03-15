@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Ygi-Wu-OlV" customClass="TGAgendaCardView" customModule="TGCardViewController" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="663"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="j0b-zd-Ism" userLabel="Grab handle" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="dwL-e9-2yn">
+                    <rect key="frame" x="8" y="29" width="359" height="44"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="Jcg-8l-rvb">
+                            <rect key="frame" x="0.0" y="0.0" width="329" height="44"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RtE-Vb-pHD">
+                                    <rect key="frame" x="0.0" y="0.0" width="329" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BsH-yj-EDf">
+                                    <rect key="frame" x="0.0" y="23.5" width="329" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GTh-fW-jGw">
+                            <rect key="frame" x="337" y="0.0" width="22" height="44"/>
+                        </button>
+                    </subviews>
+                </stackView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5h6-Sk-RAc">
+                    <rect key="frame" x="0.0" y="81" width="375" height="522"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cI1-UC-c48" userLabel="Fixed Bottom View">
+                    <rect key="frame" x="0.0" y="603" width="375" height="60"/>
+                    <color key="backgroundColor" red="0.71223908899999999" green="1" blue="0.61848639260000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="Dxb-LU-Njv"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="dwL-e9-2yn" secondAttribute="trailing" constant="8" id="3Lc-Hq-jht"/>
+                <constraint firstAttribute="trailing" secondItem="cI1-UC-c48" secondAttribute="trailing" id="Dcy-Is-uhk"/>
+                <constraint firstItem="cI1-UC-c48" firstAttribute="leading" secondItem="Ygi-Wu-OlV" secondAttribute="leading" id="Dpy-SD-Qly"/>
+                <constraint firstAttribute="trailing" secondItem="5h6-Sk-RAc" secondAttribute="trailing" id="LpM-8L-4nq"/>
+                <constraint firstAttribute="trailing" secondItem="j0b-zd-Ism" secondAttribute="trailing" id="M4S-aF-qXU"/>
+                <constraint firstItem="cI1-UC-c48" firstAttribute="top" secondItem="5h6-Sk-RAc" secondAttribute="bottom" id="M68-r4-gjv"/>
+                <constraint firstItem="dwL-e9-2yn" firstAttribute="leading" secondItem="Ygi-Wu-OlV" secondAttribute="leading" constant="8" id="N9f-HD-Ju6"/>
+                <constraint firstItem="5h6-Sk-RAc" firstAttribute="top" secondItem="dwL-e9-2yn" secondAttribute="bottom" constant="8" id="NuA-HM-n7C"/>
+                <constraint firstItem="j0b-zd-Ism" firstAttribute="top" secondItem="Ygi-Wu-OlV" secondAttribute="top" id="QDs-AD-Wse"/>
+                <constraint firstItem="5h6-Sk-RAc" firstAttribute="leading" secondItem="Ygi-Wu-OlV" secondAttribute="leading" id="VQz-f0-hmC"/>
+                <constraint firstItem="cI1-UC-c48" firstAttribute="top" secondItem="Ygi-Wu-OlV" secondAttribute="bottom" constant="-60" id="bFz-0R-cS1"/>
+                <constraint firstItem="j0b-zd-Ism" firstAttribute="leading" secondItem="Ygi-Wu-OlV" secondAttribute="leading" id="fsS-wZ-VID"/>
+                <constraint firstItem="dwL-e9-2yn" firstAttribute="top" secondItem="j0b-zd-Ism" secondAttribute="bottom" constant="8" id="zfb-Hq-3uh"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="bottomViewContainer" destination="cI1-UC-c48" id="uYy-jz-XBO"/>
+                <outlet property="bottomViewContainerHeightConstraint" destination="Dxb-LU-Njv" id="Z3t-Yv-cW2"/>
+                <outlet property="closeButton" destination="GTh-fW-jGw" id="6zz-iI-LL1"/>
+                <outlet property="subtitleLabel" destination="BsH-yj-EDf" id="AJU-3C-9Ld"/>
+                <outlet property="tableView" destination="5h6-Sk-RAc" id="iaD-ah-Vf8"/>
+                <outlet property="titleLabel" destination="RtE-Vb-pHD" id="sWZ-6j-1gP"/>
+            </connections>
+            <point key="canvasLocation" x="81.5" y="184.5"/>
+        </view>
+    </objects>
+</document>

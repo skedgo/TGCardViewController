@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -48,34 +48,22 @@
                     <rect key="frame" x="0.0" y="81" width="375" height="582"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SAR-c2-wO8" userLabel="Fixed Bottom View">
-                    <rect key="frame" x="0.0" y="663" width="375" height="60"/>
-                    <color key="backgroundColor" red="0.71223908899999999" green="1" blue="0.61848639260000005" alpha="1" colorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="60" id="Pxi-hp-ia4"/>
-                    </constraints>
-                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="AET-EB-dGo" firstAttribute="top" secondItem="lf5-YV-zqk" secondAttribute="bottom" constant="8" id="4BH-B2-P31"/>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4TM-kT-hhY"/>
-                <constraint firstItem="SAR-c2-wO8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="7i9-6x-8kr"/>
                 <constraint firstItem="9vC-GM-Rte" firstAttribute="top" secondItem="AET-EB-dGo" secondAttribute="bottom" constant="8" id="84u-9p-lUM"/>
                 <constraint firstAttribute="trailing" secondItem="AET-EB-dGo" secondAttribute="trailing" constant="8" id="IwQ-dK-NMb"/>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="JhJ-X6-bzM"/>
                 <constraint firstItem="9vC-GM-Rte" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="NQ6-Pz-Vva"/>
-                <constraint firstItem="SAR-c2-wO8" firstAttribute="top" secondItem="9vC-GM-Rte" secondAttribute="bottom" id="Unu-V0-GgC"/>
-                <constraint firstAttribute="trailing" secondItem="SAR-c2-wO8" secondAttribute="trailing" id="ax8-28-fG0"/>
+                <constraint firstAttribute="bottom" secondItem="9vC-GM-Rte" secondAttribute="bottom" id="S6v-zr-HSQ"/>
                 <constraint firstAttribute="trailing" secondItem="9vC-GM-Rte" secondAttribute="trailing" id="dDq-g6-M1Z"/>
-                <constraint firstItem="SAR-c2-wO8" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="bottom" id="hdx-ga-M7x"/>
                 <constraint firstItem="AET-EB-dGo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="tAe-ey-c7V"/>
                 <constraint firstAttribute="trailing" secondItem="lf5-YV-zqk" secondAttribute="trailing" id="wU3-bz-Tc8"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="bottomView" destination="SAR-c2-wO8" id="tem-cb-eIV"/>
-                <outlet property="bottomViewTopConstraint" destination="hdx-ga-M7x" id="nMT-mP-6ha"/>
                 <outlet property="closeButton" destination="gaZ-Nm-Ttn" id="8ec-H2-bUv"/>
                 <outlet property="scrollView" destination="9vC-GM-Rte" id="XSC-xp-0e1"/>
                 <outlet property="subtitleLabel" destination="Aj9-Wv-1Z7" id="0Qc-AW-rCK"/>

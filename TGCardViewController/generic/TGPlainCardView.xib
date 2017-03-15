@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -44,13 +44,6 @@
                         </button>
                     </subviews>
                 </stackView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lq2-er-uXs" userLabel="Fixed Bottom View">
-                    <rect key="frame" x="0.0" y="423" width="375" height="60"/>
-                    <color key="backgroundColor" red="1" green="0.27304439139999997" blue="0.32756929099999998" alpha="1" colorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="60" id="nJO-ki-kcn"/>
-                    </constraints>
-                </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
                     <rect key="frame" x="0.0" y="81" width="375" height="342"/>
                     <subviews>
@@ -70,28 +63,23 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="lq2-er-uXs" firstAttribute="top" secondItem="Dar-6n-Caw" secondAttribute="bottom" id="Bol-53-UgA"/>
                 <constraint firstItem="shr-2r-Hk0" firstAttribute="top" secondItem="JFj-Bl-Nt0" secondAttribute="bottom" constant="8" id="Doo-Du-eee"/>
                 <constraint firstAttribute="trailing" secondItem="Dar-6n-Caw" secondAttribute="trailing" id="EeC-BN-kQR"/>
-                <constraint firstItem="lq2-er-uXs" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="bottom" id="GMF-GB-34W"/>
                 <constraint firstItem="Dar-6n-Caw" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="GxS-7a-gUP"/>
                 <constraint firstItem="shr-2r-Hk0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="MTl-am-fJM"/>
                 <constraint firstItem="JFj-Bl-Nt0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="OuN-YF-8oH"/>
                 <constraint firstAttribute="trailing" secondItem="shr-2r-Hk0" secondAttribute="trailing" constant="8" id="bfo-bI-ghd"/>
-                <constraint firstAttribute="trailing" secondItem="lq2-er-uXs" secondAttribute="trailing" id="etJ-Zb-CT1"/>
+                <constraint firstAttribute="bottom" secondItem="Dar-6n-Caw" secondAttribute="bottom" id="gnL-8s-eXj"/>
                 <constraint firstItem="JFj-Bl-Nt0" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="mkQ-ym-714"/>
                 <constraint firstItem="Dar-6n-Caw" firstAttribute="top" secondItem="shr-2r-Hk0" secondAttribute="bottom" constant="8" id="s4R-ts-121"/>
                 <constraint firstAttribute="trailing" secondItem="JFj-Bl-Nt0" secondAttribute="trailing" id="tqI-dg-XCt"/>
                 <constraint firstItem="fpj-MI-D7T" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="xRh-jD-2kN"/>
-                <constraint firstItem="lq2-er-uXs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="y6Y-dJ-aPS"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="bottomView" destination="lq2-er-uXs" id="OfS-wA-s4Z"/>
-                <outlet property="bottomViewTopConstraint" destination="GMF-GB-34W" id="IgJ-rd-1Gq"/>
                 <outlet property="closeButton" destination="S0E-UZ-jgN" id="PTX-DA-6fw"/>
                 <outlet property="contentView" destination="fpj-MI-D7T" id="xMy-mv-ixq"/>
                 <outlet property="scrollView" destination="Dar-6n-Caw" id="1AT-AH-grU"/>

@@ -13,12 +13,12 @@ class ExampleTableCard : TGTableCard {
   fileprivate let source = ExampleDataSource()
 
   init() {
-    super.init(title: "Table", dataSource: source, delegate: source, bottomView: UIView())
+    super.init(title: "Table", dataSource: source, delegate: source)
   }
   
 }
 
-fileprivate class ExampleDataSource: NSObject {
+class ExampleDataSource: NSObject {
 }
 
 extension ExampleDataSource : UITableViewDelegate {

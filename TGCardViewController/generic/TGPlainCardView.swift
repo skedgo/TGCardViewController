@@ -23,7 +23,6 @@ class TGPlainCardView: TGCardView {
   func configure(with card: TGPlainCard, showClose: Bool) {
     titleLabel.text = card.title
     subtitleLabel.text = card.subtitle
-    
     closeButton.isHidden = !showClose
     
     if let content = card.contentView {
