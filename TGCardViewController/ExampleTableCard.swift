@@ -13,7 +13,7 @@ class ExampleTableCard : TGTableCard {
   fileprivate let source = ExampleDataSource()
 
   init() {
-    super.init(title: "Table", dataSource: source, delegate: source)
+    super.init(title: "Table", dataSource: source, delegate: source, bottomView: UIView())
   }
   
 }
