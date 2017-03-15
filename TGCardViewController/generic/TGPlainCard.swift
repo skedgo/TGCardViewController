@@ -35,6 +35,7 @@ class TGPlainCard : TGCard {
   
   func buildView(showClose: Bool) -> TGCardView {
     let view = TGPlainCardView.instantiate()
+    view.showBottomView(show: true)
     view.configure(with: self, showClose: showClose)
     return view
   }

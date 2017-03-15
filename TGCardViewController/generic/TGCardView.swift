@@ -20,4 +20,21 @@ class TGCardView: TGCornerView {
   /// handling dragging the card up and down.
   @IBOutlet weak var scrollView: UIScrollView!
   
+  @IBOutlet weak var bottomView: UIView!
+  
+  @IBOutlet weak var bottomViewTopConstraint: NSLayoutConstraint!
+  
+  func showBottomView(show: Bool, animated: Bool = false) {
+    bottomViewTopConstraint.constant = show ? -60 : 0
+    setNeedsUpdateConstraints()
+    
+    if animated {
+      UIView.animate(withDuration: 0.5, animations: { 
+        self.layoutIfNeeded()
+      })
+    } else {
+      self.layoutIfNeeded()
+    }
+  }
+  
 }
