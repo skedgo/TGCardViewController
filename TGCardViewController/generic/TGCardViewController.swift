@@ -49,8 +49,12 @@ class TGCardViewController: UIViewController {
   
   fileprivate var isVisible = false
   
+  fileprivate var cardViews: [TGCardView] {
+    return cardWrapperContent.subviews.flatMap { $0 as? TGCardView }
+  }
+  
   fileprivate var topCardView: TGCardView? {
-    return cardWrapperContent.subviews.last as? TGCardView
+    return cardViews.last
   }
 
   // MARK: - UIViewController
@@ -303,6 +307,14 @@ class TGCardViewController: UIViewController {
     }
   }
   
+  fileprivate func cardWithView(atIndex index: Int) -> (card: TGCard, view: TGCardView)? {
+    let cards = self.cards
+    let views = self.cardViews
+    guard cards.count > index, views.count > index else { return nil }
+    
+    return (cards[index], views[index])
+  }
+  
   func pop(animated: Bool = true) {
     guard var top = cards.last, let topView = topCardView else {
       print("Nothing to pop")
@@ -310,36 +322,49 @@ class TGCardViewController: UIViewController {
     }
     
     // Updating card logic and informing of transitions
-    let newTop: TGCard? = cards.count > 1 ? cards[cards.count - 2] : nil
+    let newTop = cardWithView(atIndex: cards.count - 2)
+
     let notify = isVisible
     if notify {
-      newTop?.willAppear(animated: animated)
+      newTop?.card.willAppear(animated: animated)
       top.willDisappear(animated: animated)
     }
     
     top.mapManager?.cleanUp(mapView)
-    newTop?.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
+    newTop?.card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
 
     // We update the stack immediately to allow calling this many times
     // while we're still animating without issues
     cards.remove(at: cards.count - 1)
     
-    let forceExtended = (newTop?.mapManager == nil)
-    // TODO: Snap new top view back up if we force extended state?
+    let forceExtended = (newTop?.card.mapManager == nil)
+    if forceExtended {
+      cardWrapperTopConstraint.constant = extendedMinY
+      view.setNeedsUpdateConstraints()
+    }
     panner.isEnabled = !forceExtended
+    newTop?.view.grabHandle.isHidden = forceExtended
     
     // Clean-up when we're done. If we're not animated, that's all that's necessary
     func whenDone(completed: Bool) {
       top.controller = nil
       if notify {
         top.didDisappear(animated: animated)
-        newTop?.didAppear(animated: animated)
+        newTop?.card.didAppear(animated: animated)
       }
       topView.removeFromSuperview()
       self.cardTransitionShadow?.removeFromSuperview()
       self.updateForNewTopCard()
     }
-    guard animated else { whenDone(completed: true); return }
+    
+    guard animated else {
+      view.layoutIfNeeded()
+      if forceExtended {
+        self.mapShadow.alpha = Constants.mapShadowVisibleAlpha
+      }
+      whenDone(completed: true)
+      return
+    }
     
     // We animate the view moving back down to the bottom
     // we also temporarily insert a shadow view again, if there's a card below
@@ -359,6 +384,10 @@ class TGCardViewController: UIViewController {
       initialSpringVelocity: 0,
       options: [.curveEaseInOut],
       animations: {
+        self.view.layoutIfNeeded()
+        if forceExtended {
+          self.mapShadow.alpha = Constants.mapShadowVisibleAlpha
+        }
         topView.frame.origin.y = self.cardWrapperContent.frame.maxY
         self.cardTransitionShadow?.alpha = 0
       },
