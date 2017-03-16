@@ -613,12 +613,11 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
     
     if cardTapper == gestureRecognizer {
-      // Only intercept any taps when in the collapsed states.
+      // Only intercept any taps on the title.
       // This is so that the tapper doesn't interfere with, say, taps on a table view.
-      switch cardPosition {
-      case .collapsed, .peaking:  return true
-      case .extended:             return false
-      }
+      guard let view = topCardView else { return false }
+      let location = touch.location(in: view)
+      return location.y < view.headerHeight
       
     } else if mapShadowTapper == gestureRecognizer {
       // Only intercept any taps when in the expanded state.
