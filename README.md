@@ -17,22 +17,22 @@ Behaviour:
     3. `extended`: Shows card fully, map shows a little bit on top but is greyed out
 - Pushing a card from another card
 	- [x] Adds (x) button unless it’s the root card
-    - [ ] Card has a preferred position which is used when pushing (!3)
+    - [x] Card has a preferred position which is used when pushing (!3)
 	- [x] Animation: Slide up from the bottom; fading black view on card below with alpha from 0% to 25%
 	- [x] Pass on appearance callbacks appropriately to involved cards
 - Popping a card
 	- [x] Tap (x) to pop card
-    - [ ] When popping top card, restore card position of card below when something got pushed on it (!3)
+    - [x] When popping top card, restore card position of card below when something got pushed on it (!3)
 	- [x] Animation: Slide back down; fading out black view on card below with alpha from 25% to 0%
 	- [x] Pass on appearance callbacks appropriately to involved cards
 - Cards are draggable
-	- [ ] Snap to collapsed (only title), peaking (near half-way showing both map and card content), extended (still shows a bit of the map on top, but darkened) (!3)
+	- [x] Snap to collapsed (only title), peaking (near half-way showing both map and card content), extended (still shows a bit of the map on top, but darkened) (!3)
 	- [x] Cards can be dragged up and down anywhere on the card
 	- [ ] When scrolling to the top and keeping to scroll, start dragging card
-	- [ ] Tap title when collapsed: go to peaking (!3)
-	- [ ] Tap title when peaking: go to extended (!3)
+	- [x] Tap title when collapsed: go to peaking (!3)
+	- [x] Tap title when peaking: go to extended (!3)
 	- [x] Tap title when extended: do nothing
-	- [ ] Tap map when extended: go to peaking (!3)
+	- [x] Tap map when extended: go to peaking (!3)
 - Sticky bar at the top
 	- [x] Set content rather than just showing (!1)
 	- [x] Cross-fade content if it was showing already and there’s new content (!1)
@@ -75,7 +75,7 @@ Map content:
 
 - [x] Cards can optionally have map content
 - [x] When showing the content, the insets should be respected to account for the card overlapping the map
-- [ ] If there’s no map content: Show card always extended and don't allow dragging it down (or just snap back up when using tries) (!3)
+- [x] If there’s no map content: Show card always extended and don't allow dragging it down (or just snap back up when using tries) (!3)
 
 Map widget:
 
