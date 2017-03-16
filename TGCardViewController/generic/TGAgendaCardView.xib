@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -76,10 +76,11 @@
             <connections>
                 <outlet property="bottomViewContainer" destination="cI1-UC-c48" id="uYy-jz-XBO"/>
                 <outlet property="bottomViewContainerHeightConstraint" destination="Dxb-LU-Njv" id="Z3t-Yv-cW2"/>
+                <outlet property="bottomViewContainerTopConstraint" destination="bFz-0R-cS1" id="SeW-se-Ml4"/>
                 <outlet property="closeButton" destination="GTh-fW-jGw" id="6zz-iI-LL1"/>
-                <outlet property="subtitleLabel" destination="BsH-yj-EDf" id="AJU-3C-9Ld"/>
-                <outlet property="tableView" destination="5h6-Sk-RAc" id="iaD-ah-Vf8"/>
-                <outlet property="titleLabel" destination="RtE-Vb-pHD" id="sWZ-6j-1gP"/>
+                <outlet property="subtitleLabel" destination="BsH-yj-EDf" id="bv2-vE-rLz"/>
+                <outlet property="tableView" destination="5h6-Sk-RAc" id="cQZ-ot-ah4"/>
+                <outlet property="titleLabel" destination="RtE-Vb-pHD" id="nTQ-sx-HdD"/>
             </connections>
             <point key="canvasLocation" x="81.5" y="184.5"/>
         </view>

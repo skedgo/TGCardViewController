@@ -13,7 +13,11 @@ class ExampleAgendaCard: TGAgendaCard {
   fileprivate let source = ExampleDataSource()
   
   init() {
-    super.init(title: "Agenda", dataSource: source, delegate: source)
+    let container = UIView()
+    let label = UILabel()
+    label.text = "This is where weekly selector goes"
+    label.center(on: container)
+    super.init(title: "Agenda", dataSource: source, delegate: source, bottomContent: container)
   }
   
 }
