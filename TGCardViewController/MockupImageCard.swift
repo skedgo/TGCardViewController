@@ -17,7 +17,7 @@ class MockupImageCard : TGPlainCard {
   
   let targets: [Target]
   
-  init(title: String, subtitle: String? = nil, image: UIImage, targets: [Target] = []) {
+  init(title: String, subtitle: String? = nil, image: UIImage, locations: [MKAnnotation] = [], targets: [Target] = []) {
     self.targets = targets
     
     let content = MockupImageContentView.instantiate()
@@ -27,7 +27,11 @@ class MockupImageCard : TGPlainCard {
     content.imageWidthConstraint.constant  = UIScreen.main.bounds.width
     content.imageHeightConstraint.constant = UIScreen.main.bounds.width * ratio
     
-    super.init(title: title, subtitle: subtitle, contentView: content, mapManager: nil, position: .peaking)
+    let mapManager = locations.count > 0 ? TGMapManager() : nil
+    mapManager?.annotations = locations
+    mapManager?.preferredZoomLevel = .road
+    
+    super.init(title: title, subtitle: subtitle, contentView: content, mapManager: mapManager, position: .peaking)
 
     let tapper = UITapGestureRecognizer()
     tapper.addTarget(self, action: #selector(handleTap))

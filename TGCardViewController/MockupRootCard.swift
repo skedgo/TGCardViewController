@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 class MockupRootCard : TGTableCard {
   
@@ -34,18 +35,26 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
     case event
     
     var card: TGCard {
+      let home = MKPointAnnotation()
+      home.coordinate = CLLocationCoordinate2DMake(-33.913144, 151.237732)
+      
+      let laureate = MKPointAnnotation()
+      laureate.coordinate = CLLocationCoordinate2DMake(-33.877026, 151.206072)
+      
       switch self {
       case .agenda:
-        return MockupImageCard(title: "Agenda", image: #imageLiteral(resourceName: "agenda"), targets: [
+        return MockupImageCard(title: "Agenda", image: #imageLiteral(resourceName: "agenda"), locations: [home, laureate], targets: [
           (0.14 ..< 0.17, Mockup.routes.card),
           (0.17 ..< 0.25, Mockup.event.card),
           (0.33 ..< 0.36, Mockup.routes.card),
           (0.44 ..< 0.47, Mockup.routes.card),
           (0.47 ..< 0.55, Mockup.event.card),
           (0.55 ..< 0.58, Mockup.routes.card),
-        ])
+          ])
+
       case .event:
-        return MockupImageCard(title: "Work Laureate", image: #imageLiteral(resourceName: "agenda-event"))
+        return MockupImageCard(title: "Work Laureate", image: #imageLiteral(resourceName: "agenda-event"), locations: [laureate])
+
       case .routes:
         return MockupImageCard(title: "Routes", image: #imageLiteral(resourceName: "routes"))
       }
