@@ -14,6 +14,8 @@ class ExampleRootContentView: UIView {
 
   @IBOutlet weak var showTableButton: UIButton!
   
+  @IBOutlet weak var showPagingWithoutTableButton: UIButton!
+  
   static func instantiate() -> ExampleRootContentView {
     let bundle = Bundle(for: self)
     return bundle.loadNibNamed("ExampleRootContentView", owner: nil, options: nil)!.first as! ExampleRootContentView

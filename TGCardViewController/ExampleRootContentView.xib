@@ -23,9 +23,15 @@
                     <rect key="frame" x="148" y="70" width="79" height="30"/>
                     <state key="normal" title="Show Table"/>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5GO-gv-GSo">
+                    <rect key="frame" x="109.5" y="108" width="156" height="30"/>
+                    <state key="normal" title="Show paging w/o table"/>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="0.93387785270000001" blue="0.41837176459999997" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
+                <constraint firstItem="5GO-gv-GSo" firstAttribute="top" secondItem="TZY-qW-ebD" secondAttribute="bottom" constant="8" id="06E-A6-9bA"/>
+                <constraint firstItem="5GO-gv-GSo" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="FeO-qt-K2e"/>
                 <constraint firstItem="sVO-NT-gru" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="g9O-jS-GXC"/>
                 <constraint firstItem="TZY-qW-ebD" firstAttribute="top" secondItem="sVO-NT-gru" secondAttribute="bottom" constant="8" id="lGd-5p-0oc"/>
                 <constraint firstItem="sVO-NT-gru" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="32" id="lNq-Ys-1qa"/>
@@ -35,6 +41,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="addChildButton" destination="sVO-NT-gru" id="OOD-yZ-maQ"/>
+                <outlet property="showPagingWithoutTableButton" destination="5GO-gv-GSo" id="ACe-Nl-u88"/>
                 <outlet property="showTableButton" destination="TZY-qW-ebD" id="FBd-TE-YwU"/>
             </connections>
         </view>

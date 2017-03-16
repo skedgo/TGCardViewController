@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="e4q-Wy-3hg" customClass="TGPagingPlainCardView" customModule="TGCardViewController" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="423"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="0KZ-hj-PBR" userLabel="Grab handle" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wzD-NE-9oA">
+                    <rect key="frame" x="8" y="29" width="359" height="44"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="f5v-Qp-gHF">
+                            <rect key="frame" x="0.0" y="0.0" width="329" height="44"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ty5-HV-cI4">
+                                    <rect key="frame" x="0.0" y="0.0" width="329" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1DY-Da-AQz">
+                                    <rect key="frame" x="0.0" y="23.5" width="329" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x7y-Vm-Uoq">
+                            <rect key="frame" x="337" y="0.0" width="22" height="44"/>
+                        </button>
+                    </subviews>
+                </stackView>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qRp-sn-Xln">
+                    <rect key="frame" x="0.0" y="81" width="375" height="342"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="348" translatesAutoresizingMaskIntoConstraints="NO" id="BEK-6a-5vk">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="348"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="BEK-6a-5vk" firstAttribute="top" secondItem="qRp-sn-Xln" secondAttribute="top" id="Dx4-nr-BQB"/>
+                        <constraint firstAttribute="trailing" secondItem="BEK-6a-5vk" secondAttribute="trailing" id="IET-t2-kSH"/>
+                        <constraint firstAttribute="bottom" secondItem="BEK-6a-5vk" secondAttribute="bottom" id="kwZ-EV-0I8"/>
+                        <constraint firstItem="BEK-6a-5vk" firstAttribute="leading" secondItem="qRp-sn-Xln" secondAttribute="leading" id="m6h-pQ-1u2"/>
+                        <constraint firstItem="BEK-6a-5vk" firstAttribute="height" secondItem="qRp-sn-Xln" secondAttribute="height" priority="250" id="vA5-I4-1pv"/>
+                    </constraints>
+                </scrollView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="qRp-sn-Xln" secondAttribute="trailing" id="6MX-Ck-HsJ"/>
+                <constraint firstItem="BEK-6a-5vk" firstAttribute="width" secondItem="e4q-Wy-3hg" secondAttribute="width" priority="250" id="8tW-dy-2xW"/>
+                <constraint firstItem="wzD-NE-9oA" firstAttribute="leading" secondItem="e4q-Wy-3hg" secondAttribute="leading" constant="8" id="DRv-gw-B0E"/>
+                <constraint firstAttribute="bottom" secondItem="qRp-sn-Xln" secondAttribute="bottom" id="Pw0-ae-PtR"/>
+                <constraint firstItem="qRp-sn-Xln" firstAttribute="leading" secondItem="e4q-Wy-3hg" secondAttribute="leading" id="RMM-T6-8HC"/>
+                <constraint firstItem="0KZ-hj-PBR" firstAttribute="top" secondItem="e4q-Wy-3hg" secondAttribute="top" id="UMX-KC-I9C"/>
+                <constraint firstItem="wzD-NE-9oA" firstAttribute="top" secondItem="0KZ-hj-PBR" secondAttribute="bottom" constant="8" id="iAQ-eY-Ech"/>
+                <constraint firstItem="qRp-sn-Xln" firstAttribute="top" secondItem="wzD-NE-9oA" secondAttribute="bottom" constant="8" id="iRD-f9-lRq"/>
+                <constraint firstAttribute="trailing" secondItem="wzD-NE-9oA" secondAttribute="trailing" constant="8" id="nQf-JV-LNo"/>
+                <constraint firstItem="0KZ-hj-PBR" firstAttribute="leading" secondItem="e4q-Wy-3hg" secondAttribute="leading" id="tTr-vw-oSX"/>
+                <constraint firstAttribute="trailing" secondItem="0KZ-hj-PBR" secondAttribute="trailing" id="v0k-E1-6Rs"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="closeButton" destination="x7y-Vm-Uoq" id="o3E-ur-c7U"/>
+                <outlet property="contentView" destination="BEK-6a-5vk" id="mg1-uF-3Z9"/>
+                <outlet property="subtitleLabel" destination="1DY-Da-AQz" id="mxv-2u-74L"/>
+                <outlet property="titleLabel" destination="Ty5-HV-cI4" id="jD3-No-UlK"/>
+            </connections>
+            <point key="canvasLocation" x="33.5" y="-36.5"/>
+        </view>
+    </objects>
+</document>

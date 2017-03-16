@@ -25,6 +25,7 @@ class ExampleRootCard : TGPlainCard {
 
     content.addChildButton.addTarget(self, action: #selector(addChildTapped(sender:)), for: .touchUpInside)
     content.showTableButton.addTarget(self, action: #selector(showTableTapped(sender:)), for: .touchUpInside)
+    content.showPagingWithoutTableButton.addTarget(self, action: #selector(showPagingWithoutTableTapped(sender:)), for: .touchUpInside)
   }
   
   @objc
@@ -35,6 +36,11 @@ class ExampleRootCard : TGPlainCard {
   @objc
   func showTableTapped(sender: Any) {
     controller?.push(ExampleTableCard())
+  }
+  
+  @objc
+  func showPagingWithoutTableTapped(sender: Any) {
+    controller?.push(ExamplePagingPlainCard())
   }
   
   
