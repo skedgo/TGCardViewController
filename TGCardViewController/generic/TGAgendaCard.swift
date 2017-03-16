@@ -15,6 +15,8 @@ class TGAgendaCard: TGCard {
   let subtitle: String?
   let mapManager: TGMapManager?
   
+  let defaultPosition: TGCardPosition = .peaking
+  
   /// This is the content for the bottom view.
   let bottomContentView: UIView?
   
