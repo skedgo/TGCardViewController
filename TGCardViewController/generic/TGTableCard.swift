@@ -9,7 +9,6 @@
 import UIKit
 
 class TGTableCard : TGCard {
-  
   weak var controller: TGCardViewController?
   
   let title: String
