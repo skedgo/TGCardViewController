@@ -41,6 +41,8 @@ class TGCardViewController: UIViewController {
   @IBOutlet weak var fixedCardWrapperTopConstraint: NSLayoutConstraint!
 
   var panner: UIPanGestureRecognizer!
+  var cardTapper: UITapGestureRecognizer!
+  var mapShadowTapper: UITapGestureRecognizer!
   
   fileprivate var isVisible = false
   
@@ -69,11 +71,19 @@ class TGCardViewController: UIViewController {
     panner = panGesture
     
     // Tapper for tapping the title of the cards
-    let tapper = UITapGestureRecognizer()
-    tapper.addTarget(self, action: #selector(handleTap))
-    tapper.delegate = self
-    cardWrapperContent.addGestureRecognizer(tapper)
+    let cardTapper = UITapGestureRecognizer()
+    cardTapper.addTarget(self, action: #selector(handleCardTap))
+    cardTapper.delegate = self
+    cardWrapperContent.addGestureRecognizer(cardTapper)
+    self.cardTapper = cardTapper
 
+    // Tapper for tapping the map shadow
+    let mapTapper = UITapGestureRecognizer()
+    mapTapper.addTarget(self, action: #selector(handleMapTap))
+    mapTapper.delegate = self
+    mapShadow.addGestureRecognizer(mapTapper)
+    self.mapShadowTapper = mapTapper
+    
     // Setting up additional constraints
     cardWrapperHeightConstraint.constant = extendedMinY * -1
     fixedCardWrapperTopConstraint.constant = 0
@@ -173,24 +183,30 @@ class TGCardViewController: UIViewController {
   }
   
   
-  /// The current amount of points that the card overlaps with the map
-  fileprivate var cardOverlap: CGFloat {
-    guard let superview = cardWrapperContent.superview else { return 0 }
-    return mapView.frame.height - superview.frame.minY
-  }
-
-  
-  /// The current edge padding for the map that map managers should use
+  /// The edge padding for the map that map managers should use
   /// to determine the zoom and scroll position of the map.
   ///
   /// - Note: This is the card's overlap for the collapsed and peaking
   ///         card positions, and capped at the peaking card position
   ///         for the extended overlap (to avoid only having a tiny
   ///         map area to work with).
-  fileprivate var mapEdgePadding: UIEdgeInsets {
-    let maxOverlap = mapView.frame.height - peakY
-    let bottomOverlap = min(cardOverlap, maxOverlap)
+  fileprivate func mapEdgePadding(for position: TGCardPosition) -> UIEdgeInsets {
+    let cardY: CGFloat
+    switch position {
+    case .extended, .peaking: cardY = peakY
+    case .collapsed:          cardY = collapsedMinY - 75 // not entirely true, but close enough
+    }
+    let bottomOverlap = mapView.frame.height - cardY
     return UIEdgeInsets(top: topOverlap, left: 0, bottom: bottomOverlap, right: 0)
+  }
+  
+  
+  /// Call this whenever the card position changes to properly configure the map shadow
+  ///
+  /// - Parameter position: New card position
+  fileprivate func updateMapShadow(for position: TGCardPosition) {
+    mapShadow.alpha = position == .extended ? Constants.mapShadowVisibleAlpha : 0
+    mapShadow.isUserInteractionEnabled = position == .extended
   }
   
   
@@ -199,11 +215,15 @@ class TGCardViewController: UIViewController {
   fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
   
   
-  func cardLocation(forDesired position: TGCardPosition) -> (position: TGCardPosition, y: CGFloat) {
-    switch (position, traitCollection.verticalSizeClass) {
-    case (.extended, _):        return (.extended, extendedMinY)
-    case (.peaking, .regular):  return (.peaking, peakY)
-    default:                    return (.collapsed, collapsedMinY)
+  fileprivate func cardLocation(forDesired position: TGCardPosition?, direction: Direction) -> (position: TGCardPosition, y: CGFloat) {
+    guard let position = position else { return (.collapsed, collapsedMinY) }
+    
+    switch (position, traitCollection.verticalSizeClass, direction) {
+    case (.extended, _, _):         return (.extended, extendedMinY)
+    case (.peaking, .regular, _):   return (.peaking, peakY)
+    case (.peaking, _, .up):        return (.extended, extendedMinY)
+    case (.peaking, _, .down):      return (.collapsed, collapsedMinY)
+    case (.collapsed, _, _):        return (.collapsed, collapsedMinY)
     }
   }
   
@@ -213,7 +233,7 @@ class TGCardViewController: UIViewController {
     
     // 1. Determine where the new card will go
     let forceExtended = (top.mapManager == nil)
-    let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.defaultPosition)
+    let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.defaultPosition, direction: .down)
 
     // 2. Updating card logic and informing of transition
     let oldTop = topCard
@@ -231,7 +251,7 @@ class TGCardViewController: UIViewController {
     
     // 3. Hand over the map
     oldTop?.mapManager?.cleanUp(mapView)
-    top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
+    top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
     
     // 4. Create and configure the new view
     let cardView = top.buildView(showClose: cards.count > 1)
@@ -274,7 +294,7 @@ class TGCardViewController: UIViewController {
       options: [.curveEaseInOut],
       animations: {
         self.view.layoutIfNeeded()
-        self.mapShadow.alpha = animateTo.position == .extended ? Constants.mapShadowVisibleAlpha : 0
+        self.updateMapShadow(for: animateTo.position)
         cardView.frame = self.cardWrapperContent.bounds
         self.cardTransitionShadow?.alpha = 0.15
       },
@@ -328,7 +348,7 @@ class TGCardViewController: UIViewController {
     
     // 2. Hand over the map
     top.mapManager?.cleanUp(mapView)
-    newTop?.card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
+    newTop?.card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: newTop?.position ?? .collapsed), animated: animated)
     
     // 3. Special handling of when the new top card has no map content
     let forceExtended = (newTop?.card.mapManager == nil)
@@ -336,10 +356,8 @@ class TGCardViewController: UIViewController {
     newTop?.view.grabHandle.isHidden = forceExtended
     
     // 4. Determine and set new position of the wrapper
-    if let newPosition = newTop?.position {
-      let animateTo = cardLocation(forDesired: newPosition)
-      cardWrapperTopConstraint.constant = animateTo.y
-    }
+    let animateTo = cardLocation(forDesired: newTop?.position, direction: .down)
+    cardWrapperTopConstraint.constant = animateTo.y
     fixedCardWrapperTopConstraint.constant = newTop?.view.headerHeight ?? 0
     view.setNeedsUpdateConstraints()
 
@@ -363,9 +381,7 @@ class TGCardViewController: UIViewController {
       options: [.curveEaseInOut],
       animations: {
         self.view.layoutIfNeeded()
-        if forceExtended {
-          self.mapShadow.alpha = Constants.mapShadowVisibleAlpha
-        }
+        self.updateMapShadow(for: animateTo.position)
         topView.frame.origin.y = self.cardWrapperContent.frame.maxY
         self.cardTransitionShadow?.alpha = 0
       },
@@ -484,7 +500,7 @@ class TGCardViewController: UIViewController {
     view.setNeedsUpdateConstraints()
     
     UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
-      self.mapShadow.alpha = (snapTo.position == .extended) ? Constants.mapShadowVisibleAlpha : 0
+      self.updateMapShadow(for: snapTo.position)
       self.view.layoutIfNeeded()
       
     }, completion: { _ in
@@ -493,35 +509,45 @@ class TGCardViewController: UIViewController {
   }
   
   @objc
-  fileprivate func handleTap(_ recogniser: UITapGestureRecognizer) {
+  fileprivate func handleCardTap(_ recogniser: UITapGestureRecognizer) {
     
-    let animateTo: (position: TGCardPosition, y: CGFloat)
-    
-    switch (cardPosition, traitCollection.verticalSizeClass) {
-    case (.extended, _):          return // tapping when extended does nothing
-    case (.peaking, _):           animateTo = (.extended, extendedMinY)
-    case (.collapsed, .regular):  animateTo = (.peaking, peakY)
-    case (.collapsed, _):         animateTo = (.extended, extendedMinY)
+    let desired: TGCardPosition
+    switch (cardPosition) {
+    case (.extended):  return // tapping when extended does nothing
+    case (.peaking):   desired = .extended
+    case (.collapsed): desired = .peaking
     }
+    
+    switchTo(desired, direction: .up, animated: true)
+  }
+  
+  @objc
+  fileprivate func handleMapTap(_ recogniser: UITapGestureRecognizer) {
+    guard cardPosition == .extended, topCard?.mapManager != nil else { return }
+    
+    switchTo(.peaking, direction: .down, animated: true)
+  }
+  
+  fileprivate func switchTo(_ position: TGCardPosition, direction: Direction, animated: Bool) {
+    let animateTo = cardLocation(forDesired: position, direction: direction)
     
     cardWrapperTopConstraint.constant = animateTo.y
     view.setNeedsUpdateConstraints()
     
     UIView.animate(
-      withDuration: 0.35,
+      withDuration: animated ? 0.35 : 0,
       delay: 0,
       usingSpringWithDamping: 0.75,
       initialSpringVelocity: 0,
       options: [.curveEaseOut],
       animations: {
-        self.mapShadow.alpha = (animateTo.position == .extended) ? Constants.mapShadowVisibleAlpha : 0
+        self.updateMapShadow(for: animateTo.position)
         self.view.layoutIfNeeded()
     },
       completion: nil
     )
   }
   
-
   
   // MARK: - Sticky bar at the top
   
@@ -589,14 +615,27 @@ class TGCardViewController: UIViewController {
 extension TGCardViewController: UIGestureRecognizerDelegate {
   
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-    guard gestureRecognizer is UITapGestureRecognizer else { return true }
     
-    // Only intercept any taps when in the collapsed states.
-    // This is so that the tapper doesn't interfere with, say, taps on a table view.
-    switch cardPosition {
-    case .collapsed, .peaking:  return true
-    case .extended:             return false
+    if cardTapper == gestureRecognizer {
+      // Only intercept any taps when in the collapsed states.
+      // This is so that the tapper doesn't interfere with, say, taps on a table view.
+      switch cardPosition {
+      case .collapsed, .peaking:  return true
+      case .extended:             return false
+      }
+      
+    } else if mapShadowTapper == gestureRecognizer {
+      // Only intercept any taps when in the expanded state.
+      // This is so that the tapper doesn't interfere with taps on the map
+      switch cardPosition {
+      case .extended:             return true
+      case .collapsed, .peaking:  return false
+      }
+      
+    } else {
+      return true
     }
+    
   }
   
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
