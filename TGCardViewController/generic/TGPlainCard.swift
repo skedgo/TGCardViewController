@@ -24,13 +24,16 @@ class TGPlainCard : TGCard {
 
   let mapManager: TGMapManager?
   
-  init(title: String, subtitle: String? = nil, contentView: UIView? = nil, mapManager: TGMapManager? = nil) {
+  let defaultPosition: TGCardPosition
+  
+  init(title: String, subtitle: String? = nil, contentView: UIView? = nil, mapManager: TGMapManager? = nil, position: TGCardPosition = .peaking) {
     assert(!(contentView is UIScrollView), "This card is not meant for content views that are itself scrolling. Use `TGTableCardView` instead.")
     
     self.title = title
     self.subtitle = subtitle
     self.contentView = contentView
     self.mapManager = mapManager
+    self.defaultPosition = mapManager != nil ? position : .extended
   }
   
   func buildView(showClose: Bool) -> TGCardView {
@@ -39,11 +42,4 @@ class TGPlainCard : TGCard {
     return view
   }
   
-  func willAppear(animated: Bool) { }
-  
-  func didAppear(animated: Bool) { }
-  
-  func willDisappear(animated: Bool) { }
-  
-  func didDisappear(animated: Bool) { }
 }

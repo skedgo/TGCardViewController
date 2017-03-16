@@ -10,35 +10,14 @@ import UIKit
 
 class ExampleTableCard : TGTableCard {
 
-  fileprivate let source = ExampleDataSource()
+  fileprivate let source = ExampleTableDataSource()
 
   init() {
-    super.init(title: "Table", dataSource: source, delegate: source)
-  }
-  
-}
-
-class ExampleDataSource: NSObject {
-}
-
-extension ExampleDataSource : UITableViewDelegate {
-}
-
-extension ExampleDataSource : UITableViewDataSource {
-  
-  func numberOfSections(in tableView: UITableView) -> Int {
-    return 1
-  }
-  
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 30
-  }
-  
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let tableCell = UITableViewCell(style: .default, reuseIdentifier: nil)
-    tableCell.textLabel?.text = "Table cell #\(indexPath.row)"
-    return tableCell
-
+    super.init(title: "London stops", dataSource: source, delegate: source)
+    source.onSelect = {
+      let card = ExampleTableChildCard(annotation: $0)
+      self.controller?.push(card, animated: true)
+    }
   }
   
 }

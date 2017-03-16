@@ -10,7 +10,7 @@ import UIKit
 
 class ExampleAgendaCard: TGAgendaCard {
   
-  fileprivate let source = ExampleDataSource()
+  fileprivate let source = ExampleTableDataSource()
   
   init() {
     let container = UIView()

@@ -17,21 +17,19 @@ class TGCardViewController: UIViewController {
     /// top of the card to keep a bit of the map always showing through.
     fileprivate static let minMapSpace: CGFloat = 50
     
-    /// The minimum number of points from the top of the card to the
-    /// bottom of the screen to make sure a bit of the card is always
-    /// visible.
-    fileprivate static let minCardOverlap: CGFloat = 100
-    
     fileprivate static let pushAnimationDuration = 0.4
+    
+    fileprivate static let mapShadowVisibleAlpha: CGFloat = 0.25
   }
 
   @IBOutlet weak var stickyBar: UIView!
   @IBOutlet weak var mapView: MKMapView!
+  @IBOutlet weak var mapShadow: UIView!
   @IBOutlet weak var cardWrapperShadow: UIView!
   @IBOutlet weak var cardWrapperContent: UIView!
   fileprivate weak var cardTransitionShadow: UIView?
   @IBOutlet weak var statusBarBlurView: UIVisualEffectView!
-  
+
   // Dynamic constraints
   @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var stickyBarTopConstraint: NSLayoutConstraint!
@@ -41,11 +39,23 @@ class TGCardViewController: UIViewController {
 
   // Constraints to ensure cards don't get hidden
   @IBOutlet weak var fixedCardWrapperTopConstraint: NSLayoutConstraint!
+
+  var panner: UIPanGestureRecognizer!
+  var cardTapper: UITapGestureRecognizer!
+  var mapShadowTapper: UITapGestureRecognizer!
   
   fileprivate var isVisible = false
   
+  fileprivate var topCard: TGCard? {
+    return cards.last?.card
+  }
+  
+  fileprivate var cardViews: [TGCardView] {
+    return cardWrapperContent.subviews.flatMap { $0 as? TGCardView }
+  }
+  
   fileprivate var topCardView: TGCardView? {
-    return cardWrapperContent.subviews.last as? TGCardView
+    return cardViews.last
   }
 
   // MARK: - UIViewController
@@ -55,19 +65,34 @@ class TGCardViewController: UIViewController {
 
     // Panner for dragging cards up and down
     let panGesture = UIPanGestureRecognizer()
-    panGesture.addTarget(self, action: #selector(handle))
+    panGesture.addTarget(self, action: #selector(handlePan))
     panGesture.delegate = self
     cardWrapperContent.addGestureRecognizer(panGesture)
+    panner = panGesture
+    
+    // Tapper for tapping the title of the cards
+    let cardTapper = UITapGestureRecognizer()
+    cardTapper.addTarget(self, action: #selector(handleCardTap))
+    cardTapper.delegate = self
+    cardWrapperContent.addGestureRecognizer(cardTapper)
+    self.cardTapper = cardTapper
 
+    // Tapper for tapping the map shadow
+    let mapTapper = UITapGestureRecognizer()
+    mapTapper.addTarget(self, action: #selector(handleMapTap))
+    mapTapper.delegate = self
+    mapShadow.addGestureRecognizer(mapTapper)
+    self.mapShadowTapper = mapTapper
+    
     // Setting up additional constraints
-    fixedCardWrapperTopConstraint.constant = Constants.minCardOverlap * -1
     cardWrapperHeightConstraint.constant = extendedMinY * -1
+    fixedCardWrapperTopConstraint.constant = 0
     
     // Hide sticky bar at first
     hideStickyBar(animated: false)
 
     // Extend card at first
-    cardWrapperTopConstraint.constant = extendedMinY
+    cardWrapperTopConstraint.constant = collapsedMinY
     
     // Add a bit of a shadow behind card.
     cardWrapperShadow.layer.shadowColor = UIColor.black.cgColor
@@ -79,27 +104,27 @@ class TGCardViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    cards.last?.willAppear(animated: animated)
+    topCard?.willAppear(animated: animated)
   }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     
-    cards.last?.didAppear(animated: animated)
+    topCard?.didAppear(animated: animated)
     isVisible = true
   }
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     
-    cards.last?.willDisappear(animated: animated)
+    topCard?.willDisappear(animated: animated)
     isVisible = false
   }
   
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     
-    cards.last?.didDisappear(animated: animated)
+    topCard?.didDisappear(animated: animated)
   }
   
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -115,125 +140,226 @@ class TGCardViewController: UIViewController {
   }
   
   
-  // MARK: - Cards
+  // MARK: - Card positioning
   
-  fileprivate var cards = [TGCard]()
-  
-  fileprivate var cardOverlap: CGFloat {
-    guard let superview = cardWrapperContent.superview else { return 0 }
-    return mapView.frame.height - superview.frame.minY
+  fileprivate var cardPosition: TGCardPosition {
+    let cardY = cardWrapperTopConstraint.constant
+    
+    switch (cardY, traitCollection.verticalSizeClass) {
+    case (0..<peakY, _):                      return .extended
+    case (peakY..<collapsedMinY, .regular):   return .peaking
+    default:                                  return .collapsed
+    }
   }
   
-  fileprivate var mapEdgePadding: UIEdgeInsets {
-    return UIEdgeInsets(top: 0, left: 0, bottom: cardOverlap, right: 0)
+  fileprivate var extendedMinY: CGFloat {
+    var value: CGFloat = UIApplication.shared.statusBarFrame.height
+    
+    if let navigationBar = navigationController?.navigationBar {
+      value += navigationBar.frame.height
+    }
+    
+    value += Constants.minMapSpace
+    
+    return value
   }
   
-  fileprivate var cardViewAnimatedEndFrame: CGRect {
-    return CGRect(x: 0, y: 0, width: cardWrapperContent.frame.width, height: cardWrapperContent.frame.height)
+  fileprivate var collapsedMinY: CGFloat {
+    // It is save to use the full height of the frame, when actually
+    // positioning the card, the fixedCardWrapperTopConstraint will
+    // make sure that the top of the card remains visible.
+    return view.frame.height
   }
+  
+  fileprivate var peakY: CGFloat {
+    return (collapsedMinY - extendedMinY) / 2
+  }
+  
+  
+  /// The current amount of points of content at the top of the view
+  /// that's overlapping with the map. Includes status bar, if visible.
+  fileprivate var topOverlap: CGFloat {
+    return UIApplication.shared.statusBarFrame.height
+  }
+  
+  
+  /// The edge padding for the map that map managers should use
+  /// to determine the zoom and scroll position of the map.
+  ///
+  /// - Note: This is the card's overlap for the collapsed and peaking
+  ///         card positions, and capped at the peaking card position
+  ///         for the extended overlap (to avoid only having a tiny
+  ///         map area to work with).
+  fileprivate func mapEdgePadding(for position: TGCardPosition) -> UIEdgeInsets {
+    let cardY: CGFloat
+    switch position {
+    case .extended, .peaking: cardY = peakY
+    case .collapsed:          cardY = collapsedMinY - 75 // not entirely true, but close enough
+    }
+    let bottomOverlap = mapView.frame.height - cardY
+    return UIEdgeInsets(top: topOverlap, left: 0, bottom: bottomOverlap, right: 0)
+  }
+  
+  
+  /// Call this whenever the card position changes to properly configure the map shadow
+  ///
+  /// - Parameter position: New card position
+  fileprivate func updateMapShadow(for position: TGCardPosition) {
+    mapShadow.alpha = position == .extended ? Constants.mapShadowVisibleAlpha : 0
+    mapShadow.isUserInteractionEnabled = position == .extended
+  }
+  
+  
+  // MARK: - Card stack management
+  
+  fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
+  
+  
+  fileprivate func cardLocation(forDesired position: TGCardPosition?, direction: Direction) -> (position: TGCardPosition, y: CGFloat) {
+    guard let position = position else { return (.collapsed, collapsedMinY) }
+    
+    switch (position, traitCollection.verticalSizeClass, direction) {
+    case (.extended, _, _):         return (.extended, extendedMinY)
+    case (.peaking, .regular, _):   return (.peaking, peakY)
+    case (.peaking, _, .up):        return (.extended, extendedMinY)
+    case (.peaking, _, .down):      return (.collapsed, collapsedMinY)
+    case (.collapsed, _, _):        return (.collapsed, collapsedMinY)
+    }
+  }
+  
   
   func push(_ card: TGCard, animated: Bool = true) {
     var top = card
+    
+    // 1. Determine where the new card will go
+    let forceExtended = (top.mapManager == nil)
+    let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.defaultPosition, direction: .down)
 
-    // Updating card logic and informing of transition
-    let oldTop = cards.last
+    // 2. Updating card logic and informing of transition
+    let oldTop = topCard
     let notify = isVisible
     if notify {
       oldTop?.willDisappear(animated: animated)
       top.willAppear(animated: animated)
     }
     top.controller = self
-    cards.append(top)
+    if let oldTop = oldTop {
+      cards.removeLast()
+      cards.append( (oldTop, cardPosition) )
+    }
+    cards.append( (top, animateTo.position) )
     
+    // 3. Hand over the map
     oldTop?.mapManager?.cleanUp(mapView)
-    top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
+    top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
     
-    // Create the new view
+    // 4. Create and configure the new view
     let cardView = top.buildView(showClose: cards.count > 1)
     cardView.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     
-    // We animate the view coming in from the bottom
-    // we also temporarily insert a shadow view below if there's already a card
-    cardView.frame = cardViewAnimatedEndFrame
-    
+    // 5. Place the new view coming, preparing to animate in from the bottom
+    cardView.frame = cardWrapperContent.bounds
     if animated {
       cardView.frame.origin.y = cardWrapperContent.frame.maxY
     }
-    
     cardWrapperContent.addSubview(cardView)
     
-    func whenDone(completed: Bool) {
-      self.cardTransitionShadow?.removeFromSuperview()
-      if notify {
-        oldTop?.didDisappear(animated: animated)
-        top.didAppear(animated: animated)
-      }
+    // Give AutoLayout a nudge to layout the card view, now that we have
+    // the right hight. This is so that we can use `cardView.headerHeight`.
+    cardView.setNeedsUpdateConstraints()
+    cardView.layoutIfNeeded()
+    
+    // 6. Special handling of when the new top card has no map content
+    panner.isEnabled = !forceExtended
+    cardView.grabHandle.isHidden = forceExtended
+    
+    // 7. Set new position of the wrapper
+    cardWrapperTopConstraint.constant = animateTo.y
+    fixedCardWrapperTopConstraint.constant = cardView.headerHeight
+    view.setNeedsUpdateConstraints()
+    
+    // 8. Do the transition, optionally animated
+    // We insert a temporary shadow underneath the new top view and above the old
+    
+    if oldTop != nil && animated {
+      let shadow = TGCornerView(frame: cardWrapperContent.bounds)
+      shadow.frame.size.height += 50 // for bounciness
+      shadow.backgroundColor = .black
+      shadow.alpha = 0
+      cardWrapperContent.insertSubview(shadow, belowSubview: cardView)
+      cardTransitionShadow = shadow
     }
     
-    if animated {
-      if oldTop != nil {
-        let shadow = TGCornerView(frame: cardWrapperContent.bounds)
-        shadow.frame.size.height += 50 // for bounciness
-        shadow.backgroundColor = .black
-        shadow.alpha = 0
-        cardWrapperContent.insertSubview(shadow, belowSubview: cardView)
-        cardTransitionShadow = shadow
+    UIView.animate(
+      withDuration: animated ? Constants.pushAnimationDuration : 0,
+      delay: 0,
+      usingSpringWithDamping: 0.75,
+      initialSpringVelocity: 0,
+      options: [.curveEaseInOut],
+      animations: {
+        self.view.layoutIfNeeded()
+        self.updateMapShadow(for: animateTo.position)
+        cardView.frame = self.cardWrapperContent.bounds
+        self.cardTransitionShadow?.alpha = 0.15
+      },
+      completion: { finished in
+        self.topCardView?.scrollView.isScrollEnabled = animateTo.position == .extended
+        if notify {
+          oldTop?.didDisappear(animated: animated)
+          top.didAppear(animated: animated)
+        }
+        self.cardTransitionShadow?.removeFromSuperview()
       }
-      
-      UIView.animate(
-        withDuration: Constants.pushAnimationDuration,
-        delay: 0,
-        usingSpringWithDamping: 0.75,
-        initialSpringVelocity: 0,
-        options: [.curveEaseInOut],
-        animations: {
-          cardView.frame = self.cardViewAnimatedEndFrame
-          self.cardTransitionShadow?.alpha = 0.15
-        },
-        completion: whenDone)
-      
-    } else {
-      whenDone(completed: true)
-    }
+    )
+  }
+  
+  fileprivate func cardWithView(atIndex index: Int) -> (card: TGCard, position: TGCardPosition, view: TGCardView)? {
+    let cards = self.cards
+    let views = self.cardViews
+    guard cards.count > index, views.count > index else { return nil }
+    
+    return (cards[index].card, cards[index].lastPosition, views[index])
   }
   
   func pop(animated: Bool = true) {
-    guard var top = cards.last, let topView = topCardView else {
+    guard var top = topCard, let topView = topCardView else {
       print("Nothing to pop")
       return
     }
+
+    let newTop = cardWithView(atIndex: cards.count - 2)
     
-    // Updating card logic and informing of transitions
-    let newTop: TGCard? = cards.count > 1 ? cards[cards.count - 2] : nil
+    // 1. Updating card logic and informing of transitions
     let notify = isVisible
     if notify {
-      newTop?.willAppear(animated: animated)
+      newTop?.card.willAppear(animated: animated)
       top.willDisappear(animated: animated)
     }
-    
-    top.mapManager?.cleanUp(mapView)
-    newTop?.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
 
     // We update the stack immediately to allow calling this many times
     // while we're still animating without issues
     cards.remove(at: cards.count - 1)
     
-    // Clean-up when we're done. If we're not animated, that's all that's necessary
-    func whenDone(completed: Bool) {
-      top.controller = nil
-      if notify {
-        top.didDisappear(animated: animated)
-        newTop?.didAppear(animated: animated)
-      }
-      topView.removeFromSuperview()
-      self.cardTransitionShadow?.removeFromSuperview()
-    }
-    guard animated else { whenDone(completed: true); return }
+    // 2. Hand over the map
+    top.mapManager?.cleanUp(mapView)
+    newTop?.card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: newTop?.position ?? .collapsed), animated: animated)
     
+    // 3. Special handling of when the new top card has no map content
+    let forceExtended = (newTop?.card.mapManager == nil)
+    panner.isEnabled = !forceExtended
+    newTop?.view.grabHandle.isHidden = forceExtended
+    
+    // 4. Determine and set new position of the wrapper
+    let animateTo = cardLocation(forDesired: newTop?.position, direction: .down)
+    cardWrapperTopConstraint.constant = animateTo.y
+    fixedCardWrapperTopConstraint.constant = newTop?.view.headerHeight ?? 0
+    view.setNeedsUpdateConstraints()
+
+    // 5. Do the transition, optionally animated.
     // We animate the view moving back down to the bottom
     // we also temporarily insert a shadow view again, if there's a card below
     
-    if newTop != nil {
+    if animated && newTop != nil {
       let shadow = TGCornerView(frame: cardWrapperContent.bounds)
       shadow.backgroundColor = .black
       shadow.alpha = 0.15
@@ -242,16 +368,28 @@ class TGCardViewController: UIViewController {
     }
     
     UIView.animate(
-      withDuration: Constants.pushAnimationDuration * 1.25,
+      withDuration: animated ? Constants.pushAnimationDuration * 1.25 : 0,
       delay: 0,
       usingSpringWithDamping: 1,
       initialSpringVelocity: 0,
       options: [.curveEaseInOut],
       animations: {
+        self.view.layoutIfNeeded()
+        self.updateMapShadow(for: animateTo.position)
         topView.frame.origin.y = self.cardWrapperContent.frame.maxY
         self.cardTransitionShadow?.alpha = 0
       },
-      completion: whenDone)
+      completion: { completed in
+        self.topCardView?.scrollView.isScrollEnabled = animateTo.position == .extended
+        top.controller = nil
+        if notify {
+          top.didDisappear(animated: animated)
+          newTop?.card.didAppear(animated: animated)
+        }
+        topView.removeFromSuperview()
+        self.cardTransitionShadow?.removeFromSuperview()
+      }
+    )
     
   }
   
@@ -275,68 +413,142 @@ class TGCardViewController: UIViewController {
     }
   }
   
-  fileprivate var extendedMinY: CGFloat {
-    var value: CGFloat = UIApplication.shared.statusBarFrame.height
+  /// Determines where to snap the card wrapper to, considering its current
+  /// location and the provided velocity.
+  ///
+  /// - note:  We only go to peaking state, in regular size class.
+  ///
+  /// - Parameter velocity: Velocity of movement of card wrapper
+  /// - Returns: Desired snap position and y
+  fileprivate func determineSnap(for velocity: CGPoint) -> (position: TGCardPosition, y: CGFloat) {
     
-    if let navigationBar = navigationController?.navigationBar {
-      value += navigationBar.frame.height
+    let currentCardY = cardWrapperTopConstraint.constant
+    let nextCardY = currentCardY + velocity.y / 5 // in a fraction of a second
+    
+    // First we see if the card is close to a target snap position, then we use that
+    let delta: CGFloat = 22
+    switch (nextCardY, traitCollection.verticalSizeClass) {
+    case (extendedMinY - delta ..< extendedMinY + delta, _):
+      return (.extended, extendedMinY)
+    case (peakY - delta * 2 ..< peakY + delta * 2, .regular):
+      return (.peaking, peakY)
+    case (collapsedMinY - delta ..< collapsedMinY + delta, _):
+      return (.collapsed, collapsedMinY)
+    
+    default:
+      break // not near a target position
     }
     
-    value += Constants.minMapSpace
+    // Otherwise we look into the direction and snap to the next one that way
+    let direction = Direction(ofVelocity: velocity)
+    switch (direction, traitCollection.verticalSizeClass) {
+    case (.up, .compact): fallthrough
+    case (.up, _) where nextCardY < peakY:
+      return (.extended, extendedMinY)
+      
+    case (.down, .compact): fallthrough
+    case (.down, _) where nextCardY > peakY:
+      return (.collapsed, collapsedMinY)
+      
+    default:
+      return (.peaking, peakY)
+    }
     
-    return value
-  }
-  
-  fileprivate var collapsedMinY: CGFloat {
-    return view.frame.height - Constants.minCardOverlap
-  }
-  
-  fileprivate var topCardScrollView: UIScrollView? {
-    return topCardView?.scrollView
   }
   
   @objc
-  fileprivate func handle(_ recogniser: UIPanGestureRecognizer) {
+  fileprivate func handlePan(_ recogniser: UIPanGestureRecognizer) {
     let translation = recogniser.translation(in: cardWrapperContent)
     let velocity = recogniser.velocity(in: cardWrapperContent)
     let direction = Direction(ofVelocity: velocity)
     
-    let y = cardWrapperTopConstraint.constant
-    if (y + translation.y >= extendedMinY) && (y + translation.y <= collapsedMinY) {
+    let previousCardY = cardWrapperTopConstraint.constant
+    
+    // Reposition the card according to the pan as long as the user
+    // is dragging in the range of extended and collapsed
+    if (previousCardY + translation.y >= extendedMinY) && (previousCardY + translation.y <= collapsedMinY) {
       recogniser.setTranslation(.zero, in: cardWrapperContent)
-      cardWrapperTopConstraint.constant = y + translation.y
+      cardWrapperTopConstraint.constant = previousCardY + translation.y
       view.setNeedsUpdateConstraints()
       view.layoutIfNeeded()
     }
     
-    // Additionally, when we're done and there's a velocity, we'll
-    // animate snapping to the bottom or top
+    // Additionally, when the user is done panning, we'll snap the card
+    // to the appropriate state (extended, peaking, collapsed)
     guard recogniser.state == .ended else { return }
     
+    let snapTo = determineSnap(for: velocity)
+    let currentCardY = cardWrapperTopConstraint.constant
+    
+    // Now we can animate to the new position
     var duration = direction == .up
-      ? Double((y - extendedMinY) / -velocity.y)
-      : Double((collapsedMinY - y) / velocity.y )
+      ? Double((currentCardY - snapTo.y) / -velocity.y)
+      : Double((snapTo.y - currentCardY) / velocity.y )
+
+    // We add a max to not make it super slow when there was
+    // barely any velocity.
+    // We add a min to it to make sure the alpha transition
+    // animates nicely and not too suddenly.
+    duration = min(max(duration, 0.25), 1.3)
     
-    duration = duration > 1.3 ? 1 : duration
-    
-    cardWrapperTopConstraint.constant = direction == .up ? extendedMinY : collapsedMinY
+    cardWrapperTopConstraint.constant = snapTo.y
     view.setNeedsUpdateConstraints()
     
     UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
+      self.updateMapShadow(for: snapTo.position)
       self.view.layoutIfNeeded()
       
     }, completion: { _ in
-      if direction == .up {
-        self.topCardScrollView?.isScrollEnabled = true
-      }
+      self.topCardView?.scrollView?.isScrollEnabled = snapTo.position == .extended
     })
   }
-
+  
+  @objc
+  fileprivate func handleCardTap(_ recogniser: UITapGestureRecognizer) {
+    
+    let desired: TGCardPosition
+    switch (cardPosition) {
+    case (.extended):  return // tapping when extended does nothing
+    case (.peaking):   desired = .extended
+    case (.collapsed): desired = .peaking
+    }
+    
+    switchTo(desired, direction: .up, animated: true)
+  }
+  
+  @objc
+  fileprivate func handleMapTap(_ recogniser: UITapGestureRecognizer) {
+    guard cardPosition == .extended, topCard?.mapManager != nil else { return }
+    
+    switchTo(.peaking, direction: .down, animated: true)
+  }
+  
+  fileprivate func switchTo(_ position: TGCardPosition, direction: Direction, animated: Bool) {
+    let animateTo = cardLocation(forDesired: position, direction: direction)
+    
+    cardWrapperTopConstraint.constant = animateTo.y
+    view.setNeedsUpdateConstraints()
+    
+    UIView.animate(
+      withDuration: animated ? 0.35 : 0,
+      delay: 0,
+      usingSpringWithDamping: 0.75,
+      initialSpringVelocity: 0,
+      options: [.curveEaseOut],
+      animations: {
+        self.updateMapShadow(for: animateTo.position)
+        self.view.layoutIfNeeded()
+    },
+      completion: { _ in
+        self.topCardView?.scrollView?.isScrollEnabled = animateTo.position == .extended
+    })
+  }
+  
   
   // MARK: - Sticky bar at the top
   
   var isShowingSticky: Bool {
-    return self.stickyBarTopConstraint.constant > -1
+    return stickyBarTopConstraint.constant > -1
   }
   
   func showStickyBar(content: UIView, animated: Bool) {
@@ -398,9 +610,33 @@ class TGCardViewController: UIViewController {
 
 extension TGCardViewController: UIGestureRecognizerDelegate {
   
+  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    
+    if cardTapper == gestureRecognizer {
+      // Only intercept any taps when in the collapsed states.
+      // This is so that the tapper doesn't interfere with, say, taps on a table view.
+      switch cardPosition {
+      case .collapsed, .peaking:  return true
+      case .extended:             return false
+      }
+      
+    } else if mapShadowTapper == gestureRecognizer {
+      // Only intercept any taps when in the expanded state.
+      // This is so that the tapper doesn't interfere with taps on the map
+      switch cardPosition {
+      case .extended:             return true
+      case .collapsed, .peaking:  return false
+      }
+      
+    } else {
+      return true
+    }
+    
+  }
+  
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     
-    guard let scrollView = topCardScrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+    guard let scrollView = topCardView?.scrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
     
     let direction = Direction(ofVelocity: panner.velocity(in: cardWrapperContent))
     

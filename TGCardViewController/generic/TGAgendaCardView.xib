@@ -78,6 +78,8 @@
                 <outlet property="bottomViewContainerHeightConstraint" destination="Dxb-LU-Njv" id="Z3t-Yv-cW2"/>
                 <outlet property="bottomViewContainerTopConstraint" destination="bFz-0R-cS1" id="SeW-se-Ml4"/>
                 <outlet property="closeButton" destination="GTh-fW-jGw" id="6zz-iI-LL1"/>
+                <outlet property="grabHandle" destination="j0b-zd-Ism" id="L8I-KI-aUa"/>
+                <outlet property="scrollView" destination="5h6-Sk-RAc" id="lWr-BK-rW4"/>
                 <outlet property="subtitleLabel" destination="BsH-yj-EDf" id="bv2-vE-rLz"/>
                 <outlet property="tableView" destination="5h6-Sk-RAc" id="cQZ-ot-ah4"/>
                 <outlet property="titleLabel" destination="RtE-Vb-pHD" id="nTQ-sx-HdD"/>

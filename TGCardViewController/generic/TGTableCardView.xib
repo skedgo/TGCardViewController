@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -65,6 +65,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="closeButton" destination="gaZ-Nm-Ttn" id="8ec-H2-bUv"/>
+                <outlet property="grabHandle" destination="lf5-YV-zqk" id="fmS-0K-Vki"/>
                 <outlet property="scrollView" destination="9vC-GM-Rte" id="XSC-xp-0e1"/>
                 <outlet property="subtitleLabel" destination="Aj9-Wv-1Z7" id="0Qc-AW-rCK"/>
                 <outlet property="tableView" destination="9vC-GM-Rte" id="Dbs-WA-lYh"/>
