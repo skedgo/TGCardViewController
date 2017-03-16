@@ -44,6 +44,10 @@ class TGCardViewController: UIViewController {
   
   fileprivate var isVisible = false
   
+  fileprivate var topCard: TGCard? {
+    return cards.last?.card
+  }
+  
   fileprivate var cardViews: [TGCardView] {
     return cardWrapperContent.subviews.flatMap { $0 as? TGCardView }
   }
@@ -90,27 +94,27 @@ class TGCardViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    cards.last?.willAppear(animated: animated)
+    topCard?.willAppear(animated: animated)
   }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     
-    cards.last?.didAppear(animated: animated)
+    topCard?.didAppear(animated: animated)
     isVisible = true
   }
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     
-    cards.last?.willDisappear(animated: animated)
+    topCard?.willDisappear(animated: animated)
     isVisible = false
   }
   
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     
-    cards.last?.didDisappear(animated: animated)
+    topCard?.didDisappear(animated: animated)
   }
   
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -192,55 +196,67 @@ class TGCardViewController: UIViewController {
   
   // MARK: - Card stack management
   
-  fileprivate var cards = [TGCard]()
+  fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
+  
+  
+  func cardLocation(forDesired position: TGCardPosition) -> (position: TGCardPosition, y: CGFloat) {
+    switch (position, traitCollection.verticalSizeClass) {
+    case (.extended, _):        return (.extended, extendedMinY)
+    case (.peaking, .regular):  return (.peaking, peakY)
+    default:                    return (.collapsed, collapsedMinY)
+    }
+  }
+  
   
   func push(_ card: TGCard, animated: Bool = true) {
     var top = card
+    
+    // 1. Determine where the new card will go
+    let forceExtended = (top.mapManager == nil)
+    let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.defaultPosition)
 
-    // 1. Updating card logic and informing of transition
-    let oldTop = cards.last
+    // 2. Updating card logic and informing of transition
+    let oldTop = topCard
     let notify = isVisible
     if notify {
       oldTop?.willDisappear(animated: animated)
       top.willAppear(animated: animated)
     }
     top.controller = self
-    cards.append(top)
+    if let oldTop = oldTop {
+      cards.removeLast()
+      cards.append( (oldTop, cardPosition) )
+    }
+    cards.append( (top, animateTo.position) )
     
-    // 2. Hand over the map
+    // 3. Hand over the map
     oldTop?.mapManager?.cleanUp(mapView)
     top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
     
-    // 3. Create and configure the new view
+    // 4. Create and configure the new view
     let cardView = top.buildView(showClose: cards.count > 1)
     cardView.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     cardView.scrollView?.isScrollEnabled = cardPosition == .extended
     
-    // 4. Animate the view coming in from the bottom, with temporary shadow underneath
+    // 5. Place the new view coming, preparing to animate in from the bottom
     cardView.frame = cardWrapperContent.bounds
     if animated {
       cardView.frame.origin.y = cardWrapperContent.frame.maxY
     }
-    
     cardWrapperContent.addSubview(cardView)
     
-    // 5. Special handling of when the new top card has no map content
-    let forceExtended = (top.mapManager == nil)
+    // 6. Special handling of when the new top card has no map content
     panner.isEnabled = !forceExtended
     cardView.grabHandle.isHidden = forceExtended
     
-    // 6. Determine and set new position
-    let animateTo: (position: TGCardPosition, y: CGFloat)
-    switch (top.defaultPosition, forceExtended, traitCollection.verticalSizeClass) {
-    case (_, true, _), (.extended, false, _): animateTo = (.extended, extendedMinY)
-    case (.peaking, false, .regular):         animateTo = (.peaking, peakY)
-    default:                                  animateTo = (.collapsed, collapsedMinY)
-    }
+    // 7. Set new position of the wrapper
     cardWrapperTopConstraint.constant = animateTo.y
     fixedCardWrapperTopConstraint.constant = cardView.headerHeight
     view.setNeedsUpdateConstraints()
     
-    // 7. Animate to the new position
+    // 8. Do the transition, optionally animated
+    // We insert a temporary shadow underneath the new top view and above the old
+    
     if oldTop != nil && animated {
       let shadow = TGCornerView(frame: cardWrapperContent.bounds)
       shadow.frame.size.height += 50 // for bounciness
@@ -283,70 +299,55 @@ class TGCardViewController: UIViewController {
     )
   }
   
-  fileprivate func cardWithView(atIndex index: Int) -> (card: TGCard, view: TGCardView)? {
+  fileprivate func cardWithView(atIndex index: Int) -> (card: TGCard, position: TGCardPosition, view: TGCardView)? {
     let cards = self.cards
     let views = self.cardViews
     guard cards.count > index, views.count > index else { return nil }
     
-    return (cards[index], views[index])
+    return (cards[index].card, cards[index].lastPosition, views[index])
   }
   
   func pop(animated: Bool = true) {
-    guard var top = cards.last, let topView = topCardView else {
+    guard var top = topCard, let topView = topCardView else {
       print("Nothing to pop")
       return
     }
-    
-    // Updating card logic and informing of transitions
-    let newTop = cardWithView(atIndex: cards.count - 2)
 
+    let newTop = cardWithView(atIndex: cards.count - 2)
+    
+    // 1. Updating card logic and informing of transitions
     let notify = isVisible
     if notify {
       newTop?.card.willAppear(animated: animated)
       top.willDisappear(animated: animated)
     }
-    
-    top.mapManager?.cleanUp(mapView)
-    newTop?.card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
 
     // We update the stack immediately to allow calling this many times
     // while we're still animating without issues
     cards.remove(at: cards.count - 1)
     
+    // 2. Hand over the map
+    top.mapManager?.cleanUp(mapView)
+    newTop?.card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding, animated: animated)
+    
+    // 3. Special handling of when the new top card has no map content
     let forceExtended = (newTop?.card.mapManager == nil)
-    if forceExtended {
-      cardWrapperTopConstraint.constant = extendedMinY
-    }
     panner.isEnabled = !forceExtended
     newTop?.view.grabHandle.isHidden = forceExtended
-
+    
+    // 4. Determine and set new position of the wrapper
+    if let newPosition = newTop?.position {
+      let animateTo = cardLocation(forDesired: newPosition)
+      cardWrapperTopConstraint.constant = animateTo.y
+    }
     fixedCardWrapperTopConstraint.constant = newTop?.view.headerHeight ?? 0
     view.setNeedsUpdateConstraints()
-    
-    // Clean-up when we're done. If we're not animated, that's all that's necessary
-    func whenDone(completed: Bool) {
-      top.controller = nil
-      if notify {
-        top.didDisappear(animated: animated)
-        newTop?.card.didAppear(animated: animated)
-      }
-      topView.removeFromSuperview()
-      self.cardTransitionShadow?.removeFromSuperview()
-    }
-    
-    guard animated else {
-      view.layoutIfNeeded()
-      if forceExtended {
-        self.mapShadow.alpha = Constants.mapShadowVisibleAlpha
-      }
-      whenDone(completed: true)
-      return
-    }
-    
+
+    // 5. Do the transition, optionally animated.
     // We animate the view moving back down to the bottom
     // we also temporarily insert a shadow view again, if there's a card below
     
-    if newTop != nil {
+    if animated && newTop != nil {
       let shadow = TGCornerView(frame: cardWrapperContent.bounds)
       shadow.backgroundColor = .black
       shadow.alpha = 0.15
@@ -355,7 +356,7 @@ class TGCardViewController: UIViewController {
     }
     
     UIView.animate(
-      withDuration: Constants.pushAnimationDuration * 1.25,
+      withDuration: animated ? Constants.pushAnimationDuration * 1.25 : 0,
       delay: 0,
       usingSpringWithDamping: 1,
       initialSpringVelocity: 0,
@@ -368,7 +369,16 @@ class TGCardViewController: UIViewController {
         topView.frame.origin.y = self.cardWrapperContent.frame.maxY
         self.cardTransitionShadow?.alpha = 0
       },
-      completion: whenDone)
+      completion: { completed in
+        top.controller = nil
+        if notify {
+          top.didDisappear(animated: animated)
+          newTop?.card.didAppear(animated: animated)
+        }
+        topView.removeFromSuperview()
+        self.cardTransitionShadow?.removeFromSuperview()
+      }
+    )
     
   }
   
