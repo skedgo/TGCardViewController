@@ -11,12 +11,18 @@ project for showing how to use it and easily testing all the different cases.
 
 Behaviour:
 
+- Card positions (!3):
+    1. `collapsed`: Only shows header of card
+    2. `peaking`: Shows half of card's content and the map content
+    3. `extended`: Shows card fully, map shows a little bit on top but is greyed out
 - Pushing a card from another card
 	- [x] Adds (x) button unless it’s the root card
+    - [ ] Card has a preferred position which is used when pushing (!3)
 	- [x] Animation: Slide up from the bottom; fading black view on card below with alpha from 0% to 25%
 	- [x] Pass on appearance callbacks appropriately to involved cards
 - Popping a card
 	- [x] Tap (x) to pop card
+    - [ ] When popping top card, restore card position of card below when something got pushed on it (!3)
 	- [x] Animation: Slide back down; fading out black view on card below with alpha from 25% to 0%
 	- [x] Pass on appearance callbacks appropriately to involved cards
 - Cards are draggable
@@ -26,6 +32,7 @@ Behaviour:
 	- [ ] Tap title when collapsed: go to peaking (!3)
 	- [ ] Tap title when peaking: go to extended (!3)
 	- [x] Tap title when extended: do nothing
+	- [ ] Tap map when extended: go to peaking (!3)
 - Sticky bar at the top
 	- [x] Set content rather than just showing (!1)
 	- [x] Cross-fade content if it was showing already and there’s new content (!1)
@@ -60,7 +67,7 @@ Card styles:
 - [ ] Nice close button
 - [ ] Title and subtitle styling
 - [x] Add mini drop shadow to card views (!2)
-- [ ] Bottom view
+- [ ] Bottom view (!4)
 
 ### 3. Map content
 
