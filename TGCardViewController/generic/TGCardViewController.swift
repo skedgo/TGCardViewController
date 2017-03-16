@@ -256,7 +256,6 @@ class TGCardViewController: UIViewController {
     // 4. Create and configure the new view
     let cardView = top.buildView(showClose: cards.count > 1)
     cardView.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
-    cardView.scrollView?.isScrollEnabled = cardPosition == .extended
     
     // 5. Place the new view coming, preparing to animate in from the bottom
     cardView.frame = cardWrapperContent.bounds
@@ -299,6 +298,8 @@ class TGCardViewController: UIViewController {
         self.cardTransitionShadow?.alpha = 0.15
       },
       completion: { finished in
+        self.topCardView?.scrollView.isScrollEnabled = animateTo.position == .extended
+
         if notify {
           oldTop?.didDisappear(animated: animated)
           top.didAppear(animated: animated)
@@ -386,6 +387,7 @@ class TGCardViewController: UIViewController {
         self.cardTransitionShadow?.alpha = 0
       },
       completion: { completed in
+        self.topCardView?.scrollView.isScrollEnabled = animateTo.position == .extended
         top.controller = nil
         if notify {
           top.didDisappear(animated: animated)
@@ -544,8 +546,9 @@ class TGCardViewController: UIViewController {
         self.updateMapShadow(for: animateTo.position)
         self.view.layoutIfNeeded()
     },
-      completion: nil
-    )
+      completion: { _ in
+        self.topCardView?.scrollView?.isScrollEnabled = animateTo.position == .extended
+    })
   }
   
   
