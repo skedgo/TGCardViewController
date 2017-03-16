@@ -264,6 +264,11 @@ class TGCardViewController: UIViewController {
     }
     cardWrapperContent.addSubview(cardView)
     
+    // Give AutoLayout a nudge to layout the card view, now that we have
+    // the right hight. This is so that we can use `cardView.headerHeight`.
+    cardView.setNeedsUpdateConstraints()
+    cardView.layoutIfNeeded()
+    
     // 6. Special handling of when the new top card has no map content
     panner.isEnabled = !forceExtended
     cardView.grabHandle.isHidden = forceExtended
@@ -299,22 +304,10 @@ class TGCardViewController: UIViewController {
       },
       completion: { finished in
         self.topCardView?.scrollView.isScrollEnabled = animateTo.position == .extended
-
         if notify {
           oldTop?.didDisappear(animated: animated)
           top.didAppear(animated: animated)
         }
-        
-        // Hack in case that the card view's header height was previously unknown
-        // A better fix would be to change `fixedCardWrapperTopConstraint` from having
-        // a constant and using the frame's height to properly using AutoLayout, i.e.,
-        // to setting that constraint equal to the card view's constraint on the header.
-        if self.fixedCardWrapperTopConstraint.constant != cardView.headerHeight {
-          self.fixedCardWrapperTopConstraint.constant = cardView.headerHeight
-          self.view.setNeedsUpdateConstraints()
-          self.view.layoutIfNeeded()
-        }
-        
         self.cardTransitionShadow?.removeFromSuperview()
       }
     )
