@@ -18,7 +18,7 @@ class ExampleTableCard : TGTableCard {
   
 }
 
-fileprivate class ExampleDataSource: NSObject {
+class ExampleDataSource: NSObject {
 }
 
 extension ExampleDataSource : UITableViewDelegate {
