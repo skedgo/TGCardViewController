@@ -72,7 +72,7 @@ class TGCardViewController: UIViewController {
 
     // Setting up additional constraints
     cardWrapperHeightConstraint.constant = extendedMinY * -1
-    updateForNewTopCard()
+    fixedCardWrapperTopConstraint.constant = 0
     
     // Hide sticky bar at first
     hideStickyBar(animated: false)
@@ -190,20 +190,6 @@ class TGCardViewController: UIViewController {
   }
   
   
-  /// Needs to get called whenever a new top card has been added
-  ///
-  /// Adjusts the constraints as required, primarily the inequality
-  /// constraint on the card's top spacing to make sure the card
-  /// doesn't disappear when triggering the sticky bar or changing
-  /// trait collections.
-  fileprivate func updateForNewTopCard() {
-    guard let overlap = topCardView?.headerHeight else { return }
-    fixedCardWrapperTopConstraint.constant = overlap
-    view.setNeedsUpdateConstraints()
-    view.layoutIfNeeded()
-  }
-  
-  
   // MARK: - Card stack management
   
   fileprivate var cards = [TGCard]()
@@ -251,6 +237,7 @@ class TGCardViewController: UIViewController {
     default:                                  animateTo = (.collapsed, collapsedMinY)
     }
     cardWrapperTopConstraint.constant = animateTo.y
+    fixedCardWrapperTopConstraint.constant = cardView.headerHeight
     view.setNeedsUpdateConstraints()
     
     // 7. Animate to the new position
@@ -276,11 +263,21 @@ class TGCardViewController: UIViewController {
         self.cardTransitionShadow?.alpha = 0.15
       },
       completion: { finished in
-        self.updateForNewTopCard()
         if notify {
           oldTop?.didDisappear(animated: animated)
           top.didAppear(animated: animated)
         }
+        
+        // Hack in case that the card view's header height was previously unknown
+        // A better fix would be to change `fixedCardWrapperTopConstraint` from having
+        // a constant and using the frame's height to properly using AutoLayout, i.e.,
+        // to setting that constraint equal to the card view's constraint on the header.
+        if self.fixedCardWrapperTopConstraint.constant != cardView.headerHeight {
+          self.fixedCardWrapperTopConstraint.constant = cardView.headerHeight
+          self.view.setNeedsUpdateConstraints()
+          self.view.layoutIfNeeded()
+        }
+        
         self.cardTransitionShadow?.removeFromSuperview()
       }
     )
@@ -319,10 +316,12 @@ class TGCardViewController: UIViewController {
     let forceExtended = (newTop?.card.mapManager == nil)
     if forceExtended {
       cardWrapperTopConstraint.constant = extendedMinY
-      view.setNeedsUpdateConstraints()
     }
     panner.isEnabled = !forceExtended
     newTop?.view.grabHandle.isHidden = forceExtended
+
+    fixedCardWrapperTopConstraint.constant = newTop?.view.headerHeight ?? 0
+    view.setNeedsUpdateConstraints()
     
     // Clean-up when we're done. If we're not animated, that's all that's necessary
     func whenDone(completed: Bool) {
@@ -333,7 +332,6 @@ class TGCardViewController: UIViewController {
       }
       topView.removeFromSuperview()
       self.cardTransitionShadow?.removeFromSuperview()
-      self.updateForNewTopCard()
     }
     
     guard animated else {
