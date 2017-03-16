@@ -1,46 +1,59 @@
 //
-//  ExampleRootCard.swift
+//  MockupRootCard.swift
 //  TGCardViewController
 //
-//  Created by Adrian Schoenig on 9/3/17.
+//  Created by Adrian Schoenig on 16/3/17.
 //  Copyright © 2017 SkedGo Pty Ltd. All rights reserved.
 //
 
 import UIKit
-import MapKit
 
-class ExampleRootCard : TGTableCard {
+class MockupRootCard : TGTableCard {
   
   fileprivate let source = DataSource()
   
   init() {
-    let nuremberg = MKPointAnnotation()
-    nuremberg.coordinate = CLLocationCoordinate2DMake(49.45, 11.08)
-    
-    let mapManager = TGMapManager()
-    mapManager.annotations = [nuremberg]
-    mapManager.preferredZoomLevel = .country
-    
-    super.init(title: "Card Demo", dataSource: source, delegate: source, mapManager: mapManager)
+    super.init(title: "TripGo Mock-up", dataSource: source, delegate: source)
     
     source.onSelect = { item in
       self.controller?.push(item.card)
     }
   }
-  
+
 }
 
 fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSource {
-  
+
   typealias Item = (title: String, card: TGCard)
   
   var onSelect: ((Item) -> Void)?
   
+  enum Mockup {
+    case agenda
+    case routes
+    case event
+    
+    var card: TGCard {
+      switch self {
+      case .agenda:
+        return MockupImageCard(title: "Agenda", image: #imageLiteral(resourceName: "agenda"), targets: [
+          (0.14 ..< 0.17, Mockup.routes.card),
+          (0.17 ..< 0.25, Mockup.event.card),
+          (0.33 ..< 0.36, Mockup.routes.card),
+          (0.44 ..< 0.47, Mockup.routes.card),
+          (0.47 ..< 0.55, Mockup.event.card),
+          (0.55 ..< 0.58, Mockup.routes.card),
+        ])
+      case .event:
+        return MockupImageCard(title: "Work Laureate", image: #imageLiteral(resourceName: "agenda-event"))
+      case .routes:
+        return MockupImageCard(title: "Routes", image: #imageLiteral(resourceName: "routes"))
+      }
+    }
+  }
+  
   let items: [Item] = [
-    (title: "Show Mock-up", card: MockupRootCard()),
-    (title: "Show Erlking", card: ExampleChildCard()),
-    (title: "Show Table",   card: ExampleTableCard()),
-    (title: "Show Agenda",  card: ExampleAgendaCard()),
+    (title: "Agenda", card: Mockup.agenda.card),
   ]
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
