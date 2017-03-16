@@ -17,11 +17,6 @@ class TGCardViewController: UIViewController {
     /// top of the card to keep a bit of the map always showing through.
     fileprivate static let minMapSpace: CGFloat = 50
     
-    /// The minimum number of points from the top of the card to the
-    /// bottom of the screen to make sure a bit of the card is always
-    /// visible.
-    fileprivate static let minCardOverlap: CGFloat = 100
-    
     fileprivate static let pushAnimationDuration = 0.4
     
     fileprivate static let mapShadowVisibleAlpha: CGFloat = 0.25
@@ -156,8 +151,10 @@ class TGCardViewController: UIViewController {
   }
   
   fileprivate var collapsedMinY: CGFloat {
-    let overlap = topCardView?.headerHeight ?? Constants.minCardOverlap
-    return view.frame.height - overlap
+    // It is save to use the full height of the frame, when actually
+    // positioning the card, the fixedCardWrapperTopConstraint will
+    // make sure that the top of the card remains visible.
+    return view.frame.height
   }
   
   fileprivate var peakY: CGFloat {
@@ -200,8 +197,8 @@ class TGCardViewController: UIViewController {
   /// doesn't disappear when triggering the sticky bar or changing
   /// trait collections.
   fileprivate func updateForNewTopCard() {
-    let overlap = topCardView?.headerHeight ?? Constants.minCardOverlap
-    fixedCardWrapperTopConstraint.constant = overlap * -1
+    guard let overlap = topCardView?.headerHeight else { return }
+    fixedCardWrapperTopConstraint.constant = overlap
     view.setNeedsUpdateConstraints()
     view.layoutIfNeeded()
   }
