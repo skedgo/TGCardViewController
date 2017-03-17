@@ -9,11 +9,11 @@
 import UIKit
 import MapKit
 
-class ExampleRootCard : TGPlainCard {
+class ExampleRootCard : TGTableCard {
+  
+  fileprivate let source = DataSource()
   
   init() {
-    let content = ExampleRootContentView.instantiate()
-    
     let nuremberg = MKPointAnnotation()
     nuremberg.coordinate = CLLocationCoordinate2DMake(49.45, 11.08)
     
@@ -21,27 +21,45 @@ class ExampleRootCard : TGPlainCard {
     mapManager.annotations = [nuremberg]
     mapManager.preferredZoomLevel = .country
     
-    super.init(title: "Root", contentView: content, mapManager: mapManager)
+    super.init(title: "Card Demo", dataSource: source, delegate: source, mapManager: mapManager)
+    
+    source.onSelect = { item in
+      self.controller?.push(item.card)
+    }
+  }
+  
+}
 
-    content.addChildButton.addTarget(self, action: #selector(addChildTapped(sender:)), for: .touchUpInside)
-    content.showTableButton.addTarget(self, action: #selector(showTableTapped(sender:)), for: .touchUpInside)
-    content.showPagingWithoutTableButton.addTarget(self, action: #selector(showPagingWithoutTableTapped(sender:)), for: .touchUpInside)
+fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSource {
+  
+  typealias Item = (title: String, card: TGCard)
+  
+  var onSelect: ((Item) -> Void)?
+  
+  let items: [Item] = [
+    (title: "Show Mock-up", card: MockupRootCard()),
+    (title: "Show Erlking", card: ExampleChildCard()),
+    (title: "Show Table",   card: ExampleTableCard()),
+    (title: "Show Agenda",  card: ExampleAgendaCard()),
+  ]
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    onSelect?(items[indexPath.row])
   }
   
-  @objc
-  func addChildTapped(sender: Any) {
-    controller?.push(ExampleChildCard())
-  }
-
-  @objc
-  func showTableTapped(sender: Any) {
-    controller?.push(ExampleTableCard())
+  func numberOfSections(in tableView: UITableView) -> Int {
+    return 1
   }
   
-  @objc
-  func showPagingWithoutTableTapped(sender: Any) {
-    controller?.push(ExamplePagingPlainCard())
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return items.count
   }
   
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let tableCell = UITableViewCell(style: .default, reuseIdentifier: nil)
+    let row = indexPath.row
+    tableCell.textLabel?.text = items[row].card.title
+    return tableCell
+  }
   
 }

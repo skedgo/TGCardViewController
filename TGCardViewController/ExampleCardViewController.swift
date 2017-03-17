@@ -12,13 +12,10 @@ import MapKit
 class ExampleCardViewController: TGCardViewController {
 
   required init(coder aDecoder: NSCoder) {
+    // When loading from the storyboard we don't want to use the controller
+    // as defined in the storyboard but instead use the TGCardViewController.xib
     super.init(nibName: "TGCardViewController", bundle: .main)
   }
-  
-//  override func awakeAfter(using aDecoder: NSCoder) -> Any? {
-//    // The super classes XIB file defines the whole structure
-//    return TGCardViewController(nibName: "TGCardViewController", bundle: .main) as Any
-//  }
   
   override func viewDidLoad() {
     super.viewDidLoad()

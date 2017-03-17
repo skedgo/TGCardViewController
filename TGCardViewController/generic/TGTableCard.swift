@@ -9,12 +9,12 @@
 import UIKit
 
 class TGTableCard : TGCard {
-  
   weak var controller: TGCardViewController?
   
   let title: String
   let subtitle: String?
   let mapManager: TGMapManager?
+  let defaultPosition: TGCardPosition
 
   weak var tableViewDelegate: UITableViewDelegate?
   weak var tableViewDataSource: UITableViewDataSource?
@@ -26,6 +26,7 @@ class TGTableCard : TGCard {
     self.mapManager = mapManager
     self.tableViewDataSource = dataSource
     self.tableViewDelegate = delegate
+    self.defaultPosition = mapManager != nil ? .peaking : .extended
   }
   
   func buildView(showClose: Bool) -> TGCardView {
@@ -33,13 +34,5 @@ class TGTableCard : TGCard {
     view.configure(with: self, showClose: showClose)
     return view
   }
-  
-  func willAppear(animated: Bool) { }
-  
-  func didAppear(animated: Bool) { }
-  
-  func willDisappear(animated: Bool) { }
-  
-  func didDisappear(animated: Bool) { }
   
 }

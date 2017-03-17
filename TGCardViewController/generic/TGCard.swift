@@ -22,6 +22,9 @@ protocol TGCard {
   /// The manager that handles the content of the map for this card
   var mapManager: TGMapManager? { get }
   
+  /// The position to display the card in, when pushing
+  var defaultPosition: TGCardPosition { get }
+  
   /// Builds the card view to represent the card
   ///
   /// - Returns: Card view configured with the content of this card
@@ -57,4 +60,16 @@ protocol TGCard {
   ///
   /// - Parameter animated: If it was animated
   func didDisappear(animated: Bool)
+}
+
+extension TGCard {
+  
+  func willAppear(animated: Bool) { }
+  
+  func didAppear(animated: Bool) { }
+  
+  func willDisappear(animated: Bool) { }
+  
+  func didDisappear(animated: Bool) { }
+  
 }
