@@ -255,7 +255,7 @@ class TGCardViewController: UIViewController {
     
     // 4. Create and configure the new view
     let cardView = top.buildView(showClose: cards.count > 1)
-    cardView.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+    cardView.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     
     // 5. Place the new view coming, preparing to animate in from the bottom
     cardView.frame = cardWrapperContent.bounds
@@ -271,7 +271,7 @@ class TGCardViewController: UIViewController {
     
     // 6. Special handling of when the new top card has no map content
     panner.isEnabled = !forceExtended
-    cardView.grabHandle.isHidden = forceExtended
+    cardView.grabHandle?.isHidden = forceExtended
     
     // 7. Set new position of the wrapper
     cardWrapperTopConstraint.constant = animateTo.y
@@ -347,7 +347,7 @@ class TGCardViewController: UIViewController {
     // 3. Special handling of when the new top card has no map content
     let forceExtended = (newTop?.card.mapManager == nil)
     panner.isEnabled = !forceExtended
-    newTop?.view.grabHandle.isHidden = forceExtended
+    newTop?.view.grabHandle?.isHidden = forceExtended
     
     // 4. Determine and set new position of the wrapper
     let animateTo = cardLocation(forDesired: newTop?.position, direction: .down)

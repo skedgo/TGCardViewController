@@ -24,7 +24,7 @@ class TGTableCardView: TGCardView {
   func configure(with card: TGTableCard, showClose: Bool) {
     titleLabel.text = card.title
     subtitleLabel.text = card.subtitle    
-    closeButton.isHidden = !showClose
+    closeButton?.isHidden = !showClose
     
     tableView.dataSource = card.tableViewDataSource
     tableView.delegate = card.tableViewDelegate

@@ -41,7 +41,7 @@ class TGAgendaCardView: TGCardView {
   func configure(with card: TGAgendaCard, dismissable: Bool) {
     titleLabel.text = card.title
     subtitleLabel.text = card.subtitle
-    closeButton.isHidden = !dismissable
+    closeButton?.isHidden = !dismissable
     tableView.delegate = card.tableViewDelegate
     tableView.dataSource = card.tableViewDataSource
     

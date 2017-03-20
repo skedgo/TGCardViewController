@@ -9,12 +9,12 @@
 import UIKit
 
 class TGAgendaCard: TGCard {
+  
   weak var controller: TGCardViewController?
   
   let title: String
   let subtitle: String?
   let mapManager: TGMapManager?
-  
   let defaultPosition: TGCardPosition = .peaking
   
   /// This is the content for the bottom view.
@@ -43,13 +43,4 @@ class TGAgendaCard: TGCard {
     return view
   }
   
-  // MARK: - Card view life cycle
-  
-  func willAppear(animated: Bool) { }
-  
-  func didAppear(animated: Bool) { }
-  
-  func willDisappear(animated: Bool) { }
-  
-  func didDisappear(animated: Bool) { }
 }
