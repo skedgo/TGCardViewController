@@ -10,7 +10,18 @@ import UIKit
 
 class TGScrollCard: TGCard {
   
-  weak var controller: TGCardViewController?
+  weak var controller: TGCardViewController? {
+    didSet {
+      contentCards.forEach {
+        // Since TGCard is not specified as a class-only protocol, $0 can be 
+        // either a reference-type instance or a value-type instance. Hence,
+        // compiler will issue a warning about $0 being immutable. Assigning
+        // $0 to a variable allows us to modify its controller property.
+        var vCard = $0
+        vCard.controller = controller
+      }
+    }
+  }
   
   let title: String
   let mapManager: TGMapManager?
