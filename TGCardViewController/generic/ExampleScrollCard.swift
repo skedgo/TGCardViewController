@@ -25,7 +25,7 @@ class ExampleScrollCard: TGScrollCard {
     mapManager.annotations = [sydney]
     mapManager.preferredZoomLevel = .city
     
-    super.init(title: "Paging views", contentCards: [card1, card2, card3], mapManager: nil)
+    super.init(title: "Paging views", contentCards: [card1, card2, card3], mapManager: mapManager)
   }
   
 }

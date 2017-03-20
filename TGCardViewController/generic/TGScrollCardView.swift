@@ -12,6 +12,24 @@ class TGScrollCardView: TGCardView {
   
   @IBOutlet weak var contentView: UIView!
   
+  override var headerHeight: CGFloat {
+    guard contentView.subviews.count > 0 else { return 0 }
+    
+    var currentContent: UIView?
+    
+    for aContent in contentView.subviews {
+      if aContent.frame.contains(scrollView.contentOffset) {
+        currentContent = aContent
+      }
+    }
+    
+    if let cardView = currentContent as? TGCardView {
+      return cardView.headerHeight
+    }
+    
+    return 0
+  }
+  
   // MARK: - New instance
   
   static func instantiate() -> TGScrollCardView {
@@ -65,7 +83,5 @@ class TGScrollCardView: TGCardView {
       previous = view
     }
   }
-  
-  
   
 }

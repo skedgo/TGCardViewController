@@ -242,7 +242,12 @@ class TGCardViewController: UIViewController {
       oldTop?.willDisappear(animated: animated)
       top.willAppear(animated: animated)
     }
+    
     top.controller = self
+//    if let scrollCard = top as? TGScrollCard {
+//      scrollCard.delegate = self
+//    }
+    
     if let oldTop = oldTop {
       cards.removeLast()
       cards.append( (oldTop, cardPosition) )
@@ -608,6 +613,14 @@ class TGCardViewController: UIViewController {
   
 }
 
+extension TGCardViewController: TGScrollCardDelegate {
+  
+  func scrollCardDidEndPaging(_ card: TGScrollCard) {
+    panner.isEnabled = true
+  }
+  
+}
+
 extension TGCardViewController: UIGestureRecognizerDelegate {
   
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -635,16 +648,23 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
   
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     
-    guard let scrollView = topCardView?.scrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+    guard let scrollView = otherGestureRecognizer.view as? UIScrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+    
+//    print("(before - panner: \(panner.isEnabled), scrolling: \(scrollView.isScrollEnabled), paging: \(scrollView.isPagingEnabled))")
     
     let direction = Direction(ofVelocity: panner.velocity(in: cardWrapperContent))
     
+    let velocity = panner.velocity(in: cardWrapperContent)
+    let isPanningHorizontally = fabs(velocity.x) > fabs(velocity.y)
+    
     let y = cardWrapperTopConstraint.constant
     if (y == extendedMinY && scrollView.contentOffset.y == 0 && direction == .down) || (y == collapsedMinY) {
-      scrollView.isScrollEnabled = false
+      scrollView.isScrollEnabled = false || isPanningHorizontally
     } else {
       scrollView.isScrollEnabled = true
     }
+    
+    print("(after - panner: \(panner.isEnabled), scrolling: \(scrollView.isScrollEnabled), paging: \(scrollView.isPagingEnabled))")
     
     return false
   }

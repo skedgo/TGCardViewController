@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TGScrollCard: TGCard {
+class TGScrollCard: NSObject, TGCard {
   
   weak var controller: TGCardViewController? {
     didSet {
@@ -22,6 +22,8 @@ class TGScrollCard: TGCard {
       }
     }
   }
+  
+  weak var delegate: TGScrollCardDelegate?
   
   let title: String
   let mapManager: TGMapManager?
@@ -39,7 +41,27 @@ class TGScrollCard: TGCard {
   func buildView(showClose: Bool) -> TGCardView {
     let view = TGScrollCardView.instantiate()
     view.configure(with: self)
+    view.scrollView.delegate = self
     return view
   }
 
+}
+
+protocol TGScrollCardDelegate: class {
+  
+  func scrollCardDidEndPaging(_ card: TGScrollCard)
+  
+}
+
+extension TGScrollCard: UIScrollViewDelegate {
+  
+  func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+    scrollView.isUserInteractionEnabled = false
+  }
+  
+  func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    scrollView.isUserInteractionEnabled = true
+    delegate?.scrollCardDidEndPaging(self)
+  }
+  
 }
