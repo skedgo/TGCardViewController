@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 class ExampleScrollCard: TGScrollCard {
   
@@ -17,7 +18,14 @@ class ExampleScrollCard: TGScrollCard {
     
     let card3 = ExampleChildCard()
     
-    super.init(title: "Paging views", contentCards: [card1, card2, card3])
+    let sydney = MKPointAnnotation()
+    sydney.coordinate = CLLocationCoordinate2DMake(-33.86, 151.21)
+    
+    let mapManager = TGMapManager()
+    mapManager.annotations = [sydney]
+    mapManager.preferredZoomLevel = .city
+    
+    super.init(title: "Paging views", contentCards: [card1, card2, card3], mapManager: nil)
   }
   
 }
