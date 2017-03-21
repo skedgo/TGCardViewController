@@ -46,6 +46,8 @@
 		D39107B11E79705D0043B6B3 /* ExampleAgendaCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39107B01E79705D0043B6B3 /* ExampleAgendaCard.swift */; };
 		D39107B51E7977660043B6B3 /* TGAgendaCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39107B41E7977660043B6B3 /* TGAgendaCard.swift */; };
 		D398BF9E1E7F5D07002248E5 /* ExampleScrollCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D398BF9D1E7F5D07002248E5 /* ExampleScrollCard.swift */; };
+		D398BFA01E80B3CE002248E5 /* ExampleScrollStickyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D398BF9F1E80B3CE002248E5 /* ExampleScrollStickyView.swift */; };
+		D398BFA41E80B785002248E5 /* ExampleScrollStickyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D398BFA31E80B785002248E5 /* ExampleScrollStickyView.xib */; };
 		D3F77BF81E7B67CB00D0DFF1 /* TGCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F77BF61E7B67CB00D0DFF1 /* TGCornerView.swift */; };
 		D3F77BF91E7B67CB00D0DFF1 /* TGGrabHandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F77BF71E7B67CB00D0DFF1 /* TGGrabHandleView.swift */; };
 /* End PBXBuildFile section */
@@ -104,6 +106,8 @@
 		D39107B01E79705D0043B6B3 /* ExampleAgendaCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleAgendaCard.swift; sourceTree = "<group>"; };
 		D39107B41E7977660043B6B3 /* TGAgendaCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGAgendaCard.swift; path = generic/TGAgendaCard.swift; sourceTree = "<group>"; };
 		D398BF9D1E7F5D07002248E5 /* ExampleScrollCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExampleScrollCard.swift; path = generic/ExampleScrollCard.swift; sourceTree = "<group>"; };
+		D398BF9F1E80B3CE002248E5 /* ExampleScrollStickyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleScrollStickyView.swift; sourceTree = "<group>"; };
+		D398BFA31E80B785002248E5 /* ExampleScrollStickyView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleScrollStickyView.xib; sourceTree = "<group>"; };
 		D3F77BF61E7B67CB00D0DFF1 /* TGCornerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCornerView.swift; path = generic/TGCornerView.swift; sourceTree = "<group>"; };
 		D3F77BF71E7B67CB00D0DFF1 /* TGGrabHandleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGGrabHandleView.swift; path = generic/TGGrabHandleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -237,6 +241,8 @@
 				3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */,
 				3AB8944E1E7AB25900267A06 /* ExampleTableDataSource.swift */,
 				D398BF9D1E7F5D07002248E5 /* ExampleScrollCard.swift */,
+				D398BF9F1E80B3CE002248E5 /* ExampleScrollStickyView.swift */,
+				D398BFA31E80B785002248E5 /* ExampleScrollStickyView.xib */,
 			);
 			name = "example cards";
 			sourceTree = "<group>";
@@ -335,6 +341,7 @@
 				3AB894581E7AEBC400267A06 /* MockupImageContentView.xib in Resources */,
 				3ACA74891E716AFC00408678 /* Main.storyboard in Resources */,
 				3ACA74CB1E72FA6E00408678 /* TGTableCardView.xib in Resources */,
+				D398BFA41E80B785002248E5 /* ExampleScrollStickyView.xib in Resources */,
 				3ACA74C01E71A12200408678 /* ExampleChildContentView.xib in Resources */,
 				3ACA74AF1E71718800408678 /* TGCardViewController.xib in Resources */,
 			);
@@ -373,6 +380,7 @@
 				3ACA74A91E716ED600408678 /* TGCard.swift in Sources */,
 				3ACA74861E716AFC00408678 /* ExampleCardViewController.swift in Sources */,
 				3AE839C81E76A92B0035D9B0 /* ExampleChildStickyView.swift in Sources */,
+				D398BFA01E80B3CE002248E5 /* ExampleScrollStickyView.swift in Sources */,
 				3ACA74A61E716CB900408678 /* TGCardViewController.swift in Sources */,
 				3ACA74B51E717C2F00408678 /* TGCardView.swift in Sources */,
 				3ACA74C71E72FA3900408678 /* TGTableCard.swift in Sources */,

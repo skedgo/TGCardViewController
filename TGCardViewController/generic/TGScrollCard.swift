@@ -44,7 +44,15 @@ class TGScrollCard: NSObject, TGCard {
     view.scrollView.delegate = self
     return view
   }
-
+  
+  func didAppear(animated: Bool) {
+    // Subclass to implement
+  }
+  
+  func willAppear(animated: Bool) {
+    // Subclass to implement
+  }
+  
 }
 
 protocol TGScrollCardDelegate: class {

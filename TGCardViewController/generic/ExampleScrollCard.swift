@@ -28,4 +28,18 @@ class ExampleScrollCard: TGScrollCard {
     super.init(title: "Paging views", contentCards: [card1, card2, card3], mapManager: mapManager)
   }
   
+  override func willAppear(animated: Bool) {
+    super.willAppear(animated: animated)
+    
+    let stickyContent = ExampleScrollStickyView.instantiate()
+    stickyContent.closeButton.addTarget(self, action: #selector(closeButtonTapped(sender:)), for: .touchUpInside)
+    controller?.showStickyBar(content: stickyContent, animated: true)
+  }
+  
+  @objc
+  func closeButtonTapped(sender: Any) {
+    controller?.pop()
+    controller?.hideStickyBar(animated: true)
+  }
+  
 }

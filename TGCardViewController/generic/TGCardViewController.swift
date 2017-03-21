@@ -231,6 +231,11 @@ class TGCardViewController: UIViewController {
   func push(_ card: TGCard, animated: Bool = true) {
     var top = card
     
+    // Set the controller on the top card earlier, because we may want
+    // to ask the card to do something on willAppear, e.g., show sticky 
+    // bar, which requires access to this property.
+    top.controller = self
+    
     // 1. Determine where the new card will go
     let forceExtended = (top.mapManager == nil)
     let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.defaultPosition, direction: .down)
@@ -243,15 +248,10 @@ class TGCardViewController: UIViewController {
       top.willAppear(animated: animated)
     }
     
-    top.controller = self
-//    if let scrollCard = top as? TGScrollCard {
-//      scrollCard.delegate = self
-//    }
-    
     if let oldTop = oldTop {
       cards.removeLast()
       cards.append( (oldTop, cardPosition) )
-    }
+    }    
     cards.append( (top, animateTo.position) )
     
     // 3. Hand over the map
@@ -617,7 +617,6 @@ class TGCardViewController: UIViewController {
   
   fileprivate func overwriteStickyBarContent(with content: UIView) {
     stickyBar.subviews.forEach { $0.removeFromSuperview() }
-    
     content.translatesAutoresizingMaskIntoConstraints = false
     stickyBar.addSubview(content)
     content.leadingAnchor.constraint(equalTo: stickyBar.leadingAnchor).isActive = true
@@ -679,7 +678,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
       scrollView.isScrollEnabled = true
     }
     
-    print("(after - panner: \(panner.isEnabled), scrolling: \(scrollView.isScrollEnabled), paging: \(scrollView.isPagingEnabled))")
+    print("(after - panner: \(panner.isEnabled), scrolling: \(scrollView.isScrollEnabled), paging: \(scrollView.isPagingEnabled), scroller: \(scrollView))")
     
     return false
   }
