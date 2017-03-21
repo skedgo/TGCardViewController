@@ -7,8 +7,14 @@
 //
 
 import UIKit
+import RxSwift
 
-class TGScrollCard: NSObject, TGCard {
+class TGScrollCard: TGCard {
+  
+  enum Direction {
+    case forward
+    case backward
+  }
   
   weak var controller: TGCardViewController? {
     didSet {
@@ -23,13 +29,13 @@ class TGScrollCard: NSObject, TGCard {
     }
   }
   
-  weak var delegate: TGScrollCardDelegate?
-  
   let title: String
   let mapManager: TGMapManager?
   let defaultPosition: TGCardPosition
   
   let contentCards: [TGCard]
+  
+  var move = PublishSubject<Direction>()
   
   init(title: String, contentCards: [TGCard], mapManager: TGMapManager? = nil) {
     self.title = title
@@ -40,8 +46,8 @@ class TGScrollCard: NSObject, TGCard {
   
   func buildView(showClose: Bool) -> TGCardView {
     let view = TGScrollCardView.instantiate()
+    move = PublishSubject<Direction>()
     view.configure(with: self)
-    view.scrollView.delegate = self
     return view
   }
   
@@ -51,25 +57,6 @@ class TGScrollCard: NSObject, TGCard {
   
   func willAppear(animated: Bool) {
     // Subclass to implement
-  }
-  
-}
-
-protocol TGScrollCardDelegate: class {
-  
-  func scrollCardDidEndPaging(_ card: TGScrollCard)
-  
-}
-
-extension TGScrollCard: UIScrollViewDelegate {
-  
-  func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-    scrollView.isUserInteractionEnabled = false
-  }
-  
-  func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-    scrollView.isUserInteractionEnabled = true
-    delegate?.scrollCardDidEndPaging(self)
   }
   
 }

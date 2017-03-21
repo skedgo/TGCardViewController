@@ -18,19 +18,37 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="edy-eG-Hww">
                     <rect key="frame" x="168" y="40" width="39" height="26"/>
                     <state key="normal" title="Close">
-                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NGc-Mk-rcf">
+                    <rect key="frame" x="69" y="38" width="59" height="30"/>
+                    <state key="normal" title="Previous">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wg7-ab-DSQ">
+                    <rect key="frame" x="247" y="38" width="32" height="30"/>
+                    <state key="normal" title="Next">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
             </subviews>
-            <color key="backgroundColor" red="0.98039215690000003" green="0.066666666669999999" blue="0.30980392159999998" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.0" green="0.80000000000000004" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
+                <constraint firstItem="Wg7-ab-DSQ" firstAttribute="leading" secondItem="edy-eG-Hww" secondAttribute="trailing" constant="40" id="KNQ-ap-rJq"/>
+                <constraint firstItem="edy-eG-Hww" firstAttribute="leading" secondItem="NGc-Mk-rcf" secondAttribute="trailing" constant="40" id="OFE-k1-pHv"/>
+                <constraint firstItem="edy-eG-Hww" firstAttribute="centerY" secondItem="NGc-Mk-rcf" secondAttribute="centerY" id="Ttb-RZ-wIL"/>
                 <constraint firstAttribute="bottom" secondItem="edy-eG-Hww" secondAttribute="bottom" constant="20" id="gkD-MW-1AI"/>
+                <constraint firstItem="Wg7-ab-DSQ" firstAttribute="centerY" secondItem="NGc-Mk-rcf" secondAttribute="centerY" id="nKi-Ii-8ki"/>
                 <constraint firstItem="edy-eG-Hww" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="40" id="qev-QP-Np0"/>
                 <constraint firstItem="edy-eG-Hww" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="sZ1-cS-2RE"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="closeButton" destination="edy-eG-Hww" id="yLB-eb-ALn"/>
+                <outlet property="nextButton" destination="Wg7-ab-DSQ" id="r65-Tj-hTl"/>
+                <outlet property="previousButton" destination="NGc-Mk-rcf" id="tan-vD-Xor"/>
             </connections>
             <point key="canvasLocation" x="42.5" y="62"/>
         </view>

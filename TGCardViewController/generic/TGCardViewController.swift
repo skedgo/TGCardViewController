@@ -239,6 +239,8 @@ class TGCardViewController: UIViewController {
     // 1. Determine where the new card will go
     let forceExtended = (top.mapManager == nil)
     let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.defaultPosition, direction: .down)
+    
+    let cardView = top.buildView(showClose: cards.count > 1)
 
     // 2. Updating card logic and informing of transition
     let oldTop = topCard
@@ -251,7 +253,7 @@ class TGCardViewController: UIViewController {
     if let oldTop = oldTop {
       cards.removeLast()
       cards.append( (oldTop, cardPosition) )
-    }    
+    }
     cards.append( (top, animateTo.position) )
     
     // 3. Hand over the map
@@ -259,7 +261,7 @@ class TGCardViewController: UIViewController {
     top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
     
     // 4. Create and configure the new view
-    let cardView = top.buildView(showClose: cards.count > 1)
+//    let cardView = top.buildView(showClose: cards.count > 1)
     cardView.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     
     // 5. Place the new view coming, preparing to animate in from the bottom
@@ -623,14 +625,6 @@ class TGCardViewController: UIViewController {
     content.trailingAnchor.constraint(equalTo: stickyBar.trailingAnchor).isActive = true
     content.topAnchor.constraint(equalTo: stickyBar.topAnchor).isActive = true
     content.bottomAnchor.constraint(equalTo: stickyBar.bottomAnchor).isActive = true
-  }
-  
-}
-
-extension TGCardViewController: TGScrollCardDelegate {
-  
-  func scrollCardDidEndPaging(_ card: TGScrollCard) {
-    panner.isEnabled = true
   }
   
 }

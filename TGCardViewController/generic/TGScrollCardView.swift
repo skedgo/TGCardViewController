@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import RxSwift
 
 class TGScrollCardView: TGCardView {
   
   @IBOutlet weak var contentView: UIView!
+  
+  fileprivate let disposeBag = DisposeBag()
   
   override var headerHeight: CGFloat {
     guard contentView.subviews.count > 0 else { return 0 }
@@ -37,11 +40,53 @@ class TGScrollCardView: TGCardView {
     return bundle.loadNibNamed("TGScrollCardView", owner: nil, options: nil)!.first as! TGScrollCardView
   }
   
+  // MARK: - Navigation
+  
+  func moveForward(animated: Bool = true) {
+    // Shift by the entire width of the card view
+    let newX = scrollView.contentOffset.x + frame.width
+    
+    // Make sure we don't go over.
+    guard newX < scrollView.contentSize.width else { return }
+    
+    if animated {
+      UIView.animate(withDuration: 0.4, animations: { 
+        self.scrollView.contentOffset = CGPoint(x: newX, y: 0)
+      })
+    } else {
+      scrollView.contentOffset = CGPoint(x: newX, y: 0)
+    }
+  }
+  
+  func moveBackward(animated: Bool = true) {
+    let newX = scrollView.contentOffset.x - frame.width
+    
+    // We don't wanna go off screen.
+    guard newX >= 0 else { return }
+    
+    if animated {
+      UIView.animate(withDuration: 0.4, animations: { 
+        self.scrollView.contentOffset = CGPoint(x: newX, y: 0)
+      })
+    } else {
+      scrollView.contentOffset = CGPoint(x: newX, y: 0)
+    }
+  }
+  
   // MARK: - Configuration
   
   func configure(with card: TGScrollCard) {
     let contents = card.contentCards.map { $0.buildView(showClose: true) }
     fill(with: contents)
+    
+    card.move
+      .subscribe(onNext: { [weak self] in
+        switch $0 {
+        case .forward:  self?.moveForward()
+        case .backward: self?.moveBackward()
+        }
+      })
+      .addDisposableTo(disposeBag)
   }
   
   private func fill(with contentViews: [UIView]) {
