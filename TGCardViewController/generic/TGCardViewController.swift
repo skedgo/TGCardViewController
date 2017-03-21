@@ -557,9 +557,24 @@ class TGCardViewController: UIViewController {
   }
   
   func showStickyBar(content: UIView, animated: Bool) {
-    let stickyHeight = content.frame.height
-    
+    // It's okay to do replacement here, even though the height of the
+    // sticky bar may not fit the content. This is because the height
+    // constraint on the sticky bar has lower priority, so AL can break
+    // it if conflicts arise.
     overwriteStickyBarContent(with: content)
+    
+    // The content view passed in here may be loaded from xib, to get
+    // the correct height, we need to adjust its width and ask the AL
+    // to compute the fitting height.
+    content.frame.size.width = stickyBar.frame.width
+    
+    // Do a layout pass, just to make sure its subviews are still laid
+    // out correctly after the change in width.
+    content.setNeedsLayout()
+    content.layoutIfNeeded()
+    
+    // Ask the AL for the most fitting height.
+    let stickyHeight = content.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
     
     stickyBarHeightConstraint.constant = stickyHeight
     stickyBarTopConstraint.constant = 0
