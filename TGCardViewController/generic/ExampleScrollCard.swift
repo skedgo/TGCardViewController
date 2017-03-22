@@ -37,6 +37,10 @@ class ExampleScrollCard: TGScrollCard {
     showHeaderView()
   }
   
+  override func willDisappear(animated: Bool) {
+    super.willDisappear(animated: animated)
+    controller?.hideStickyBar(animated: true)
+  }
   
   fileprivate func showHeaderView() {
     let headerView = ExampleScrollStickyView.instantiate()
