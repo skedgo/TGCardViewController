@@ -73,6 +73,21 @@ class TGScrollCardView: TGCardView {
     }
   }
   
+  func move(to cardIndex: Int, animated: Bool = true) {
+    // index must fall within the range of available content cards.
+    guard 0..<contentView.subviews.count ~= cardIndex else { return }
+    
+    let newX = frame.width * CGFloat(cardIndex)
+    
+    if animated {
+      UIView.animate(withDuration: 0.4) {
+        self.scrollView.contentOffset = CGPoint(x: newX, y: 0)
+      }
+    } else {
+      scrollView.contentOffset = CGPoint(x: newX, y: 0)
+    }
+  }
+  
   // MARK: - Configuration
   
   func configure(with card: TGScrollCard) {
@@ -82,8 +97,9 @@ class TGScrollCardView: TGCardView {
     card.move
       .subscribe(onNext: { [weak self] in
         switch $0 {
-        case .forward:  self?.moveForward()
-        case .backward: self?.moveBackward()
+        case .forward:          self?.moveForward()
+        case .backward:         self?.moveBackward()
+        case .jump(let index):  self?.move(to: index)
         }
       })
       .addDisposableTo(disposeBag)
