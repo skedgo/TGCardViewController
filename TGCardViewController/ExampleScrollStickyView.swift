@@ -13,6 +13,7 @@ class ExampleScrollStickyView: UIView {
   @IBOutlet weak var previousButton: UIButton!
   @IBOutlet weak var nextButton: UIButton!
   @IBOutlet weak var closeButton: UIButton!
+  @IBOutlet weak var jumpButton: UIButton!
   
   static func instantiate() -> ExampleScrollStickyView {
     let bundle = Bundle(for: self)

@@ -14,6 +14,7 @@ class TGScrollCard: TGCard {
   enum Direction {
     case forward
     case backward
+    case jump(Int)
   }
   
   weak var controller: TGCardViewController? {

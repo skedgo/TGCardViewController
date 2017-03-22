@@ -19,6 +19,8 @@ class ExampleScrollCard: TGScrollCard {
     let card1 = TGPlainCard(title: "Sample card 1")
     let card2 = ExampleTableCard()
     let card3 = ExampleChildCard()
+    let card4 = TGPlainCard(title: "Sample card 4")
+    let card5 = TGPlainCard(title: "Sample card 5")
     
     let sydney = MKPointAnnotation()
     sydney.coordinate = CLLocationCoordinate2DMake(-33.86, 151.21)
@@ -27,7 +29,7 @@ class ExampleScrollCard: TGScrollCard {
     mapManager.annotations = [sydney]
     mapManager.preferredZoomLevel = .city
     
-    super.init(title: "Paging views", contentCards: [card1, card2, card3], mapManager: mapManager)
+    super.init(title: "Paging views", contentCards: [card1, card2, card3, card4, card5], mapManager: mapManager)
   }
   
   override func willAppear(animated: Bool) {
@@ -53,6 +55,15 @@ class ExampleScrollCard: TGScrollCard {
 
     headerView.previousButton.rx.tap
       .map { Direction.backward }
+      .bindTo(move)
+      .addDisposableTo(disposeBag)
+    
+    headerView.jumpButton.rx.tap
+      .map {
+        let index = arc4random_uniform(UInt32(self.contentCards.count))
+        print("jumping to page \(index)")
+        return Direction.jump(Int(index))
+      }
       .bindTo(move)
       .addDisposableTo(disposeBag)
     
