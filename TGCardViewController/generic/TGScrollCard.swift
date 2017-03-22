@@ -47,7 +47,13 @@ class TGScrollCard: TGCard {
   
   func buildView(showClose: Bool) -> TGCardView {
     let view = TGScrollCardView.instantiate()
+    
+    // It's important that we use a new observable here. The observable
+    // will be added to the disposable bag maintained by `view`. As that
+    // view gets deallocated, so does the disposable bag and we will not
+    // be getting any future events from the observable.
     move = PublishSubject<Direction>()
+    
     view.configure(with: self)
     return view
   }
