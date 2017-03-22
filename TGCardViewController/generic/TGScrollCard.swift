@@ -31,18 +31,37 @@ class TGScrollCard: TGCard {
   }
   
   let title: String
-  let mapManager: TGMapManager?
+  var mapManager: TGMapManager?
   let defaultPosition: TGCardPosition
   
   let contentCards: [TGCard]
   
-  var move = PublishSubject<Direction>()
+  fileprivate let disposeBag = DisposeBag()
   
-  init(title: String, contentCards: [TGCard], mapManager: TGMapManager? = nil) {
+  fileprivate var rx_currentPageIndex_var = Variable(0) {
+    didSet {
+      rx_currentPageIndex_var
+        .asObservable()
+        .filter { [unowned self] in
+          0..<self.contentCards.count ~= $0
+        }
+        .subscribe(onNext: { [unowned self] in
+          self.mapManager = self.contentCards[$0].mapManager
+          print("map manager swapped to \(self.mapManager) on page \($0)")
+        })
+        .addDisposableTo(disposeBag)
+    }
+  }
+  
+  var rx_currentPagIndex: Observable<Int> {
+    return rx_currentPageIndex_var.asObservable()
+  }
+  
+  init(title: String, contentCards: [TGCard]) {
     self.title = title
-    self.mapManager = mapManager
     self.contentCards = contentCards
-    self.defaultPosition = mapManager != nil ? .peaking : .extended
+    self.defaultPosition = .peaking
+    self.mapManager = contentCards.first?.mapManager
   }
   
   func buildView(showClose: Bool) -> TGCardView {
@@ -52,17 +71,46 @@ class TGScrollCard: TGCard {
     // will be added to the disposable bag maintained by `view`. As that
     // view gets deallocated, so does the disposable bag and we will not
     // be getting any future events from the observable.
-    move = PublishSubject<Direction>()
+    rx_currentPageIndex_var = Variable(0)
     
     view.configure(with: self)
     return view
   }
+  
+  // MARK: - Navigation
+  
+  func moveForward() {
+    let old = rx_currentPageIndex_var.value
+    let new = min(old + 1, contentCards.count - 1)
+    rx_currentPageIndex_var.value = new
+  }
+  
+  func moveBackward() {
+    let old = rx_currentPageIndex_var.value
+    let new = max(old - 1, 0)
+    rx_currentPageIndex_var.value = new
+  }
+  
+  func move(to page: Int) {
+    guard 0..<contentCards.count ~= page else { return }
+    rx_currentPageIndex_var.value = page
+  }
+  
+  // MARK: - Card life cycle
   
   func didAppear(animated: Bool) {
     // Subclass to implement
   }
   
   func willAppear(animated: Bool) {
+    // Subclass to implement
+  }
+  
+  func willDisappear(animated: Bool) {
+    // Subclass to implement
+  }
+  
+  func didDisappear(animated: Bool) {
     // Subclass to implement
   }
   

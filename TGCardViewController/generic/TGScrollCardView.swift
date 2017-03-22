@@ -94,13 +94,9 @@ class TGScrollCardView: TGCardView {
     let contents = card.contentCards.map { $0.buildView(showClose: false) }
     fill(with: contents)
     
-    card.move
+    card.rx_currentPagIndex
       .subscribe(onNext: { [weak self] in
-        switch $0 {
-        case .forward:          self?.moveForward()
-        case .backward:         self?.moveBackward()
-        case .jump(let index):  self?.move(to: index)
-        }
+        self?.move(to: $0)
       })
       .addDisposableTo(disposeBag)
   }
