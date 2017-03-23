@@ -25,14 +25,6 @@ class TGScrollCard: TGCard {
   }
   
   let title: String
-  let contentCards: [TGCard]
-  let initialPageIndex: Int
-  
-  fileprivate let disposeBag = DisposeBag()
-  
-  var defaultPosition: TGCardPosition {
-    return mapManager != nil ? .peaking : .extended
-  }
   
   // Scroll card itself doesn't have a map manager. Instead, it passes through
   // the manager that handles the map view for the current card.
@@ -41,15 +33,24 @@ class TGScrollCard: TGCard {
     return contentCards[currentPage].mapManager
   }
   
+  let defaultPosition: TGCardPosition
+  
+  let contentCards: [TGCard]
+  
+  let initialPageIndex: Int
+  
+  fileprivate let disposeBag = DisposeBag()
+  
   fileprivate let rx_currentPageIndex_var: Variable<Int>
-  var rx_currentPagIndex: Observable<Int> {
+  var rx_currentPageIndex: Observable<Int> {
     return rx_currentPageIndex_var.asObservable()
   }
   
-  init(title: String, contentCards: [TGCard], initialPage: Int = 0) {
+  init(title: String, contentCards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
     self.title = title
     self.contentCards = contentCards
     self.initialPageIndex = initialPage
+    self.defaultPosition = initialPosition
     self.rx_currentPageIndex_var = Variable(initialPage)
   }
   

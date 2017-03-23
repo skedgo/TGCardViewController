@@ -239,8 +239,6 @@ class TGCardViewController: UIViewController {
     // 1. Determine where the new card will go
     let forceExtended = (top.mapManager == nil)
     let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.defaultPosition, direction: .down)
-    
-    let cardView = top.buildView(showClose: cards.count > 1)
 
     // 2. Updating card logic and informing of transition
     let oldTop = topCard
@@ -261,7 +259,7 @@ class TGCardViewController: UIViewController {
     top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
     
     // 4. Create and configure the new view
-//    let cardView = top.buildView(showClose: cards.count > 1)
+    let cardView = top.buildView(showClose: cards.count > 1)
     cardView.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     
     // 5. Place the new view coming, preparing to animate in from the bottom
@@ -310,7 +308,7 @@ class TGCardViewController: UIViewController {
         self.cardTransitionShadow?.alpha = 0.15
       },
       completion: { finished in
-        self.topCardView?.scrollView.isScrollEnabled = animateTo.position == .extended
+        self.topCardView?.allowContentScrolling(animateTo.position == .extended)
         if notify {
           oldTop?.didDisappear(animated: animated)
           top.didAppear(animated: animated)
@@ -387,7 +385,7 @@ class TGCardViewController: UIViewController {
         self.cardTransitionShadow?.alpha = 0
       },
       completion: { completed in
-        self.topCardView?.scrollView.isScrollEnabled = animateTo.position == .extended
+        self.topCardView?.allowContentScrolling(animateTo.position == .extended)
         top.controller = nil
         if notify {
           top.didDisappear(animated: animated)
@@ -506,7 +504,7 @@ class TGCardViewController: UIViewController {
       self.view.layoutIfNeeded()
       
     }, completion: { _ in
-      self.topCardView?.scrollView?.isScrollEnabled = snapTo.position == .extended
+      self.topCardView?.allowContentScrolling(snapTo.position == .extended)
     })
   }
   
@@ -547,7 +545,7 @@ class TGCardViewController: UIViewController {
         self.view.layoutIfNeeded()
     },
       completion: { _ in
-        self.topCardView?.scrollView?.isScrollEnabled = animateTo.position == .extended
+        self.topCardView?.allowContentScrolling(animateTo.position == .extended)
     })
   }
   
@@ -656,7 +654,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
   
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     
-    guard let scrollView = otherGestureRecognizer.view as? UIScrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+    guard let scrollView = topCardView?.scrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
     
 //    print("(before - panner: \(panner.isEnabled), scrolling: \(scrollView.isScrollEnabled), paging: \(scrollView.isPagingEnabled))")
     

@@ -11,6 +11,8 @@ import RxSwift
 
 class TGScrollCardView: TGCardView {
   
+  @IBOutlet weak var pager: UIScrollView!
+  
   @IBOutlet weak var contentView: UIView!
   
   fileprivate let disposeBag = DisposeBag()
@@ -21,7 +23,7 @@ class TGScrollCardView: TGCardView {
     var currentContent: UIView?
     
     for aContent in contentView.subviews {
-      if aContent.frame.contains(scrollView.contentOffset) {
+      if aContent.frame.contains(pager.contentOffset) {
         currentContent = aContent
       }
     }
@@ -31,6 +33,24 @@ class TGScrollCardView: TGCardView {
     }
     
     return 0
+  }
+  
+  override var pagingScrollView: UIScrollView? {
+    get {
+      return pager
+    }
+    set {}
+  }
+  
+  override var contentScrollViews: [UIScrollView] {
+    get {
+      guard let cardViews = contentView.subviews as? [TGCardView] else {
+        return []
+      }
+      
+      return cardViews.flatMap { $0.scrollView }
+    }
+    set {}
   }
   
   // MARK: - New instance
@@ -44,32 +64,32 @@ class TGScrollCardView: TGCardView {
   
   func moveForward(animated: Bool = true) {
     // Shift by the entire width of the card view
-    let newX = scrollView.contentOffset.x + frame.width
+    let newX = pager.contentOffset.x + frame.width
     
     // Make sure we don't go over.
-    guard newX < scrollView.contentSize.width else { return }
+    guard newX < pager.contentSize.width else { return }
     
     if animated {
       UIView.animate(withDuration: 0.4, animations: { 
-        self.scrollView.contentOffset = CGPoint(x: newX, y: 0)
+        self.pager.contentOffset = CGPoint(x: newX, y: 0)
       })
     } else {
-      scrollView.contentOffset = CGPoint(x: newX, y: 0)
+      pager.contentOffset = CGPoint(x: newX, y: 0)
     }
   }
   
   func moveBackward(animated: Bool = true) {
-    let newX = scrollView.contentOffset.x - frame.width
+    let newX = pager.contentOffset.x - frame.width
     
     // We don't wanna go off screen.
     guard newX >= 0 else { return }
     
     if animated {
       UIView.animate(withDuration: 0.4, animations: { 
-        self.scrollView.contentOffset = CGPoint(x: newX, y: 0)
+        self.pager.contentOffset = CGPoint(x: newX, y: 0)
       })
     } else {
-      scrollView.contentOffset = CGPoint(x: newX, y: 0)
+      pager.contentOffset = CGPoint(x: newX, y: 0)
     }
   }
   
@@ -81,10 +101,10 @@ class TGScrollCardView: TGCardView {
     
     if animated {
       UIView.animate(withDuration: 0.4) {
-        self.scrollView.contentOffset = CGPoint(x: newX, y: 0)
+        self.pager.contentOffset = CGPoint(x: newX, y: 0)
       }
     } else {
-      scrollView.contentOffset = CGPoint(x: newX, y: 0)
+      pager.contentOffset = CGPoint(x: newX, y: 0)
     }
   }
   
@@ -94,7 +114,7 @@ class TGScrollCardView: TGCardView {
     let contents = card.contentCards.map { $0.buildView(showClose: false) }
     fill(with: contents)
     
-    card.rx_currentPagIndex
+    card.rx_currentPageIndex
       .distinctUntilChanged()
       .subscribe(onNext: { [weak self] in
         self?.move(to: $0)
@@ -130,7 +150,7 @@ class TGScrollCardView: TGCardView {
       // All contents have the same width, which equals to the width of
       // the scroll view. Note that, scroll view is used here, instead
       // of its content view.
-      view.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor).isActive = true
+      view.widthAnchor.constraint(equalTo: self.pager.widthAnchor).isActive = true
       
       // The last content is connected to the trailing edge of the
       // scroll view's content view.
