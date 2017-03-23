@@ -38,9 +38,9 @@ class ExampleScrollCard: TGScrollCard {
     let headerView = ExampleScrollStickyView.instantiate()
     
     headerView.closeButton.rx.tap
-      .subscribe(onNext: { [weak self] in
-        self?.controller?.pop()
-        self?.controller?.hideStickyBar(animated: true)
+      .subscribe(onNext: {
+        self.controller?.pop()
+        self.controller?.hideStickyBar(animated: true)
       })
       .addDisposableTo(disposeBag)
     
