@@ -26,22 +26,10 @@ class TGScrollCard: TGCard {
   
   let title: String
   let contentCards: [TGCard]
+  let initialPageIndex: Int
   
   fileprivate let disposeBag = DisposeBag()
   
-  fileprivate var rx_currentPageIndex_var = Variable(0) {
-    didSet {
-      rx_currentPageIndex_var
-        .asObservable()
-        .filter { [unowned self] in
-          0..<self.contentCards.count ~= $0
-        }
-        .subscribe(onNext: { [unowned self] in
-          self.mapManager = self.contentCards[$0].mapManager
-          print("map manager swapped to \(self.mapManager) on page \($0)")
-        })
-        .addDisposableTo(disposeBag)
-    }
   var defaultPosition: TGCardPosition {
     return mapManager != nil ? .peaking : .extended
   }
@@ -53,26 +41,21 @@ class TGScrollCard: TGCard {
     return contentCards[currentPage].mapManager
   }
   
+  fileprivate let rx_currentPageIndex_var: Variable<Int>
   var rx_currentPagIndex: Observable<Int> {
     return rx_currentPageIndex_var.asObservable()
   }
   
-  init(title: String, contentCards: [TGCard]) {
+  init(title: String, contentCards: [TGCard], initialPage: Int = 0) {
     self.title = title
     self.contentCards = contentCards
-    self.defaultPosition = .peaking
-    self.mapManager = contentCards.first?.mapManager
+    self.initialPageIndex = initialPage
+    self.rx_currentPageIndex_var = Variable(initialPage)
   }
   
   func buildView(showClose: Bool) -> TGCardView {
     let view = TGScrollCardView.instantiate()
-    
-    // It's important that we use a new observable here. The observable
-    // will be added to the disposable bag maintained by `view`. As that
-    // view gets deallocated, so does the disposable bag and we will not
-    // be getting any future events from the observable.
-    rx_currentPageIndex_var = Variable(0)
-    
+    rx_currentPageIndex_var.value = initialPageIndex
     view.configure(with: self)
     return view
   }
