@@ -95,6 +95,7 @@ class TGScrollCardView: TGCardView {
     fill(with: contents)
     
     card.rx_currentPagIndex
+      .distinctUntilChanged()
       .subscribe(onNext: { [weak self] in
         self?.move(to: $0)
       })
