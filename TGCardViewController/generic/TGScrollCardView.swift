@@ -42,17 +42,6 @@ class TGScrollCardView: TGCardView {
     set {}
   }
   
-//  override var contentScrollViews: [UIScrollView] {
-//    get {
-//      guard let cardViews = contentView.subviews as? [TGCardView] else {
-//        return []
-//      }
-//      
-//      return cardViews.flatMap { $0.scrollView }
-//    }
-//    set {}
-//  }
-  
   // MARK: - New instance
   
   static func instantiate() -> TGScrollCardView {
