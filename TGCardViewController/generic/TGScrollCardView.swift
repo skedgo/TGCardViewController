@@ -42,16 +42,16 @@ class TGScrollCardView: TGCardView {
     set {}
   }
   
-  override var contentScrollViews: [UIScrollView] {
-    get {
-      guard let cardViews = contentView.subviews as? [TGCardView] else {
-        return []
-      }
-      
-      return cardViews.flatMap { $0.scrollView }
-    }
-    set {}
-  }
+//  override var contentScrollViews: [UIScrollView] {
+//    get {
+//      guard let cardViews = contentView.subviews as? [TGCardView] else {
+//        return []
+//      }
+//      
+//      return cardViews.flatMap { $0.scrollView }
+//    }
+//    set {}
+//  }
   
   // MARK: - New instance
   
@@ -120,6 +120,11 @@ class TGScrollCardView: TGCardView {
         self?.move(to: $0)
       })
       .addDisposableTo(disposeBag)
+  }
+  
+  override func allowContentScrolling(_ allowScrolling: Bool) {
+    guard let cardViews = contentView.subviews as? [TGCardView] else { return }
+    cardViews.forEach { $0.contentScrollView?.isScrollEnabled = allowScrolling }
   }
   
   private func fill(with contentViews: [UIView]) {

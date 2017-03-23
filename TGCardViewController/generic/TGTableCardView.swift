@@ -20,7 +20,6 @@ class TGTableCardView: TGCardView {
     return bundle.loadNibNamed("TGTableCardView", owner: nil, options: nil)!.first as! TGTableCardView
   }
   
-  
   func configure(with card: TGTableCard, showClose: Bool) {
     titleLabel.text = card.title
     subtitleLabel.text = card.subtitle    

@@ -654,7 +654,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
   
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     
-    guard let scrollView = topCardView?.scrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+    guard let scrollView = topCardView?.contentScrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
     
 //    print("(before - panner: \(panner.isEnabled), scrolling: \(scrollView.isScrollEnabled), paging: \(scrollView.isPagingEnabled))")
     

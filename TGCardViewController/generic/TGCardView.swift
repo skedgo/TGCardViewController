@@ -22,24 +22,19 @@ class TGCardView: TGCornerView {
   /// Each card view needs a scroll view where the main content of the
   /// card goes. The card controller need access to it, in order to
   /// handling dragging the card up and down.
-  @IBOutlet weak var scrollView: UIScrollView?
+  @IBOutlet weak var contentScrollView: UIScrollView?
   
   var pagingScrollView: UIScrollView?
   
-  var contentScrollViews: [UIScrollView] {
-    guard let scrollView = scrollView else { return [] }
-    return [scrollView]
-  }
-  
   var headerHeight: CGFloat {
-    guard let scrollView = scrollView else { return 0 }
+    guard let scrollView = contentScrollView else { return 0 }
     return scrollView.frame.minY
   }
   
   // MARK: - Configuration
   
   func allowContentScrolling(_ allowScrolling: Bool) {
-    contentScrollViews.forEach { $0.isScrollEnabled = allowScrolling }
+    contentScrollView?.isScrollEnabled = allowScrolling
   }
   
 }
