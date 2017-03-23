@@ -16,7 +16,8 @@ class ExampleScrollCard: TGScrollCard {
   fileprivate let disposeBag = DisposeBag()
   
   init() {
-    let card1 = TGPlainCard(title: "Sample card 1")
+    let mapManager = TGMapManager()
+    let card1 = TGPlainCard(title: "Sample card 1", mapManager: mapManager)
     let card2 = ExampleTableCard()
     let card3 = ExampleChildCard()
     let card4 = TGPlainCard(title: "Sample card 4")
