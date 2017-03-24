@@ -40,6 +40,8 @@ class ExampleScrollCard: TGScrollCard {
 
     headerView.jumpButton.addTarget(self, action: #selector(headerJumpPressed(sender:)), for: .touchUpInside)
     
+    headerView.closeButton.addTarget(self, action: #selector(headerClosePressed(sender:)), for: .touchUpInside)
+    
     
     controller?.showStickyBar(content: headerView, animated: true)
   }
@@ -58,6 +60,11 @@ class ExampleScrollCard: TGScrollCard {
   func headerJumpPressed(sender: Any) {
     let index = Int(arc4random_uniform(UInt32(self.contentCards.count)))
     move(to: index)
+  }
+  
+  @objc
+  func headerClosePressed(sender: Any) {
+    controller?.pop()
   }
   
 }
