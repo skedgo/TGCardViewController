@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RxSwift
 
 class TGScrollCard: TGCard {
   
@@ -28,10 +27,11 @@ class TGScrollCard: TGCard {
   
   // Scroll card itself doesn't have a map manager. Instead, it passes through
   // the manager that handles the map view for the current card.
-  var mapManager: TGMapManager? {
-    let currentPage = rx_currentPageIndex_var.value
-    return contentCards[currentPage].mapManager
-  }
+  var mapManager: TGMapManager? = nil
+//  var mapManager: TGMapManager? {
+//    let currentPage = rx_currentPageIndex_var.value
+//    return contentCards[currentPage].mapManager
+//  }
   
   let defaultPosition: TGCardPosition
   
@@ -39,46 +39,36 @@ class TGScrollCard: TGCard {
   
   let initialPageIndex: Int
   
-  fileprivate let disposeBag = DisposeBag()
-  
-  fileprivate let rx_currentPageIndex_var: Variable<Int>
-  var rx_currentPageIndex: Observable<Int> {
-    return rx_currentPageIndex_var.asObservable()
-  }
+  var cardView: TGScrollCardView? = nil
   
   init(title: String, contentCards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
     self.title = title
     self.contentCards = contentCards
     self.initialPageIndex = initialPage
     self.defaultPosition = initialPosition
-    self.rx_currentPageIndex_var = Variable(initialPage)
   }
   
   func buildView(showClose: Bool) -> TGCardView {
     let view = TGScrollCardView.instantiate()
-    rx_currentPageIndex_var.value = initialPageIndex
     view.configure(with: self)
+    cardView = view
     return view
   }
   
   // MARK: - Navigation
   
   func moveForward() {
-    let old = rx_currentPageIndex_var.value
-    let new = min(old + 1, contentCards.count - 1)
-    rx_currentPageIndex_var.value = new
+    cardView?.moveForward()
   }
   
   func moveBackward() {
-    let old = rx_currentPageIndex_var.value
-    let new = max(old - 1, 0)
-    rx_currentPageIndex_var.value = new
+    cardView?.moveBackward()
   }
   
   func move(to page: Int) {
-    guard 0..<contentCards.count ~= page else { return }
-    rx_currentPageIndex_var.value = page
+    cardView?.move(to: page)
   }
+
   
   // MARK: - Card life cycle
   
@@ -96,6 +86,6 @@ class TGScrollCard: TGCard {
   
   func didDisappear(animated: Bool) {
     // Subclass to implement
-  }
+  }  
   
 }

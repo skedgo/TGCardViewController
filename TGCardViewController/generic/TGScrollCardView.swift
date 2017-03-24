@@ -7,15 +7,12 @@
 //
 
 import UIKit
-import RxSwift
 
 class TGScrollCardView: TGCardView {
   
   @IBOutlet weak var pager: UIScrollView!
   
   @IBOutlet weak var contentView: UIView!
-  
-  fileprivate let disposeBag = DisposeBag()
   
   override var headerHeight: CGFloat {
     guard contentView.subviews.count > 0 else { return 0 }
@@ -113,13 +110,6 @@ class TGScrollCardView: TGCardView {
   func configure(with card: TGScrollCard) {
     let contents = card.contentCards.map { $0.buildView(showClose: false) }
     fill(with: contents)
-    
-    card.rx_currentPageIndex
-      .distinctUntilChanged()
-      .subscribe(onNext: { [weak self] in
-        self?.move(to: $0)
-      })
-      .addDisposableTo(disposeBag)
   }
   
   override func allowContentScrolling(_ allowScrolling: Bool) {
