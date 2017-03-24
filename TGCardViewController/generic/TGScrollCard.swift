@@ -22,6 +22,8 @@ class TGScrollCard: TGCard {
   
   let title: String
   
+  let subtitle: String? = nil
+  
   // Scroll card itself doesn't have a map manager. Instead, it passes through
   // the manager that handles the map view for the current card. This is
   // set on intialising and then updated whenever we scroll.
@@ -56,11 +58,16 @@ class TGScrollCard: TGCard {
     self.mapManager = contentCards[initialPage].mapManager
   }
   
-  func buildCardView(showClose: Bool) -> TGCardView {
+  func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGScrollCardView.instantiate()
     view.configure(with: self)
     view.delegate = self
     cardView = view
+    
+    // reset the header, too, so that it's not left
+    // in an outdated state
+    headerView = nil
+    
     return view
   }
   
@@ -96,7 +103,7 @@ class TGScrollCard: TGCard {
     }
     
     headerView.titleLabel.text = card.title
-    // headerView.subtitleLabel.text = card.subtitle
+    headerView.subtitleLabel.text = card.subtitle
     
     if index + 1 < contentCards.count {
       headerView.rightAction = { [unowned self] in

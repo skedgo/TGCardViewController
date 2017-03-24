@@ -122,7 +122,7 @@ class TGScrollCardView: TGCardView {
   // MARK: - Configuration
   
   func configure(with card: TGScrollCard) {
-    let contents = card.contentCards.map { $0.buildCardView(showClose: false) }
+    let contents = card.contentCards.map { $0.buildCardView(showClose: false, includeHeader: false) }
     fill(with: contents)
   }
   

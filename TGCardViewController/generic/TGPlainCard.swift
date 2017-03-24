@@ -15,7 +15,6 @@ class TGPlainCard : TGCard {
 
   let title: String
 
-  /// Localised optional subtitle of the card
   let subtitle: String?
 
   /// The content to display on the card below title + subtitle
@@ -38,9 +37,9 @@ class TGPlainCard : TGCard {
     self.defaultPosition = mapManager != nil ? position : .extended
   }
   
-  func buildCardView(showClose: Bool) -> TGCardView {
+  func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGPlainCardView.instantiate()
-    view.configure(with: self, showClose: showClose)
+    view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
     return view
   }
   

@@ -20,9 +20,9 @@ class TGPlainCardView: TGCardView {
     return bundle.loadNibNamed("TGPlainCardView", owner: nil, options: nil)!.first as! TGPlainCardView
   }
   
-  func configure(with card: TGPlainCard, showClose: Bool) {
-    titleLabel.text = card.title
-    subtitleLabel.text = card.subtitle
+  func configure(with card: TGPlainCard, showClose: Bool, includeHeader: Bool) {
+    titleLabel.text = includeHeader ? card.title : nil
+    subtitleLabel.text = includeHeader ? card.subtitle : nil
     closeButton?.isHidden = !showClose
     
     if let content = card.contentView {

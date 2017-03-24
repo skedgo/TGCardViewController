@@ -267,7 +267,7 @@ class TGCardViewController: UIViewController {
     top.delegate = self
     
     // 4. Create and configure the new view
-    let cardView = top.buildCardView(showClose: cards.count > 1)
+    let cardView = top.buildCardView(showClose: cards.count > 1, includeHeader: true)
     cardView.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     
     // 5. Place the new view coming, preparing to animate in from the bottom

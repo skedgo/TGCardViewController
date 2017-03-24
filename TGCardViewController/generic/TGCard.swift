@@ -23,6 +23,9 @@ protocol TGCard: class {
   
   /// Localised title of the card
   var title: String { get }
+
+  /// Localised subtitle of the card
+  var subtitle: String? { get }
   
   /// The manager that handles the content of the map for this card
   var mapManager: TGMapManager? { get }
@@ -33,7 +36,7 @@ protocol TGCard: class {
   /// Builds the card view to represent the card
   ///
   /// - Returns: Card view configured with the content of this card
-  func buildCardView(showClose: Bool) -> TGCardView
+  func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView
   
   func buildHeaderView() -> TGHeaderView?
   

@@ -20,9 +20,9 @@ class TGTableCardView: TGCardView {
     return bundle.loadNibNamed("TGTableCardView", owner: nil, options: nil)!.first as! TGTableCardView
   }
   
-  func configure(with card: TGTableCard, showClose: Bool) {
-    titleLabel.text = card.title
-    subtitleLabel.text = card.subtitle    
+  func configure(with card: TGTableCard, showClose: Bool, includeHeader: Bool) {
+    titleLabel.text = includeHeader ? card.title : nil
+    subtitleLabel.text = includeHeader ? card.subtitle : nil
     closeButton?.isHidden = !showClose
     
     tableView.dataSource = card.tableViewDataSource

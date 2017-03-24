@@ -39,9 +39,9 @@ class TGAgendaCard: TGCard {
   
   // MARK: - Constructing views.
   
-  func buildCardView(showClose: Bool) -> TGCardView {
+  func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGAgendaCardView.instantiate()
-    view.configure(with: self, dismissable: showClose)
+    view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
     return view
   }
   
