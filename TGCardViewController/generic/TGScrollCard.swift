@@ -98,7 +98,7 @@ class TGScrollCard: TGCard {
     headerView.titleLabel.text = card.title
     // headerView.subtitleLabel.text = card.subtitle
     
-    if index - 1 < contentCards.count {
+    if index + 1 < contentCards.count {
       headerView.rightAction = { [unowned self] in
         self.moveForward()
       }
