@@ -228,8 +228,7 @@ class TGCardViewController: UIViewController {
   }
   
   
-  func push(_ card: TGCard, animated: Bool = true) {
-    var top = card
+  func push(_ top: TGCard, animated: Bool = true) {
     
     // Set the controller on the top card earlier, because we may want
     // to ask the card to do something on willAppear, e.g., show sticky 
@@ -257,6 +256,7 @@ class TGCardViewController: UIViewController {
     // 3. Hand over the map
     oldTop?.mapManager?.cleanUp(mapView)
     top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
+    top.delegate = self
     
     // 4. Create and configure the new view
     let cardView = top.buildView(showClose: cards.count > 1)
@@ -327,7 +327,7 @@ class TGCardViewController: UIViewController {
   }
   
   func pop(animated: Bool = true) {
-    guard var top = topCard, let topView = topCardView else {
+    guard let top = topCard, let topView = topCardView else {
       print("Nothing to pop")
       return
     }
@@ -627,6 +627,9 @@ class TGCardViewController: UIViewController {
   
 }
 
+
+// MARK: - UIGestureRecognizerDelegate
+
 extension TGCardViewController: UIGestureRecognizerDelegate {
   
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -673,6 +676,20 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     print("(after - panner: \(panner.isEnabled), scrolling: \(scrollView.isScrollEnabled), paging: \(scrollView.isPagingEnabled), scroller: \(scrollView))")
     
     return false
+  }
+  
+}
+
+
+// MARK: - TGCardDelegate
+
+extension TGCardViewController: TGCardDelegate {
+  
+  func mapManagerDidChange(old: TGMapManager?, for card: TGCard) {
+    guard card === topCard else { return }
+    
+    old?.cleanUp(mapView)
+    card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: cardPosition), animated: true)
   }
   
 }

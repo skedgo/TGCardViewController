@@ -8,12 +8,8 @@
 
 import UIKit
 import MapKit
-import RxCocoa
-import RxSwift
 
 class ExampleScrollCard: TGScrollCard {
-  
-  fileprivate let disposeBag = DisposeBag()
   
   init() {
     let mapManager = TGMapManager()
@@ -38,30 +34,30 @@ class ExampleScrollCard: TGScrollCard {
   fileprivate func showHeaderView() {
     let headerView = ExampleScrollStickyView.instantiate()
     
-    headerView.closeButton.rx.tap
-      .subscribe(onNext: {
-        self.controller?.pop()
-        self.controller?.hideStickyBar(animated: true)
-      })
-      .addDisposableTo(disposeBag)
+    headerView.nextButton.addTarget(self, action: #selector(headerNextPressed(sender:)), for: .touchUpInside)
+
+    headerView.previousButton.addTarget(self, action: #selector(headerPreviousPressed(sender:)), for: .touchUpInside)
+
+    headerView.jumpButton.addTarget(self, action: #selector(headerJumpPressed(sender:)), for: .touchUpInside)
     
-    headerView.nextButton.rx.tap
-      .subscribe(onNext: { self.moveForward() })
-      .addDisposableTo(disposeBag)
-    
-    headerView.previousButton.rx.tap
-      .subscribe(onNext: { self.moveBackward() })
-      .addDisposableTo(disposeBag)
-    
-    headerView.jumpButton.rx.tap
-      .map {
-        let index = arc4random_uniform(UInt32(self.contentCards.count))
-        return Int(index)
-      }
-      .subscribe(onNext: { self.move(to: $0) })
-      .addDisposableTo(disposeBag)
     
     controller?.showStickyBar(content: headerView, animated: true)
+  }
+  
+  @objc
+  func headerNextPressed(sender: Any) {
+    moveForward()
+  }
+
+  @objc
+  func headerPreviousPressed(sender: Any) {
+    moveBackward()
+  }
+  
+  @objc
+  func headerJumpPressed(sender: Any) {
+    let index = Int(arc4random_uniform(UInt32(self.contentCards.count)))
+    move(to: index)
   }
   
 }

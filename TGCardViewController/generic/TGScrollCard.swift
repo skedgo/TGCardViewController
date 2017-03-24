@@ -7,30 +7,28 @@
 //
 
 import UIKit
-import RxSwift
 
 class TGScrollCard: TGCard {
   
   weak var controller: TGCardViewController? {
     didSet {
       contentCards.forEach {
-        // Since TGCard is not specified as a class-only protocol, $0 can be 
-        // either a reference-type instance or a value-type instance. Hence,
-        // compiler will issue a warning about $0 being immutable. Assigning
-        // $0 to a variable allows us to modify its controller property.
-        var vCard = $0
-        vCard.controller = controller
+        $0.controller = controller
       }
     }
   }
   
+  weak var delegate: TGCardDelegate? = nil
+  
   let title: String
   
   // Scroll card itself doesn't have a map manager. Instead, it passes through
-  // the manager that handles the map view for the current card.
+  // the manager that handles the map view for the current card. This is
+  // set on intialising and then updated whenever we scroll.
   var mapManager: TGMapManager? {
-    let currentPage = rx_currentPageIndex_var.value
-    return contentCards[currentPage].mapManager
+    didSet {
+      delegate?.mapManagerDidChange(old: oldValue, for: self)
+    }
   }
   
   let defaultPosition: TGCardPosition
@@ -39,46 +37,46 @@ class TGScrollCard: TGCard {
   
   let initialPageIndex: Int
   
-  fileprivate let disposeBag = DisposeBag()
-  
-  fileprivate let rx_currentPageIndex_var: Variable<Int>
-  var rx_currentPageIndex: Observable<Int> {
-    return rx_currentPageIndex_var.asObservable()
-  }
+  var cardView: TGScrollCardView? = nil
   
   init(title: String, contentCards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
+    guard initialPage < contentCards.count else {
+      preconditionFailure()
+    }
+    
     self.title = title
     self.contentCards = contentCards
     self.initialPageIndex = initialPage
     self.defaultPosition = initialPosition
-    self.rx_currentPageIndex_var = Variable(initialPage)
+    
+    // Initialise map manager probably, then we'll wait for delegate
+    // callbacks to update it correctly
+    self.mapManager = contentCards[initialPage].mapManager
   }
   
   func buildView(showClose: Bool) -> TGCardView {
     let view = TGScrollCardView.instantiate()
-    rx_currentPageIndex_var.value = initialPageIndex
     view.configure(with: self)
+    view.delegate = self
+    cardView = view
     return view
   }
+  
   
   // MARK: - Navigation
   
   func moveForward() {
-    let old = rx_currentPageIndex_var.value
-    let new = min(old + 1, contentCards.count - 1)
-    rx_currentPageIndex_var.value = new
+    cardView?.moveForward()
   }
   
   func moveBackward() {
-    let old = rx_currentPageIndex_var.value
-    let new = max(old - 1, 0)
-    rx_currentPageIndex_var.value = new
+    cardView?.moveBackward()
   }
   
   func move(to page: Int) {
-    guard 0..<contentCards.count ~= page else { return }
-    rx_currentPageIndex_var.value = page
+    cardView?.move(to: page)
   }
+
   
   // MARK: - Card life cycle
   
@@ -96,6 +94,19 @@ class TGScrollCard: TGCard {
   
   func didDisappear(animated: Bool) {
     // Subclass to implement
+  }  
+  
+}
+
+extension TGScrollCard: TGScrollCardViewDelegate {
+  
+  func didChangeCurrentPage(to index: Int) {
+    guard index < contentCards.count else {
+      assertionFailure()
+      return
+    }
+    
+    mapManager = contentCards[index].mapManager
   }
   
 }

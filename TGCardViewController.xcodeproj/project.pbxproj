@@ -38,7 +38,6 @@
 		3ACA74CD1E72FEAB00408678 /* ExampleTableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74CC1E72FEAB00408678 /* ExampleTableCard.swift */; };
 		3AE839C61E76A9170035D9B0 /* ExampleChildStickyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AE839C51E76A9170035D9B0 /* ExampleChildStickyView.xib */; };
 		3AE839C81E76A92B0035D9B0 /* ExampleChildStickyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE839C71E76A92B0035D9B0 /* ExampleChildStickyView.swift */; };
-		BF631187C8AF0A99657536B5 /* Pods_TGCardViewControllerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4315A30B950EFFFC1A8B05CB /* Pods_TGCardViewControllerUITests.framework */; };
 		D363B0101E7CEAC30031EAD1 /* TGScrollCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D363B00F1E7CEAC30031EAD1 /* TGScrollCardView.xib */; };
 		D363B0121E7CEC300031EAD1 /* TGScrollCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D363B0111E7CEC300031EAD1 /* TGScrollCardView.swift */; };
 		D363B0141E7CECDA0031EAD1 /* TGScrollCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D363B0131E7CECDA0031EAD1 /* TGScrollCard.swift */; };
@@ -51,7 +50,6 @@
 		D398BFA41E80B785002248E5 /* ExampleScrollStickyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D398BFA31E80B785002248E5 /* ExampleScrollStickyView.xib */; };
 		D3F77BF81E7B67CB00D0DFF1 /* TGCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F77BF61E7B67CB00D0DFF1 /* TGCornerView.swift */; };
 		D3F77BF91E7B67CB00D0DFF1 /* TGGrabHandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F77BF71E7B67CB00D0DFF1 /* TGGrabHandleView.swift */; };
-		DE218A48688D66F7026E9025 /* Pods_TGCardViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 522D79F1D9DBA19710526DCD /* Pods_TGCardViewController.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,10 +98,6 @@
 		3ACA74CC1E72FEAB00408678 /* ExampleTableCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableCard.swift; sourceTree = "<group>"; };
 		3AE839C51E76A9170035D9B0 /* ExampleChildStickyView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleChildStickyView.xib; sourceTree = "<group>"; };
 		3AE839C71E76A92B0035D9B0 /* ExampleChildStickyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleChildStickyView.swift; sourceTree = "<group>"; };
-		4315A30B950EFFFC1A8B05CB /* Pods_TGCardViewControllerUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TGCardViewControllerUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		522D79F1D9DBA19710526DCD /* Pods_TGCardViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TGCardViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5777B5533C9FD8B0E75850EE /* Pods-TGCardViewControllerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TGCardViewControllerUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TGCardViewControllerUITests/Pods-TGCardViewControllerUITests.release.xcconfig"; sourceTree = "<group>"; };
-		74AAAF594BD300AA4C18A7AA /* Pods-TGCardViewController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TGCardViewController.release.xcconfig"; path = "Pods/Target Support Files/Pods-TGCardViewController/Pods-TGCardViewController.release.xcconfig"; sourceTree = "<group>"; };
 		D363B00F1E7CEAC30031EAD1 /* TGScrollCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TGScrollCardView.xib; path = generic/TGScrollCardView.xib; sourceTree = "<group>"; };
 		D363B0111E7CEC300031EAD1 /* TGScrollCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGScrollCardView.swift; path = generic/TGScrollCardView.swift; sourceTree = "<group>"; };
 		D363B0131E7CECDA0031EAD1 /* TGScrollCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGScrollCard.swift; path = generic/TGScrollCard.swift; sourceTree = "<group>"; };
@@ -116,8 +110,6 @@
 		D398BFA31E80B785002248E5 /* ExampleScrollStickyView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleScrollStickyView.xib; sourceTree = "<group>"; };
 		D3F77BF61E7B67CB00D0DFF1 /* TGCornerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCornerView.swift; path = generic/TGCornerView.swift; sourceTree = "<group>"; };
 		D3F77BF71E7B67CB00D0DFF1 /* TGGrabHandleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGGrabHandleView.swift; path = generic/TGGrabHandleView.swift; sourceTree = "<group>"; };
-		DD00D3C4B83DC0528A927A06 /* Pods-TGCardViewController.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TGCardViewController.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TGCardViewController/Pods-TGCardViewController.debug.xcconfig"; sourceTree = "<group>"; };
-		F73F0A326049C801AA3F6268 /* Pods-TGCardViewControllerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TGCardViewControllerUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TGCardViewControllerUITests/Pods-TGCardViewControllerUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,7 +117,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE218A48688D66F7026E9025 /* Pods_TGCardViewController.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,7 +124,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF631187C8AF0A99657536B5 /* Pods_TGCardViewControllerUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,8 +168,6 @@
 				3ACA74821E716AFC00408678 /* TGCardViewController */,
 				3ACA74971E716AFC00408678 /* TGCardViewControllerUITests */,
 				3ACA74811E716AFC00408678 /* Products */,
-				51BF507B06709DFC18DF4F8B /* Pods */,
-				7BBF4D49DFD3943AE80536C7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -259,26 +247,6 @@
 			name = "example cards";
 			sourceTree = "<group>";
 		};
-		51BF507B06709DFC18DF4F8B /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				DD00D3C4B83DC0528A927A06 /* Pods-TGCardViewController.debug.xcconfig */,
-				74AAAF594BD300AA4C18A7AA /* Pods-TGCardViewController.release.xcconfig */,
-				F73F0A326049C801AA3F6268 /* Pods-TGCardViewControllerUITests.debug.xcconfig */,
-				5777B5533C9FD8B0E75850EE /* Pods-TGCardViewControllerUITests.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		7BBF4D49DFD3943AE80536C7 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				522D79F1D9DBA19710526DCD /* Pods_TGCardViewController.framework */,
-				4315A30B950EFFFC1A8B05CB /* Pods_TGCardViewControllerUITests.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -286,12 +254,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3ACA749D1E716AFC00408678 /* Build configuration list for PBXNativeTarget "TGCardViewController" */;
 			buildPhases = (
-				37E223FBDECE063FAE6A9492 /* [CP] Check Pods Manifest.lock */,
 				3ACA747C1E716AFC00408678 /* Sources */,
 				3ACA747D1E716AFC00408678 /* Frameworks */,
 				3ACA747E1E716AFC00408678 /* Resources */,
-				B71BB53038EE4458C21AE651 /* [CP] Embed Pods Frameworks */,
-				9BADB25382FBCC6C77E2AF22 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -306,12 +271,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3ACA74A01E716AFC00408678 /* Build configuration list for PBXNativeTarget "TGCardViewControllerUITests" */;
 			buildPhases = (
-				18D35B682CA953852342B586 /* [CP] Check Pods Manifest.lock */,
 				3ACA74901E716AFC00408678 /* Sources */,
 				3ACA74911E716AFC00408678 /* Frameworks */,
 				3ACA74921E716AFC00408678 /* Resources */,
-				3F4FFD2A0C3995921C23110D /* [CP] Embed Pods Frameworks */,
-				B120348AF02AC93C8C2F8337 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -393,99 +355,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		18D35B682CA953852342B586 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		37E223FBDECE063FAE6A9492 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		3F4FFD2A0C3995921C23110D /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TGCardViewControllerUITests/Pods-TGCardViewControllerUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9BADB25382FBCC6C77E2AF22 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TGCardViewController/Pods-TGCardViewController-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B120348AF02AC93C8C2F8337 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TGCardViewControllerUITests/Pods-TGCardViewControllerUITests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B71BB53038EE4458C21AE651 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TGCardViewController/Pods-TGCardViewController-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3ACA747C1E716AFC00408678 /* Sources */ = {
@@ -658,7 +527,6 @@
 		};
 		3ACA749E1E716AFC00408678 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD00D3C4B83DC0528A927A06 /* Pods-TGCardViewController.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = JFT62W5LA3;
@@ -672,7 +540,6 @@
 		};
 		3ACA749F1E716AFC00408678 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 74AAAF594BD300AA4C18A7AA /* Pods-TGCardViewController.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = JFT62W5LA3;
@@ -686,7 +553,6 @@
 		};
 		3ACA74A11E716AFC00408678 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F73F0A326049C801AA3F6268 /* Pods-TGCardViewControllerUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = JFT62W5LA3;
@@ -701,7 +567,6 @@
 		};
 		3ACA74A21E716AFC00408678 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5777B5533C9FD8B0E75850EE /* Pods-TGCardViewControllerUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = JFT62W5LA3;

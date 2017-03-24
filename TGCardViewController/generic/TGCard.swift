@@ -9,12 +9,17 @@
 import UIKit
 
 /// A card representing the content currently displayed
-protocol TGCard {
+///
+/// Class-protocol as we'll dynamically set the `controller` and 
+/// `delegate` fields.
+protocol TGCard: class {
   
   /// The card controller currently displaying the card
   ///
   /// Set by the card controller itself
   weak var controller: TGCardViewController? { get set }
+  
+  weak var delegate: TGCardDelegate? { get set }
   
   /// Localised title of the card
   var title: String { get }
@@ -60,6 +65,10 @@ protocol TGCard {
   ///
   /// - Parameter animated: If it was animated
   func didDisappear(animated: Bool)
+}
+
+protocol TGCardDelegate: class {
+  func mapManagerDidChange(old: TGMapManager?, for card: TGCard)
 }
 
 extension TGCard {
