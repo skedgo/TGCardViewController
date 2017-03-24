@@ -49,6 +49,17 @@ class TGScrollCardView: TGCardView {
     set {}
   }
   
+  override var contentScrollView: UIScrollView? {
+    get {
+      guard let cardViews = contentView.subviews as? [TGCardView] else {
+        return nil
+      }
+      
+      return cardViews[currentPage].contentScrollView
+    }
+    set {}
+  }
+  
   // MARK: - New instance
   
   static func instantiate() -> TGScrollCardView {
