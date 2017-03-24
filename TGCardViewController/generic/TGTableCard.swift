@@ -11,6 +11,8 @@ import UIKit
 class TGTableCard : TGCard {
   weak var controller: TGCardViewController?
   
+  weak var delegate: TGCardDelegate? = nil
+  
   let title: String
   let subtitle: String?
   let mapManager: TGMapManager?

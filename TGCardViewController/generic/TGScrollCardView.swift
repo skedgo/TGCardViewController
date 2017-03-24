@@ -8,11 +8,21 @@
 
 import UIKit
 
+
+protocol TGScrollCardViewDelegate: class {
+  
+  func didChangeCurrentPage(to index: Int)
+  
+}
+
+
 class TGScrollCardView: TGCardView {
   
   @IBOutlet weak var pager: UIScrollView!
   
   @IBOutlet weak var contentView: UIView!
+  
+  weak var delegate: TGScrollCardViewDelegate? = nil
   
   override var headerHeight: CGFloat {
     guard contentView.subviews.count > 0 else { return 0 }
@@ -58,6 +68,10 @@ class TGScrollCardView: TGCardView {
   }
   
   // MARK: - Navigation
+  
+  var currentPage: Int {
+    return Int(pager.contentOffset.x / frame.width)
+  }
   
   func moveForward(animated: Bool = true) {
     // Shift by the entire width of the card view
@@ -158,3 +172,14 @@ class TGScrollCardView: TGCardView {
   }
   
 }
+
+
+extension TGScrollCardView: UIScrollViewDelegate {
+  
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    delegate?.didChangeCurrentPage(to: currentPage)
+  }
+  
+}
+
+

@@ -10,7 +10,9 @@ import UIKit
 
 class TGPlainCard : TGCard {
   weak var controller: TGCardViewController?
-  
+
+  weak var delegate: TGCardDelegate? = nil
+
   let title: String
 
   /// Localised optional subtitle of the card
