@@ -37,7 +37,9 @@ class TGScrollCard: TGCard {
   
   let initialPageIndex: Int
   
-  var cardView: TGScrollCardView? = nil
+  fileprivate var cardView: TGScrollCardView? = nil
+  
+  fileprivate lazy var headerView: TGHeaderView? = nil
   
   init(title: String, contentCards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
     guard initialPage < contentCards.count else {
@@ -54,12 +56,55 @@ class TGScrollCard: TGCard {
     self.mapManager = contentCards[initialPage].mapManager
   }
   
-  func buildView(showClose: Bool) -> TGCardView {
+  func buildCardView(showClose: Bool) -> TGCardView {
     let view = TGScrollCardView.instantiate()
     view.configure(with: self)
     view.delegate = self
     cardView = view
     return view
+  }
+  
+  func buildHeaderView() -> TGHeaderView? {
+    if let header = headerView {
+      return header
+    }
+    
+    let view = TGHeaderView.instantiate()
+    let card = contentCards[initialPageIndex]
+    headerView = view
+    updateHeader(for: card, atIndex: initialPageIndex)
+    return view
+  }
+
+  // MARK: - Header actions
+  
+  fileprivate func update(forCardAtIndex index: Int) {
+    guard index < contentCards.count else {
+      assertionFailure()
+      return
+    }
+    
+    let card = contentCards[index]
+    
+    mapManager = card.mapManager
+    updateHeader(for: card, atIndex: index)
+  }
+  
+  fileprivate func updateHeader(for card: TGCard, atIndex index: Int) {
+    guard let headerView = headerView else {
+      preconditionFailure()
+    }
+    
+    headerView.titleLabel.text = card.title
+    // headerView.subtitleLabel.text = card.subtitle
+    
+    if index - 1 < contentCards.count {
+      headerView.rightAction = { [unowned self] in
+        self.moveForward()
+      }
+    } else {
+      headerView.rightAction = nil
+    }
   }
   
   
@@ -101,12 +146,7 @@ class TGScrollCard: TGCard {
 extension TGScrollCard: TGScrollCardViewDelegate {
   
   func didChangeCurrentPage(to index: Int) {
-    guard index < contentCards.count else {
-      assertionFailure()
-      return
-    }
-    
-    mapManager = contentCards[index].mapManager
+    update(forCardAtIndex: index)
   }
   
 }

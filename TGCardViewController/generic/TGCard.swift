@@ -33,7 +33,9 @@ protocol TGCard: class {
   /// Builds the card view to represent the card
   ///
   /// - Returns: Card view configured with the content of this card
-  func buildView(showClose: Bool) -> TGCardView
+  func buildCardView(showClose: Bool) -> TGCardView
+  
+  func buildHeaderView() -> TGHeaderView?
   
   /// Called just before the card becomes visible
   ///

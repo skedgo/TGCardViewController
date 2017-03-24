@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TGHeaderView" customModule="TGCardViewController" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Mf5-6t-ox4">
+                    <rect key="frame" x="8" y="20" width="359" height="60"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5Ak-zD-zBO">
+                            <rect key="frame" x="0.0" y="0.0" width="359" height="42"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WrS-XT-0Zp">
+                                    <rect key="frame" x="0.0" y="6" width="39" height="30"/>
+                                    <state key="normal" title="Close"/>
+                                </button>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="TjZ-eI-Fpj">
+                                    <rect key="frame" x="47" y="0.0" width="272" height="42"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="llr-Qv-YHg">
+                                            <rect key="frame" x="116.5" y="0.0" width="39" height="24"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="36W-q6-I4y">
+                                            <rect key="frame" x="109.5" y="24" width="53" height="18"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lxe-5l-7gl">
+                                    <rect key="frame" x="327" y="6" width="32" height="30"/>
+                                    <state key="normal" title="Next"/>
+                                    <connections>
+                                        <action selector="rightButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="paw-Ft-1Gc"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="TjZ-eI-Fpj" firstAttribute="leading" secondItem="WrS-XT-0Zp" secondAttribute="trailing" constant="8" id="b2D-k4-9oU"/>
+                                <constraint firstItem="Lxe-5l-7gl" firstAttribute="leading" secondItem="TjZ-eI-Fpj" secondAttribute="trailing" constant="8" id="hER-Vd-nxc"/>
+                            </constraints>
+                        </stackView>
+                        <view contentMode="scaleToFill" horizontalHuggingPriority="254" verticalHuggingPriority="254" translatesAutoresizingMaskIntoConstraints="NO" id="OCh-my-Dlb">
+                            <rect key="frame" x="0.0" y="42" width="359" height="18"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="OCh-my-Dlb" secondAttribute="trailing" id="KH9-fi-ZB4"/>
+                        <constraint firstItem="OCh-my-Dlb" firstAttribute="leading" secondItem="Mf5-6t-ox4" secondAttribute="leading" id="VGm-nz-eY0"/>
+                        <constraint firstItem="OCh-my-Dlb" firstAttribute="top" secondItem="5Ak-zD-zBO" secondAttribute="bottom" id="q6c-ZY-N2M"/>
+                        <constraint firstAttribute="bottom" secondItem="OCh-my-Dlb" secondAttribute="bottom" id="wJr-d1-QWi"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Mf5-6t-ox4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="Bfy-Dj-WPh"/>
+                <constraint firstItem="Mf5-6t-ox4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="CWM-Br-2ua"/>
+                <constraint firstAttribute="bottom" secondItem="Mf5-6t-ox4" secondAttribute="bottom" id="YBA-fX-Fri"/>
+                <constraint firstAttribute="trailing" secondItem="Mf5-6t-ox4" secondAttribute="trailing" constant="8" id="g0L-aS-aTK"/>
+            </constraints>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="accessoryWrapperView" destination="OCh-my-Dlb" id="3ch-WX-uOk"/>
+                <outlet property="closeButton" destination="WrS-XT-0Zp" id="Ncx-ax-ofs"/>
+                <outlet property="rightButton" destination="Lxe-5l-7gl" id="c59-sK-mfe"/>
+                <outlet property="subtitleLabel" destination="36W-q6-I4y" id="ygJ-C6-Px8"/>
+                <outlet property="titleLabel" destination="llr-Qv-YHg" id="0Ss-X4-Lvh"/>
+            </connections>
+            <point key="canvasLocation" x="34.5" y="54"/>
+        </view>
+        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="TLb-8B-F8V">
+            <rect key="frame" x="0.0" y="0.0" width="46" height="30"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <state key="normal" title="Button"/>
+            <point key="canvasLocation" x="23" y="202"/>
+        </button>
+    </objects>
+</document>

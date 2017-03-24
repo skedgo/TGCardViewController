@@ -31,10 +31,14 @@ class TGTableCard : TGCard {
     self.defaultPosition = mapManager != nil ? .peaking : .extended
   }
   
-  func buildView(showClose: Bool) -> TGCardView {
+  func buildCardView(showClose: Bool) -> TGCardView {
     let view = TGTableCardView.instantiate()
     view.configure(with: self, showClose: showClose)
     return view
+  }
+ 
+  func buildHeaderView() -> TGHeaderView? {
+    return nil
   }
   
 }
