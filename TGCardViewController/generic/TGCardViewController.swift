@@ -248,21 +248,21 @@ class TGCardViewController: UIViewController {
     let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.defaultPosition, direction: .down)
 
     // 2. Updating card logic and informing of transition
-    let oldTop = topCard
+    let oldTop = cardWithView(atIndex: cards.count - 1)
     let notify = isVisible
     if notify {
-      oldTop?.willDisappear(animated: animated)
+      oldTop?.card.willDisappear(animated: animated)
       top.willAppear(animated: animated)
     }
     
     if let oldTop = oldTop {
       cards.removeLast()
-      cards.append( (oldTop, cardPosition) )
+      cards.append( (oldTop.card, cardPosition) )
     }
     cards.append( (top, animateTo.position) )
     
     // 3. Hand over the map
-    oldTop?.mapManager?.cleanUp(mapView)
+    oldTop?.card.mapManager?.cleanUp(mapView)
     top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
     top.delegate = self
     
@@ -323,8 +323,9 @@ class TGCardViewController: UIViewController {
       },
       completion: { finished in
         self.topCardView?.allowContentScrolling(animateTo.position == .extended)
+        oldTop?.view.alpha = 0
         if notify {
-          oldTop?.didDisappear(animated: animated)
+          oldTop?.card.didDisappear(animated: animated)
           top.didAppear(animated: animated)
         }
         self.cardTransitionShadow?.removeFromSuperview()
@@ -335,7 +336,7 @@ class TGCardViewController: UIViewController {
   fileprivate func cardWithView(atIndex index: Int) -> (card: TGCard, position: TGCardPosition, view: TGCardView)? {
     let cards = self.cards
     let views = self.cardViews
-    guard cards.count > index, views.count > index else { return nil }
+    guard index >= 0, index < cards.count, index < views.count else { return nil }
     
     return (cards[index].card, cards[index].lastPosition, views[index])
   }
@@ -369,6 +370,7 @@ class TGCardViewController: UIViewController {
     newTop?.view.grabHandle?.isHidden = forceExtended
     
     // 4. Determine and set new position of the card wrapper
+    newTop?.view.alpha = 1
     let animateTo = cardLocation(forDesired: newTop?.position, direction: .down)
     cardWrapperDesiredTopConstraint.constant = animateTo.y
     cardWrapperMinOverlapTopConstraint.constant = newTop?.view.headerHeight ?? 0

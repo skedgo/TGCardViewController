@@ -18,10 +18,17 @@ protocol TGScrollCardViewDelegate: class {
 
 class TGScrollCardView: TGCardView {
   
+  fileprivate enum Constants {
+    static let animationDuration: Double = 0.4
+    static let spaceBetweenCards: CGFloat = 5
+  }
+  
   @IBOutlet weak var pager: UIScrollView!
   
   @IBOutlet weak var contentView: UIView!
-  
+
+  @IBOutlet weak var pagerTrailingConstant: NSLayoutConstraint!
+
   weak var delegate: TGScrollCardViewDelegate? = nil
   
   override var headerHeight: CGFloat {
@@ -60,6 +67,13 @@ class TGScrollCardView: TGCardView {
     set {}
   }
   
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    
+    // remove corner as we want each card to show its own corners
+    layer.mask = nil
+  }
+  
   // MARK: - New instance
   
   static func instantiate() -> TGScrollCardView {
@@ -67,21 +81,27 @@ class TGScrollCardView: TGCardView {
     return bundle.loadNibNamed("TGScrollCardView", owner: nil, options: nil)!.first as! TGScrollCardView
   }
   
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    
+    pagerTrailingConstant.constant = Constants.spaceBetweenCards
+  }
+  
   // MARK: - Navigation
   
   var currentPage: Int {
-    return Int(pager.contentOffset.x / frame.width)
+    return Int(pager.contentOffset.x / (frame.width + Constants.spaceBetweenCards))
   }
   
   func moveForward(animated: Bool = true) {
     // Shift by the entire width of the card view
-    let newX = pager.contentOffset.x + frame.width
+    let newX = pager.contentOffset.x + frame.width + Constants.spaceBetweenCards
     
     // Make sure we don't go over.
     guard newX < pager.contentSize.width else { return }
     
     if animated {
-      UIView.animate(withDuration: 0.4, animations: { 
+      UIView.animate(withDuration: Constants.animationDuration, animations: {
         self.pager.contentOffset = CGPoint(x: newX, y: 0)
       })
     } else {
@@ -90,13 +110,13 @@ class TGScrollCardView: TGCardView {
   }
   
   func moveBackward(animated: Bool = true) {
-    let newX = pager.contentOffset.x - frame.width
+    let newX = pager.contentOffset.x - frame.width - Constants.spaceBetweenCards
     
     // We don't wanna go off screen.
     guard newX >= 0 else { return }
     
     if animated {
-      UIView.animate(withDuration: 0.4, animations: { 
+      UIView.animate(withDuration: Constants.animationDuration, animations: {
         self.pager.contentOffset = CGPoint(x: newX, y: 0)
       })
     } else {
@@ -108,10 +128,10 @@ class TGScrollCardView: TGCardView {
     // index must fall within the range of available content cards.
     guard 0..<contentView.subviews.count ~= cardIndex else { return }
     
-    let newX = frame.width * CGFloat(cardIndex)
+    let newX = (frame.width + Constants.spaceBetweenCards) * CGFloat(cardIndex)
     
     if animated {
-      UIView.animate(withDuration: 0.4) {
+      UIView.animate(withDuration: Constants.animationDuration) {
         self.pager.contentOffset = CGPoint(x: newX, y: 0)
       }
     } else {
@@ -147,8 +167,8 @@ class TGScrollCardView: TGCardView {
         view.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
       } else {
         // Subsequent, non-last, content is connected to its
-        // preceding sibling.
-        view.leadingAnchor.constraint(equalTo: previous.trailingAnchor).isActive = true
+        // preceding sibling, but accounting for the space.
+        view.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: Constants.spaceBetweenCards).isActive = true
       }
       
       // All contents are connected to the top and bottom edges
@@ -159,12 +179,12 @@ class TGScrollCardView: TGCardView {
       // All contents have the same width, which equals to the width of
       // the scroll view. Note that, scroll view is used here, instead
       // of its content view.
-      view.widthAnchor.constraint(equalTo: self.pager.widthAnchor).isActive = true
+      view.widthAnchor.constraint(equalTo: self.pager.widthAnchor, constant: Constants.spaceBetweenCards * -1).isActive = true
       
       // The last content is connected to the trailing edge of the
       // scroll view's content view.
       if index == contentViews.count - 1 {
-        view.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
+        view.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: Constants.spaceBetweenCards * -1).isActive = true
       }
       
       previous = view
