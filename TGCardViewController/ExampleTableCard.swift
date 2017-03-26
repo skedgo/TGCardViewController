@@ -12,8 +12,8 @@ class ExampleTableCard : TGTableCard {
 
   fileprivate let source = ExampleTableDataSource()
 
-  init() {
-    super.init(title: "London stops", dataSource: source, delegate: source)
+  init(mapManager: TGMapManager? = nil) {
+    super.init(title: "London stops", dataSource: source, delegate: source, mapManager: mapManager)
     source.onSelect = {
       let card = ExampleTableChildCard(annotation: $0)
       self.controller?.push(card, animated: true)

@@ -12,13 +12,11 @@ import MapKit
 class ExampleScrollCard: TGScrollCard {
   
   init() {
-    let mapManager = TGMapManager()
-    let card1 = TGPlainCard(title: "Sample card 1", mapManager: mapManager)
-    let card2 = ExampleTableCard()
+    let card1 = TGPlainCard(title: "Hello Sydney", mapManager: .sydney)
+    let card2 = ExampleTableCard(mapManager: .london)
     let card3 = ExampleChildCard()
-    let card4 = TGPlainCard(title: "Sample card 4")
-    let card5 = TGPlainCard(title: "Sample card 5")
-    super.init(title: "Paging views", contentCards: [card1, card2, card3, card4, card5])
+    let card4 = TGPlainCard(title: "Hello Nuremberg", mapManager: .nuremberg)
+    super.init(title: "Paging views", contentCards: [card1, card2, card3, card4])
   }
   
   override func buildHeaderView() -> TGHeaderView? {

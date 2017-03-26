@@ -47,6 +47,7 @@ class TGScrollCard: TGCard {
     guard initialPage < contentCards.count else {
       preconditionFailure()
     }
+    assert(TGScrollCard.allCardsHaveMapManagers(in: contentCards), "TGCardVC doesn't yet properly handle scroll cards where some cards don't have map managers. It won't crash but will experience unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck in 'extended' mode.")
     
     self.title = title
     self.contentCards = contentCards
@@ -56,6 +57,15 @@ class TGScrollCard: TGCard {
     // Initialise map manager probably, then we'll wait for delegate
     // callbacks to update it correctly
     self.mapManager = contentCards[initialPage].mapManager
+  }
+  
+  fileprivate static func allCardsHaveMapManagers(in cards: [TGCard]) -> Bool {
+    for card in cards {
+      if card.mapManager == nil {
+        return false
+      }
+    }
+    return true
   }
   
   func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
@@ -128,7 +138,7 @@ class TGScrollCard: TGCard {
   func move(to page: Int) {
     cardView?.move(to: page)
   }
-
+  
   
   // MARK: - Card life cycle
   

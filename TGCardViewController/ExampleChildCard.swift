@@ -14,14 +14,7 @@ class ExampleChildCard : TGPlainCard {
   init() {
     let content = ExampleChildContentView.instantiate()
     
-    let sydney = MKPointAnnotation()
-    sydney.coordinate = CLLocationCoordinate2DMake(-33.86, 151.21)
-    
-    let mapManager = TGMapManager()
-    mapManager.annotations = [sydney]
-    mapManager.preferredZoomLevel = .city
-    
-    super.init(title: "Child", subtitle: "With sticky button", contentView: content, mapManager: mapManager)
+    super.init(title: "Child", subtitle: "With sticky button", contentView: content, mapManager: .sydney)
     
     content.showStickyButton.addTarget(self, action: #selector(toggleStickyImagePressed(sender:)), for: .touchUpInside)
     content.showStickyCreditsButton.addTarget(self, action: #selector(toggleStickyCreditsPressed(sender:)), for: .touchUpInside)
