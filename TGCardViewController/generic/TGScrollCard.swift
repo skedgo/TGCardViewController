@@ -78,6 +78,9 @@ class TGScrollCard: TGCard {
     // in an outdated state
     headerView = nil
     
+    // also need to reset the map manager, too
+    mapManager = contentCards[initialPageIndex].mapManager
+    
     return view
   }
   
