@@ -125,6 +125,9 @@ class TGScrollCard: TGCard {
     } else {
       headerView.rightAction = nil
     }
+    
+    headerView.setNeedsLayout()
+    headerView.layoutIfNeeded()
   }
   
   

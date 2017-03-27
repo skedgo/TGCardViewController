@@ -584,6 +584,20 @@ class TGCardViewController: UIViewController {
     // it if conflicts arise.
     overwriteHeaderContent(with: content)
     
+    // The content view passed in here may be loaded from xib, to get
+    // the correct height, we need to adjust its width and ask the AL
+    // to compute the fitting height.
+    content.frame.size.width = headerView.frame.width
+    
+    // Do a layout pass, just to make sure its subviews are still laid
+    // out correctly after the change in width.
+    content.setNeedsLayout()
+    content.layoutIfNeeded()
+    
+    // Ask the AL for the most fitting height.
+    let headerHeight = content.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+    
+    headerViewHeightConstraint.constant = headerHeight
     headerViewTopConstraint.constant = 0
     view.setNeedsUpdateConstraints()
 
