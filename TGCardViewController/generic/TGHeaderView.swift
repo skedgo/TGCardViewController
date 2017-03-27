@@ -37,12 +37,25 @@ class TGHeaderView : UIView {
       return accessoryWrapperView.subviews.first
     }
     set {
-      guard let view = accessoryView else {
+      guard let view = newValue else {
         accessoryWrapperView.subviews.forEach { $0.removeFromSuperview() }
+        
+        // This may be redundant, but just to be on the safe side, we still
+        // hide it so AL won't consider it when calculating view frame.
+        accessoryWrapperView.isHidden = true
         return
       }
       
       accessoryWrapperView.addSubview(view)
+      
+      // This sets up constraints and is required for AL to work out
+      // the fitting height of the header view.
+      view.snap(to: accessoryWrapperView)
+      
+      // Note tha the wrapper view is housed inside a stack view, so
+      // in order for AL to consider it when calculating view height,
+      // it must be visible if there's a content.
+      accessoryWrapperView.isHidden = false
     }
   }
   
