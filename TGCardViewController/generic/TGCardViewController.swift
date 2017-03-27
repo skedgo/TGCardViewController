@@ -584,20 +584,6 @@ class TGCardViewController: UIViewController {
     // it if conflicts arise.
     overwriteHeaderContent(with: content)
     
-    // The content view passed in here may be loaded from xib, to get
-    // the correct height, we need to adjust its width and ask the AL
-    // to compute the fitting height.
-    content.frame.size.width = headerView.frame.width
-    
-    // Do a layout pass, just to make sure its subviews are still laid
-    // out correctly after the change in width.
-    content.setNeedsLayout()
-    content.layoutIfNeeded()
-    
-    // Ask the AL for the most fitting height.
-    let headerHeight = content.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
-    
-    headerViewHeightConstraint.constant = headerHeight
     headerViewTopConstraint.constant = 0
     view.setNeedsUpdateConstraints()
 
@@ -615,9 +601,7 @@ class TGCardViewController: UIViewController {
   }
   
   fileprivate func hideHeader(animated: Bool) {
-    let headerHeight = headerViewHeightConstraint.constant
-    
-    headerViewTopConstraint.constant = headerHeight * -1
+    headerViewTopConstraint.constant = headerView.frame.height * -1
     view.setNeedsUpdateConstraints()
 
     UIView.animate(
@@ -757,8 +741,6 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     
     guard let scrollView = topCardView?.contentScrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
     
-//    print("(before - panner: \(panner.isEnabled), scrolling: \(scrollView.isScrollEnabled), paging: \(scrollView.isPagingEnabled))")
-    
     let direction = Direction(ofVelocity: panner.velocity(in: cardWrapperContent))
     
     let velocity = panner.velocity(in: cardWrapperContent)
@@ -770,8 +752,6 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     } else {
       scrollView.isScrollEnabled = true
     }
-    
-    print("(after - panner: \(panner.isEnabled), scrolling: \(scrollView.isScrollEnabled), paging: \(scrollView.isPagingEnabled), scroller: \(scrollView))")
     
     return false
   }
