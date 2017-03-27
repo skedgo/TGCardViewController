@@ -48,7 +48,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="60" id="dMP-Sd-KN9"/>
+                                <constraint firstAttribute="height" priority="750" constant="60" id="dMP-Sd-KN9"/>
                             </constraints>
                         </view>
                         <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7">
