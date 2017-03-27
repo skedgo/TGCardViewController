@@ -46,7 +46,8 @@ class TGAgendaCardView: TGCardView {
     tableView.dataSource = card.tableViewDataSource
     
     if let bottomContent = card.bottomContentView {
-      bottomContent.snapOnAllEdges(to: bottomViewContainer)
+      bottomViewContainer.addSubview(bottomContent)
+      bottomContent.snap(to: bottomViewContainer)
       
       // Work out the fitting height for the content.
       let fittingHeight = bottomContent.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
@@ -61,24 +62,4 @@ class TGAgendaCardView: TGCardView {
     }
   }
   
-}
-
-extension UIView {
-  
-  func snapOnAllEdges(to superView: UIView) {
-    translatesAutoresizingMaskIntoConstraints = false
-    superView.addSubview(self)
-    topAnchor.constraint(equalTo: superView.topAnchor).isActive = true
-    leadingAnchor.constraint(equalTo: superView.leadingAnchor).isActive = true
-    trailingAnchor.constraint(equalTo: superView.trailingAnchor).isActive = true
-    bottomAnchor.constraint(equalTo: superView.bottomAnchor).isActive = true
-  }
-  
-  func center(on superView: UIView) {
-    translatesAutoresizingMaskIntoConstraints = false
-    superView.addSubview(self)
-    topAnchor.constraint(equalTo: superView.topAnchor, constant: 8).isActive = true
-    centerXAnchor.constraint(equalTo: superView.centerXAnchor).isActive = true
-    centerYAnchor.constraint(equalTo: superView.centerYAnchor).isActive = true
-  }
 }
