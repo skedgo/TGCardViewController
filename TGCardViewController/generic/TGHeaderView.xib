@@ -25,19 +25,19 @@
                                     <rect key="frame" x="0.0" y="8.5" width="39" height="30"/>
                                     <state key="normal" title="Close"/>
                                 </button>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="arw-E3-CF2">
+                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="arw-E3-CF2">
                                     <rect key="frame" x="47" y="0.0" width="272" height="46.5"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="TjZ-eI-Fpj">
+                                        <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="253" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="TjZ-eI-Fpj">
                                             <rect key="frame" x="106" y="0.0" width="53" height="47"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="llr-Qv-YHg">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="253" verticalCompressionResistancePriority="752" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="llr-Qv-YHg">
                                                     <rect key="frame" x="0.0" y="0.0" width="53" height="24"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Subtitle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="36W-q6-I4y">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="752" text="Subtitle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="36W-q6-I4y">
                                                     <rect key="frame" x="0.0" y="24" width="53" height="23"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <nil key="textColor"/>
@@ -62,7 +62,7 @@
                                 </button>
                             </subviews>
                         </stackView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OCh-my-Dlb">
+                        <view contentMode="scaleToFill" horizontalHuggingPriority="254" verticalHuggingPriority="254" translatesAutoresizingMaskIntoConstraints="NO" id="OCh-my-Dlb">
                             <rect key="frame" x="0.0" y="46.5" width="359" height="46.5"/>
                         </view>
                     </subviews>
