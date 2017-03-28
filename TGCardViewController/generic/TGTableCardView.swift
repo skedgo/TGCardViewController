@@ -9,9 +9,6 @@
 import UIKit
 
 class TGTableCardView: TGCardView {
-
-  @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var subtitleLabel: UILabel!
   
   @IBOutlet weak var tableView: UITableView!
   
@@ -21,9 +18,7 @@ class TGTableCardView: TGCardView {
   }
   
   func configure(with card: TGTableCard, showClose: Bool, includeHeader: Bool) {
-    titleLabel.text = includeHeader ? card.title : nil
-    subtitleLabel.text = includeHeader ? card.subtitle : nil
-    closeButton?.isHidden = !showClose
+    super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
     
     tableView.dataSource = card.tableViewDataSource
     tableView.delegate = card.tableViewDelegate

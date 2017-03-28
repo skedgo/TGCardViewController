@@ -10,9 +10,6 @@ import UIKit
 
 class TGPlainCardView: TGCardView {
 
-  @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var subtitleLabel: UILabel!
-
   @IBOutlet weak var contentView: UIView!
   
   static func instantiate() -> TGPlainCardView {
@@ -21,9 +18,7 @@ class TGPlainCardView: TGCardView {
   }
   
   func configure(with card: TGPlainCard, showClose: Bool, includeHeader: Bool) {
-    titleLabel.text = includeHeader ? card.title : nil
-    subtitleLabel.text = includeHeader ? card.subtitle : nil
-    closeButton?.isHidden = !showClose
+    super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
     
     if let content = card.contentView {
       content.translatesAutoresizingMaskIntoConstraints = false

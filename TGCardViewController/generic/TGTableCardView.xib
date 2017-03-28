@@ -67,9 +67,12 @@
                 <outlet property="closeButton" destination="gaZ-Nm-Ttn" id="8ec-H2-bUv"/>
                 <outlet property="contentScrollView" destination="9vC-GM-Rte" id="qCO-y6-fZD"/>
                 <outlet property="grabHandle" destination="lf5-YV-zqk" id="fmS-0K-Vki"/>
-                <outlet property="subtitleLabel" destination="Aj9-Wv-1Z7" id="0Qc-AW-rCK"/>
+                <outlet property="headerStackBottomConstraint" destination="84u-9p-lUM" id="wRq-vW-CUH"/>
+                <outlet property="headerStackTopConstraint" destination="4BH-B2-P31" id="e9g-xr-wUT"/>
+                <outlet property="labelStack" destination="fzr-SN-jeB" id="jVg-K4-pnY"/>
+                <outlet property="subtitleLabel" destination="Aj9-Wv-1Z7" id="VM0-dj-53r"/>
                 <outlet property="tableView" destination="9vC-GM-Rte" id="Dbs-WA-lYh"/>
-                <outlet property="titleLabel" destination="Y7e-Bs-jau" id="t7I-Cr-kdR"/>
+                <outlet property="titleLabel" destination="Y7e-Bs-jau" id="syo-l0-lMd"/>
             </connections>
             <point key="canvasLocation" x="81.5" y="184.5"/>
         </view>

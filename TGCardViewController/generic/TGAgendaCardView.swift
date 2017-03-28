@@ -10,8 +10,6 @@ import UIKit
 
 class TGAgendaCardView: TGCardView {
   
-  @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var subtitleLabel: UILabel!
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var bottomViewContainer: UIView!
   
@@ -39,9 +37,8 @@ class TGAgendaCardView: TGCardView {
   // MARK: - Configuration
   
   func configure(with card: TGAgendaCard, showClose: Bool, includeHeader: Bool) {
-    titleLabel.text = includeHeader ? card.title : nil
-    subtitleLabel.text = includeHeader ? card.subtitle : nil
-    closeButton?.isHidden = !showClose
+    super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
+    
     tableView.delegate = card.tableViewDelegate
     tableView.dataSource = card.tableViewDataSource
     

@@ -80,9 +80,12 @@
                 <outlet property="closeButton" destination="GTh-fW-jGw" id="6zz-iI-LL1"/>
                 <outlet property="contentScrollView" destination="5h6-Sk-RAc" id="jCQ-6Z-b85"/>
                 <outlet property="grabHandle" destination="j0b-zd-Ism" id="L8I-KI-aUa"/>
-                <outlet property="subtitleLabel" destination="BsH-yj-EDf" id="bv2-vE-rLz"/>
+                <outlet property="headerStackBottomConstraint" destination="NuA-HM-n7C" id="YX4-Xd-0hW"/>
+                <outlet property="headerStackTopConstraint" destination="zfb-Hq-3uh" id="dTD-bk-7sZ"/>
+                <outlet property="labelStack" destination="Jcg-8l-rvb" id="iEJ-yO-P94"/>
+                <outlet property="subtitleLabel" destination="BsH-yj-EDf" id="fZA-Ed-VfB"/>
                 <outlet property="tableView" destination="5h6-Sk-RAc" id="cQZ-ot-ah4"/>
-                <outlet property="titleLabel" destination="RtE-Vb-pHD" id="nTQ-sx-HdD"/>
+                <outlet property="titleLabel" destination="RtE-Vb-pHD" id="fKa-8c-er8"/>
             </connections>
             <point key="canvasLocation" x="81.5" y="184.5"/>
         </view>
