@@ -100,13 +100,15 @@ class TGScrollCardView: TGCardView {
     // Make sure we don't go over.
     guard newX < pager.contentSize.width else { return }
     
-    if animated {
-      UIView.animate(withDuration: Constants.animationDuration, animations: {
-        self.pager.contentOffset = CGPoint(x: newX, y: 0)
-      })
-    } else {
-      pager.contentOffset = CGPoint(x: newX, y: 0)
-    }
+    pager.setContentOffset(CGPoint(x: newX, y: 0), animated: animated)
+    
+//    if animated {
+//      UIView.animate(withDuration: Constants.animationDuration, animations: {
+//        self.pager.contentOffset = CGPoint(x: newX, y: 0)
+//      })
+//    } else {
+//      pager.contentOffset = CGPoint(x: newX, y: 0)
+//    }
   }
   
   func moveBackward(animated: Bool = true) {
@@ -115,13 +117,15 @@ class TGScrollCardView: TGCardView {
     // We don't wanna go off screen.
     guard newX >= 0 else { return }
     
-    if animated {
-      UIView.animate(withDuration: Constants.animationDuration, animations: {
-        self.pager.contentOffset = CGPoint(x: newX, y: 0)
-      })
-    } else {
-      pager.contentOffset = CGPoint(x: newX, y: 0)
-    }
+    pager.setContentOffset(CGPoint(x: newX, y: 0), animated: animated)
+    
+//    if animated {
+//      UIView.animate(withDuration: Constants.animationDuration, animations: {
+//        self.pager.contentOffset = CGPoint(x: newX, y: 0)
+//      })
+//    } else {
+//      pager.contentOffset = CGPoint(x: newX, y: 0)
+//    }
   }
   
   func move(to cardIndex: Int, animated: Bool = true) {
@@ -130,13 +134,15 @@ class TGScrollCardView: TGCardView {
     
     let newX = (frame.width + Constants.spaceBetweenCards) * CGFloat(cardIndex)
     
-    if animated {
-      UIView.animate(withDuration: Constants.animationDuration) {
-        self.pager.contentOffset = CGPoint(x: newX, y: 0)
-      }
-    } else {
-      pager.contentOffset = CGPoint(x: newX, y: 0)
-    }
+    pager.setContentOffset(CGPoint(x: newX, y: 0), animated: animated)
+    
+//    if animated {
+//      UIView.animate(withDuration: Constants.animationDuration) {
+//        self.pager.contentOffset = CGPoint(x: newX, y: 0)
+//      }
+//    } else {
+//      pager.contentOffset = CGPoint(x: newX, y: 0)
+//    }
   }
   
   // MARK: - Configuration
@@ -196,7 +202,18 @@ class TGScrollCardView: TGCardView {
 
 extension TGScrollCardView: UIScrollViewDelegate {
   
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//    print("did scroll to page: \(currentPage)")
+//    delegate?.didChangeCurrentPage(to: currentPage)
+//  }
+  
+  func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    print("ended scrolling animation")
+    delegate?.didChangeCurrentPage(to: currentPage)
+  }
+  
+  func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    print("ended decelerating")
     delegate?.didChangeCurrentPage(to: currentPage)
   }
   
