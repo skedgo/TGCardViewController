@@ -17,7 +17,7 @@
             <subviews>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="JFj-Bl-Nt0" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
-                    <color key="backgroundColor" red="1" green="0.47157064539999999" blue="0.42593104329999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="shr-2r-Hk0">
                     <rect key="frame" x="8" y="29" width="359" height="44"/>
@@ -27,14 +27,12 @@
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lyt-Iu-uGp">
                                     <rect key="frame" x="0.0" y="0.0" width="329" height="20.5"/>
-                                    <color key="backgroundColor" red="0.14117647059999999" green="0.57647058819999997" blue="0.86274509799999999" alpha="1" colorSpace="calibratedRGB"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kRV-RD-D8g">
                                     <rect key="frame" x="0.0" y="23.5" width="329" height="20.5"/>
-                                    <color key="backgroundColor" red="0.93601578470000002" green="0.49126215379999999" blue="0.90906047879999996" alpha="1" colorSpace="calibratedRGB"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -43,7 +41,6 @@
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S0E-UZ-jgN">
                             <rect key="frame" x="337" y="11" width="22" height="22"/>
-                            <color key="backgroundColor" red="0.42948405979999998" green="0.57318578990000002" blue="0.72411197419999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </button>
                     </subviews>
                 </stackView>
@@ -52,7 +49,6 @@
                     <subviews>
                         <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="348" translatesAutoresizingMaskIntoConstraints="NO" id="fpj-MI-D7T">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="348"/>
-                            <color key="backgroundColor" red="0.95389531979999997" green="1" blue="0.5718103457" alpha="1" colorSpace="calibratedRGB"/>
                         </view>
                     </subviews>
                     <constraints>

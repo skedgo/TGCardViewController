@@ -74,7 +74,7 @@
                 <outlet property="tableView" destination="9vC-GM-Rte" id="Dbs-WA-lYh"/>
                 <outlet property="titleLabel" destination="Y7e-Bs-jau" id="syo-l0-lMd"/>
             </connections>
-            <point key="canvasLocation" x="81.5" y="184.5"/>
+            <point key="canvasLocation" x="122" y="152"/>
         </view>
     </objects>
 </document>
