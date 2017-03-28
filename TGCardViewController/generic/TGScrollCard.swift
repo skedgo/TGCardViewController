@@ -98,7 +98,7 @@ class TGScrollCard: TGCard {
 
   // MARK: - Header actions
   
-  fileprivate func update(forCardAtIndex index: Int) {
+  fileprivate func update(forCardAtIndex index: Int, animated: Bool = false) {
     guard index < contentCards.count else {
       assertionFailure()
       return
@@ -107,10 +107,10 @@ class TGScrollCard: TGCard {
     let card = contentCards[index]
     
     mapManager = card.mapManager
-    updateHeader(for: card, atIndex: index)
+    updateHeader(for: card, atIndex: index, animated: animated)
   }
   
-  fileprivate func updateHeader(for card: TGCard, atIndex index: Int) {
+  fileprivate func updateHeader(for card: TGCard, atIndex index: Int, animated: Bool = false) {
     guard let headerView = headerView else {
       preconditionFailure()
     }
@@ -127,7 +127,10 @@ class TGScrollCard: TGCard {
     }
     
     headerView.setNeedsLayout()
-    headerView.layoutIfNeeded()
+    
+    UIView.animate(withDuration: animated ? 0.25 : 0) {
+      headerView.layoutIfNeeded()
+    }
   }
   
   
@@ -169,7 +172,7 @@ class TGScrollCard: TGCard {
 extension TGScrollCard: TGScrollCardViewDelegate {
   
   func didChangeCurrentPage(to index: Int) {
-    update(forCardAtIndex: index)
+    update(forCardAtIndex: index, animated: true)
   }
   
 }
