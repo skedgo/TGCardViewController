@@ -1,5 +1,5 @@
 //
-//  TGScrollCard.swift
+//  TGPageCard.swift
 //  TGCardViewController
 //
 //  Created by Kuan Lun Huang on 18/3/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TGScrollCard: TGCard {
+class TGPageCard: TGCard {
   
   weak var controller: TGCardViewController? {
     didSet {
@@ -39,7 +39,7 @@ class TGScrollCard: TGCard {
   
   let initialPageIndex: Int
   
-  fileprivate var cardView: TGScrollCardView? = nil
+  fileprivate var cardView: TGPageCardView? = nil
   
   fileprivate lazy var headerView: TGHeaderView? = nil
   
@@ -47,7 +47,7 @@ class TGScrollCard: TGCard {
     guard initialPage < contentCards.count else {
       preconditionFailure()
     }
-    assert(TGScrollCard.allCardsHaveMapManagers(in: contentCards), "TGCardVC doesn't yet properly handle scroll cards where some cards don't have map managers. It won't crash but will experience unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck in 'extended' mode.")
+    assert(TGPageCard.allCardsHaveMapManagers(in: contentCards), "TGCardVC doesn't yet properly handle scroll cards where some cards don't have map managers. It won't crash but will experience unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck in 'extended' mode.")
     
     self.title = title
     self.contentCards = contentCards
@@ -69,7 +69,7 @@ class TGScrollCard: TGCard {
   }
   
   func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
-    let view = TGScrollCardView.instantiate()
+    let view = TGPageCardView.instantiate()
     view.configure(with: self)
     view.delegate = self
     cardView = view
@@ -169,7 +169,7 @@ class TGScrollCard: TGCard {
   
 }
 
-extension TGScrollCard: TGScrollCardViewDelegate {
+extension TGPageCard: TGPageCardViewDelegate {
   
   func didChangeCurrentPage(to index: Int) {
     update(forCardAtIndex: index, animated: true)

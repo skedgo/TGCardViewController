@@ -34,7 +34,7 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
     (title: "Show Erlking", card: ExampleChildCard()),
     (title: "Show Table",   card: ExampleTableCard()),
     (title: "Show Agenda",  card: ExampleAgendaCard()),
-    (title: "Show Pages",   card: ExampleScrollCard()),
+    (title: "Show Pages",   card: ExamplePageCard()),
   ]
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -1,5 +1,5 @@
 //
-//  TGScrollCardView.swift
+//  TGPageCardView.swift
 //  TGCardViewController
 //
 //  Created by Kuan Lun Huang on 18/3/17.
@@ -9,13 +9,13 @@
 import UIKit
 
 
-protocol TGScrollCardViewDelegate: class {
+protocol TGPageCardViewDelegate: class {
   
   func didChangeCurrentPage(to index: Int)
   
 }
 
-class TGScrollCardView: TGCardView {
+class TGPageCardView: TGCardView {
   
   fileprivate enum Constants {
     static let animationDuration: Double = 0.4
@@ -28,7 +28,7 @@ class TGScrollCardView: TGCardView {
 
   @IBOutlet weak var pagerTrailingConstant: NSLayoutConstraint!
 
-  weak var delegate: TGScrollCardViewDelegate? = nil
+  weak var delegate: TGPageCardViewDelegate? = nil
   
   override var headerHeight: CGFloat {
     guard contentView.subviews.count > 0 else { return 0 }
@@ -75,9 +75,9 @@ class TGScrollCardView: TGCardView {
   
   // MARK: - New instance
   
-  static func instantiate() -> TGScrollCardView {
+  static func instantiate() -> TGPageCardView {
     let bundle = Bundle(for: self)
-    return bundle.loadNibNamed("TGScrollCardView", owner: nil, options: nil)!.first as! TGScrollCardView
+    return bundle.loadNibNamed("TGPageCardView", owner: nil, options: nil)!.first as! TGPageCardView
   }
   
   override func awakeFromNib() {
@@ -122,7 +122,15 @@ class TGScrollCardView: TGCardView {
   
   // MARK: - Configuration
   
-  func configure(with card: TGScrollCard) {
+  func configure(with card: TGPageCard) {
+
+    // TODO: This does a lot of work by building all the child cards
+    //       and then laying them out using auto layout. If this
+    //       becomes a performance issue, e.g., when there are a lot
+    //       child cards, it could be changed to have a placeholder
+    //       with the right width for each card, but only build and
+    //       layout the child card when it's becoming visible soon.
+    
     let contents = card.contentCards.map { $0.buildCardView(showClose: false, includeHeader: false) }
     fill(with: contents)
   }
@@ -174,7 +182,7 @@ class TGScrollCardView: TGCardView {
   
 }
 
-extension TGScrollCardView: UIScrollViewDelegate {
+extension TGPageCardView: UIScrollViewDelegate {
   
   // This delegate is called in response to setContentOffset(_, animated).
   // We use it here to detect the end of scrolling due to user pressing a

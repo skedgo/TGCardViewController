@@ -1,5 +1,5 @@
 //
-//  ExampleScrollCard.swift
+//  ExamplePageCard.swift
 //  TGCardViewController
 //
 //  Created by Kuan Lun Huang on 20/3/17.
@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class ExampleScrollCard: TGScrollCard {
+class ExamplePageCard: TGPageCard {
   
   init() {
     let card1 = TGPlainCard(title: "Hello Sydney", mapManager: .sydney)
