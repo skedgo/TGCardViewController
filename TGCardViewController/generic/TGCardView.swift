@@ -41,12 +41,21 @@ class TGCardView: TGCornerView {
   /// handling dragging the card up and down.
   @IBOutlet weak var contentScrollView: UIScrollView?
   
+  /// Each card view needs a place to display the card's title.
   @IBOutlet weak var titleLabel: UILabel!
   
+  /// Each card view needs a place to display the card's subtitle.
   @IBOutlet weak var subtitleLabel: UILabel!
   
+  /// Optional pager in which `contentScrollView` can be wrapped.
+  ///
+  /// - SeeAlso: `TGPageCardView` which relies on this.
   var pagingScrollView: UIScrollView?
   
+  /// The height of the header part of the view, i.e., everything
+  /// up to where `contentScrollView` starts.
+  ///
+  /// - Warning: Might not be accurate if the view hasn't been layed out.
   var headerHeight: CGFloat {
     guard let scrollView = contentScrollView else { return 0 }
     return scrollView.frame.minY

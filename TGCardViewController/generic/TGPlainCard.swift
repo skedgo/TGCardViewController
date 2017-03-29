@@ -9,6 +9,7 @@
 import UIKit
 
 class TGPlainCard : TGCard {
+  
   weak var controller: TGCardViewController?
 
   weak var delegate: TGCardDelegate? = nil

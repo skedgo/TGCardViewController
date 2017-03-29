@@ -19,6 +19,9 @@ protocol TGCard: class {
   /// Set by the card controller itself
   weak var controller: TGCardViewController? { get set }
   
+  /// Optional delegate for this card
+  ///
+  /// Typically, `TGCardViewController` will assign itself.
   weak var delegate: TGCardDelegate? { get set }
   
   /// Localised title of the card
@@ -38,6 +41,11 @@ protocol TGCard: class {
   /// - Returns: Card view configured with the content of this card
   func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView
   
+  /// Builds the card's optional header which will be pinned to the top
+  ///
+  /// - SeeAlso: `TGPageCard`, which relies on this for its navigation.
+  ///
+  /// - Returns: Header view configured with the card's title content
   func buildHeaderView() -> TGHeaderView?
   
   /// Called just before the card becomes visible
@@ -73,6 +81,14 @@ protocol TGCard: class {
 }
 
 protocol TGCardDelegate: class {
+  /// Called whenever the map manager of the card is changing
+  ///
+  /// The old map manager is provided, the new map manager can
+  /// be access via `card.mapManager`.
+  ///
+  /// - Parameters:
+  ///   - old: Previous map manager, if any
+  ///   - card: The card whose map manager changed
   func mapManagerDidChange(old: TGMapManager?, for card: TGCard)
 }
 

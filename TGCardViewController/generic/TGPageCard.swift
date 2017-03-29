@@ -8,6 +8,14 @@
 
 import UIKit
 
+/// A page card lets users navigate between cards that are on the same
+/// hierarchical level, where each card is managed by its own `TGCard`
+/// subclass. Navigation between cards can be controlled programatically
+/// (through the `TGPageCardView`'s methods) by your app or directly
+/// by the user using gestures.
+///
+/// Think of this class as an equivalent of `UIPageViewController`, but
+/// for cards.
 class TGPageCard: TGCard {
   
   weak var controller: TGCardViewController? {
@@ -37,7 +45,7 @@ class TGPageCard: TGCard {
   
   let contentCards: [TGCard]
   
-  let initialPageIndex: Int
+  fileprivate let initialPageIndex: Int
   
   fileprivate var cardView: TGPageCardView? = nil
   
