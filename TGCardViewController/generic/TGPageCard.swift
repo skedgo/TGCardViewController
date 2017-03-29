@@ -47,6 +47,16 @@ class TGPageCard: TGCard {
   
   fileprivate let initialPageIndex: Int
   
+  fileprivate var currentPageIndex: Int {
+    return cardView?.currentPage ?? initialPageIndex
+  }
+  
+  fileprivate var currentCard: TGCard {
+    return contentCards[currentPageIndex]
+  }
+  
+  fileprivate var previousAppearedCard: TGCard? = nil
+  
   fileprivate var cardView: TGPageCardView? = nil
   
   fileprivate lazy var headerView: TGHeaderView? = nil
@@ -159,21 +169,23 @@ class TGPageCard: TGCard {
   
   // MARK: - Card life cycle
   
-  func didAppear(animated: Bool) {
-    // Subclass to implement
+  func willAppear(animated: Bool) {
+    currentCard.willAppear(animated: animated)
   }
   
-  func willAppear(animated: Bool) {
-    // Subclass to implement
+  func didAppear(animated: Bool) {
+    previousAppearedCard = currentCard
+    currentCard.didAppear(animated: animated)
   }
   
   func willDisappear(animated: Bool) {
-    // Subclass to implement
+    currentCard.willDisappear(animated: animated)
   }
   
   func didDisappear(animated: Bool) {
-    // Subclass to implement
-  }  
+    currentCard.didDisappear(animated: animated)
+    previousAppearedCard = nil
+  }
   
 }
 
@@ -181,6 +193,15 @@ extension TGPageCard: TGPageCardViewDelegate {
   
   func didChangeCurrentPage(to index: Int) {
     update(forCardAtIndex: index, animated: true)
+    
+    let previous = previousAppearedCard
+    let current  = currentCard
+    
+    previous?.willDisappear(animated: false)
+    current.willAppear(animated: false)
+    previousAppearedCard = current
+    current.didAppear(animated: false)
+    previous?.didDisappear(animated: false)
   }
   
 }

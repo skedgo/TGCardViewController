@@ -49,4 +49,20 @@ class TGAgendaCard: TGCard {
     return nil
   }
   
+  func willAppear(animated: Bool) {
+//    print("+. \(title) will appear")
+  }
+  
+  func didAppear(animated: Bool) {
+//    print("++ \(title) did appear")
+  }
+  
+  func willDisappear(animated: Bool) {
+//    print("-. \(title) will disappear")
+  }
+  
+  func didDisappear(animated: Bool) {
+//    print("-- \(title) did disappear")
+  }
+  
 }

@@ -91,15 +91,3 @@ protocol TGCardDelegate: class {
   ///   - card: The card whose map manager changed
   func mapManagerDidChange(old: TGMapManager?, for card: TGCard)
 }
-
-extension TGCard {
-  
-  func willAppear(animated: Bool) { }
-  
-  func didAppear(animated: Bool) { }
-  
-  func willDisappear(animated: Bool) { }
-  
-  func didDisappear(animated: Bool) { }
-  
-}
