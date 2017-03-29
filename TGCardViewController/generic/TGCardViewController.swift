@@ -406,7 +406,7 @@ class TGCardViewController: UIViewController {
         self.cardTransitionShadow?.alpha = 0
       },
       completion: { completed in
-        self.topCardView?.allowContentScrolling(animateTo.position == .extended)
+        newTop?.view.allowContentScrolling(animateTo.position == .extended)
         top.controller = nil
         if notify {
           top.didDisappear(animated: animated)

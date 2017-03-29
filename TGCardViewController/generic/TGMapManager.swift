@@ -80,13 +80,10 @@ extension MKMapView {
   
   func showAnnotations(_ annotations: [MKAnnotation], minimumZoomLevel: Double, edgePadding: UIEdgeInsets = .zero, animated: Bool) {
     
-    let annotationRect = annotations.reduce(MKMapRectNull) { acc, annotation in
-      let point = MKMapPointForCoordinate(annotation.coordinate)
-      let miniRect = MKMapRect(origin: point, size: MKMapSize(width: 1, height: 1))
-      return MKMapRectUnion(acc, miniRect)
-    }
-    
-    var mapRect = mapRectThatFits(annotationRect, edgePadding: edgePadding)
+    // Note: Using zero insets here as we'll respect the inspect already in the
+    //       call below when setting the visible map rect - otherwise we adjust
+    //       for it twice.
+    var mapRect = mapRectThatFits(annotations.boundingMapRect, edgePadding: .zero)
     
     if zoomLevel(of: mapRect) < minimumZoomLevel {
       let center = MKMapPoint(x: MKMapRectGetMidX(mapRect), y: MKMapRectGetMidY(mapRect))
@@ -94,6 +91,18 @@ extension MKMapView {
     }
     
     setVisibleMapRect(mapRect, edgePadding: edgePadding, animated: animated)
+  }
+  
+}
+
+extension Array where Element == MKAnnotation {
+  
+  var boundingMapRect: MKMapRect {
+    return reduce(MKMapRectNull) { acc, annotation in
+      let point = MKMapPointForCoordinate(annotation.coordinate)
+      let miniRect = MKMapRect(origin: point, size: MKMapSize(width: 1, height: 1))
+      return MKMapRectUnion(acc, miniRect)
+    }
   }
   
 }
