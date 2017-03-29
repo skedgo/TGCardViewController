@@ -59,7 +59,7 @@ Card types:
     - [x] Handles list of child cards on the same hierarchical level which can be paged programatically and through gestures
     - [x] Has header view: Used for titles (child cards shouldn't show them then) and navigation; Header view is separate from sticky bar, i.e., you can have both.
     - [x] Re-uses the top card's map manager
-	- [ ] Pass on appearance callbacks appropriately to child cards
+	- [x] Pass on appearance callbacks appropriately to child cards
 
 Card styles:
 
