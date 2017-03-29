@@ -15,7 +15,6 @@ protocol TGScrollCardViewDelegate: class {
   
 }
 
-
 class TGScrollCardView: TGCardView {
   
   fileprivate enum Constants {
@@ -101,14 +100,6 @@ class TGScrollCardView: TGCardView {
     guard newX < pager.contentSize.width else { return }
     
     pager.setContentOffset(CGPoint(x: newX, y: 0), animated: animated)
-    
-//    if animated {
-//      UIView.animate(withDuration: Constants.animationDuration, animations: {
-//        self.pager.contentOffset = CGPoint(x: newX, y: 0)
-//      })
-//    } else {
-//      pager.contentOffset = CGPoint(x: newX, y: 0)
-//    }
   }
   
   func moveBackward(animated: Bool = true) {
@@ -118,14 +109,6 @@ class TGScrollCardView: TGCardView {
     guard newX >= 0 else { return }
     
     pager.setContentOffset(CGPoint(x: newX, y: 0), animated: animated)
-    
-//    if animated {
-//      UIView.animate(withDuration: Constants.animationDuration, animations: {
-//        self.pager.contentOffset = CGPoint(x: newX, y: 0)
-//      })
-//    } else {
-//      pager.contentOffset = CGPoint(x: newX, y: 0)
-//    }
   }
   
   func move(to cardIndex: Int, animated: Bool = true) {
@@ -135,14 +118,6 @@ class TGScrollCardView: TGCardView {
     let newX = (frame.width + Constants.spaceBetweenCards) * CGFloat(cardIndex)
     
     pager.setContentOffset(CGPoint(x: newX, y: 0), animated: animated)
-    
-//    if animated {
-//      UIView.animate(withDuration: Constants.animationDuration) {
-//        self.pager.contentOffset = CGPoint(x: newX, y: 0)
-//      }
-//    } else {
-//      pager.contentOffset = CGPoint(x: newX, y: 0)
-//    }
   }
   
   // MARK: - Configuration
@@ -199,24 +174,20 @@ class TGScrollCardView: TGCardView {
   
 }
 
-
 extension TGScrollCardView: UIScrollViewDelegate {
   
-//  func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//    print("did scroll to page: \(currentPage)")
-//    delegate?.didChangeCurrentPage(to: currentPage)
-//  }
-  
+  // This delegate is called in response to setContentOffset(_, animated).
+  // We use it here to detect the end of scrolling due to user pressing a
+  // button, i.e., scrolling programmatically.
   func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-    print("ended scrolling animation")
     delegate?.didChangeCurrentPage(to: currentPage)
   }
   
+  // This delegate is called in response to actual user scrolling. We use
+  // it here to detect the end of scrolling due to users actually swiping
+  // between pages.
   func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-    print("ended decelerating")
     delegate?.didChangeCurrentPage(to: currentPage)
   }
   
 }
-
-
