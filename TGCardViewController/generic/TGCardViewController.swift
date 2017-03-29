@@ -416,7 +416,6 @@ class TGCardViewController: UIViewController {
         self.cardTransitionShadow?.removeFromSuperview()
       }
     )
-    
   }
   
   @objc
@@ -720,7 +719,6 @@ class TGCardViewController: UIViewController {
     content.bottomAnchor.constraint(equalTo: stickyBar.bottomAnchor).isActive = true
   }
   
-  
 }
 
 
@@ -729,7 +727,6 @@ class TGCardViewController: UIViewController {
 extension TGCardViewController: UIGestureRecognizerDelegate {
   
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-    
     if cardTapper == gestureRecognizer {
       // Only intercept any taps on the title.
       // This is so that the tapper doesn't interfere with, say, taps on a table view.
@@ -748,22 +745,47 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     } else {
       return true
     }
-    
   }
   
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-    
-    guard let scrollView = topCardView?.contentScrollView, let panner = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+    guard
+      let scrollView = topCardView?.contentScrollView,
+      let panner = gestureRecognizer as? UIPanGestureRecognizer
+      else {
+        return false
+    }
     
     let direction = Direction(ofVelocity: panner.velocity(in: cardWrapperContent))
     
     let velocity = panner.velocity(in: cardWrapperContent)
-    let isPanningHorizontally = fabs(velocity.x) > fabs(velocity.y)
+    let swipeHorizontally = fabs(velocity.x) > fabs(velocity.y)
     
     let y = cardWrapperDesiredTopConstraint.constant
-    if (y == extendedMinY && scrollView.contentOffset.y == 0 && direction == .down) || (y == collapsedMinY) {
-      scrollView.isScrollEnabled = false || isPanningHorizontally
-    } else {
+    
+    switch (y, scrollView.contentOffset.y, direction, swipeHorizontally) {
+    case (collapsedMinY, _, _, _), (peakY, _, _, _):
+      // we don't care about any other conditions, as long as the top card is at
+      // one of these two positions, scrolling is disabled.
+      scrollView.isScrollEnabled = false
+      
+    case (extendedMinY, 0, _, true):
+      // while the top card is at the extended position, we are more interested
+      // in finding out first if the user is panning horizontally, that is,
+      // paing between pages. If they are, don't make any changes.
+      let currentValue = scrollView.isScrollEnabled
+      scrollView.isScrollEnabled = currentValue
+      
+    case (extendedMinY, 0, .down, _):
+      // if the top card is at the extended position with its content scroll view
+      // already scrolled to the top, and the user is scrolling down, scrolling is
+      // disabled, so the card can be moved down to peak/collapsed position. Note,
+      // this is tested after looking for horizontally swiping. If the order is
+      // reversed, we could end up in a situation where a scoll view needs a 2nd
+      // scroll to actually scroll up due to horizontally scrolling also carries
+      // with it a vertical component.
+      scrollView.isScrollEnabled = false
+      
+    default:
       scrollView.isScrollEnabled = true
     }
     
