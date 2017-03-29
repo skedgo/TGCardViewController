@@ -56,9 +56,9 @@ Card types:
 - Table card
 	- [x] Same as plain card, but with a table view as its content
 - Paging card
-	- [ ] Add
+	- [x] Add (!5)
 - Paging card w/ table
-	- [ ] Add
+	- [x] Add (!5)
 
 Card styles:
 
