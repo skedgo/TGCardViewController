@@ -132,9 +132,13 @@ class TGPageCard: TGCard {
     guard let headerView = headerView else {
       preconditionFailure()
     }
-    
+
     headerView.titleLabel.text = card.title
     headerView.subtitleLabel.text = card.subtitle
+    
+    headerView.rightButton.setImage(TGCardStyleKit.imageOfHeaderNextIcon(), for: .normal)
+    headerView.rightButton.setTitle(nil, for: .normal)
+    headerView.rightButton.accessibilityLabel = NSLocalizedString("Next", comment: "Next button accessory title")
     
     if index + 1 < contentCards.count {
       headerView.rightAction = { [unowned self] in

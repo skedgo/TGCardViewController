@@ -29,6 +29,10 @@ class TGHeaderView : UIView {
     subtitleLabel.text = nil
     rightButton.isHidden = true
     accessoryWrapperView.isHidden = true
+    
+    closeButton?.setImage(TGCardStyleKit.imageOfHeaderCloseIcon(), for: .normal)
+    closeButton?.setTitle(nil, for: .normal)
+    closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
   
   
