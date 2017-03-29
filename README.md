@@ -86,7 +86,7 @@ Map widget:
 
 Map buttons:
 
-- [ ] Optional list of buttons that float on the right above the card (when collapsed)
+- [ ] Optional list of buttons that float on the right above the card (when collapsed or peaking)
 
 ### 4. Large screens (iPad + iPhone Plus in landscape)
 
