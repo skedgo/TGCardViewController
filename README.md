@@ -65,7 +65,7 @@ Card styles:
 
 - [x] Rounded corners to cards (!2)
 - [x] Grab handle for cards (!2)
-- [ ] Nice close button
+- [x] Nice close buttons (and next button for paging cards) (!5)
 - [ ] Title and subtitle styling
 - [x] Add mini drop shadow to card views (!2)
 - [x] Bottom view (!4)
