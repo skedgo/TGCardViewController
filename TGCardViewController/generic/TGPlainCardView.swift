@@ -21,7 +21,7 @@ class TGPlainCardView: TGCardView {
   override func awakeFromNib() {
     super.awakeFromNib()
     
-    closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon(), for: .normal)
+    closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)
     closeButton?.setTitle(nil, for: .normal)
     closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
