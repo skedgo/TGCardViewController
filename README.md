@@ -55,10 +55,11 @@ Card types:
 	- [ ] Add floaty button
 - Table card
 	- [x] Same as plain card, but with a table view as its content
-- Paging card
-	- [x] Add (!5)
-- Paging card w/ table
-	- [x] Add (!5)
+- Paging card (!5)
+    - [x] Handles list of child cards on the same hierarchical level which can be paged programatically and through gestures
+    - [x] Has header view: Used for titles (child cards shouldn't show them then) and navigation; Header view is separate from sticky bar, i.e., you can have both.
+    - [x] Re-uses the top card's map manager
+	- [ ] Pass on appearance callbacks appropriately to child cards
 
 Card styles:
 
