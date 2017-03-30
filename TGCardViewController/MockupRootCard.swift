@@ -62,7 +62,7 @@ fileprivate enum Mockup {
     }
     
     func pager(start: Int) -> TGPageCard {
-      return TGPageCard(title: "Trip", contentCards: modeByMode.map { $0.card }, initialPage: start)
+      return TGPageCard(title: "Trip", cards: modeByMode.map { $0.card }, initialPage: start)
     }
   }
   
@@ -132,11 +132,11 @@ fileprivate enum Mockup {
       if trips.count == 1, let trip = trips.first {
         return trip.card
       } else {
-        return TGPageCard(title: "Trips", contentCards: trips.map { $0.card })
+        return TGPageCard(title: "Trips", cards: trips.map { $0.card })
       }
       
     case .modeByMode(let steps):
-      return TGPageCard(title: "Trip", contentCards: steps.map { $0.card })
+      return TGPageCard(title: "Trip", cards: steps.map { $0.card })
     }
   }
 }
@@ -150,7 +150,7 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
   
   let items: [Item] = [
     (title: "Agenda", card: Mockup.agenda.card),
-    (title: "Mode by mode", card: Mockup.modeByMode(Mockup.Trip.walkBus.modeByMode).card),
+    (title: "Mode by mode", card: Mockup.Trip.walkBus.pager(start: 0)),
   ]
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

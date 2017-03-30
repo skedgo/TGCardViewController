@@ -16,7 +16,7 @@ class ExamplePageCard: TGPageCard {
     let card2 = ExampleTableCard(mapManager: .london)
     let card3 = ExampleChildCard()
     let card4 = TGPlainCard(title: "Hello Nuremberg", mapManager: .nuremberg)
-    super.init(title: "Paging views", contentCards: [card1, card2, card3, card4])
+    super.init(title: "Paging views", cards: [card1, card2, card3, card4])
   }
   
   override func buildHeaderView() -> TGHeaderView? {
@@ -32,7 +32,7 @@ class ExamplePageCard: TGPageCard {
   
   @objc
   func headerJumpPressed(sender: Any) {
-    let index = Int(arc4random_uniform(UInt32(self.contentCards.count)))
+    let index = Int(arc4random_uniform(UInt32(self.cards.count)))
     move(to: index)
   }
   

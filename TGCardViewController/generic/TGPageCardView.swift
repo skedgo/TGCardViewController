@@ -131,7 +131,7 @@ class TGPageCardView: TGCardView {
     //       with the right width for each card, but only build and
     //       layout the child card when it's becoming visible soon.
     
-    let contents = card.contentCards.map { $0.buildCardView(showClose: false, includeHeader: false) }
+    let contents = card.cards.map { $0.buildCardView(showClose: false, includeHeader: false) }
     fill(with: contents)
   }
   

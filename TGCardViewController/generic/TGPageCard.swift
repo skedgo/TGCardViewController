@@ -20,7 +20,7 @@ class TGPageCard: TGCard {
   
   weak var controller: TGCardViewController? {
     didSet {
-      contentCards.forEach {
+      cards.forEach {
         $0.controller = controller
       }
     }
@@ -43,7 +43,9 @@ class TGPageCard: TGCard {
   
   let defaultPosition: TGCardPosition
   
-  let contentCards: [TGCard]
+  
+  /// The cards displayed by the page card
+  let cards: [TGCard]
   
   fileprivate let initialPageIndex: Int
   
@@ -52,7 +54,7 @@ class TGPageCard: TGCard {
   }
   
   fileprivate var currentCard: TGCard {
-    return contentCards[currentPageIndex]
+    return cards[currentPageIndex]
   }
   
   fileprivate var previousAppearedCard: TGCard? = nil
@@ -65,24 +67,24 @@ class TGPageCard: TGCard {
   ///
   /// - Parameters:
   ///   - title: duh!
-  ///   - contentCards: these are the child cards that will be displayed by the page card as pages.
+  ///   - cards: these are the child cards that will be displayed by the page card as pages.
   ///   - initialPage: the index of the first child card (page) to display when the page card is pushed.
   ///   - initialPosition: the position to anchor the page card when it is pushed.
-  init(title: String, contentCards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
-    guard initialPage < contentCards.count else {
+  init(title: String, cards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
+    guard initialPage < cards.count else {
       preconditionFailure()
     }
     
-    assert(TGPageCard.allCardsHaveMapManagers(in: contentCards), "TGCardVC doesn't yet properly handle scroll cards where some cards don't have map managers. It won't crash but will experience unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck in 'extended' mode.")
+    assert(TGPageCard.allCardsHaveMapManagers(in: cards), "TGCardVC doesn't yet properly handle scroll cards where some cards don't have map managers. It won't crash but will experience unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck in 'extended' mode.")
     
     self.title = title
-    self.contentCards = contentCards
+    self.cards = cards
     self.initialPageIndex = initialPage
     self.defaultPosition = initialPosition
     
     // Initialise map manager probably, then we'll wait for delegate
     // callbacks to update it correctly
-    self.mapManager = contentCards[initialPage].mapManager
+    self.mapManager = cards[initialPage].mapManager
   }
   
   fileprivate static func allCardsHaveMapManagers(in cards: [TGCard]) -> Bool {
@@ -105,7 +107,7 @@ class TGPageCard: TGCard {
     headerView = nil
     
     // also need to reset the map manager, too
-    mapManager = contentCards[initialPageIndex].mapManager
+    mapManager = cards[initialPageIndex].mapManager
     
     return view
   }
@@ -116,7 +118,7 @@ class TGPageCard: TGCard {
     }
     
     let view = TGHeaderView.instantiate()
-    let card = contentCards[initialPageIndex]
+    let card = cards[initialPageIndex]
     headerView = view
     updateHeader(for: card, atIndex: initialPageIndex)
     return view
@@ -125,12 +127,12 @@ class TGPageCard: TGCard {
   // MARK: - Header actions
   
   fileprivate func update(forCardAtIndex index: Int, animated: Bool = false) {
-    guard index < contentCards.count else {
+    guard index < cards.count else {
       assertionFailure()
       return
     }
     
-    let card = contentCards[index]
+    let card = cards[index]
     
     mapManager = card.mapManager
     updateHeader(for: card, atIndex: index, animated: animated)
@@ -148,7 +150,7 @@ class TGPageCard: TGCard {
     headerView.rightButton.setTitle(nil, for: .normal)
     headerView.rightButton.accessibilityLabel = NSLocalizedString("Next", comment: "Next button accessory title")
     
-    if index + 1 < contentCards.count {
+    if index + 1 < cards.count {
       headerView.rightAction = { [unowned self] in
         self.moveForward()
       }
@@ -166,14 +168,19 @@ class TGPageCard: TGCard {
   
   // MARK: - Navigation
   
+  /// Navigates to the next card, animated
   func moveForward() {
     cardView?.moveForward()
   }
   
+  /// Navigates to the previous card, animated
   func moveBackward() {
     cardView?.moveBackward()
   }
   
+  /// Navigates to the card at the provided index, animated
+  ///
+  /// - Parameter page: Index of the card
   func move(to page: Int) {
     cardView?.move(to: page)
   }
