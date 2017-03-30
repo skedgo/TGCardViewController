@@ -68,7 +68,7 @@
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="375" id="8rc-Rj-2HA"/>
+                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="414" id="8rc-Rj-2HA"/>
                                 <constraint firstItem="aqL-1W-7nJ" firstAttribute="leading" secondItem="Bui-Tf-j0O" secondAttribute="leading" id="DBu-TB-tJO"/>
                                 <constraint firstItem="aqL-1W-7nJ" firstAttribute="top" secondItem="Bui-Tf-j0O" secondAttribute="top" id="Sw2-mc-NvU"/>
                                 <constraint firstAttribute="bottom" secondItem="aqL-1W-7nJ" secondAttribute="bottom" id="Uys-KQ-RD8"/>
