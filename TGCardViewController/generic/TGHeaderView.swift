@@ -25,6 +25,8 @@ class TGHeaderView : UIView {
   
   
   override func awakeFromNib() {
+    super.awakeFromNib()
+    
     titleLabel.text = nil
     subtitleLabel.text = nil
     rightButton.isHidden = true
