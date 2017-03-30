@@ -199,13 +199,29 @@ class TGCardViewController: UIViewController {
   ///         for the extended overlap (to avoid only having a tiny
   ///         map area to work with).
   fileprivate func mapEdgePadding(for position: TGCardPosition) -> UIEdgeInsets {
-    let cardY: CGFloat
-    switch position {
-    case .extended, .peaking: cardY = peakY
-    case .collapsed:          cardY = collapsedMinY - 75 // not entirely true, but close enough
+    
+    let bottomOverlap: CGFloat
+    let leftOverlap: CGFloat
+    
+    if traitCollection.horizontalSizeClass == .compact {
+      // In compact width the map will always be between the card
+      // and the top.
+      leftOverlap = 0
+      let cardY: CGFloat
+      switch position {
+      case .extended, .peaking: cardY = peakY
+      case .collapsed:          cardY = collapsedMinY - 75 // not entirely true, but close enough
+      }
+      bottomOverlap = mapView.frame.height - cardY
+
+    } else {
+      // In regular width the map will be to the right of the card, which
+      // we account for when not collapsed
+      leftOverlap = (position != .collapsed) ? cardWrapperShadow.frame.maxX : 0
+      bottomOverlap = 0
     }
-    let bottomOverlap = mapView.frame.height - cardY
-    return UIEdgeInsets(top: topOverlap, left: 0, bottom: bottomOverlap, right: 0)
+    
+    return UIEdgeInsets(top: topOverlap, left: leftOverlap, bottom: bottomOverlap, right: 0)
   }
   
   
