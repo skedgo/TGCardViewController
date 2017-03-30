@@ -10,8 +10,6 @@ import UIKit
 
 class TGAgendaCardView: TGCardView {
   
-  @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var subtitleLabel: UILabel!
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var bottomViewContainer: UIView!
   
@@ -36,17 +34,27 @@ class TGAgendaCardView: TGCardView {
     return bundle.loadNibNamed("TGAgendaCardView", owner: nil, options: nil)!.first as! TGAgendaCardView
   }
   
+
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    
+    closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)
+    closeButton?.setTitle(nil, for: .normal)
+    closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
+  }
+  
+  
   // MARK: - Configuration
   
-  func configure(with card: TGAgendaCard, dismissable: Bool) {
-    titleLabel.text = card.title
-    subtitleLabel.text = card.subtitle
-    closeButton.isHidden = !dismissable
+  func configure(with card: TGAgendaCard, showClose: Bool, includeHeader: Bool) {
+    super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
+    
     tableView.delegate = card.tableViewDelegate
     tableView.dataSource = card.tableViewDataSource
     
     if let bottomContent = card.bottomContentView {
-      bottomContent.snapOnAllEdges(to: bottomViewContainer)
+      bottomViewContainer.addSubview(bottomContent)
+      bottomContent.snap(to: bottomViewContainer)
       
       // Work out the fitting height for the content.
       let fittingHeight = bottomContent.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
@@ -61,24 +69,4 @@ class TGAgendaCardView: TGCardView {
     }
   }
   
-}
-
-extension UIView {
-  
-  func snapOnAllEdges(to superView: UIView) {
-    translatesAutoresizingMaskIntoConstraints = false
-    superView.addSubview(self)
-    topAnchor.constraint(equalTo: superView.topAnchor).isActive = true
-    leadingAnchor.constraint(equalTo: superView.leadingAnchor).isActive = true
-    trailingAnchor.constraint(equalTo: superView.trailingAnchor).isActive = true
-    bottomAnchor.constraint(equalTo: superView.bottomAnchor).isActive = true
-  }
-  
-  func center(on superView: UIView) {
-    translatesAutoresizingMaskIntoConstraints = false
-    superView.addSubview(self)
-    topAnchor.constraint(equalTo: superView.topAnchor, constant: 8).isActive = true
-    centerXAnchor.constraint(equalTo: superView.centerXAnchor).isActive = true
-    centerYAnchor.constraint(equalTo: superView.centerYAnchor).isActive = true
-  }
 }

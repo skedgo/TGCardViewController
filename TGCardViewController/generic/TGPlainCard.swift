@@ -9,11 +9,13 @@
 import UIKit
 
 class TGPlainCard : TGCard {
-  weak var controller: TGCardViewController?
   
+  weak var controller: TGCardViewController?
+
+  weak var delegate: TGCardDelegate? = nil
+
   let title: String
 
-  /// Localised optional subtitle of the card
   let subtitle: String?
 
   /// The content to display on the card below title + subtitle
@@ -36,10 +38,30 @@ class TGPlainCard : TGCard {
     self.defaultPosition = mapManager != nil ? position : .extended
   }
   
-  func buildView(showClose: Bool) -> TGCardView {
+  func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGPlainCardView.instantiate()
-    view.configure(with: self, showClose: showClose)
+    view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
     return view
+  }
+  
+  func buildHeaderView() -> TGHeaderView? {
+    return nil
+  }
+ 
+  func willAppear(animated: Bool) {
+//    print("+. \(title) will appear")
+  }
+  
+  func didAppear(animated: Bool) {
+//    print("++ \(title) did appear")
+  }
+  
+  func willDisappear(animated: Bool) {
+//    print("-. \(title) will disappear")
+  }
+  
+  func didDisappear(animated: Bool) {
+//    print("-- \(title) did disappear")
   }
   
 }

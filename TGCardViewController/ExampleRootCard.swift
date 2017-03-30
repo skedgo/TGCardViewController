@@ -14,14 +14,7 @@ class ExampleRootCard : TGTableCard {
   fileprivate let source = DataSource()
   
   init() {
-    let nuremberg = MKPointAnnotation()
-    nuremberg.coordinate = CLLocationCoordinate2DMake(49.45, 11.08)
-    
-    let mapManager = TGMapManager()
-    mapManager.annotations = [nuremberg]
-    mapManager.preferredZoomLevel = .country
-    
-    super.init(title: "Card Demo", dataSource: source, delegate: source, mapManager: mapManager)
+    super.init(title: "Card Demo", dataSource: source, delegate: source, mapManager: .nuremberg)
     
     source.onSelect = { item in
       self.controller?.push(item.card)
@@ -41,6 +34,7 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
     (title: "Show Erlking", card: ExampleChildCard()),
     (title: "Show Table",   card: ExampleTableCard()),
     (title: "Show Agenda",  card: ExampleAgendaCard()),
+    (title: "Show Pages",   card: ExamplePageCard()),
   ]
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

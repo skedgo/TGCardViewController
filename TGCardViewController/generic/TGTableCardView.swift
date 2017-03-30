@@ -9,9 +9,6 @@
 import UIKit
 
 class TGTableCardView: TGCardView {
-
-  @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var subtitleLabel: UILabel!
   
   @IBOutlet weak var tableView: UITableView!
   
@@ -20,11 +17,18 @@ class TGTableCardView: TGCardView {
     return bundle.loadNibNamed("TGTableCardView", owner: nil, options: nil)!.first as! TGTableCardView
   }
   
+
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    
+    closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)
+    closeButton?.setTitle(nil, for: .normal)
+    closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
+  }
   
-  func configure(with card: TGTableCard, showClose: Bool) {
-    titleLabel.text = card.title
-    subtitleLabel.text = card.subtitle    
-    closeButton.isHidden = !showClose
+  
+  func configure(with card: TGTableCard, showClose: Bool, includeHeader: Bool) {
+    super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
     
     tableView.dataSource = card.tableViewDataSource
     tableView.delegate = card.tableViewDelegate

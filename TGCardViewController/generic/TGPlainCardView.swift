@@ -10,9 +10,6 @@ import UIKit
 
 class TGPlainCardView: TGCardView {
 
-  @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var subtitleLabel: UILabel!
-
   @IBOutlet weak var contentView: UIView!
   
   static func instantiate() -> TGPlainCardView {
@@ -20,10 +17,18 @@ class TGPlainCardView: TGCardView {
     return bundle.loadNibNamed("TGPlainCardView", owner: nil, options: nil)!.first as! TGPlainCardView
   }
   
-  func configure(with card: TGPlainCard, showClose: Bool) {
-    titleLabel.text = card.title
-    subtitleLabel.text = card.subtitle
-    closeButton.isHidden = !showClose
+  
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    
+    closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)
+    closeButton?.setTitle(nil, for: .normal)
+    closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
+  }
+  
+  
+  func configure(with card: TGPlainCard, showClose: Bool, includeHeader: Bool) {
+    super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
     
     if let content = card.contentView {
       content.translatesAutoresizingMaskIntoConstraints = false

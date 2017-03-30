@@ -9,7 +9,10 @@
 import UIKit
 
 class TGTableCard : TGCard {
+  
   weak var controller: TGCardViewController?
+  
+  weak var delegate: TGCardDelegate? = nil
   
   let title: String
   let subtitle: String?
@@ -29,10 +32,30 @@ class TGTableCard : TGCard {
     self.defaultPosition = mapManager != nil ? .peaking : .extended
   }
   
-  func buildView(showClose: Bool) -> TGCardView {
+  func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGTableCardView.instantiate()
-    view.configure(with: self, showClose: showClose)
+    view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
     return view
   }
+ 
+  func buildHeaderView() -> TGHeaderView? {
+    return nil
+  }
+
+  func willAppear(animated: Bool) {
+//    print("+. \(title) will appear")
+  }
   
+  func didAppear(animated: Bool) {
+//    print("++ \(title) did appear")
+  }
+  
+  func willDisappear(animated: Bool) {
+//    print("-. \(title) will disappear")
+  }
+  
+  func didDisappear(animated: Bool) {
+//    print("-- \(title) did disappear")
+  }
+
 }

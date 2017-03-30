@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -23,24 +23,25 @@
                     <rect key="frame" x="8" y="29" width="359" height="44"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="fzr-SN-jeB">
-                            <rect key="frame" x="0.0" y="0.0" width="329" height="44"/>
+                            <rect key="frame" x="0.0" y="0.0" width="312" height="44"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y7e-Bs-jau">
-                                    <rect key="frame" x="0.0" y="0.0" width="329" height="20.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="312" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aj9-Wv-1Z7">
-                                    <rect key="frame" x="0.0" y="23.5" width="329" height="20.5"/>
+                                    <rect key="frame" x="0.0" y="23.5" width="312" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
                         </stackView>
-                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gaZ-Nm-Ttn">
-                            <rect key="frame" x="337" y="0.0" width="22" height="44"/>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gaZ-Nm-Ttn">
+                            <rect key="frame" x="320" y="0.0" width="39" height="44"/>
+                            <state key="normal" title="Close"/>
                         </button>
                     </subviews>
                 </stackView>
@@ -65,13 +66,16 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="closeButton" destination="gaZ-Nm-Ttn" id="8ec-H2-bUv"/>
+                <outlet property="contentScrollView" destination="9vC-GM-Rte" id="qCO-y6-fZD"/>
                 <outlet property="grabHandle" destination="lf5-YV-zqk" id="fmS-0K-Vki"/>
-                <outlet property="scrollView" destination="9vC-GM-Rte" id="XSC-xp-0e1"/>
-                <outlet property="subtitleLabel" destination="Aj9-Wv-1Z7" id="0Qc-AW-rCK"/>
+                <outlet property="headerStackBottomConstraint" destination="84u-9p-lUM" id="wRq-vW-CUH"/>
+                <outlet property="headerStackTopConstraint" destination="4BH-B2-P31" id="e9g-xr-wUT"/>
+                <outlet property="labelStack" destination="fzr-SN-jeB" id="jVg-K4-pnY"/>
+                <outlet property="subtitleLabel" destination="Aj9-Wv-1Z7" id="VM0-dj-53r"/>
                 <outlet property="tableView" destination="9vC-GM-Rte" id="Dbs-WA-lYh"/>
-                <outlet property="titleLabel" destination="Y7e-Bs-jau" id="t7I-Cr-kdR"/>
+                <outlet property="titleLabel" destination="Y7e-Bs-jau" id="syo-l0-lMd"/>
             </connections>
-            <point key="canvasLocation" x="81.5" y="184.5"/>
+            <point key="canvasLocation" x="122" y="152"/>
         </view>
     </objects>
 </document>

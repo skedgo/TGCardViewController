@@ -9,12 +9,14 @@
 import UIKit
 
 class TGAgendaCard: TGCard {
+  
   weak var controller: TGCardViewController?
+  
+  weak var delegate: TGCardDelegate? = nil
   
   let title: String
   let subtitle: String?
   let mapManager: TGMapManager?
-  
   let defaultPosition: TGCardPosition = .peaking
   
   /// This is the content for the bottom view.
@@ -37,19 +39,30 @@ class TGAgendaCard: TGCard {
   
   // MARK: - Constructing views.
   
-  func buildView(showClose: Bool) -> TGCardView {
+  func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGAgendaCardView.instantiate()
-    view.configure(with: self, dismissable: showClose)
+    view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
     return view
   }
   
-  // MARK: - Card view life cycle
+  func buildHeaderView() -> TGHeaderView? {
+    return nil
+  }
   
-  func willAppear(animated: Bool) { }
+  func willAppear(animated: Bool) {
+//    print("+. \(title) will appear")
+  }
   
-  func didAppear(animated: Bool) { }
+  func didAppear(animated: Bool) {
+//    print("++ \(title) did appear")
+  }
   
-  func willDisappear(animated: Bool) { }
+  func willDisappear(animated: Bool) {
+//    print("-. \(title) will disappear")
+  }
   
-  func didDisappear(animated: Bool) { }
+  func didDisappear(animated: Bool) {
+//    print("-- \(title) did disappear")
+  }
+  
 }
