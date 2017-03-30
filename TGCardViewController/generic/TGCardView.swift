@@ -63,6 +63,22 @@ class TGCardView: TGCornerView {
   
   // MARK: - Configuration
   
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    
+    // Here we set the minimum width and height to provide sufficient hit
+    // target. The priority is lowered because we may need to hide the
+    // button and in such case, stack view will reduce its size to zero,
+    // hence creating conflicting constraints.
+    let widthConstraint = closeButton?.widthAnchor.constraint(greaterThanOrEqualToConstant: 44)
+    widthConstraint?.priority = 999
+    widthConstraint?.isActive = true
+    
+    let heightConstraint = closeButton?.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
+    heightConstraint?.priority = 999
+    heightConstraint?.isActive = true
+  }
+  
   func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
     titleLabel.text = includeHeader ? card.title : nil
     subtitleLabel.text = includeHeader ? card.subtitle : nil
