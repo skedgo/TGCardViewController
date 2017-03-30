@@ -63,6 +63,8 @@ class TGPageCard: TGCard {
   
   fileprivate lazy var headerView: TGHeaderView? = nil
   
+  fileprivate weak var headerPageControl: UIPageControl? = nil
+  
   /// Customisation for the header's right button
   /// 
   /// `title` will be used as the button's title and `onPress` will be
@@ -71,6 +73,12 @@ class TGPageCard: TGCard {
   ///
   /// - note: If this is not set the default "next" button will be used.
   var headerRightAction: (title: String, onPress: (Int) -> Void)? = nil
+  
+  /// Customisation of the header's accessory view
+  ///
+  /// - note: If this is not set a default `UIPageControl will be used
+  ///         indicating the current page.
+  var headerAccessoryView: UIView? = nil
   
   /// Initialise a new page card.
   ///
@@ -127,6 +135,20 @@ class TGPageCard: TGCard {
     }
     
     let view = TGHeaderView.instantiate()
+    
+    if let accessory = headerAccessoryView {
+      view.accessoryView = accessory
+    } else {
+      let pageControl = UIPageControl()
+      pageControl.currentPage = initialPageIndex
+      pageControl.numberOfPages = cards.count
+      pageControl.pageIndicatorTintColor = .gray
+      pageControl.currentPageIndicatorTintColor = .blue
+      pageControl.addTarget(self, action: #selector(headerPageControlChanged(sender:)), for: .valueChanged)
+      self.headerPageControl = pageControl
+      view.accessoryView = pageControl
+    }
+    
     let card = cards[initialPageIndex]
     headerView = view
     updateHeader(for: card, atIndex: initialPageIndex)
@@ -151,6 +173,8 @@ class TGPageCard: TGCard {
     guard let headerView = headerView else {
       preconditionFailure()
     }
+    
+    headerPageControl?.currentPage = index
 
     headerView.titleLabel.text = card.title
     headerView.subtitleLabel.text = card.subtitle
@@ -182,6 +206,13 @@ class TGPageCard: TGCard {
     UIView.animate(withDuration: animated ? 0.25 : 0) {
       headerView.layoutIfNeeded()
     }
+  }
+  
+  @objc
+  func headerPageControlChanged(sender: UIPageControl) {
+    guard sender.currentPage != currentPageIndex else { return }
+    
+    move(to: sender.currentPage)
   }
   
   
@@ -243,3 +274,4 @@ extension TGPageCard: TGPageCardViewDelegate {
   }
   
 }
+
