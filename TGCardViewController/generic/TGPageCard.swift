@@ -61,10 +61,18 @@ class TGPageCard: TGCard {
   
   fileprivate lazy var headerView: TGHeaderView? = nil
   
+  /// Initialise a new page card.
+  ///
+  /// - Parameters:
+  ///   - title: duh!
+  ///   - contentCards: these are the child cards that will be displayed by the page card as pages.
+  ///   - initialPage: the index of the first child card (page) to display when the page card is pushed.
+  ///   - initialPosition: the position to anchor the page card when it is pushed.
   init(title: String, contentCards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
     guard initialPage < contentCards.count else {
       preconditionFailure()
     }
+    
     assert(TGPageCard.allCardsHaveMapManagers(in: contentCards), "TGCardVC doesn't yet properly handle scroll cards where some cards don't have map managers. It won't crash but will experience unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck in 'extended' mode.")
     
     self.title = title

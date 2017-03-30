@@ -772,8 +772,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
       // while the top card is at the extended position, we are more interested
       // in finding out first if the user is panning horizontally, that is,
       // paing between pages. If they are, don't make any changes.
-      let currentValue = scrollView.isScrollEnabled
-      scrollView.isScrollEnabled = currentValue
+      break
       
     case (extendedMinY, 0, .down, _):
       // if the top card is at the extended position with its content scroll view
@@ -786,6 +785,10 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
       scrollView.isScrollEnabled = false
       
     default:
+      // scrolling is enabled when the top card is at the extended position and
+      // the user is scrolling up. It's also enabled when user scrolls down and
+      // the scroll view isn't at its top, i.e., its content offset on the y axis
+      // isn't zero.
       scrollView.isScrollEnabled = true
     }
     
