@@ -72,8 +72,19 @@
                                 <constraint firstItem="aqL-1W-7nJ" firstAttribute="leading" secondItem="Bui-Tf-j0O" secondAttribute="leading" id="DBu-TB-tJO"/>
                                 <constraint firstItem="aqL-1W-7nJ" firstAttribute="top" secondItem="Bui-Tf-j0O" secondAttribute="top" id="Sw2-mc-NvU"/>
                                 <constraint firstAttribute="bottom" secondItem="aqL-1W-7nJ" secondAttribute="bottom" id="Uys-KQ-RD8"/>
+                                <constraint firstAttribute="width" priority="750" constant="352" id="ftZ-m5-F2i"/>
                                 <constraint firstAttribute="trailing" secondItem="aqL-1W-7nJ" secondAttribute="trailing" id="g07-Nl-Q8E"/>
                             </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="ftZ-m5-F2i"/>
+                                </mask>
+                            </variation>
+                            <variation key="widthClass=regular">
+                                <mask key="constraints">
+                                    <include reference="ftZ-m5-F2i"/>
+                                </mask>
+                            </variation>
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -112,6 +123,7 @@
                         <mask key="constraints">
                             <include reference="0es-h4-clN"/>
                             <exclude reference="1Mc-Uh-pXD"/>
+                            <exclude reference="DGx-yq-huX"/>
                             <include reference="QkK-q5-x7Y"/>
                         </mask>
                     </variation>
