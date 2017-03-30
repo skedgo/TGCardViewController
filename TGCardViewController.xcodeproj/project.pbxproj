@@ -233,10 +233,11 @@
 		3ACA74BE1E71A0EC00408678 /* example */ = {
 			isa = PBXGroup;
 			children = (
-				3ACA74831E716AFC00408678 /* AppDelegate.swift */,
-				3ACA74851E716AFC00408678 /* ExampleCardViewController.swift */,
 				3ACA74C11E71A12E00408678 /* example cards */,
 				3AB894501E7AE3F300267A06 /* mock-up cards */,
+				3ACA74831E716AFC00408678 /* AppDelegate.swift */,
+				3ACA74851E716AFC00408678 /* ExampleCardViewController.swift */,
+				3A8BEA4F1E87E9E00007B410 /* Helpers.swift */,
 				3ACA74871E716AFC00408678 /* Main.storyboard */,
 				3ACA748A1E716AFC00408678 /* Assets.xcassets */,
 				3ACA748C1E716AFC00408678 /* LaunchScreen.storyboard */,
@@ -259,7 +260,6 @@
 				3ACA74CC1E72FEAB00408678 /* ExampleTableCard.swift */,
 				3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */,
 				3AB8944E1E7AB25900267A06 /* ExampleTableDataSource.swift */,
-				3A8BEA4F1E87E9E00007B410 /* Helpers.swift */,
 			);
 			name = "example cards";
 			sourceTree = "<group>";

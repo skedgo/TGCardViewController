@@ -25,7 +25,7 @@ extension TGMapManager {
 
 extension MKPointAnnotation {
   
-  fileprivate convenience init(lat: CLLocationDegrees, lng: CLLocationDegrees) {
+  convenience init(lat: CLLocationDegrees, lng: CLLocationDegrees) {
     self.init()
     self.coordinate = CLLocationCoordinate2DMake(lat, lng)
   }
