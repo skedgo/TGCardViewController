@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -52,15 +52,15 @@
                         </view>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="Dar-6n-Caw" secondAttribute="height" priority="260" id="1vb-vD-vcN"/>
                         <constraint firstItem="fpj-MI-D7T" firstAttribute="leading" secondItem="Dar-6n-Caw" secondAttribute="leading" id="3fi-nu-PFE"/>
                         <constraint firstAttribute="bottom" secondItem="fpj-MI-D7T" secondAttribute="bottom" id="JEJ-ob-UKD"/>
+                        <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="Dar-6n-Caw" secondAttribute="height" priority="250" id="cge-oP-lBy"/>
                         <constraint firstAttribute="trailing" secondItem="fpj-MI-D7T" secondAttribute="trailing" id="lhK-ti-Rb8"/>
                         <constraint firstItem="fpj-MI-D7T" firstAttribute="top" secondItem="Dar-6n-Caw" secondAttribute="top" id="p6T-g1-McS"/>
                     </constraints>
                     <variation key="default">
                         <mask key="constraints">
-                            <exclude reference="1vb-vD-vcN"/>
+                            <exclude reference="cge-oP-lBy"/>
                         </mask>
                     </variation>
                 </scrollView>
@@ -84,6 +84,11 @@
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="aSh-Kf-Nmj"/>
+                </mask>
+            </variation>
             <connections>
                 <outlet property="closeButton" destination="S0E-UZ-jgN" id="PTX-DA-6fw"/>
                 <outlet property="contentScrollView" destination="Dar-6n-Caw" id="cgp-sH-B9w"/>
