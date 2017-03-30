@@ -63,6 +63,15 @@ class TGPageCard: TGCard {
   
   fileprivate lazy var headerView: TGHeaderView? = nil
   
+  /// Customisation for the header's right button
+  /// 
+  /// `title` will be used as the button's title and `onPress` will be
+  /// triggered when the button is pressed with the current page provided
+  /// as the single parameter.
+  ///
+  /// - note: If this is not set the default "next" button will be used.
+  var headerRightAction: (title: String, onPress: (Int) -> Void)? = nil
+  
   /// Initialise a new page card.
   ///
   /// - Parameters:
@@ -146,16 +155,26 @@ class TGPageCard: TGCard {
     headerView.titleLabel.text = card.title
     headerView.subtitleLabel.text = card.subtitle
     
-    headerView.rightButton.setImage(TGCardStyleKit.imageOfHeaderNextIcon(), for: .normal)
-    headerView.rightButton.setTitle(nil, for: .normal)
-    headerView.rightButton.accessibilityLabel = NSLocalizedString("Next", comment: "Next button accessory title")
-    
-    if index + 1 < cards.count {
+    if let rightAction = headerRightAction {
+      headerView.rightButton.setImage(nil, for: .normal)
+      headerView.rightButton.setTitle(rightAction.title, for: .normal)
+      headerView.accessibilityLabel = rightAction.title
       headerView.rightAction = { [unowned self] in
-        self.moveForward()
+        rightAction.onPress(self.currentPageIndex)
       }
+      
     } else {
-      headerView.rightAction = nil
+      headerView.rightButton.setImage(TGCardStyleKit.imageOfHeaderNextIcon(), for: .normal)
+      headerView.rightButton.setTitle(nil, for: .normal)
+      headerView.rightButton.accessibilityLabel = NSLocalizedString("Next", comment: "Next button accessory title")
+      
+      if index + 1 < cards.count {
+        headerView.rightAction = { [unowned self] in
+          self.moveForward()
+        }
+      } else {
+        headerView.rightAction = nil
+      }
     }
     
     headerView.setNeedsLayout()
