@@ -78,6 +78,7 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="XA2-1g-kYz" secondAttribute="top" id="0es-h4-clN"/>
                         <constraint firstItem="ewk-8T-6Fw" firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="0wl-hr-BEj"/>
                         <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="ewk-8T-6Fw" secondAttribute="bottom" id="1Mc-Uh-pXD"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="centerX" secondItem="zI8-lz-Md7" secondAttribute="centerX" id="4HE-3s-wMK"/>
@@ -95,6 +96,17 @@
                         <constraint firstItem="ewk-8T-6Fw" firstAttribute="leading" secondItem="Bui-Tf-j0O" secondAttribute="leading" id="xxs-tH-iF9"/>
                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Bui-Tf-j0O" secondAttribute="top" constant="100" id="zKc-st-3DD"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="0es-h4-clN"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=regular">
+                        <mask key="constraints">
+                            <include reference="0es-h4-clN"/>
+                            <exclude reference="1Mc-Uh-pXD"/>
+                        </mask>
+                    </variation>
                 </view>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hZy-nx-c0N">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
