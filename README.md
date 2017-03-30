@@ -90,5 +90,5 @@ Map buttons:
 
 ### 4. Large screens (iPad + iPhone Plus in landscape)
 
-- [ ] Move card to the side with min (iPhone Plus) and max (iPad) width
-- [ ] Make sure transitions work when changing size and traits
+- [x] Move card to the side with min (iPhone Plus) and max (iPad) width (!9)
+- [x] Make sure transitions work when changing size and traits (!9)
