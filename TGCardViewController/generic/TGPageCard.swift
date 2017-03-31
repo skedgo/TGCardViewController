@@ -63,6 +63,23 @@ class TGPageCard: TGCard {
   
   fileprivate lazy var headerView: TGHeaderView? = nil
   
+  fileprivate weak var headerPageControl: UIPageControl? = nil
+  
+  /// Customisation for the header's right button
+  /// 
+  /// `title` will be used as the button's title and `onPress` will be
+  /// triggered when the button is pressed with the current page provided
+  /// as the single parameter.
+  ///
+  /// - note: If this is not set the default "next" button will be used.
+  var headerRightAction: (title: String, onPress: (Int) -> Void)? = nil
+  
+  /// Customisation of the header's accessory view
+  ///
+  /// - note: If this is not set a default `UIPageControl will be used
+  ///         indicating the current page.
+  var headerAccessoryView: UIView? = nil
+  
   /// Initialise a new page card.
   ///
   /// - Parameters:
@@ -118,6 +135,20 @@ class TGPageCard: TGCard {
     }
     
     let view = TGHeaderView.instantiate()
+    
+    if let accessory = headerAccessoryView {
+      view.accessoryView = accessory
+    } else {
+      let pageControl = UIPageControl()
+      pageControl.currentPage = initialPageIndex
+      pageControl.numberOfPages = cards.count
+      pageControl.pageIndicatorTintColor = .gray
+      pageControl.currentPageIndicatorTintColor = .blue
+      pageControl.addTarget(self, action: #selector(headerPageControlChanged(sender:)), for: .valueChanged)
+      self.headerPageControl = pageControl
+      view.accessoryView = pageControl
+    }
+    
     let card = cards[initialPageIndex]
     headerView = view
     updateHeader(for: card, atIndex: initialPageIndex)
@@ -142,20 +173,32 @@ class TGPageCard: TGCard {
     guard let headerView = headerView else {
       preconditionFailure()
     }
+    
+    headerPageControl?.currentPage = index
 
     headerView.titleLabel.text = card.title
     headerView.subtitleLabel.text = card.subtitle
     
-    headerView.rightButton.setImage(TGCardStyleKit.imageOfHeaderNextIcon(), for: .normal)
-    headerView.rightButton.setTitle(nil, for: .normal)
-    headerView.rightButton.accessibilityLabel = NSLocalizedString("Next", comment: "Next button accessory title")
-    
-    if index + 1 < cards.count {
+    if let rightAction = headerRightAction {
+      headerView.rightButton.setImage(nil, for: .normal)
+      headerView.rightButton.setTitle(rightAction.title, for: .normal)
+      headerView.accessibilityLabel = rightAction.title
       headerView.rightAction = { [unowned self] in
-        self.moveForward()
+        rightAction.onPress(self.currentPageIndex)
       }
+      
     } else {
-      headerView.rightAction = nil
+      headerView.rightButton.setImage(TGCardStyleKit.imageOfHeaderNextIcon(), for: .normal)
+      headerView.rightButton.setTitle(nil, for: .normal)
+      headerView.rightButton.accessibilityLabel = NSLocalizedString("Next", comment: "Next button accessory title")
+      
+      if index + 1 < cards.count {
+        headerView.rightAction = { [unowned self] in
+          self.moveForward()
+        }
+      } else {
+        headerView.rightAction = nil
+      }
     }
     
     headerView.setNeedsLayout()
@@ -163,6 +206,13 @@ class TGPageCard: TGCard {
     UIView.animate(withDuration: animated ? 0.25 : 0) {
       headerView.layoutIfNeeded()
     }
+  }
+  
+  @objc
+  func headerPageControlChanged(sender: UIPageControl) {
+    guard sender.currentPage != currentPageIndex else { return }
+    
+    move(to: sender.currentPage)
   }
   
   
@@ -224,3 +274,4 @@ extension TGPageCard: TGPageCardViewDelegate {
   }
   
 }
+
