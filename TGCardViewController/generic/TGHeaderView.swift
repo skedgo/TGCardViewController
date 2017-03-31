@@ -17,14 +17,16 @@ class TGHeaderView : UIView {
   @IBOutlet weak var rightButton: UIButton!
   
   @IBOutlet weak var accessoryWrapperView: UIView!
+  @IBOutlet weak var accessoryWrapperHeightConstraint: NSLayoutConstraint!
   
   static func instantiate() -> TGHeaderView {
     let bundle = Bundle(for: self)
     return bundle.loadNibNamed("TGHeaderView", owner: nil, options: nil)!.first as! TGHeaderView
   }
   
-  
   override func awakeFromNib() {
+    super.awakeFromNib()
+    
     titleLabel.text = nil
     subtitleLabel.text = nil
     rightButton.isHidden = true
@@ -34,7 +36,6 @@ class TGHeaderView : UIView {
     closeButton?.setTitle(nil, for: .normal)
     closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
-  
   
   var accessoryView: UIView? {
     get {
@@ -55,6 +56,10 @@ class TGHeaderView : UIView {
       // This sets up constraints and is required for AL to work out
       // the fitting height of the header view.
       view.snap(to: accessoryWrapperView)
+      
+      // If the accessory view is a page control, we use its intrinsic
+      // height, rather than enforcing it to have a minimum value of 44
+      accessoryWrapperHeightConstraint.isActive = !(view is UIPageControl)
       
       // Note tha the wrapper view is housed inside a stack view, so
       // in order for AL to consider it when calculating view height,
