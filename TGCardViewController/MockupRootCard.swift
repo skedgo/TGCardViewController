@@ -46,10 +46,10 @@ fileprivate enum Mockup {
           title: "To Laureate", subtitle: "From Home", image: #imageLiteral(resourceName: "overview"),
           locations: [MKPointAnnotation.home, MKPointAnnotation.busStop, MKPointAnnotation.laureate],
           targets: [
-            (0.11 ..< 0.22, pager(start: 0)),
-            (0.22 ..< 0.33, pager(start: 1)),
-            (0.33 ..< 0.44, pager(start: 3)),
-            (0.44 ..< 0.55, pager(start: 4)),
+            (0.11 ..< 0.22, modeByModePager(start: 0)),
+            (0.22 ..< 0.33, modeByModePager(start: 1)),
+            (0.33 ..< 0.44, modeByModePager(start: 3)),
+            (0.44 ..< 0.55, modeByModePager(start: 4)),
           ]
         )
       }
@@ -61,7 +61,7 @@ fileprivate enum Mockup {
       }
     }
     
-    func pager(start: Int) -> TGPageCard {
+    func modeByModePager(start: Int) -> TGPageCard {
       return TGPageCard(title: "Trip", cards: modeByMode.map { $0.card }, initialPage: start)
     }
   }
@@ -132,7 +132,11 @@ fileprivate enum Mockup {
       if trips.count == 1, let trip = trips.first {
         return trip.card
       } else {
-        return TGPageCard(title: "Trips", cards: trips.map { $0.card })
+        let tripsPager = TGPageCard(title: "Trips", cards: trips.map { $0.card })
+        tripsPager.headerRightAction = (title: "Start", onPress: { [unowned tripsPager] index in
+          tripsPager.controller?.push(trips[index].modeByModePager(start: 0))
+        })
+        return tripsPager
       }
       
     case .modeByMode(let steps):
@@ -150,7 +154,7 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
   
   let items: [Item] = [
     (title: "Agenda", card: Mockup.agenda.card),
-    (title: "Mode by mode", card: Mockup.Trip.walkBus.pager(start: 0)),
+    (title: "Mode by mode", card: Mockup.Trip.walkBus.modeByModePager(start: 0)),
   ]
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

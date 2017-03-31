@@ -17,17 +17,13 @@ class ExamplePageCard: TGPageCard {
     let card3 = ExampleChildCard()
     let card4 = TGPlainCard(title: "Hello Nuremberg", mapManager: .nuremberg)
     super.init(title: "Paging views", cards: [card1, card2, card3, card4])
-  }
-  
-  override func buildHeaderView() -> TGHeaderView? {
-    let view = super.buildHeaderView()
-    
+   
+    // Custom accessory for testing jumping around
     let jumpButton = UIButton(type: .roundedRect)
     jumpButton.setTitle("Jump", for: .normal)
     jumpButton.addTarget(self, action: #selector(headerJumpPressed(sender:)), for: .touchUpInside)
-    view?.accessoryView = jumpButton
     
-    return view
+    self.headerAccessoryView = jumpButton
   }
   
   @objc
