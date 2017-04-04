@@ -13,13 +13,9 @@ class ExampleTableCard : TGTableCard {
   fileprivate let source = ExampleTableDataSource()
 
   init(mapManager: TGMapManager? = nil) {
-    let label = UILabel()
-    label.textAlignment = .center
-    label.text = "This is accessory view for table card"
-    label.textColor = .orange
-    label.sizeToFit()
+    let accessory = ExampleAccessoryView.instantiate()
     
-    super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: label, mapManager: mapManager)
+    super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: accessory, mapManager: mapManager)
     
     source.onSelect = {
       let card = ExampleTableChildCard(annotation: $0)

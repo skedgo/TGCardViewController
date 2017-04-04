@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ExampleAccessoryView" customModule="TGCardViewController" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="hkI-Yk-Pu5">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z9d-O0-z6u">
+                            <rect key="frame" x="0.0" y="0.0" width="255" height="44"/>
+                            <state key="normal" title="Arriving at 9:00 am">
+                                <color key="titleColor" red="0.0" green="0.80000000000000004" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sGY-cA-zdH">
+                            <rect key="frame" x="263" y="0.0" width="112" height="44"/>
+                            <state key="normal" title="Options">
+                                <color key="titleColor" red="0.0" green="0.80000000000000004" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="hkI-Yk-Pu5" secondAttribute="trailing" id="aHP-9h-vsm"/>
+                <constraint firstAttribute="bottom" secondItem="hkI-Yk-Pu5" secondAttribute="bottom" id="cN0-uU-tEy"/>
+                <constraint firstItem="hkI-Yk-Pu5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="k1u-UB-SFL"/>
+                <constraint firstItem="hkI-Yk-Pu5" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="yOz-Ys-UJi"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="125.5" y="-90.5"/>
+        </view>
+    </objects>
+</document>
