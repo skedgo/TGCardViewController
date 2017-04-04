@@ -285,6 +285,9 @@ class TGCardViewController: UIViewController {
     // 4. Create and configure the new view
     let cardView = top.buildCardView(showClose: cards.count > 1, includeHeader: true)
     cardView.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+    if !forceExtended {
+      cardView.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
+    }
     
     // 5. Place the new view coming, preparing to animate in from the bottom
     cardView.frame = cardWrapperContent.bounds
@@ -501,7 +504,6 @@ class TGCardViewController: UIViewController {
   fileprivate func handlePan(_ recogniser: UIPanGestureRecognizer) {
     let translation = recogniser.translation(in: cardWrapperContent)
     let velocity = recogniser.velocity(in: cardWrapperContent)
-    let direction = Direction(ofVelocity: velocity)
     
     let previousCardY = cardWrapperDesiredTopConstraint.constant
     
@@ -518,14 +520,20 @@ class TGCardViewController: UIViewController {
     // to the appropriate state (extended, peaking, collapsed)
     guard recogniser.state == .ended else { return }
     
+    animateCardSnap(forVelocity: velocity)
+  }
+  
+  
+  fileprivate func animateCardSnap(forVelocity velocity: CGPoint, completion: (() -> Void)? = nil) {
     let snapTo = determineSnap(for: velocity)
     let currentCardY = cardWrapperDesiredTopConstraint.constant
     
     // Now we can animate to the new position
+    let direction = Direction(ofVelocity: velocity)
     var duration = direction == .up
       ? Double((currentCardY - snapTo.y) / -velocity.y)
       : Double((snapTo.y - currentCardY) / velocity.y )
-
+    
     // We add a max to not make it super slow when there was
     // barely any velocity.
     // We add a min to it to make sure the alpha transition
@@ -541,8 +549,48 @@ class TGCardViewController: UIViewController {
       
     }, completion: { _ in
       self.topCardView?.allowContentScrolling(snapTo.position == .extended)
+      completion?()
     })
   }
+  
+  
+  @objc
+  fileprivate func handleInnerPan(_ recogniser: UIPanGestureRecognizer) {
+    guard let scrollView = recogniser.view as? UIScrollView, scrollView == topCardView?.contentScrollView else { return }
+
+    let negativity = scrollView.contentOffset.y
+
+    switch (negativity, recogniser.state) {
+      
+    case (0 ..< CGFloat.infinity, _):
+      // Reset the transformation whenever we get back to positive offset
+      scrollView.transform = .identity
+      scrollView.scrollIndicatorInsets = .zero
+      
+    case (_, .ended), (_, .cancelled):
+      // When we finish up, we bring the scroll view back to the state how
+      // it's appearing: scrolled to the top with zero inset
+      scrollView.transform = .identity
+      scrollView.scrollIndicatorInsets = .zero
+      scrollView.contentOffset = .zero
+
+      let velocity = recogniser.velocity(in: cardWrapperContent)
+      animateCardSnap(forVelocity: velocity)
+      
+    case (_, .changed):
+      // This is where the magic happens: We move the card down and make
+      // the scroll view appear to stay in place (it's important to not
+      // set the content offset to zero here!)
+      cardWrapperDesiredTopConstraint.constant = extendedMinY - negativity
+      scrollView.transform = CGAffineTransform(translationX: 0, y: negativity)
+      scrollView.scrollIndicatorInsets.top = negativity * -1
+      
+    default:
+      // Ignore other states such as began, failed, etc.
+      break
+    }
+  }
+  
   
   @objc
   fileprivate func handleCardTap(_ recogniser: UITapGestureRecognizer) {
@@ -742,6 +790,7 @@ class TGCardViewController: UIViewController {
 
 extension TGCardViewController: UIGestureRecognizerDelegate {
   
+  
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
     if cardTapper == gestureRecognizer {
       // Only intercept any taps on the title.
@@ -809,6 +858,19 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     }
     
     return false
+  }
+  
+}
+
+
+// MARK: - UIScrollViewDelegate
+
+extension TGCardViewController: UIScrollViewDelegate {
+  
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    guard scrollView == topCardView?.contentScrollView else { return }
+    
+    scrollView.contentOffset.y = max(scrollView.contentOffset.y, 0)
   }
   
 }
