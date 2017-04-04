@@ -887,4 +887,12 @@ extension TGCardViewController: TGCardDelegate {
     card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: cardPosition), animated: true)
   }
   
+  
+  func contentScrollViewDidChange(old: UIScrollView?, for card: TGCard) {
+    guard card === topCard, let view = topCardView else { return }
+    
+    old?.panGestureRecognizer.removeTarget(self, action: nil)
+    view.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
+  }
+  
 }
