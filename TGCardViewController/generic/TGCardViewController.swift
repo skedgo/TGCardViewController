@@ -374,6 +374,7 @@ class TGCardViewController: UIViewController {
       newTop?.card.willAppear(animated: animated)
       top.willDisappear(animated: animated)
     }
+    topView.contentScrollView?.panGestureRecognizer.removeTarget(self, action: nil)
 
     // We update the stack immediately to allow calling this many times
     // while we're still animating without issues
