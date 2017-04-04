@@ -32,7 +32,6 @@ class TGPlainCardView: TGCardView {
       accessoryView = card.accessoryView
     }
     
-    
     if let content = card.contentView {
       content.translatesAutoresizingMaskIntoConstraints = false
       contentView.addSubview(content)

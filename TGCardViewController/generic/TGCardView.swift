@@ -96,15 +96,13 @@ class TGCardView: TGCornerView {
     // target. The priority is lowered because we may need to hide the
     // button and in such case, stack view will reduce its size to zero,
     // hence creating conflicting constraints.
-    let widthConstraint = closeButton?.widthAnchor.constraint(greaterThanOrEqualToConstant: 44)
+    let widthConstraint = closeButton?.widthAnchor.constraint(equalToConstant: 44)
     widthConstraint?.priority = 999
     widthConstraint?.isActive = true
     
-    let heightConstraint = closeButton?.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
+    let heightConstraint = closeButton?.heightAnchor.constraint(equalToConstant: 44)
     heightConstraint?.priority = 999
     heightConstraint?.isActive = true
-    
-    closeButton?.backgroundColor = .red
   }
   
   func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
@@ -112,7 +110,6 @@ class TGCardView: TGCornerView {
     subtitleLabel.text = includeHeader ? card.subtitle : nil
     closeButton?.isHidden = !showClose
     labelStack?.spacing = includeHeader && card.subtitle != nil ? 3 : 0
-    headerStack?.spacing = includeHeader ? 4 : 0
     headerStackTopConstraint?.constant = includeHeader ? 8 : 0
     headerStackBottomConstraint?.constant = includeHeader ? 8 : 0
   }
