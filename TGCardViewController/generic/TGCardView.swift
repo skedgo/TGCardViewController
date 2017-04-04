@@ -73,8 +73,9 @@ class TGCardView: TGCornerView {
       return accessoryWrapperView.subviews.first
     }
     set {
+      accessoryWrapperView.subviews.forEach { $0.removeFromSuperview() }
+      
       guard let view = newValue else {
-        accessoryWrapperView.subviews.forEach { $0.removeFromSuperview() }
         accessoryWrapperView.isHidden = true
         headerStack?.spacing = 0
         return
@@ -84,6 +85,8 @@ class TGCardView: TGCornerView {
       view.snap(to: accessoryWrapperView)
       accessoryWrapperView.isHidden = false
       headerStack?.spacing = 4
+      
+      setNeedsUpdateConstraints()
     }
   }
   
