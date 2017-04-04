@@ -13,7 +13,14 @@ class ExampleTableCard : TGTableCard {
   fileprivate let source = ExampleTableDataSource()
 
   init(mapManager: TGMapManager? = nil) {
-    super.init(title: "London stops", dataSource: source, delegate: source, mapManager: mapManager)
+    let label = UILabel()
+    label.textAlignment = .center
+    label.text = "This is accessory view for table card"
+    label.textColor = .orange
+    label.sizeToFit()
+    
+    super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: label, mapManager: mapManager)
+    
     source.onSelect = {
       let card = ExampleTableChildCard(annotation: $0)
       self.controller?.push(card, animated: true)

@@ -58,7 +58,7 @@ class TGHeaderView : UIView {
       view.snap(to: accessoryWrapperView)
       
       // If the accessory view is a page control, we use its intrinsic
-      // height, rather than enforcing it to have a minimum value of 44
+      // height, rather than enforcing it to have a minimum value of 44      
       accessoryWrapperHeightConstraint.isActive = !(view is UIPageControl)
       
       // Note tha the wrapper view is housed inside a stack view, so

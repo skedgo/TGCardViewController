@@ -14,6 +14,10 @@ class TGCardView: TGCornerView {
   /// might hide and show.
   @IBOutlet weak var grabHandle: TGGrabHandleView?
   
+  /// The stack view that contains the label stack and the 
+  /// accessory view.
+  @IBOutlet private weak var headerStack: UIStackView?
+  
   /// The stack view that houses the title and subtitle labels.
   ///
   /// This outlet exists so that we can adjust the spacing between
@@ -61,6 +65,28 @@ class TGCardView: TGCornerView {
     return scrollView.frame.minY
   }
   
+  @IBOutlet private weak var accessoryWrapperView: UIView!
+  
+  /// Optional view beneath title + subtitle.
+  var accessoryView: UIView? {
+    get {
+      return accessoryWrapperView.subviews.first
+    }
+    set {
+      guard let view = newValue else {
+        accessoryWrapperView.subviews.forEach { $0.removeFromSuperview() }
+        accessoryWrapperView.isHidden = true
+        headerStack?.spacing = 0
+        return
+      }
+      
+      accessoryWrapperView.addSubview(view)
+      view.snap(to: accessoryWrapperView)
+      accessoryWrapperView.isHidden = false
+      headerStack?.spacing = 4
+    }
+  }
+  
   // MARK: - Configuration
   
   override func awakeFromNib() {
@@ -77,13 +103,16 @@ class TGCardView: TGCornerView {
     let heightConstraint = closeButton?.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
     heightConstraint?.priority = 999
     heightConstraint?.isActive = true
+    
+    closeButton?.backgroundColor = .red
   }
   
   func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
     titleLabel.text = includeHeader ? card.title : nil
     subtitleLabel.text = includeHeader ? card.subtitle : nil
     closeButton?.isHidden = !showClose
-    labelStack?.spacing = includeHeader ? 3 : 0
+    labelStack?.spacing = includeHeader && card.subtitle != nil ? 3 : 0
+    headerStack?.spacing = includeHeader ? 4 : 0
     headerStackTopConstraint?.constant = includeHeader ? 8 : 0
     headerStackBottomConstraint?.constant = includeHeader ? 8 : 0
   }

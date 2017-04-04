@@ -14,7 +14,13 @@ class ExampleChildCard : TGPlainCard {
   init() {
     let content = ExampleChildContentView.instantiate()
     
-    super.init(title: "Child", subtitle: "With sticky button", contentView: content, mapManager: .sydney)
+    let accessoryLabel = UILabel()
+    accessoryLabel.text = "This is an accessory view"
+    accessoryLabel.textColor = .cyan
+    accessoryLabel.textAlignment = .center
+    accessoryLabel.sizeToFit()
+    
+    super.init(title: "Child", subtitle: "With sticky button", contentView: content, accessoryView: accessoryLabel, mapManager: .sydney)
     
     content.showStickyButton.addTarget(self, action: #selector(toggleStickyImagePressed(sender:)), for: .touchUpInside)
     content.showStickyCreditsButton.addTarget(self, action: #selector(toggleStickyCreditsPressed(sender:)), for: .touchUpInside)

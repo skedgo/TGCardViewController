@@ -17,7 +17,6 @@ class TGPlainCardView: TGCardView {
     return bundle.loadNibNamed("TGPlainCardView", owner: nil, options: nil)!.first as! TGPlainCardView
   }
   
-  
   override func awakeFromNib() {
     super.awakeFromNib()
     
@@ -26,9 +25,13 @@ class TGPlainCardView: TGCardView {
     closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
   
-  
   func configure(with card: TGPlainCard, showClose: Bool, includeHeader: Bool) {
     super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
+    
+    if includeHeader {
+      accessoryView = card.accessoryView
+    }
+    
     
     if let content = card.contentView {
       content.translatesAutoresizingMaskIntoConstraints = false

@@ -18,17 +18,20 @@ class TGTableCard : TGCard {
   let subtitle: String?
   let mapManager: TGMapManager?
   let defaultPosition: TGCardPosition
+  
+  let accessoryView: UIView?
 
   weak var tableViewDelegate: UITableViewDelegate?
   weak var tableViewDataSource: UITableViewDataSource?
   
-  init(title: String, subtitle: String? = nil, dataSource: UITableViewDataSource, delegate: UITableViewDelegate? = nil, mapManager: TGMapManager? = nil) {
+  init(title: String, subtitle: String? = nil, dataSource: UITableViewDataSource, delegate: UITableViewDelegate? = nil, accessoryView: UIView? = nil, mapManager: TGMapManager? = nil) {
     
     self.title = title
     self.subtitle = subtitle
     self.mapManager = mapManager
     self.tableViewDataSource = dataSource
     self.tableViewDelegate = delegate
+    self.accessoryView = accessoryView
     self.defaultPosition = mapManager != nil ? .peaking : .extended
   }
   
