@@ -50,7 +50,7 @@ Card types:
 
 - Plain card
 	- [x] On top: Title, (x), optional subtitle and optional accessory view
-	- [ ] Add accessory view
+	- [ ] Add accessory view (!11)
 	- [x] Content can be scrollable and size adjusts to content. If it fits, it shouldn’t be scrollable
 	- [ ] Add floaty button
 - Table card
