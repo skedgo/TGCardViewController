@@ -10,15 +10,15 @@ import Foundation
 
 import MapKit
 
-class TGMapManager {
+open class TGMapManager {
   
-  enum Zoom: Double {
+  public enum Zoom: Double {
     case road     = 5  // local level => how do I navigate on the road?
     case city     = 10 // can fit a city => where in the city are we?
     case country  = 15 // can fit a country => where in the world/in this country are we?
   }
   
-  var annotations = [MKAnnotation]() {
+  public var annotations = [MKAnnotation]() {
     didSet {
       guard let mapView = mapView else { return }
       mapView.removeAnnotations(oldValue)
@@ -28,7 +28,7 @@ class TGMapManager {
   
   /// How zoomed in/out the map should be when displaying the
   /// content the first time.
-  var preferredZoomLevel: Zoom = .city
+  public var preferredZoomLevel: Zoom = .city
   
   fileprivate var edgePadding: UIEdgeInsets = .zero
   
@@ -38,6 +38,9 @@ class TGMapManager {
     return mapView != nil
   }
   
+  public init() {
+  }
+  
   /// Takes charge of the map view, adding the map manager's content
   ///
   /// - Parameters:
@@ -45,7 +48,7 @@ class TGMapManager {
   ///   - edgePadding: Edge padding of the map view, e.g., if parts of the map view is
   /// obscured by other views.
   ///   - animated: If adding content should be animated
-  func takeCharge(of mapView: MKMapView, edgePadding: UIEdgeInsets = .zero, animated: Bool = true) {
+  public func takeCharge(of mapView: MKMapView, edgePadding: UIEdgeInsets = .zero, animated: Bool = true) {
     self.mapView = mapView
     self.edgePadding = edgePadding
     
@@ -64,7 +67,7 @@ class TGMapManager {
   /// - Parameters:
   ///   - mapView: Map view to clean-up
   ///   - animated: If removing content should be animated
-  func cleanUp(_ mapView: MKMapView, animated: Bool = true) {
+  public func cleanUp(_ mapView: MKMapView, animated: Bool = true) {
     guard mapView == self.mapView else {
       assertionFailure("Not the map view that we manage!")
       return
@@ -79,6 +82,8 @@ class TGMapManager {
 extension MKMapView {
   
   func showAnnotations(_ annotations: [MKAnnotation], minimumZoomLevel: Double, edgePadding: UIEdgeInsets = .zero, animated: Bool) {
+    
+    guard annotations.count > 0 else { return }
     
     // Note: Using zero insets here as we'll respect the inspect already in the
     //       call below when setting the visible map rect - otherwise we adjust

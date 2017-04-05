@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TGCardView: TGCornerView {
+public class TGCardView: TGCornerView {
   
   /// Each card view needs a grab handle, which the controller
   /// might hide and show.
@@ -92,7 +92,7 @@ class TGCardView: TGCornerView {
   
   // MARK: - Configuration
   
-  override func awakeFromNib() {
+  override public func awakeFromNib() {
     super.awakeFromNib()
     
     // Here we set the minimum width and height to provide sufficient hit

@@ -12,7 +12,7 @@ import UIKit
 ///
 /// Class-protocol as we'll dynamically set the `controller` and 
 /// `delegate` fields.
-protocol TGCard: class {
+public protocol TGCard: class {
   
   /// The card controller currently displaying the card
   ///
@@ -80,7 +80,7 @@ protocol TGCard: class {
   func didDisappear(animated: Bool)
 }
 
-protocol TGCardDelegate: class {
+public protocol TGCardDelegate: class {
   /// Called whenever the map manager of the card is changing
   ///
   /// The old map manager is provided, the new map manager can

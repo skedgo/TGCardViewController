@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TGAgendaCardView: TGCardView {
+public class TGAgendaCardView: TGCardView {
   
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var bottomViewContainer: UIView!
@@ -35,7 +35,7 @@ class TGAgendaCardView: TGCardView {
   }
   
 
-  override func awakeFromNib() {
+  override public func awakeFromNib() {
     super.awakeFromNib()
     
     closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)

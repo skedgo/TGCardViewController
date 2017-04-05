@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TGHeaderView : UIView {
+public class TGHeaderView : UIView {
   
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var subtitleLabel: UILabel!
@@ -24,7 +24,7 @@ class TGHeaderView : UIView {
     return bundle.loadNibNamed("TGHeaderView", owner: nil, options: nil)!.first as! TGHeaderView
   }
   
-  override func awakeFromNib() {
+  override public func awakeFromNib() {
     super.awakeFromNib()
     
     titleLabel.text = nil
