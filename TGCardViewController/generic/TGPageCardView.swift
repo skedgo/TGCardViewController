@@ -30,6 +30,10 @@ class TGPageCardView: TGCardView {
 
   weak var delegate: TGPageCardViewDelegate? = nil
   
+  var cardViews: [TGCardView] {
+    return (contentView.subviews as? [TGCardView]) ?? []
+  }
+  
   override var headerHeight: CGFloat {
     guard contentView.subviews.count > 0 else { return 0 }
     
@@ -57,7 +61,7 @@ class TGPageCardView: TGCardView {
   
   override var contentScrollView: UIScrollView? {
     get {
-      guard let cardViews = contentView.subviews as? [TGCardView] else {
+      guard currentPage < cardViews.count else {
         return nil
       }
       
@@ -136,7 +140,6 @@ class TGPageCardView: TGCardView {
   }
   
   override func allowContentScrolling(_ allowScrolling: Bool) {
-    guard let cardViews = contentView.subviews as? [TGCardView] else { return }
     cardViews.forEach { $0.contentScrollView?.isScrollEnabled = allowScrolling }
   }
   

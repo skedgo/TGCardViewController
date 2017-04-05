@@ -90,4 +90,15 @@ protocol TGCardDelegate: class {
   ///   - old: Previous map manager, if any
   ///   - card: The card whose map manager changed
   func mapManagerDidChange(old: TGMapManager?, for card: TGCard)
+
+  
+  /// Called whenever the content scroll view of the card is changing
+  ///
+  /// The old scroll view is provided, the new scroll view can
+  /// be access via `card.contentScrollView`.
+  ///
+  /// - Parameters:
+  ///   - old: Previous scroll view, if any
+  ///   - card: The card whose scroll view changed
+  func contentScrollViewDidChange(old: UIScrollView?, for card: TGCard)
 }
