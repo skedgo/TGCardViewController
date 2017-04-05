@@ -32,7 +32,7 @@ open class TGPlainCard : TGCard {
   
   public let defaultPosition: TGCardPosition
   
-  public init(title: String, subtitle: String? = nil, contentView: UIView? = nil, mapManager: TGMapManager? = nil, position: TGCardPosition = .peaking) {
+  public init(title: String, subtitle: String? = nil, contentView: UIView? = nil, accessoryView: UIView? = nil, mapManager: TGMapManager? = nil, position: TGCardPosition = .peaking) {
     assert(!(contentView is UIScrollView), "This card is not meant for content views that are itself scrolling. Use `TGTableCardView` instead.")
     
     self.title = title

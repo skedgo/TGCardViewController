@@ -24,7 +24,7 @@ open class TGTableCard : TGCard {
   weak var tableViewDelegate: UITableViewDelegate?
   weak var tableViewDataSource: UITableViewDataSource?
   
-  public init(title: String, subtitle: String? = nil, dataSource: UITableViewDataSource, delegate: UITableViewDelegate? = nil, mapManager: TGMapManager? = nil) {
+  public init(title: String, subtitle: String? = nil, dataSource: UITableViewDataSource, delegate: UITableViewDelegate? = nil, accessoryView: UIView? = nil, mapManager: TGMapManager? = nil) {
     
     self.title = title
     self.subtitle = subtitle
