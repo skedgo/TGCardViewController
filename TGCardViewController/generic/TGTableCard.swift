@@ -16,7 +16,7 @@ open class TGTableCard : TGCard {
   
   public let title: String
   public let subtitle: String?
-  open let mapManager: TGMapManager?
+  public let mapManager: TGMapManager?
   public let defaultPosition: TGCardPosition
 
   weak var tableViewDelegate: UITableViewDelegate?
