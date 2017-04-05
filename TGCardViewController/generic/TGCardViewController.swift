@@ -10,7 +10,7 @@ import UIKit
 
 import MapKit
 
-class TGCardViewController: UIViewController {
+open class TGCardViewController: UIViewController {
   
   fileprivate enum Constants {
     /// The minimum number of points between the status bar and the
@@ -67,7 +67,7 @@ class TGCardViewController: UIViewController {
 
   // MARK: - UIViewController
   
-  override func viewDidLoad() {
+  override open func viewDidLoad() {
     super.viewDidLoad()
 
     // Panner for dragging cards up and down
@@ -109,40 +109,40 @@ class TGCardViewController: UIViewController {
     cardWrapperShadow.layer.shadowOpacity = 0.3
   }
   
-  override func viewWillAppear(_ animated: Bool) {
+  override open func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
     topCard?.willAppear(animated: animated)
   }
   
-  override func viewDidAppear(_ animated: Bool) {
+  override open func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     
     topCard?.didAppear(animated: animated)
     isVisible = true
   }
   
-  override func viewWillDisappear(_ animated: Bool) {
+  override open func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     
     topCard?.willDisappear(animated: animated)
     isVisible = false
   }
   
-  override func viewDidDisappear(_ animated: Bool) {
+  override open func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     
     topCard?.didDisappear(animated: animated)
   }
   
-  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+  override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
     
     statusBarBlurHeightConstraint.constant = UIApplication.shared.statusBarFrame.height
     cardWrapperHeightConstraint.constant = extendedMinY * -1
   }
 
-  override func didReceiveMemoryWarning() {
+  override open func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
@@ -252,7 +252,7 @@ class TGCardViewController: UIViewController {
   }
   
   
-  func push(_ top: TGCard, animated: Bool = true) {
+  public func push(_ top: TGCard, animated: Bool = true) {
     
     // Set the controller on the top card earlier, because we may want
     // to ask the card to do something on willAppear, e.g., show sticky 
@@ -360,7 +360,7 @@ class TGCardViewController: UIViewController {
     return (cards[index].card, cards[index].lastPosition, views[index])
   }
   
-  func pop(animated: Bool = true) {
+  public func pop(animated: Bool = true) {
     guard let top = topCard, let topView = topCardView else {
       print("Nothing to pop")
       return
@@ -792,7 +792,7 @@ class TGCardViewController: UIViewController {
 extension TGCardViewController: UIGestureRecognizerDelegate {
   
   
-  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
     if cardTapper == gestureRecognizer {
       // Only intercept any taps on the title.
       // This is so that the tapper doesn't interfere with, say, taps on a table view.
@@ -813,7 +813,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     }
   }
   
-  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     guard
       let scrollView = topCardView?.contentScrollView,
       let panner = gestureRecognizer as? UIPanGestureRecognizer
@@ -864,24 +864,11 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
 }
 
 
-// MARK: - UIScrollViewDelegate
-
-extension TGCardViewController: UIScrollViewDelegate {
-  
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    guard scrollView == topCardView?.contentScrollView else { return }
-    
-    scrollView.contentOffset.y = max(scrollView.contentOffset.y, 0)
-  }
-  
-}
-
-
 // MARK: - TGCardDelegate
 
 extension TGCardViewController: TGCardDelegate {
   
-  func mapManagerDidChange(old: TGMapManager?, for card: TGCard) {
+  public func mapManagerDidChange(old: TGMapManager?, for card: TGCard) {
     guard card === topCard else { return }
     
     old?.cleanUp(mapView)
@@ -889,7 +876,7 @@ extension TGCardViewController: TGCardDelegate {
   }
   
   
-  func contentScrollViewDidChange(old: UIScrollView?, for card: TGCard) {
+  public func contentScrollViewDidChange(old: UIScrollView?, for card: TGCard) {
     guard card === topCard, let view = topCardView else { return }
     
     old?.panGestureRecognizer.removeTarget(self, action: nil)

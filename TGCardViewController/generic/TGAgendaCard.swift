@@ -8,16 +8,16 @@
 
 import UIKit
 
-class TGAgendaCard: TGCard {
+open class TGAgendaCard: TGCard {
   
-  weak var controller: TGCardViewController?
+  weak public var controller: TGCardViewController?
   
-  weak var delegate: TGCardDelegate? = nil
+  weak public var delegate: TGCardDelegate? = nil
   
-  let title: String
-  let subtitle: String?
-  let mapManager: TGMapManager?
-  let defaultPosition: TGCardPosition = .peaking
+  public let title: String
+  public let subtitle: String?
+  public let mapManager: TGMapManager?
+  public let defaultPosition: TGCardPosition = .peaking
   
   /// This is the content for the bottom view.
   let bottomContentView: UIView?
@@ -28,7 +28,7 @@ class TGAgendaCard: TGCard {
   
   // MARK: - Initializers
   
-  init(title: String, subtitle: String? = nil, mapManager: TGMapManager? = nil, dataSource: UITableViewDataSource? = nil, delegate: UITableViewDelegate?, bottomContent: UIView? = nil) {
+  public init(title: String, subtitle: String? = nil, mapManager: TGMapManager? = nil, dataSource: UITableViewDataSource? = nil, delegate: UITableViewDelegate?, bottomContent: UIView? = nil) {
     self.title = title
     self.subtitle = subtitle
     self.mapManager = mapManager
@@ -39,29 +39,29 @@ class TGAgendaCard: TGCard {
   
   // MARK: - Constructing views.
   
-  func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  open func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGAgendaCardView.instantiate()
     view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
     return view
   }
   
-  func buildHeaderView() -> TGHeaderView? {
+  open func buildHeaderView() -> TGHeaderView? {
     return nil
   }
   
-  func willAppear(animated: Bool) {
+  open func willAppear(animated: Bool) {
 //    print("+. \(title) will appear")
   }
   
-  func didAppear(animated: Bool) {
+  open func didAppear(animated: Bool) {
 //    print("++ \(title) did appear")
   }
   
-  func willDisappear(animated: Bool) {
+  open func willDisappear(animated: Bool) {
 //    print("-. \(title) will disappear")
   }
   
-  func didDisappear(animated: Bool) {
+  open func didDisappear(animated: Bool) {
 //    print("-- \(title) did disappear")
   }
   

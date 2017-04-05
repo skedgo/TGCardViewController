@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum TGCardPosition {
+public enum TGCardPosition {
   case extended   // showing full card, with small bit of map on top
   case peaking    // showing card and map, each about half
   case collapsed  // showing only title of card

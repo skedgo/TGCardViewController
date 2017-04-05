@@ -16,9 +16,9 @@ import UIKit
 ///
 /// Think of this class as an equivalent of `UIPageViewController`, but
 /// for cards.
-class TGPageCard: TGCard {
+open class TGPageCard: TGCard {
   
-  weak var controller: TGCardViewController? {
+  public weak var controller: TGCardViewController? {
     didSet {
       cards.forEach {
         $0.controller = controller
@@ -26,22 +26,22 @@ class TGPageCard: TGCard {
     }
   }
   
-  weak var delegate: TGCardDelegate? = nil
+  public weak var delegate: TGCardDelegate? = nil
   
-  let title: String
+  public let title: String
   
-  let subtitle: String? = nil
+  public let subtitle: String? = nil
   
   // Scroll card itself doesn't have a map manager. Instead, it passes through
   // the manager that handles the map view for the current card. This is
   // set on intialising and then updated whenever we scroll.
-  var mapManager: TGMapManager? {
+  public var mapManager: TGMapManager? {
     didSet {
       delegate?.mapManagerDidChange(old: oldValue, for: self)
     }
   }
   
-  let defaultPosition: TGCardPosition
+  public let defaultPosition: TGCardPosition
   
   
   /// The cards displayed by the page card
@@ -113,7 +113,7 @@ class TGPageCard: TGCard {
     return true
   }
   
-  func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  public func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGPageCardView.instantiate()
     view.configure(with: self)
     view.delegate = self
@@ -129,7 +129,7 @@ class TGPageCard: TGCard {
     return view
   }
   
-  func buildHeaderView() -> TGHeaderView? {
+  public func buildHeaderView() -> TGHeaderView? {
     if let header = headerView {
       return header
     }
@@ -238,20 +238,20 @@ class TGPageCard: TGCard {
   
   // MARK: - Card life cycle
   
-  func willAppear(animated: Bool) {
+  public func willAppear(animated: Bool) {
     currentCard.willAppear(animated: animated)
   }
   
-  func didAppear(animated: Bool) {
+  public func didAppear(animated: Bool) {
     previousAppearedCard = currentCard
     currentCard.didAppear(animated: animated)
   }
   
-  func willDisappear(animated: Bool) {
+  public func willDisappear(animated: Bool) {
     currentCard.willDisappear(animated: animated)
   }
   
-  func didDisappear(animated: Bool) {
+  public func didDisappear(animated: Bool) {
     currentCard.didDisappear(animated: animated)
     previousAppearedCard = nil
   }

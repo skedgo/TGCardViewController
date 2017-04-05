@@ -8,9 +8,9 @@
 
 import UIKit
 
-class TGCornerView: UIView {
+public class TGCornerView: UIView {
   
-  override func layoutSubviews() {
+  override public func layoutSubviews() {
     super.layoutSubviews()
     
     let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 10, height: 10))
