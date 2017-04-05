@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -15,6 +15,26 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="486"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
+                    <rect key="frame" x="0.0" y="137" width="375" height="349"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="348" translatesAutoresizingMaskIntoConstraints="NO" id="fpj-MI-D7T">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="348"/>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="fpj-MI-D7T" firstAttribute="leading" secondItem="Dar-6n-Caw" secondAttribute="leading" id="3fi-nu-PFE"/>
+                        <constraint firstAttribute="bottom" secondItem="fpj-MI-D7T" secondAttribute="bottom" id="JEJ-ob-UKD"/>
+                        <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="Dar-6n-Caw" secondAttribute="height" priority="250" id="cge-oP-lBy"/>
+                        <constraint firstAttribute="trailing" secondItem="fpj-MI-D7T" secondAttribute="trailing" id="lhK-ti-Rb8"/>
+                        <constraint firstItem="fpj-MI-D7T" firstAttribute="top" secondItem="Dar-6n-Caw" secondAttribute="top" id="p6T-g1-McS"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="cge-oP-lBy"/>
+                        </mask>
+                    </variation>
+                </scrollView>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="JFj-Bl-Nt0" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
                 </view>
@@ -68,26 +88,6 @@
                         </stackView>
                     </subviews>
                 </stackView>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
-                    <rect key="frame" x="0.0" y="137" width="375" height="349"/>
-                    <subviews>
-                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="348" translatesAutoresizingMaskIntoConstraints="NO" id="fpj-MI-D7T">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="348"/>
-                        </view>
-                    </subviews>
-                    <constraints>
-                        <constraint firstItem="fpj-MI-D7T" firstAttribute="leading" secondItem="Dar-6n-Caw" secondAttribute="leading" id="3fi-nu-PFE"/>
-                        <constraint firstAttribute="bottom" secondItem="fpj-MI-D7T" secondAttribute="bottom" id="JEJ-ob-UKD"/>
-                        <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="Dar-6n-Caw" secondAttribute="height" priority="250" id="cge-oP-lBy"/>
-                        <constraint firstAttribute="trailing" secondItem="fpj-MI-D7T" secondAttribute="trailing" id="lhK-ti-Rb8"/>
-                        <constraint firstItem="fpj-MI-D7T" firstAttribute="top" secondItem="Dar-6n-Caw" secondAttribute="top" id="p6T-g1-McS"/>
-                    </constraints>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="cge-oP-lBy"/>
-                        </mask>
-                    </variation>
-                </scrollView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>

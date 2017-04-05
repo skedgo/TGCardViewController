@@ -28,7 +28,7 @@ Behaviour:
 - Cards are draggable
 	- [x] Snap to collapsed (only title), peaking (near half-way showing both map and card content), extended (still shows a bit of the map on top, but darkened) (!3)
 	- [x] Cards can be dragged up and down anywhere on the card
-	- [ ] When scrolling to the top and keeping to scroll, start dragging card
+	- [ ] When scrolling to the top and keeping to scroll, start dragging card (!12)
 	- [x] Tap title when collapsed: go to peaking (!3)
 	- [x] Tap title when peaking: go to extended (!3)
 	- [x] Tap title when extended: do nothing
@@ -50,7 +50,7 @@ Card types:
 
 - Plain card
 	- [x] On top: Title, (x), optional subtitle and optional accessory view
-	- [ ] Add accessory view
+	- [ ] Add accessory view (!11)
 	- [x] Content can be scrollable and size adjusts to content. If it fits, it shouldn’t be scrollable
 	- [ ] Add floaty button
 - Table card

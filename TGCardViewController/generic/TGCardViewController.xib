@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -44,6 +44,9 @@
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XA2-1g-kYz" userLabel="Content View">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <subviews>
+                        <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7">
+                            <rect key="frame" x="0.0" y="60" width="375" height="607"/>
+                        </mapView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewk-8T-6Fw" userLabel="Header View">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -51,15 +54,12 @@
                                 <constraint firstAttribute="height" priority="750" constant="60" id="dMP-Sd-KN9"/>
                             </constraints>
                         </view>
-                        <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7">
-                            <rect key="frame" x="0.0" y="60" width="375" height="607"/>
-                        </mapView>
                         <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1uG-yl-0le">
                             <rect key="frame" x="0.0" y="60" width="375" height="607"/>
                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O" userLabel="Card Wrapper Shadow">
-                            <rect key="frame" x="0.0" y="517" width="375" height="557"/>
+                            <rect key="frame" x="0.0" y="160" width="375" height="557"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aqL-1W-7nJ" userLabel="Card Wrapper Content">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="557"/>
@@ -68,32 +68,67 @@
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
+                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="414" id="8rc-Rj-2HA"/>
                                 <constraint firstItem="aqL-1W-7nJ" firstAttribute="leading" secondItem="Bui-Tf-j0O" secondAttribute="leading" id="DBu-TB-tJO"/>
                                 <constraint firstItem="aqL-1W-7nJ" firstAttribute="top" secondItem="Bui-Tf-j0O" secondAttribute="top" id="Sw2-mc-NvU"/>
                                 <constraint firstAttribute="bottom" secondItem="aqL-1W-7nJ" secondAttribute="bottom" id="Uys-KQ-RD8"/>
+                                <constraint firstAttribute="width" priority="750" constant="360" id="ftZ-m5-F2i"/>
                                 <constraint firstAttribute="trailing" secondItem="aqL-1W-7nJ" secondAttribute="trailing" id="g07-Nl-Q8E"/>
                             </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="8rc-Rj-2HA"/>
+                                    <exclude reference="ftZ-m5-F2i"/>
+                                </mask>
+                            </variation>
+                            <variation key="widthClass=regular">
+                                <mask key="constraints">
+                                    <include reference="8rc-Rj-2HA"/>
+                                    <include reference="ftZ-m5-F2i"/>
+                                </mask>
+                            </variation>
                         </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="XA2-1g-kYz" secondAttribute="top" id="0es-h4-clN"/>
+                        <constraint firstItem="ewk-8T-6Fw" firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="0wl-hr-BEj"/>
                         <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="ewk-8T-6Fw" secondAttribute="bottom" id="1Mc-Uh-pXD"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="centerX" secondItem="zI8-lz-Md7" secondAttribute="centerX" id="4HE-3s-wMK"/>
-                        <constraint firstItem="Bui-Tf-j0O" firstAttribute="leading" secondItem="XA2-1g-kYz" secondAttribute="leading" id="D5D-bp-P3t"/>
-                        <constraint firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="DGx-yq-huX"/>
+                        <constraint firstItem="Bui-Tf-j0O" firstAttribute="leading" secondItem="XA2-1g-kYz" secondAttribute="leading" id="D5D-bp-P3t">
+                            <variation key="widthClass=regular" constant="8"/>
+                        </constraint>
+                        <constraint firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" priority="750" id="DGx-yq-huX"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="centerY" secondItem="zI8-lz-Md7" secondAttribute="centerY" id="Q0s-vO-Y4E"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="height" secondItem="zI8-lz-Md7" secondAttribute="height" id="QhJ-7r-spa"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Bui-Tf-j0O" secondAttribute="trailing" constant="408" id="QkK-q5-x7Y"/>
                         <constraint firstItem="ewk-8T-6Fw" firstAttribute="top" secondItem="XA2-1g-kYz" secondAttribute="top" id="Vi9-1z-ei1"/>
                         <constraint firstAttribute="trailing" secondItem="zI8-lz-Md7" secondAttribute="trailing" id="a3k-8B-nAB"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="width" secondItem="zI8-lz-Md7" secondAttribute="width" id="ehb-Zi-cMv"/>
                         <constraint firstItem="Bui-Tf-j0O" firstAttribute="height" secondItem="zI8-lz-Md7" secondAttribute="height" constant="-50" id="hEc-8X-109"/>
-                        <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="ewk-8T-6Fw" secondAttribute="bottom" priority="750" constant="457" id="id3-Ed-1ft"/>
-                        <constraint firstItem="ewk-8T-6Fw" firstAttribute="leading" secondItem="XA2-1g-kYz" secondAttribute="leading" id="lJ9-HB-2HQ"/>
-                        <constraint firstAttribute="trailing" secondItem="ewk-8T-6Fw" secondAttribute="trailing" id="pOF-6f-3RB"/>
+                        <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="ewk-8T-6Fw" secondAttribute="bottom" priority="750" constant="100" id="id3-Ed-1ft"/>
                         <constraint firstItem="zI8-lz-Md7" firstAttribute="leading" secondItem="XA2-1g-kYz" secondAttribute="leading" id="qWk-nn-wsJ"/>
                         <constraint firstAttribute="bottom" secondItem="zI8-lz-Md7" secondAttribute="bottom" id="sRh-ZW-PW0"/>
+                        <constraint firstItem="ewk-8T-6Fw" firstAttribute="leading" secondItem="Bui-Tf-j0O" secondAttribute="leading" id="xxs-tH-iF9"/>
                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Bui-Tf-j0O" secondAttribute="top" constant="100" id="zKc-st-3DD"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="0es-h4-clN"/>
+                            <exclude reference="QkK-q5-x7Y"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=regular">
+                        <mask key="subviews">
+                            <exclude reference="1uG-yl-0le"/>
+                        </mask>
+                        <mask key="constraints">
+                            <include reference="0es-h4-clN"/>
+                            <exclude reference="1Mc-Uh-pXD"/>
+                            <exclude reference="DGx-yq-huX"/>
+                            <include reference="QkK-q5-x7Y"/>
+                        </mask>
+                    </variation>
                 </view>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hZy-nx-c0N">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>

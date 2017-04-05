@@ -23,10 +23,6 @@ class MockupImageCard : TGPlainCard {
     let content = MockupImageContentView.instantiate()
     content.imageView.image = image
     
-    let ratio = image.size.height / image.size.width
-    content.imageWidthConstraint.constant  = UIScreen.main.bounds.width
-    content.imageHeightConstraint.constant = UIScreen.main.bounds.width * ratio
-    
     let mapManager = locations.count > 0 ? TGMapManager() : nil
     mapManager?.annotations = locations
     mapManager?.preferredZoomLevel = .road
@@ -36,6 +32,22 @@ class MockupImageCard : TGPlainCard {
     let tapper = UITapGestureRecognizer()
     tapper.addTarget(self, action: #selector(handleTap))
     content.addGestureRecognizer(tapper)
+  }
+  
+  override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+    guard
+      let content = contentView as? MockupImageContentView,
+      let image = content.imageView.image,
+      let wrapper = controller?.cardWrapperContent
+      else {
+        preconditionFailure()
+    }
+
+    let ratio = image.size.height / image.size.width
+    content.imageWidthConstraint.constant  = wrapper.bounds.width
+    content.imageHeightConstraint.constant = wrapper.bounds.width * ratio
+
+    return super.buildCardView(showClose: showClose, includeHeader: includeHeader)
   }
   
   @objc
