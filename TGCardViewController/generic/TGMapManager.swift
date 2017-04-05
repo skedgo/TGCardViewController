@@ -38,6 +38,9 @@ open class TGMapManager {
     return mapView != nil
   }
   
+  public init() {
+  }
+  
   /// Takes charge of the map view, adding the map manager's content
   ///
   /// - Parameters:

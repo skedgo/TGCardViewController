@@ -87,7 +87,7 @@ open class TGPageCard: TGCard {
   ///   - cards: these are the child cards that will be displayed by the page card as pages.
   ///   - initialPage: the index of the first child card (page) to display when the page card is pushed.
   ///   - initialPosition: the position to anchor the page card when it is pushed.
-  init(title: String, cards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
+  public init(title: String, cards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
     guard initialPage < cards.count else {
       preconditionFailure()
     }
