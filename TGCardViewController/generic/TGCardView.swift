@@ -65,25 +65,30 @@ public class TGCardView: TGCornerView {
     return scrollView.frame.minY
   }
   
-  @IBOutlet private weak var accessoryWrapperView: UIView!
+  @IBOutlet private weak var accessoryWrapperView: UIView?
   
   /// Optional view beneath title + subtitle.
   var accessoryView: UIView? {
     get {
-      return accessoryWrapperView.subviews.first
+      return accessoryWrapperView?.subviews.first
     }
     set {
-      accessoryWrapperView.subviews.forEach { $0.removeFromSuperview() }
+      guard let wrapper = accessoryWrapperView else {
+        assertionFailure("Trying to set an accessory view but we don't have a wrapper for it")
+        return
+      }
+      
+      wrapper.subviews.forEach { $0.removeFromSuperview() }
       
       guard let view = newValue else {
-        accessoryWrapperView.isHidden = true
+        wrapper.isHidden = true
         headerStack?.spacing = 0
         return
       }
       
-      accessoryWrapperView.addSubview(view)
-      view.snap(to: accessoryWrapperView)
-      accessoryWrapperView.isHidden = false
+      wrapper.addSubview(view)
+      view.snap(to: wrapper)
+      wrapper.isHidden = false
       headerStack?.spacing = 4
       
       setNeedsUpdateConstraints()
@@ -119,6 +124,37 @@ public class TGCardView: TGCornerView {
   
   func allowContentScrolling(_ allowScrolling: Bool) {
     contentScrollView?.isScrollEnabled = allowScrolling
+  }
+  
+  func headerHeight(for position: TGCardPosition) -> CGFloat {
+    guard let scrollView = contentScrollView else {
+      return 0
+    }
+    
+    switch position {
+    case .collapsed:
+      guard
+        let wrapper = self.accessoryWrapperView,
+        let accessory = self.accessoryView
+        else {
+          return scrollView.frame.minY
+      }
+      
+      // The frame of the accessory view in the coordinate system
+      // of card view itself
+      let frame = wrapper.convert(accessory.frame, to: self)
+      
+      if let handle = grabHandle {
+        // If we have a grab handle, need to account for whether its hidden. If
+        // its hideen, its space in the card view is reduced to 0.
+        return handle.isHidden ? frame.minY - handle.frame.height : frame.minY
+      } else {
+        return frame.minY
+      }
+      
+    default:
+      return scrollView.frame.minY
+    }
   }
   
 }

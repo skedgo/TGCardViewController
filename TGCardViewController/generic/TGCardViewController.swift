@@ -305,8 +305,8 @@ open class TGCardViewController: UIViewController {
     cardView.grabHandle?.isHidden = forceExtended
     
     // 7. Set new position of the wrapper
-    cardWrapperDesiredTopConstraint.constant = animateTo.y
-    cardWrapperMinOverlapTopConstraint.constant = cardView.headerHeight
+    cardWrapperDesiredTopConstraint.constant = animateTo.y    
+    cardWrapperMinOverlapTopConstraint.constant = cardView.headerHeight(for: .collapsed)
     if let header = top.buildHeaderView() {
       header.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
       showHeader(content: header, animated: animated)
@@ -392,7 +392,7 @@ open class TGCardViewController: UIViewController {
     newTop?.view.alpha = 1
     let animateTo = cardLocation(forDesired: newTop?.position, direction: .down)
     cardWrapperDesiredTopConstraint.constant = animateTo.y
-    cardWrapperMinOverlapTopConstraint.constant = newTop?.view.headerHeight ?? 0
+    cardWrapperMinOverlapTopConstraint.constant = newTop?.view.headerHeight(for: .collapsed) ?? 0
     if let header = newTop?.card.buildHeaderView() {
       showHeader(content: header, animated: animated)
     } else if isShowingHeader {
@@ -797,7 +797,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
       // This is so that the tapper doesn't interfere with, say, taps on a table view.
       guard let view = topCardView else { return false }
       let location = touch.location(in: view)
-      return location.y < view.headerHeight
+      return location.y < view.headerHeight(for: cardPosition)
       
     } else if mapShadowTapper == gestureRecognizer {
       // Only intercept any taps when in the expanded state.
