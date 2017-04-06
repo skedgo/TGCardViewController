@@ -51,13 +51,13 @@
                 </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cI1-UC-c48" userLabel="Fixed Bottom View">
                     <rect key="frame" x="0.0" y="603" width="375" height="60"/>
-                    <color key="backgroundColor" red="0.71223908899999999" green="1" blue="0.61848639260000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="Dxb-LU-Njv"/>
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="dwL-e9-2yn" secondAttribute="trailing" constant="8" id="3Lc-Hq-jht"/>
                 <constraint firstAttribute="trailing" secondItem="cI1-UC-c48" secondAttribute="trailing" id="Dcy-Is-uhk"/>

@@ -253,7 +253,6 @@ open class TGCardViewController: UIViewController {
   
   
   public func push(_ top: TGCard, animated: Bool = true) {
-    
     // Set the controller on the top card earlier, because we may want
     // to ask the card to do something on willAppear, e.g., show sticky 
     // bar, which requires access to this property.
@@ -303,7 +302,7 @@ open class TGCardViewController: UIViewController {
     
     // 6. Special handling of when the new top card has no map content
     panner.isEnabled = !forceExtended
-    cardView.grabHandle?.isHidden = forceExtended
+    cardView.showGrabHandle(!forceExtended)
     
     // 7. Set new position of the wrapper
     cardWrapperDesiredTopConstraint.constant = animateTo.y
@@ -387,7 +386,7 @@ open class TGCardViewController: UIViewController {
     // 3. Special handling of when the new top card has no map content
     let forceExtended = (newTop?.card.mapManager == nil)
     panner.isEnabled = !forceExtended
-    newTop?.view.grabHandle?.isHidden = forceExtended
+    newTop?.view.showGrabHandle(!forceExtended)
     
     // 4. Determine and set new position of the card wrapper
     newTop?.view.alpha = 1
