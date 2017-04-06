@@ -14,6 +14,10 @@ public class TGCardView: TGCornerView {
   /// might hide and show.
   @IBOutlet weak var grabHandle: TGGrabHandleView?
   
+  /// The stack view that contains the label stack and the 
+  /// accessory view.
+  @IBOutlet private weak var headerStack: UIStackView?
+  
   /// The stack view that houses the title and subtitle labels.
   ///
   /// This outlet exists so that we can adjust the spacing between
@@ -61,6 +65,36 @@ public class TGCardView: TGCornerView {
     return scrollView.frame.minY
   }
   
+  @IBOutlet private weak var accessoryWrapperView: UIView?
+  
+  /// Optional view beneath title + subtitle.
+  var accessoryView: UIView? {
+    get {
+      return accessoryWrapperView?.subviews.first
+    }
+    set {
+      guard let wrapper = accessoryWrapperView else {
+        assertionFailure("Trying to set an accessory view but we don't have a wrapper for it")
+        return
+      }
+      
+      wrapper.subviews.forEach { $0.removeFromSuperview() }
+      
+      guard let view = newValue else {
+        wrapper.isHidden = true
+        headerStack?.spacing = 0
+        return
+      }
+      
+      wrapper.addSubview(view)
+      view.snap(to: wrapper)
+      wrapper.isHidden = false
+      headerStack?.spacing = 4
+      
+      setNeedsUpdateConstraints()
+    }
+  }
+  
   // MARK: - Configuration
   
   override public func awakeFromNib() {
@@ -70,11 +104,11 @@ public class TGCardView: TGCornerView {
     // target. The priority is lowered because we may need to hide the
     // button and in such case, stack view will reduce its size to zero,
     // hence creating conflicting constraints.
-    let widthConstraint = closeButton?.widthAnchor.constraint(greaterThanOrEqualToConstant: 44)
+    let widthConstraint = closeButton?.widthAnchor.constraint(equalToConstant: 44)
     widthConstraint?.priority = 999
     widthConstraint?.isActive = true
     
-    let heightConstraint = closeButton?.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
+    let heightConstraint = closeButton?.heightAnchor.constraint(equalToConstant: 44)
     heightConstraint?.priority = 999
     heightConstraint?.isActive = true
   }
@@ -83,13 +117,44 @@ public class TGCardView: TGCornerView {
     titleLabel.text = includeHeader ? card.title : nil
     subtitleLabel.text = includeHeader ? card.subtitle : nil
     closeButton?.isHidden = !showClose
-    labelStack?.spacing = includeHeader ? 3 : 0
+    labelStack?.spacing = includeHeader && card.subtitle != nil ? 3 : 0
     headerStackTopConstraint?.constant = includeHeader ? 8 : 0
     headerStackBottomConstraint?.constant = includeHeader ? 8 : 0
   }
   
   func allowContentScrolling(_ allowScrolling: Bool) {
     contentScrollView?.isScrollEnabled = allowScrolling
+  }
+  
+  func headerHeight(for position: TGCardPosition) -> CGFloat {
+    guard let scrollView = contentScrollView else {
+      return 0
+    }
+    
+    switch position {
+    case .collapsed:
+      guard
+        let wrapper = self.accessoryWrapperView,
+        let accessory = self.accessoryView
+        else {
+          return scrollView.frame.minY
+      }
+      
+      // The frame of the accessory view in the coordinate system
+      // of card view itself
+      let frame = wrapper.convert(accessory.frame, to: self)
+      
+      if let handle = grabHandle {
+        // If we have a grab handle, need to account for whether its hidden. If
+        // its hideen, its space in the card view is reduced to 0.
+        return handle.isHidden ? frame.minY - handle.frame.height : frame.minY
+      } else {
+        return frame.minY
+      }
+      
+    default:
+      return scrollView.frame.minY
+    }
   }
   
 }

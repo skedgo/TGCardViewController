@@ -44,6 +44,8 @@
 		3ACA74CD1E72FEAB00408678 /* ExampleTableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74CC1E72FEAB00408678 /* ExampleTableCard.swift */; };
 		3AE839C61E76A9170035D9B0 /* ExampleChildStickyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AE839C51E76A9170035D9B0 /* ExampleChildStickyView.xib */; };
 		3AE839C81E76A92B0035D9B0 /* ExampleChildStickyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE839C71E76A92B0035D9B0 /* ExampleChildStickyView.swift */; };
+		D33E34961E937BEE00C40CD2 /* ExampleAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D33E34951E937BEE00C40CD2 /* ExampleAccessoryView.xib */; };
+		D33E34981E937CB200C40CD2 /* ExampleAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33E34971E937CB200C40CD2 /* ExampleAccessoryView.swift */; };
 		D363B0101E7CEAC30031EAD1 /* TGPageCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D363B00F1E7CEAC30031EAD1 /* TGPageCardView.xib */; };
 		D363B0121E7CEC300031EAD1 /* TGPageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D363B0111E7CEC300031EAD1 /* TGPageCardView.swift */; };
 		D363B0141E7CECDA0031EAD1 /* TGPageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D363B0131E7CECDA0031EAD1 /* TGPageCard.swift */; };
@@ -107,6 +109,8 @@
 		3ACA74CC1E72FEAB00408678 /* ExampleTableCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableCard.swift; sourceTree = "<group>"; };
 		3AE839C51E76A9170035D9B0 /* ExampleChildStickyView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleChildStickyView.xib; sourceTree = "<group>"; };
 		3AE839C71E76A92B0035D9B0 /* ExampleChildStickyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleChildStickyView.swift; sourceTree = "<group>"; };
+		D33E34951E937BEE00C40CD2 /* ExampleAccessoryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleAccessoryView.xib; sourceTree = "<group>"; };
+		D33E34971E937CB200C40CD2 /* ExampleAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleAccessoryView.swift; sourceTree = "<group>"; };
 		D363B00F1E7CEAC30031EAD1 /* TGPageCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TGPageCardView.xib; path = generic/TGPageCardView.xib; sourceTree = "<group>"; };
 		D363B0111E7CEC300031EAD1 /* TGPageCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGPageCardView.swift; path = generic/TGPageCardView.swift; sourceTree = "<group>"; };
 		D363B0131E7CECDA0031EAD1 /* TGPageCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGPageCard.swift; path = generic/TGPageCard.swift; sourceTree = "<group>"; };
@@ -260,6 +264,8 @@
 				3ACA74CC1E72FEAB00408678 /* ExampleTableCard.swift */,
 				3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */,
 				3AB8944E1E7AB25900267A06 /* ExampleTableDataSource.swift */,
+				D33E34951E937BEE00C40CD2 /* ExampleAccessoryView.xib */,
+				D33E34971E937CB200C40CD2 /* ExampleAccessoryView.swift */,
 			);
 			name = "example cards";
 			sourceTree = "<group>";
@@ -352,6 +358,7 @@
 				D363B0101E7CEAC30031EAD1 /* TGPageCardView.xib in Resources */,
 				3AE839C61E76A9170035D9B0 /* ExampleChildStickyView.xib in Resources */,
 				D39107AF1E79659B0043B6B3 /* TGAgendaCardView.xib in Resources */,
+				D33E34961E937BEE00C40CD2 /* ExampleAccessoryView.xib in Resources */,
 				3ACA748E1E716AFC00408678 /* LaunchScreen.storyboard in Resources */,
 				3ACA74B11E71763C00408678 /* TGPlainCardView.xib in Resources */,
 				3ACA748B1E716AFC00408678 /* Assets.xcassets in Resources */,
@@ -408,6 +415,7 @@
 				3A377BD71E95121600A8C8F0 /* UIView+Snap.swift in Sources */,
 				D3F77BF81E7B67CB00D0DFF1 /* TGCornerView.swift in Sources */,
 				3ACA74841E716AFC00408678 /* AppDelegate.swift in Sources */,
+				D33E34981E937CB200C40CD2 /* ExampleAccessoryView.swift in Sources */,
 				3AB8944F1E7AB25900267A06 /* ExampleTableDataSource.swift in Sources */,
 				D363B0121E7CEC300031EAD1 /* TGPageCardView.swift in Sources */,
 				3A59798B1E7955FE0065A5FF /* ExampleTableChildCard.swift in Sources */,

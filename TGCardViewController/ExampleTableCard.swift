@@ -13,7 +13,10 @@ class ExampleTableCard : TGTableCard {
   fileprivate let source = ExampleTableDataSource()
 
   init(mapManager: TGMapManager? = nil) {
-    super.init(title: "London stops", dataSource: source, delegate: source, mapManager: mapManager)
+    let accessory = ExampleAccessoryView.instantiate()
+    
+    super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: accessory, mapManager: mapManager)
+    
     source.onSelect = {
       let card = ExampleTableChildCard(annotation: $0)
       self.controller?.push(card, animated: true)

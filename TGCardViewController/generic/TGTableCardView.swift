@@ -30,6 +30,10 @@ public class TGTableCardView: TGCardView {
   func configure(with card: TGTableCard, showClose: Bool, includeHeader: Bool) {
     super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
     
+    if includeHeader {
+      accessoryView = card.accessoryView
+    }
+    
     tableView.dataSource = card.tableViewDataSource
     tableView.delegate = card.tableViewDelegate
   }

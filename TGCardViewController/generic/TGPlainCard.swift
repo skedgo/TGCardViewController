@@ -23,17 +23,22 @@ open class TGPlainCard : TGCard {
   /// Can be large as it will get embedded in a scroll view.
   /// Can have interactive elements.
   let contentView: UIView?
+  
+  /// The view immediately below title + subtitle but above the
+  /// content view.
+  let accessoryView: UIView?
 
   public let mapManager: TGMapManager?
   
   public let defaultPosition: TGCardPosition
   
-  public init(title: String, subtitle: String? = nil, contentView: UIView? = nil, mapManager: TGMapManager? = nil, position: TGCardPosition = .peaking) {
+  public init(title: String, subtitle: String? = nil, contentView: UIView? = nil, accessoryView: UIView? = nil, mapManager: TGMapManager? = nil, position: TGCardPosition = .peaking) {
     assert(!(contentView is UIScrollView), "This card is not meant for content views that are itself scrolling. Use `TGTableCardView` instead.")
     
     self.title = title
     self.subtitle = subtitle
     self.contentView = contentView
+    self.accessoryView = accessoryView
     self.mapManager = mapManager
     self.defaultPosition = mapManager != nil ? position : .extended
   }

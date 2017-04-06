@@ -253,7 +253,6 @@ open class TGCardViewController: UIViewController {
   
   
   public func push(_ top: TGCard, animated: Bool = true) {
-    
     // Set the controller on the top card earlier, because we may want
     // to ask the card to do something on willAppear, e.g., show sticky 
     // bar, which requires access to this property.
@@ -307,7 +306,7 @@ open class TGCardViewController: UIViewController {
     
     // 7. Set new position of the wrapper
     cardWrapperDesiredTopConstraint.constant = animateTo.y
-    cardWrapperMinOverlapTopConstraint.constant = cardView.headerHeight
+    cardWrapperMinOverlapTopConstraint.constant = cardView.headerHeight(for: .collapsed)
     let header = top.buildHeaderView()
     if let header = header {
       header.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
@@ -802,7 +801,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
       // This is so that the tapper doesn't interfere with, say, taps on a table view.
       guard let view = topCardView else { return false }
       let location = touch.location(in: view)
-      return location.y < view.headerHeight
+      return location.y < view.headerHeight(for: cardPosition)
       
     } else if mapShadowTapper == gestureRecognizer {
       // Only intercept any taps when in the expanded state.
