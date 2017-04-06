@@ -41,6 +41,9 @@ open class TGTableCard : TGCard {
   public func buildHeaderView() -> TGHeaderView? {
     return nil
   }
+  
+  open func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+  }
 
   open func willAppear(animated: Bool) {
 //    print("+. \(title) will appear")

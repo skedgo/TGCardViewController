@@ -48,6 +48,8 @@ public protocol TGCard: class {
   /// - Returns: Header view configured with the card's title content
   func buildHeaderView() -> TGHeaderView?
   
+  func didBuild(cardView: TGCardView, headerView: TGHeaderView?)
+  
   /// Called just before the card becomes visible
   ///
   /// Called when card gets pushed onto a card
