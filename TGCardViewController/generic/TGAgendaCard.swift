@@ -28,7 +28,7 @@ open class TGAgendaCard: TGCard {
   
   // MARK: - Initializers
   
-  public init(title: String, subtitle: String? = nil, mapManager: TGMapManager? = nil, dataSource: UITableViewDataSource? = nil, delegate: UITableViewDelegate?, bottomContent: UIView? = nil) {
+  public init(title: String, subtitle: String? = nil, mapManager: TGMapManager? = nil, dataSource: UITableViewDataSource? = nil, delegate: UITableViewDelegate? = nil, bottomContent: UIView? = nil) {
     self.title = title
     self.subtitle = subtitle
     self.mapManager = mapManager
