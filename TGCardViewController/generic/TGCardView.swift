@@ -121,8 +121,4 @@ public class TGCardView: TGCornerView {
     contentScrollView?.isScrollEnabled = allowScrolling
   }
   
-  func showGrabHandle(_ show: Bool) {
-    grabHandle?.isHidden = !show
-  }
-  
 }

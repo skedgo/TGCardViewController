@@ -53,6 +53,7 @@ class TGGrabHandleView: UIView {
       handleHeightConstraint?.constant = isHidden ? 0 : 5
       handleTopSpaceConstraint?.constant = isHidden ? 0 : 8
       handleBottomSpaceConstraint?.constant = isHidden ? 0 : 8
+      setNeedsUpdateConstraints()
     }
   }
 }

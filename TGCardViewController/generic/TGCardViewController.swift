@@ -302,7 +302,7 @@ open class TGCardViewController: UIViewController {
     
     // 6. Special handling of when the new top card has no map content
     panner.isEnabled = !forceExtended
-    cardView.showGrabHandle(!forceExtended)
+    cardView.grabHandle?.isHidden = forceExtended
     
     // 7. Set new position of the wrapper
     cardWrapperDesiredTopConstraint.constant = animateTo.y
@@ -386,7 +386,7 @@ open class TGCardViewController: UIViewController {
     // 3. Special handling of when the new top card has no map content
     let forceExtended = (newTop?.card.mapManager == nil)
     panner.isEnabled = !forceExtended
-    newTop?.view.showGrabHandle(!forceExtended)
+    newTop?.view.grabHandle?.isHidden = forceExtended
     
     // 4. Determine and set new position of the card wrapper
     newTop?.view.alpha = 1
