@@ -48,19 +48,19 @@ open class TGPlainCard : TGCard {
     return nil
   }
  
-  public func willAppear(animated: Bool) {
+  open func willAppear(animated: Bool) {
 //    print("+. \(title) will appear")
   }
   
-  public func didAppear(animated: Bool) {
+  open func didAppear(animated: Bool) {
 //    print("++ \(title) did appear")
   }
   
-  public func willDisappear(animated: Bool) {
+  open func willDisappear(animated: Bool) {
 //    print("-. \(title) will disappear")
   }
   
-  public func didDisappear(animated: Bool) {
+  open func didDisappear(animated: Bool) {
 //    print("-- \(title) did disappear")
   }
   

@@ -39,13 +39,13 @@ open class TGAgendaCard: TGCard {
   
   // MARK: - Constructing views.
   
-  open func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  public func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGAgendaCardView.instantiate()
     view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
     return view
   }
   
-  open func buildHeaderView() -> TGHeaderView? {
+  public func buildHeaderView() -> TGHeaderView? {
     return nil
   }
   
