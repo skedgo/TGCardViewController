@@ -92,3 +92,9 @@ Map buttons:
 
 - [x] Move card to the side with min (iPhone Plus) and max (iPad) width (!9)
 - [x] Make sure transitions work when changing size and traits (!9)
+ 
+### 5. UIKit features
+
+- [ ] State restoration
+- [ ] VoiceOver Accessibility
+- [ ] `NSUserActivity`
