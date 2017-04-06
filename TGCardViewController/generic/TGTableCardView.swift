@@ -8,9 +8,9 @@
 
 import UIKit
 
-class TGTableCardView: TGCardView {
+public class TGTableCardView: TGCardView {
   
-  @IBOutlet weak var tableView: UITableView!
+  @IBOutlet public weak var tableView: UITableView!
   
   static func instantiate() -> TGTableCardView {
     let bundle = Bundle(for: self)
@@ -18,7 +18,7 @@ class TGTableCardView: TGCardView {
   }
   
 
-  override func awakeFromNib() {
+  override public func awakeFromNib() {
     super.awakeFromNib()
     
     closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)

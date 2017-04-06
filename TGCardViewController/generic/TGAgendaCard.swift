@@ -28,7 +28,7 @@ open class TGAgendaCard: TGCard {
   
   // MARK: - Initializers
   
-  public init(title: String, subtitle: String? = nil, mapManager: TGMapManager? = nil, dataSource: UITableViewDataSource? = nil, delegate: UITableViewDelegate?, bottomContent: UIView? = nil) {
+  public init(title: String, subtitle: String? = nil, mapManager: TGMapManager? = nil, dataSource: UITableViewDataSource? = nil, delegate: UITableViewDelegate? = nil, bottomContent: UIView? = nil) {
     self.title = title
     self.subtitle = subtitle
     self.mapManager = mapManager
@@ -39,14 +39,17 @@ open class TGAgendaCard: TGCard {
   
   // MARK: - Constructing views.
   
-  open func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  public func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGAgendaCardView.instantiate()
     view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
     return view
   }
   
-  open func buildHeaderView() -> TGHeaderView? {
+  public func buildHeaderView() -> TGHeaderView? {
     return nil
+  }
+  
+  open func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
   }
   
   open func willAppear(animated: Bool) {

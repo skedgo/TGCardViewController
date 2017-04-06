@@ -305,14 +305,16 @@ open class TGCardViewController: UIViewController {
     cardView.grabHandle?.isHidden = forceExtended
     
     // 7. Set new position of the wrapper
-    cardWrapperDesiredTopConstraint.constant = animateTo.y    
+    cardWrapperDesiredTopConstraint.constant = animateTo.y
     cardWrapperMinOverlapTopConstraint.constant = cardView.headerHeight(for: .collapsed)
-    if let header = top.buildHeaderView() {
+    let header = top.buildHeaderView()
+    if let header = header {
       header.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
       showHeader(content: header, animated: animated)
     } else if isShowingHeader {
       hideHeader(animated: animated)
     }
+    top.didBuild(cardView: cardView, headerView: header)
     view.setNeedsUpdateConstraints()
     
     // 8. Do the transition, optionally animated
@@ -392,7 +394,9 @@ open class TGCardViewController: UIViewController {
     newTop?.view.alpha = 1
     let animateTo = cardLocation(forDesired: newTop?.position, direction: .down)
     cardWrapperDesiredTopConstraint.constant = animateTo.y
-    cardWrapperMinOverlapTopConstraint.constant = newTop?.view.headerHeight(for: .collapsed) ?? 0
+    cardWrapperMinOverlapTopConstraint.constant = newTop?.view.headerHeight ?? 0
+    // TODO: It'd be better if we didn't have to build the header again, but could
+    // just re-use it from the previous push. See https://gitlab.com/SkedGo/tripgo-cards-ios/issues/7.
     if let header = newTop?.card.buildHeaderView() {
       showHeader(content: header, animated: animated)
     } else if isShowingHeader {

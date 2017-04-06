@@ -237,6 +237,8 @@ open class TGPageCard: TGCard {
   
   
   // MARK: - Card life cycle
+  public func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+  }
   
   public func willAppear(animated: Bool) {
     currentCard.willAppear(animated: animated)
