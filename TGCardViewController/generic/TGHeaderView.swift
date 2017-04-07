@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class TGHeaderView : UIView {
+public class TGHeaderView: UIView {
   
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var subtitleLabel: UILabel!
@@ -21,7 +21,10 @@ public class TGHeaderView : UIView {
   
   static func instantiate() -> TGHeaderView {
     let bundle = Bundle(for: self)
-    return bundle.loadNibNamed("TGHeaderView", owner: nil, options: nil)!.first as! TGHeaderView
+    guard
+      let view = bundle.loadNibNamed("TGHeaderView", owner: nil, options: nil)!.first as? TGHeaderView
+      else { preconditionFailure() }
+    return view
   }
   
   override public func awakeFromNib() {

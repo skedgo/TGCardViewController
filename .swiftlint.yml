@@ -1,0 +1,13 @@
+included:
+  - TGCardViewController/generic
+excluded:
+  - TGCardViewController/generic/TGCardStyleKit.swift
+disabled_rules:
+  - todo
+  - trailing_whitespace
+
+large_tuple:
+  warning: 3
+  error: 4
+vertical_whitespace:
+  max_empty_lines: 2

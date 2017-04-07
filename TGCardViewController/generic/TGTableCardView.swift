@@ -14,7 +14,11 @@ public class TGTableCardView: TGCardView {
   
   static func instantiate() -> TGTableCardView {
     let bundle = Bundle(for: self)
-    return bundle.loadNibNamed("TGTableCardView", owner: nil, options: nil)!.first as! TGTableCardView
+    guard
+      let view = bundle.loadNibNamed("TGTableCardView", owner: nil, options: nil)!.first as? TGTableCardView
+      else { preconditionFailure() }
+    return view
+
   }
   
 

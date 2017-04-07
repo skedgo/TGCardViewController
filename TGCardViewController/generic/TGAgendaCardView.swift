@@ -31,7 +31,10 @@ public class TGAgendaCardView: TGCardView {
   
   static func instantiate() -> TGAgendaCardView {
     let bundle = Bundle(for: self)
-    return bundle.loadNibNamed("TGAgendaCardView", owner: nil, options: nil)!.first as! TGAgendaCardView
+    guard
+      let view = bundle.loadNibNamed("TGAgendaCardView", owner: nil, options: nil)!.first as? TGAgendaCardView
+      else { preconditionFailure() }
+    return view
   }
   
 

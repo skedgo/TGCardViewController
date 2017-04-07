@@ -8,11 +8,11 @@
 
 import UIKit
 
-open class TGPlainCard : TGCard {
+open class TGPlainCard: TGCard {
   
   weak public var controller: TGCardViewController?
 
-  weak public var delegate: TGCardDelegate? = nil
+  weak public var delegate: TGCardDelegate?
 
   public let title: String
 
@@ -32,8 +32,13 @@ open class TGPlainCard : TGCard {
   
   public let defaultPosition: TGCardPosition
   
-  public init(title: String, subtitle: String? = nil, contentView: UIView? = nil, accessoryView: UIView? = nil, mapManager: TGMapManager? = nil, position: TGCardPosition = .peaking) {
-    assert(!(contentView is UIScrollView), "This card is not meant for content views that are itself scrolling. Use `TGTableCardView` instead.")
+  public init(title: String, subtitle: String? = nil,
+              contentView: UIView? = nil, accessoryView: UIView? = nil,
+              mapManager: TGMapManager? = nil,
+              position: TGCardPosition = .peaking) {
+    assert(!(contentView is UIScrollView),
+            "This card is not meant for content views that are itself" +
+            "scrolling. Use `TGTableCardView` instead.")
     
     self.title = title
     self.subtitle = subtitle

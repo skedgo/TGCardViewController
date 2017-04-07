@@ -81,7 +81,10 @@ open class TGMapManager {
 
 extension MKMapView {
   
-  func showAnnotations(_ annotations: [MKAnnotation], minimumZoomLevel: Double, edgePadding: UIEdgeInsets = .zero, animated: Bool) {
+  func showAnnotations(_ annotations: [MKAnnotation],
+                       minimumZoomLevel: Double,
+                       edgePadding: UIEdgeInsets = .zero,
+                       animated: Bool) {
     
     guard annotations.count > 0 else { return }
     
@@ -141,7 +144,8 @@ extension MKMapView {
     let width = Double(frame.height) * ratio
     let height = width / viewRatio
     
-    return MKMapRect(origin: MKMapPoint(x: center.x - width / 2, y: center.y - height / 2), size: MKMapSize(width: width, height: height))
+    return MKMapRect(origin: MKMapPoint(x: center.x - width / 2, y: center.y - height / 2),
+                     size: MKMapSize(width: width, height: height))
   }
   
 }

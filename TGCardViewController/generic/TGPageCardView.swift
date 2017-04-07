@@ -28,7 +28,7 @@ class TGPageCardView: TGCardView {
 
   @IBOutlet weak var pagerTrailingConstant: NSLayoutConstraint!
 
-  weak var delegate: TGPageCardViewDelegate? = nil
+  weak var delegate: TGPageCardViewDelegate?
   
   var cardViews: [TGCardView] {
     return (contentView.subviews as? [TGCardView]) ?? []
@@ -81,7 +81,11 @@ class TGPageCardView: TGCardView {
   
   static func instantiate() -> TGPageCardView {
     let bundle = Bundle(for: self)
-    return bundle.loadNibNamed("TGPageCardView", owner: nil, options: nil)!.first as! TGPageCardView
+    guard
+      let view = bundle.loadNibNamed("TGPageCardView", owner: nil, options: nil)!.first as? TGPageCardView
+      else { preconditionFailure() }
+    return view
+    
   }
   
   override func awakeFromNib() {
@@ -134,6 +138,7 @@ class TGPageCardView: TGCardView {
     //       child cards, it could be changed to have a placeholder
     //       with the right width for each card, but only build and
     //       layout the child card when it's becoming visible soon.
+    // See: https://gitlab.com/SkedGo/tripgo-cards-ios/issues/3
     
     let contents = card.cards.map { $0.buildCardView(showClose: false, includeHeader: false) }
     fill(with: contents)
@@ -160,7 +165,8 @@ class TGPageCardView: TGCardView {
       } else {
         // Subsequent, non-last, content is connected to its
         // preceding sibling, but accounting for the space.
-        view.leadingAnchor.constraint(equalTo: previous.trailingAnchor, constant: Constants.spaceBetweenCards).isActive = true
+        view.leadingAnchor.constraint(equalTo: previous.trailingAnchor,
+                                      constant: Constants.spaceBetweenCards).isActive = true
       }
       
       // All contents are connected to the top and bottom edges
@@ -171,12 +177,14 @@ class TGPageCardView: TGCardView {
       // All contents have the same width, which equals to the width of
       // the scroll view. Note that, scroll view is used here, instead
       // of its content view.
-      view.widthAnchor.constraint(equalTo: self.pager.widthAnchor, constant: Constants.spaceBetweenCards * -1).isActive = true
+      view.widthAnchor.constraint(equalTo: self.pager.widthAnchor,
+                                  constant: Constants.spaceBetweenCards * -1).isActive = true
       
       // The last content is connected to the trailing edge of the
       // scroll view's content view.
       if index == contentViews.count - 1 {
-        view.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: Constants.spaceBetweenCards * -1).isActive = true
+        view.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor,
+                                       constant: Constants.spaceBetweenCards * -1).isActive = true
       }
       
       previous = view

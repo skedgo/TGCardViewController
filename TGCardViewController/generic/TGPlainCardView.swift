@@ -14,7 +14,11 @@ class TGPlainCardView: TGCardView {
   
   static func instantiate() -> TGPlainCardView {
     let bundle = Bundle(for: self)
-    return bundle.loadNibNamed("TGPlainCardView", owner: nil, options: nil)!.first as! TGPlainCardView
+    guard
+      let view = bundle.loadNibNamed("TGPlainCardView", owner: nil, options: nil)!.first as? TGPlainCardView
+      else { preconditionFailure() }
+    return view
+
   }
   
   override func awakeFromNib() {

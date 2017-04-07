@@ -26,7 +26,7 @@ open class TGPageCard: TGCard {
     }
   }
   
-  public weak var delegate: TGCardDelegate? = nil
+  public weak var delegate: TGCardDelegate?
   
   public let title: String
   
@@ -57,13 +57,13 @@ open class TGPageCard: TGCard {
     return cards[currentPageIndex]
   }
   
-  fileprivate var previousAppearedCard: TGCard? = nil
+  fileprivate var previousAppearedCard: TGCard?
   
-  fileprivate var cardView: TGPageCardView? = nil
+  fileprivate var cardView: TGPageCardView?
   
   fileprivate lazy var headerView: TGHeaderView? = nil
   
-  fileprivate weak var headerPageControl: UIPageControl? = nil
+  fileprivate weak var headerPageControl: UIPageControl?
   
   /// Customisation for the header's right button
   /// 
@@ -72,13 +72,13 @@ open class TGPageCard: TGCard {
   /// as the single parameter.
   ///
   /// - note: If this is not set the default "next" button will be used.
-  var headerRightAction: (title: String, onPress: (Int) -> Void)? = nil
+  var headerRightAction: (title: String, onPress: (Int) -> Void)?
   
   /// Customisation of the header's accessory view
   ///
   /// - note: If this is not set a default `UIPageControl will be used
   ///         indicating the current page.
-  var headerAccessoryView: UIView? = nil
+  var headerAccessoryView: UIView?
   
   /// Initialise a new page card.
   ///
@@ -92,7 +92,10 @@ open class TGPageCard: TGCard {
       preconditionFailure()
     }
     
-    assert(TGPageCard.allCardsHaveMapManagers(in: cards), "TGCardVC doesn't yet properly handle scroll cards where some cards don't have map managers. It won't crash but will experience unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck in 'extended' mode.")
+    assert(TGPageCard.allCardsHaveMapManagers(in: cards), "TGCardVC doesn't yet properly handle " +
+      "scroll cards where some cards don't have map managers. It won't crash but will experience " +
+      "unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck " +
+      "in 'extended' mode.")
     
     self.title = title
     self.cards = cards
@@ -105,10 +108,8 @@ open class TGPageCard: TGCard {
   }
   
   fileprivate static func allCardsHaveMapManagers(in cards: [TGCard]) -> Bool {
-    for card in cards {
-      if card.mapManager == nil {
-        return false
-      }
+    for card in cards where card.mapManager == nil {
+      return false
     }
     return true
   }
@@ -283,4 +284,3 @@ extension TGPageCard: TGPageCardViewDelegate {
   }
   
 }
-

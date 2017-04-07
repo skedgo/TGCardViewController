@@ -8,11 +8,11 @@
 
 import UIKit
 
-open class TGTableCard : TGCard {
+open class TGTableCard: TGCard {
   
   public weak var controller: TGCardViewController?
   
-  public weak var delegate: TGCardDelegate? = nil
+  public weak var delegate: TGCardDelegate?
   
   public let title: String
   public let subtitle: String?
@@ -24,7 +24,10 @@ open class TGTableCard : TGCard {
   weak var tableViewDelegate: UITableViewDelegate?
   weak var tableViewDataSource: UITableViewDataSource?
   
-  public init(title: String, subtitle: String? = nil, dataSource: UITableViewDataSource, delegate: UITableViewDelegate? = nil, accessoryView: UIView? = nil, mapManager: TGMapManager? = nil) {
+  public init(title: String, subtitle: String? = nil,
+              dataSource: UITableViewDataSource, delegate: UITableViewDelegate? = nil,
+              accessoryView: UIView? = nil,
+              mapManager: TGMapManager? = nil) {
     
     self.title = title
     self.subtitle = subtitle

@@ -12,7 +12,7 @@ open class TGAgendaCard: TGCard {
   
   weak public var controller: TGCardViewController?
   
-  weak public var delegate: TGCardDelegate? = nil
+  weak public var delegate: TGCardDelegate?
   
   public let title: String
   public let subtitle: String?
@@ -28,7 +28,10 @@ open class TGAgendaCard: TGCard {
   
   // MARK: - Initializers
   
-  public init(title: String, subtitle: String? = nil, mapManager: TGMapManager? = nil, dataSource: UITableViewDataSource? = nil, delegate: UITableViewDelegate? = nil, bottomContent: UIView? = nil) {
+  public init(title: String, subtitle: String? = nil,
+              mapManager: TGMapManager? = nil,
+              dataSource: UITableViewDataSource? = nil, delegate: UITableViewDelegate? = nil,
+              bottomContent: UIView? = nil) {
     self.title = title
     self.subtitle = subtitle
     self.mapManager = mapManager

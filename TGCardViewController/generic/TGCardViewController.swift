@@ -239,7 +239,9 @@ open class TGCardViewController: UIViewController {
   fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
   
   
-  fileprivate func cardLocation(forDesired position: TGCardPosition?, direction: Direction) -> (position: TGCardPosition, y: CGFloat) {
+  fileprivate func cardLocation(forDesired position: TGCardPosition?, direction: Direction)
+      -> (position: TGCardPosition, y: CGFloat) {
+    
     guard let position = position else { return (.collapsed, collapsedMinY) }
     
     switch (position, traitCollection.verticalSizeClass, direction) {
@@ -341,7 +343,7 @@ open class TGCardViewController: UIViewController {
         cardView.frame = self.cardWrapperContent.bounds
         self.cardTransitionShadow?.alpha = 0.15
       },
-      completion: { finished in
+      completion: { _ in
         cardView.allowContentScrolling(animateTo.position == .extended)
         oldTop?.view.alpha = 0
         if notify {
@@ -383,7 +385,9 @@ open class TGCardViewController: UIViewController {
     
     // 2. Hand over the map
     top.mapManager?.cleanUp(mapView)
-    newTop?.card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: newTop?.position ?? .collapsed), animated: animated)
+    newTop?.card.mapManager?.takeCharge(of: mapView,
+                                        edgePadding: mapEdgePadding(for: newTop?.position ?? .collapsed),
+                                        animated: animated)
     
     // 3. Special handling of when the new top card has no map content
     let forceExtended = (newTop?.card.mapManager == nil)
@@ -396,7 +400,8 @@ open class TGCardViewController: UIViewController {
     cardWrapperDesiredTopConstraint.constant = animateTo.y
     cardWrapperMinOverlapTopConstraint.constant = newTop?.view.headerHeight ?? 0
     // TODO: It'd be better if we didn't have to build the header again, but could
-    // just re-use it from the previous push. See https://gitlab.com/SkedGo/tripgo-cards-ios/issues/7.
+    //       just re-use it from the previous push. 
+    // See https://gitlab.com/SkedGo/tripgo-cards-ios/issues/7.
     if let header = newTop?.card.buildHeaderView() {
       showHeader(content: header, animated: animated)
     } else if isShowingHeader {
@@ -428,7 +433,7 @@ open class TGCardViewController: UIViewController {
         topView.frame.origin.y = self.cardWrapperContent.frame.maxY
         self.cardTransitionShadow?.alpha = 0
       },
-      completion: { completed in
+      completion: { _ in
         newTop?.view.allowContentScrolling(animateTo.position == .extended)
         top.controller = nil
         if notify {
@@ -445,8 +450,11 @@ open class TGCardViewController: UIViewController {
   func closeTapped(sender: Any) {
     pop()
   }
-  
-  // MARK: - Dragging the card up and down
+}
+
+
+// MARK: - Dragging the card up and down
+extension TGCardViewController {
 
   fileprivate enum Direction {
     case up
@@ -560,7 +568,10 @@ open class TGCardViewController: UIViewController {
   
   @objc
   fileprivate func handleInnerPan(_ recogniser: UIPanGestureRecognizer) {
-    guard let scrollView = recogniser.view as? UIScrollView, scrollView == topCardView?.contentScrollView else { return }
+    guard
+      let scrollView = recogniser.view as? UIScrollView,
+      scrollView == topCardView?.contentScrollView
+      else { return }
 
     let negativity = scrollView.contentOffset.y
 
@@ -600,7 +611,7 @@ open class TGCardViewController: UIViewController {
   fileprivate func handleCardTap(_ recogniser: UITapGestureRecognizer) {
     
     let desired: TGCardPosition
-    switch (cardPosition) {
+    switch cardPosition {
     case (.extended):  return // tapping when extended does nothing
     case (.peaking):   desired = .extended
     case (.collapsed): desired = .peaking
@@ -637,9 +648,12 @@ open class TGCardViewController: UIViewController {
     })
   }
   
-  
-  // MARK: - Card-specific header view
-  
+}
+
+
+// MARK: - Card-specific header view
+extension TGCardViewController {
+
   fileprivate var isShowingHeader: Bool {
     return headerViewTopConstraint.constant > -1
   }
@@ -711,9 +725,12 @@ open class TGCardViewController: UIViewController {
     content.bottomAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
   }
   
-  
-  // MARK: - Sticky bar at the top
-  
+}
+
+// MARK: - Sticky bar at the top
+
+extension TGCardViewController {
+
   var isShowingSticky: Bool {
     return stickyBarTopConstraint.constant > -1
   }
@@ -816,7 +833,10 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     }
   }
   
-  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer)
+    -> Bool {
+      
     guard
       let scrollView = topCardView?.contentScrollView,
       let panner = gestureRecognizer as? UIPanGestureRecognizer

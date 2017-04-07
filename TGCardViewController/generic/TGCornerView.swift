@@ -13,7 +13,9 @@ public class TGCornerView: UIView {
   override public func layoutSubviews() {
     super.layoutSubviews()
     
-    let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 10, height: 10))
+    let path = UIBezierPath(roundedRect: self.bounds,
+                            byRoundingCorners: [.topLeft, .topRight],
+                            cornerRadii: CGSize(width: 10, height: 10))
     let mask = CAShapeLayer()
     mask.path = path.cgPath
     layer.mask = mask
