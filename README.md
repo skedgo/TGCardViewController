@@ -52,10 +52,10 @@ Card types:
 	- [x] On top: Title, (x), optional subtitle and optional accessory view
 	- [x] Add accessory view (!11)
 	- [x] Content can be scrollable and size adjusts to content. If it fits, it shouldn’t be scrollable
-	- [ ] Add floaty button
+	- [ ] Add floaty button (!14)
 - Table card
 	- [x] Same as plain card, but with a table view as its content
-	- [x] Allow specifying plain (e.g., for departures) or grouped style (e.g., for profile) (!13)
+	- [ ] Allow specifying plain (e.g., for departures) or grouped style (e.g., for profile) (!13)
 - Paging card (!5)
     - [x] Handles list of child cards on the same hierarchical level which can be paged programatically and through gestures
     - [x] Has header view: Used for titles (child cards shouldn't show them then) and navigation; Header view is separate from sticky bar, i.e., you can have both.
