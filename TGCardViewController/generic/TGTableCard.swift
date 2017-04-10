@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class TGTableCard: TGCard {
+open class TGTableCard: NSObject, TGCard {
   
   public weak var controller: TGCardViewController?
   
