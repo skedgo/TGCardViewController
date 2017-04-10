@@ -40,6 +40,8 @@ public class TGCardView: TGCornerView {
   /// from the stack.
   @IBOutlet weak var closeButton: UIButton?
   
+  @IBOutlet weak var floatingButton: UIButton?
+  
   /// Each card view needs a scroll view where the main content of the
   /// card goes. The card controller need access to it, in order to
   /// handling dragging the card up and down.
@@ -95,10 +97,17 @@ public class TGCardView: TGCornerView {
     }
   }
   
+  var floatingButtonAction: (() -> Void)?
+  
   // MARK: - Configuration
   
   override public func awakeFromNib() {
     super.awakeFromNib()
+    
+    if let floatie = floatingButton {
+      floatie.layer.cornerRadius = floatie.frame.width * 0.5
+      floatie.addTarget(self, action: #selector(floatingButtonTapped(sender:)), for: .touchUpInside)
+    }
     
     // Here we set the minimum width and height to provide sufficient hit
     // target. The priority is lowered because we may need to hide the
@@ -155,6 +164,15 @@ public class TGCardView: TGCornerView {
     default:
       return scrollView.frame.minY
     }
+  }
+  
+  @objc
+  private func floatingButtonTapped(sender: Any) {
+    guard let onPress = floatingButtonAction else {
+      return
+    }
+    
+    onPress()
   }
   
 }
