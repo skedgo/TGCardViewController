@@ -40,6 +40,10 @@ public class TGCardView: TGCornerView {
   /// from the stack.
   @IBOutlet weak var closeButton: UIButton?
   
+  /// Optional floating button.
+  ///
+  /// The button is only visible when the corresponding action closure
+  /// is set.
   @IBOutlet weak var floatingButton: UIButton?
   
   /// Each card view needs a scroll view where the main content of the
@@ -97,7 +101,11 @@ public class TGCardView: TGCornerView {
     }
   }
   
-  var floatingButtonAction: (() -> Void)?
+  var floatingButtonAction: ((Void) -> Void)? {
+    didSet {
+      floatingButton?.isHidden = (floatingButtonAction == nil)
+    }
+  }
   
   // MARK: - Configuration
   
@@ -106,7 +114,7 @@ public class TGCardView: TGCornerView {
     
     if let floatie = floatingButton {
       floatie.layer.cornerRadius = floatie.frame.width * 0.5
-      floatie.addTarget(self, action: #selector(floatingButtonTapped(sender:)), for: .touchUpInside)
+      floatie.isHidden = true
     }
     
     // Here we set the minimum width and height to provide sufficient hit
@@ -166,13 +174,7 @@ public class TGCardView: TGCornerView {
     }
   }
   
-  @objc
-  private func floatingButtonTapped(sender: Any) {
-    guard let onPress = floatingButtonAction else {
-      return
-    }
-    
-    onPress()
+  @IBAction func floatingButtonTapped(_ sender: Any) {
+    floatingButtonAction?()
   }
-  
 }

@@ -55,6 +55,8 @@ public class TGAgendaCardView: TGCardView {
     tableView.delegate = card.tableViewDelegate
     tableView.dataSource = card.tableViewDataSource
     
+    self.floatingButtonAction = card.floatingButtonAction
+    
     if let bottomContent = card.bottomContentView {
       bottomViewContainer.addSubview(bottomContent)
       bottomContent.snap(to: bottomViewContainer)

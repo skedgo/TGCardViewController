@@ -66,6 +66,9 @@
                     <state key="normal" title="Button">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="floatingButtonTapped:" destination="Ygi-Wu-OlV" eventType="touchUpInside" id="U6B-Iz-R7l"/>
+                    </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

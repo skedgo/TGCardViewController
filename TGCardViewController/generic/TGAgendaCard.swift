@@ -22,6 +22,8 @@ open class TGAgendaCard: TGCard {
   /// This is the content for the bottom view.
   let bottomContentView: UIView?
   
+  public var floatingButtonAction: ((Void) -> Void)?
+  
   /// These are used to configure the main content view.
   var tableViewDataSource: UITableViewDataSource?
   var tableViewDelegate: UITableViewDelegate?
