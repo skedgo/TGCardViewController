@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -15,10 +15,6 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="663"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9vC-GM-Rte">
-                    <rect key="frame" x="0.0" y="137" width="375" height="526"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                </tableView>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="lf5-YV-zqk" userLabel="Grab handle" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -75,35 +71,37 @@
                         </stackView>
                     </subviews>
                 </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TwM-rE-f4a">
+                    <rect key="frame" x="0.0" y="137" width="375" height="526"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4TM-kT-hhY"/>
+                <constraint firstItem="TwM-rE-f4a" firstAttribute="top" secondItem="Otm-sh-8EH" secondAttribute="bottom" constant="8" id="Bms-6F-je2"/>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="JhJ-X6-bzM"/>
                 <constraint firstAttribute="trailing" secondItem="Otm-sh-8EH" secondAttribute="trailing" constant="8" id="KJK-c3-I6I"/>
-                <constraint firstItem="9vC-GM-Rte" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="NQ6-Pz-Vva"/>
-                <constraint firstItem="9vC-GM-Rte" firstAttribute="top" secondItem="Otm-sh-8EH" secondAttribute="bottom" constant="8" id="P3c-j9-5Sg"/>
+                <constraint firstItem="TwM-rE-f4a" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="MDl-un-wgE"/>
                 <constraint firstItem="Otm-sh-8EH" firstAttribute="top" secondItem="lf5-YV-zqk" secondAttribute="bottom" constant="8" id="PTa-je-2f9"/>
                 <constraint firstItem="Otm-sh-8EH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="RHA-y3-jrl"/>
-                <constraint firstAttribute="bottom" secondItem="9vC-GM-Rte" secondAttribute="bottom" id="S6v-zr-HSQ"/>
-                <constraint firstAttribute="trailing" secondItem="9vC-GM-Rte" secondAttribute="trailing" id="dDq-g6-M1Z"/>
+                <constraint firstAttribute="trailing" secondItem="TwM-rE-f4a" secondAttribute="trailing" id="a3D-GX-97y"/>
+                <constraint firstAttribute="bottom" secondItem="TwM-rE-f4a" secondAttribute="bottom" id="pQS-TT-hRY"/>
                 <constraint firstAttribute="trailing" secondItem="lf5-YV-zqk" secondAttribute="trailing" id="wU3-bz-Tc8"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="accessoryWrapperView" destination="bXd-mR-IBX" id="JZs-7j-lEw"/>
                 <outlet property="closeButton" destination="gaZ-Nm-Ttn" id="8ec-H2-bUv"/>
-                <outlet property="contentScrollView" destination="9vC-GM-Rte" id="qCO-y6-fZD"/>
                 <outlet property="grabHandle" destination="lf5-YV-zqk" id="fmS-0K-Vki"/>
                 <outlet property="headerStack" destination="Otm-sh-8EH" id="Zzg-RG-XYL"/>
-                <outlet property="headerStackBottomConstraint" destination="P3c-j9-5Sg" id="BLW-Se-CTu"/>
                 <outlet property="headerStackTopConstraint" destination="PTa-je-2f9" id="dAe-Xz-xge"/>
                 <outlet property="labelStack" destination="fzr-SN-jeB" id="jVg-K4-pnY"/>
                 <outlet property="subtitleLabel" destination="Aj9-Wv-1Z7" id="VM0-dj-53r"/>
-                <outlet property="tableView" destination="9vC-GM-Rte" id="Dbs-WA-lYh"/>
+                <outlet property="tableWrapper" destination="TwM-rE-f4a" id="A5e-oU-sUI"/>
                 <outlet property="titleLabel" destination="Y7e-Bs-jau" id="syo-l0-lMd"/>
             </connections>
-            <point key="canvasLocation" x="122" y="152"/>
+            <point key="canvasLocation" x="121.5" y="151.5"/>
         </view>
     </objects>
 </document>

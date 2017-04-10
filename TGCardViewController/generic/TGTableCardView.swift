@@ -10,7 +10,13 @@ import UIKit
 
 public class TGTableCardView: TGCardView {
   
-  @IBOutlet public weak var tableView: UITableView!
+  public weak var tableView: UITableView!
+  
+  // This is where the table view is going to be. We didn't insert
+  // table view directly because the style of table view is only
+  // known at run time. Using a wrapper helps us fix the constraints
+  // at design time.
+  @IBOutlet weak var tableWrapper: UIView!
   
   static func instantiate() -> TGTableCardView {
     let bundle = Bundle(for: self)
@@ -18,9 +24,7 @@ public class TGTableCardView: TGCardView {
       let view = bundle.loadNibNamed("TGTableCardView", owner: nil, options: nil)!.first as? TGTableCardView
       else { preconditionFailure() }
     return view
-
   }
-  
 
   override public func awakeFromNib() {
     super.awakeFromNib()
@@ -38,8 +42,15 @@ public class TGTableCardView: TGCardView {
       accessoryView = card.accessoryView
     }
     
+    let tableView = UITableView(frame: .zero, style: card.tableStyle)
     tableView.dataSource = card.tableViewDataSource
     tableView.delegate = card.tableViewDelegate
+    
+    tableWrapper.addSubview(tableView)
+    tableView.snap(to: tableWrapper)
+    
+    self.tableView = tableView
+    self.contentScrollView = tableView
   }
   
 }
