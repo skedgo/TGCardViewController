@@ -140,7 +140,11 @@ class TGPageCardView: TGCardView {
     //       layout the child card when it's becoming visible soon.
     // See: https://gitlab.com/SkedGo/tripgo-cards-ios/issues/3
     
-    let contents = card.cards.map { $0.buildCardView(showClose: false, includeHeader: false) }
+    let contents = card.cards.map { card -> UIView in
+      let view = card.buildCardView(showClose: false, includeHeader: false)
+      card.didBuild(cardView: view, headerView: nil)
+      return view
+    }
     fill(with: contents)
   }
   
