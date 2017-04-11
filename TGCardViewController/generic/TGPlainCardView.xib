@@ -136,7 +136,7 @@
                 <outlet property="closeButton" destination="S0E-UZ-jgN" id="PTX-DA-6fw"/>
                 <outlet property="contentScrollView" destination="Dar-6n-Caw" id="cgp-sH-B9w"/>
                 <outlet property="contentView" destination="fpj-MI-D7T" id="xMy-mv-ixq"/>
-                <outlet property="floatingButton" destination="4nd-sh-0Ix" id="IlJ-XF-enQ"/>
+                <outlet property="floatingButton" destination="4nd-sh-0Ix" id="dK6-qb-znB"/>
                 <outlet property="grabHandle" destination="JFj-Bl-Nt0" id="RDe-nF-gpP"/>
                 <outlet property="headerStack" destination="GFR-f4-rZW" id="7aS-kU-3bM"/>
                 <outlet property="headerStackBottomConstraint" destination="jNv-qi-xFY" id="GeW-4B-mET"/>
