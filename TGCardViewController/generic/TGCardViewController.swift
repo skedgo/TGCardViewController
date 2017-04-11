@@ -5,6 +5,9 @@
 //  Created by Adrian Schoenig on 9/3/17.
 //  Copyright © 2017 SkedGo Pty Ltd. All rights reserved.
 //
+// 
+// Exception for this file. Already broken into extensions.
+// swiftlint:disable file_length
 
 import UIKit
 
@@ -52,6 +55,8 @@ open class TGCardViewController: UIViewController {
   var mapShadowTapper: UITapGestureRecognizer!
   
   fileprivate var isVisible = false
+  
+  fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
   
   fileprivate var topCard: TGCard? {
     return cards.last?.card
@@ -232,12 +237,12 @@ open class TGCardViewController: UIViewController {
     mapShadow.alpha = position == .extended ? Constants.mapShadowVisibleAlpha : 0
     mapShadow.isUserInteractionEnabled = position == .extended
   }
-  
-  
-  // MARK: - Card stack management
-  
-  fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
-  
+}
+
+
+// MARK: - Card stack management
+
+extension TGCardViewController {
   
   fileprivate func cardLocation(forDesired position: TGCardPosition?, direction: Direction)
       -> (position: TGCardPosition, y: CGFloat) {
@@ -253,6 +258,8 @@ open class TGCardViewController: UIViewController {
     }
   }
   
+  // Yes, these are long. We rather keep them together like this (for now).
+  // swiftlint:disable function_body_length
   
   public func push(_ top: TGCard, animated: Bool = true) {
     // Set the controller on the top card earlier, because we may want
@@ -449,6 +456,8 @@ open class TGCardViewController: UIViewController {
       }
     )
   }
+  
+  // swiftlint:enable function_body_length
   
   @objc
   func closeTapped(sender: Any) {

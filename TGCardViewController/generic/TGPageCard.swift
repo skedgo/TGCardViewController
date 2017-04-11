@@ -61,7 +61,7 @@ public class TGPageCard: TGCard {
   
   fileprivate var cardView: TGPageCardView?
   
-  fileprivate lazy var headerView: TGHeaderView? = nil
+  fileprivate var headerView: TGHeaderView?
   
   fileprivate weak var headerPageControl: UIPageControl?
   
