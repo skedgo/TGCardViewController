@@ -60,6 +60,13 @@ open class TGCard: NSObject {
     return nil
   }
   
+  /// Called when the views have been built the first time
+  ///
+  /// Think of this as an equivalent of `UIViewController.viewDidLoad`
+  ///
+  /// - Parameters:
+  ///   - cardView: The card view that got built
+  ///   - headerView: The header view, typically used by `TGPageCard`.
   open func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
   }
   
