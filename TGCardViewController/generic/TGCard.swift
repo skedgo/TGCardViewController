@@ -33,7 +33,7 @@ open class TGCard: NSObject {
   /// The manager that handles the content of the map for this card
   public var mapManager: TGMapManager? {
     didSet {
-      guard let oldValue = oldValue, let newValue = mapManager else {
+      guard let oldValue = oldValue, mapManager !== oldValue else {
         return
       }
       delegate?.mapManagerDidChange(old: oldValue, for: self)
@@ -42,6 +42,8 @@ open class TGCard: NSObject {
   
   /// The position to display the card in, when pushing
   public let initialPosition: TGCardPosition
+  
+  public private(set) var viewIsVisible: Bool = false
   
   public init(title: String, subtitle: String? = nil,
               mapManager: TGMapManager? = nil, initialPosition: TGCardPosition = .peaking) {
@@ -86,6 +88,7 @@ open class TGCard: NSObject {
   /// - Parameter animated: If it'll be animated
   open func willAppear(animated: Bool) {
 //    print("+. \(title) will appear")
+    viewIsVisible = true
   }
   
   /// Called when the card became visible
@@ -114,6 +117,7 @@ open class TGCard: NSObject {
   /// - Parameter animated: If it was animated
   open func didDisappear(animated: Bool) {
 //    print("-- \(title) did disappear")
+    viewIsVisible = false
   }
 }
 
