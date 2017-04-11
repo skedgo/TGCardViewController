@@ -398,7 +398,12 @@ open class TGCardViewController: UIViewController {
     newTop?.view.alpha = 1
     let animateTo = cardLocation(forDesired: newTop?.position, direction: .down)
     cardWrapperDesiredTopConstraint.constant = animateTo.y
-    cardWrapperMinOverlapTopConstraint.constant = newTop?.view.headerHeight(for: .collapsed) ?? 0
+    if let new = newTop {
+      cardWrapperMinOverlapTopConstraint.constant = new.view.headerHeight(for: new.position)
+    } else {
+      cardWrapperMinOverlapTopConstraint.constant = 0
+    }
+    
     // TODO: It'd be better if we didn't have to build the header again, but could
     //       just re-use it from the previous push. 
     // See https://gitlab.com/SkedGo/tripgo-cards-ios/issues/7.
@@ -411,8 +416,7 @@ open class TGCardViewController: UIViewController {
 
     // 5. Do the transition, optionally animated.
     // We animate the view moving back down to the bottom
-    // we also temporarily insert a shadow view again, if there's a card below
-    
+    // we also temporarily insert a shadow view again, if there's a card below    
     if animated && newTop != nil {
       let shadow = TGCornerView(frame: cardWrapperContent.bounds)
       shadow.backgroundColor = .black
