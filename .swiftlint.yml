@@ -5,9 +5,22 @@ excluded:
 disabled_rules:
   - todo
   - trailing_whitespace
+opt_in:
+  - closure_spacing
+  - empty_count
+  - explicit_init
+  - fatal_error_message
+  - force_unwrapping
+  - operator_usage_whitespace
+  - overridden_super_call
+  - prohibited_super_call
 
 large_tuple:
   warning: 3
   error: 4
+identifier_name:
+  min_length:
+    warning: 2
 vertical_whitespace:
   max_empty_lines: 2
+

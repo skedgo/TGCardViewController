@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class TGTableCard: TGCard {
+open class TGTableCard: NSObject, TGCard {
   
   public weak var controller: TGCardViewController?
   
@@ -17,6 +17,7 @@ open class TGTableCard: TGCard {
   public let title: String
   public let subtitle: String?
   public let mapManager: TGMapManager?
+  public let tableStyle: UITableViewStyle
   public let defaultPosition: TGCardPosition
   
   let accessoryView: UIView?
@@ -25,7 +26,7 @@ open class TGTableCard: TGCard {
   weak var tableViewDataSource: UITableViewDataSource?
   
   public init(title: String, subtitle: String? = nil,
-              dataSource: UITableViewDataSource, delegate: UITableViewDelegate? = nil,
+              dataSource: UITableViewDataSource, delegate: UITableViewDelegate? = nil, style: UITableViewStyle = .plain,
               accessoryView: UIView? = nil,
               mapManager: TGMapManager? = nil) {
     
@@ -34,6 +35,7 @@ open class TGTableCard: TGCard {
     self.mapManager = mapManager
     self.tableViewDataSource = dataSource
     self.tableViewDelegate = delegate
+    self.tableStyle = style
     self.accessoryView = accessoryView
     self.defaultPosition = mapManager != nil ? .peaking : .extended
   }

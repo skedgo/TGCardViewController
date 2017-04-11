@@ -5,6 +5,9 @@
 //  Created by Adrian Schoenig on 9/3/17.
 //  Copyright © 2017 SkedGo Pty Ltd. All rights reserved.
 //
+// 
+// Exception for this file. Already broken into extensions.
+// swiftlint:disable file_length
 
 import UIKit
 
@@ -52,6 +55,8 @@ open class TGCardViewController: UIViewController {
   var mapShadowTapper: UITapGestureRecognizer!
   
   fileprivate var isVisible = false
+  
+  fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
   
   fileprivate var topCard: TGCard? {
     return cards.last?.card
@@ -232,12 +237,12 @@ open class TGCardViewController: UIViewController {
     mapShadow.alpha = position == .extended ? Constants.mapShadowVisibleAlpha : 0
     mapShadow.isUserInteractionEnabled = position == .extended
   }
-  
-  
-  // MARK: - Card stack management
-  
-  fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
-  
+}
+
+
+// MARK: - Card stack management
+
+extension TGCardViewController {
   
   fileprivate func cardLocation(forDesired position: TGCardPosition?, direction: Direction)
       -> (position: TGCardPosition, y: CGFloat) {
@@ -253,6 +258,8 @@ open class TGCardViewController: UIViewController {
     }
   }
   
+  // Yes, these are long. We rather keep them together like this (for now).
+  // swiftlint:disable function_body_length
   
   public func push(_ top: TGCard, animated: Bool = true) {
     // Set the controller on the top card earlier, because we may want
@@ -398,7 +405,12 @@ open class TGCardViewController: UIViewController {
     newTop?.view.alpha = 1
     let animateTo = cardLocation(forDesired: newTop?.position, direction: .down)
     cardWrapperDesiredTopConstraint.constant = animateTo.y
-    cardWrapperMinOverlapTopConstraint.constant = newTop?.view.headerHeight ?? 0
+    if let new = newTop {
+      cardWrapperMinOverlapTopConstraint.constant = new.view.headerHeight(for: new.position)
+    } else {
+      cardWrapperMinOverlapTopConstraint.constant = 0
+    }
+    
     // TODO: It'd be better if we didn't have to build the header again, but could
     //       just re-use it from the previous push. 
     // See https://gitlab.com/SkedGo/tripgo-cards-ios/issues/7.
@@ -411,8 +423,7 @@ open class TGCardViewController: UIViewController {
 
     // 5. Do the transition, optionally animated.
     // We animate the view moving back down to the bottom
-    // we also temporarily insert a shadow view again, if there's a card below
-    
+    // we also temporarily insert a shadow view again, if there's a card below    
     if animated && newTop != nil {
       let shadow = TGCornerView(frame: cardWrapperContent.bounds)
       shadow.backgroundColor = .black
@@ -445,6 +456,8 @@ open class TGCardViewController: UIViewController {
       }
     )
   }
+  
+  // swiftlint:enable function_body_length
   
   @objc
   func closeTapped(sender: Any) {

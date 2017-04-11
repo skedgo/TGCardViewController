@@ -16,7 +16,7 @@ import UIKit
 ///
 /// Think of this class as an equivalent of `UIPageViewController`, but
 /// for cards.
-open class TGPageCard: TGCard {
+public class TGPageCard: TGCard {
   
   public weak var controller: TGCardViewController? {
     didSet {
@@ -61,7 +61,7 @@ open class TGPageCard: TGCard {
   
   fileprivate var cardView: TGPageCardView?
   
-  fileprivate lazy var headerView: TGHeaderView? = nil
+  fileprivate var headerView: TGHeaderView?
   
   fileprivate weak var headerPageControl: UIPageControl?
   

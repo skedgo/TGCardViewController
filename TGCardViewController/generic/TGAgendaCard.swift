@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class TGAgendaCard: TGCard {
+open class TGAgendaCard: NSObject, TGCard {
   
   weak public var controller: TGCardViewController?
   
@@ -26,7 +26,11 @@ open class TGAgendaCard: TGCard {
   
   /// These are used to configure the main content view.
   var tableViewDataSource: UITableViewDataSource?
+  
+  // Note: It's not our delegate, but the delegate object of the table view, that's why it's not weak
+  // swiftlint:disable weak_delegate
   var tableViewDelegate: UITableViewDelegate?
+  // swiftlint:enable weak_delegate
   
   // MARK: - Initializers
   
