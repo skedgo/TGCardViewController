@@ -113,6 +113,7 @@ public class TGCardView: TGCornerView {
     heightConstraint?.isActive = true
   }
   
+  
   func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
     titleLabel.text = includeHeader ? card.title : nil
     subtitleLabel.text = includeHeader ? card.subtitle : nil
@@ -122,9 +123,11 @@ public class TGCardView: TGCornerView {
     headerStackBottomConstraint?.constant = includeHeader ? 8 : 0
   }
   
+  
   func allowContentScrolling(_ allowScrolling: Bool) {
     contentScrollView?.isScrollEnabled = allowScrolling
   }
+  
   
   func headerHeight(for position: TGCardPosition) -> CGFloat {
     guard let scrollView = contentScrollView else {
@@ -133,16 +136,19 @@ public class TGCardView: TGCornerView {
     
     switch position {
     case .collapsed:
-      guard
-        let wrapper = self.accessoryWrapperView,
-        let accessory = self.accessoryView
-        else {
-          return scrollView.frame.minY
-      }
+      var frame: CGRect
       
-      // The frame of the accessory view in the coordinate system
-      // of card view itself
-      let frame = wrapper.convert(accessory.frame, to: self)
+      if let wrapper = accessoryWrapperView,
+         let accessory = accessoryView {
+        // The frame of the accessory view in the coordinate system
+        // of card view itself
+        frame = wrapper.convert(accessory.frame, to: self)
+      } else {
+        // The frame of the scroll view in the coordinate system of
+        // card view itself. Note, the scroll view may be embedded
+        // inside another view, so we check for its superview here.
+        frame = scrollView.superview?.convert(scrollView.frame, to: self) ?? scrollView.frame
+      }
       
       if let handle = grabHandle {
         // If we have a grab handle, need to account for whether its hidden. If
@@ -153,7 +159,7 @@ public class TGCardView: TGCornerView {
       }
       
     default:
-      return scrollView.frame.minY
+      return scrollView.superview?.convert(scrollView.frame, to: self).minY ?? scrollView.frame.minY
     }
   }
   
