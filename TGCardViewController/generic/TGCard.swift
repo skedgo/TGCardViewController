@@ -31,7 +31,14 @@ open class TGCard: NSObject {
   public let subtitle: String?
   
   /// The manager that handles the content of the map for this card
-  public var mapManager: TGMapManager?
+  public var mapManager: TGMapManager? {
+    didSet {
+      guard let oldValue = oldValue, let newValue = mapManager else {
+        return
+      }
+      delegate?.mapManagerDidChange(old: oldValue, for: self)
+    }
+  }
   
   /// The position to display the card in, when pushing
   public let initialPosition: TGCardPosition

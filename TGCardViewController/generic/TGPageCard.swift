@@ -26,15 +26,6 @@ public class TGPageCard: TGCard {
     }
   }
   
-  // Scroll card itself doesn't have a map manager. Instead, it passes through
-  // the manager that handles the map view for the current card. This is
-  // set on intialising and then updated whenever we scroll.
-  public override var mapManager: TGMapManager? {
-    didSet {
-      delegate?.mapManagerDidChange(old: oldValue, for: self)
-    }
-  }
-  
   /// The cards displayed by the page card
   let cards: [TGCard]
   
@@ -91,8 +82,9 @@ public class TGPageCard: TGCard {
     self.cards = cards
     self.initialPageIndex = initialPage
 
-    // Initialise map manager probably, then we'll wait for delegate
-    // callbacks to update it correctly
+    // TGPageCard itself doesn't have a map manager. Instead, it passes through
+    // the manager that handles the map view for the current card. This is
+    // set on intialising and then updated whenever we scroll.
     let mapManager = cards[initialPage].mapManager
     
     super.init(title: title, subtitle: nil, mapManager: mapManager, initialPosition: initialPosition)
