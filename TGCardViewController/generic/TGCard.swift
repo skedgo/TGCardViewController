@@ -10,45 +10,58 @@ import UIKit
 
 /// A card representing the content currently displayed
 ///
-/// Class-protocol as we'll dynamically set the `controller` and 
-/// `delegate` fields.
-public protocol TGCard: class {
+/// Implements NSObject to make it easy to implement
+/// various UIKit protocols in subclasses
+open class TGCard: NSObject {
   
   /// The card controller currently displaying the card
   ///
   /// Set by the card controller itself
-  weak var controller: TGCardViewController? { get set }
+  public weak var controller: TGCardViewController?
   
   /// Optional delegate for this card
   ///
   /// Typically, `TGCardViewController` will assign itself.
-  weak var delegate: TGCardDelegate? { get set }
+  public weak var delegate: TGCardDelegate?
   
   /// Localised title of the card
-  var title: String { get }
+  public let title: String
 
   /// Localised subtitle of the card
-  var subtitle: String? { get }
+  public let subtitle: String?
   
   /// The manager that handles the content of the map for this card
-  var mapManager: TGMapManager? { get }
+  public var mapManager: TGMapManager?
   
   /// The position to display the card in, when pushing
-  var defaultPosition: TGCardPosition { get }
+  public let defaultPosition: TGCardPosition
+  
+  public init(title: String, subtitle: String? = nil,
+              mapManager: TGMapManager? = nil, position: TGCardPosition = .peaking) {
+    self.title = title
+    self.subtitle = subtitle
+    self.mapManager = mapManager
+    self.defaultPosition = mapManager != nil ? position : .extended
+  }
   
   /// Builds the card view to represent the card
   ///
   /// - Returns: Card view configured with the content of this card
-  func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView
+  public func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+    preconditionFailure("Override this in subclasses, but don't call super to `TGCard`.")
+  }
   
   /// Builds the card's optional header which will be pinned to the top
   ///
   /// - SeeAlso: `TGPageCard`, which relies on this for its navigation.
   ///
   /// - Returns: Header view configured with the card's title content
-  func buildHeaderView() -> TGHeaderView?
+  public func buildHeaderView() -> TGHeaderView? {
+    return nil
+  }
   
-  func didBuild(cardView: TGCardView, headerView: TGHeaderView?)
+  open func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+  }
   
   /// Called just before the card becomes visible
   ///
@@ -57,14 +70,18 @@ public protocol TGCard: class {
   /// visible.
   ///
   /// - Parameter animated: If it'll be animated
-  func willAppear(animated: Bool)
+  open func willAppear(animated: Bool) {
+//    print("+. \(title) will appear")
+  }
   
   /// Called when the card became visible
   ///
   /// - seeAlso: Notes in `willAppear`
   ///
   /// - Parameter animated: If it was animated
-  func didAppear(animated: Bool)
+  open func didAppear(animated: Bool) {
+//    print("++ \(title) did appear")
+  }
   
   /// Called just before the card disappears
   ///
@@ -72,14 +89,18 @@ public protocol TGCard: class {
   /// controller, or the controller itself disappears.
   ///
   /// - Parameter animated: If it'll be animated
-  func willDisappear(animated: Bool)
+  open func willDisappear(animated: Bool) {
+//    print("-. \(title) will disappear")
+  }
   
   /// Called when the card disappared
   ///
   /// - seeAlso: Notes in `willDisappear`
   ///
   /// - Parameter animated: If it was animated
-  func didDisappear(animated: Bool)
+  open func didDisappear(animated: Bool) {
+//    print("-- \(title) did disappear")
+  }
 }
 
 public protocol TGCardDelegate: class {
