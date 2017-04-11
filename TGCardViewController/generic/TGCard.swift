@@ -34,14 +34,14 @@ open class TGCard: NSObject {
   public var mapManager: TGMapManager?
   
   /// The position to display the card in, when pushing
-  public let defaultPosition: TGCardPosition
+  public let initialPosition: TGCardPosition
   
   public init(title: String, subtitle: String? = nil,
-              mapManager: TGMapManager? = nil, position: TGCardPosition = .peaking) {
+              mapManager: TGMapManager? = nil, initialPosition: TGCardPosition = .peaking) {
     self.title = title
     self.subtitle = subtitle
     self.mapManager = mapManager
-    self.defaultPosition = mapManager != nil ? position : .extended
+    self.initialPosition = mapManager != nil ? initialPosition : .extended
   }
   
   /// Builds the card view to represent the card

@@ -23,7 +23,7 @@ open class TGPlainCard: TGCard {
   public init(title: String, subtitle: String? = nil,
               contentView: UIView? = nil, accessoryView: UIView? = nil,
               mapManager: TGMapManager? = nil,
-              position: TGCardPosition = .peaking) {
+              initialPosition: TGCardPosition = .peaking) {
     assert(!(contentView is UIScrollView),
             "This card is not meant for content views that are itself" +
             "scrolling. Use `TGTableCardView` instead.")
@@ -31,7 +31,7 @@ open class TGPlainCard: TGCard {
     self.contentView = contentView
     self.accessoryView = accessoryView
     
-    super.init(title: title, subtitle: subtitle, mapManager: mapManager, position: position)
+    super.init(title: title, subtitle: subtitle, mapManager: mapManager, initialPosition: initialPosition)
   }
   
   public override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {

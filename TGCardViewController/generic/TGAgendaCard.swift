@@ -27,7 +27,7 @@ open class TGAgendaCard: TGCard {
     self.bottomContentView = bottomContent
     self.tableViewDelegate = delegate
     self.tableViewDataSource = dataSource
-    super.init(title: title, subtitle: subtitle, mapManager: mapManager, position: .peaking)
+    super.init(title: title, subtitle: subtitle, mapManager: mapManager)
   }
   
   // MARK: - Constructing views.

@@ -23,6 +23,6 @@ class ExampleTableChildCard : TGPlainCard {
     
     let wrappedTitle = annotation.title ?? nil
     
-    super.init(title: wrappedTitle ?? "No title", subtitle: annotation.subtitle ?? nil, contentView: label, mapManager: mapManager, position: .collapsed)
+    super.init(title: wrappedTitle ?? "No title", subtitle: annotation.subtitle ?? nil, contentView: label, mapManager: mapManager, initialPosition: .collapsed)
   }
 }

@@ -30,7 +30,7 @@ open class TGTableCard: TGCard {
     self.accessoryView = accessoryView
     
     super.init(title: title, subtitle: subtitle,
-               mapManager: mapManager, position: mapManager != nil ? .peaking : .extended)
+               mapManager: mapManager, initialPosition: mapManager != nil ? .peaking : .extended)
   }
   
   public override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {

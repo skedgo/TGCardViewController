@@ -95,7 +95,7 @@ public class TGPageCard: TGCard {
     // callbacks to update it correctly
     let mapManager = cards[initialPage].mapManager
     
-    super.init(title: title, mapManager: mapManager, position: initialPosition)
+    super.init(title: title, subtitle: nil, mapManager: mapManager, initialPosition: initialPosition)
   }
   
   fileprivate static func allCardsHaveMapManagers(in cards: [TGCard]) -> Bool {
