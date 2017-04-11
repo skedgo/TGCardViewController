@@ -398,7 +398,7 @@ open class TGCardViewController: UIViewController {
     newTop?.view.alpha = 1
     let animateTo = cardLocation(forDesired: newTop?.position, direction: .down)
     cardWrapperDesiredTopConstraint.constant = animateTo.y
-    cardWrapperMinOverlapTopConstraint.constant = newTop?.view.headerHeight ?? 0
+    cardWrapperMinOverlapTopConstraint.constant = newTop?.view.headerHeight(for: .collapsed) ?? 0
     // TODO: It'd be better if we didn't have to build the header again, but could
     //       just re-use it from the previous push. 
     // See https://gitlab.com/SkedGo/tripgo-cards-ios/issues/7.
