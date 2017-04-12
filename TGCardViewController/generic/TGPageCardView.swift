@@ -131,7 +131,6 @@ class TGPageCardView: TGCardView {
   // MARK: - Configuration
   
   func configure(with card: TGPageCard) {
-
     // TODO: This does a lot of work by building all the child cards
     //       and then laying them out using auto layout. If this
     //       becomes a performance issue, e.g., when there are a lot
@@ -145,7 +144,16 @@ class TGPageCardView: TGCardView {
       card.didBuild(cardView: view, headerView: nil)
       return view
     }
+    
     fill(with: contents)
+    
+    // Page card doesn't always start with page 0. But, in order to 
+    // set the content offset properly, we do a layout pass so that
+    // the constraints set above are considered, before moving card.
+    setNeedsUpdateConstraints()
+    layoutIfNeeded()
+    
+    move(to: card.initialPageIndex)
   }
   
   override func allowContentScrolling(_ allowScrolling: Bool) {
