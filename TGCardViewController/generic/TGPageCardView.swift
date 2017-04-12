@@ -27,6 +27,8 @@ class TGPageCardView: TGCardView {
   @IBOutlet weak var contentView: UIView!
 
   @IBOutlet weak var pagerTrailingConstant: NSLayoutConstraint!
+  
+  fileprivate var lastHorizontalOffset: CGFloat = 0
 
   weak var delegate: TGPageCardViewDelegate?
   
@@ -102,12 +104,26 @@ class TGPageCardView: TGCardView {
   
   func moveForward(animated: Bool = true) {
     // Shift by the entire width of the card view
-    let newX = pager.contentOffset.x + frame.width + Constants.spaceBetweenCards
+    let nextFullWidthHorizontalOffset = pager.contentOffset.x + frame.width + Constants.spaceBetweenCards
+    
+    // It's possible that the scroll view is in the middle of scrolling
+    // when this method is called. In this case, the content offset may
+    // not be at the start of the next full page. We use the variable
+    // below to calculate where the start of the next full page should be.
+    let nextFullPageHorizontalOffset = lastHorizontalOffset + frame.width + Constants.spaceBetweenCards
+    
+    // Maximum ensures we are always at the start of a page. It also
+    // helps when the page view doesn't start with page 0 -> In this
+    // case, we won't be moving to page 1, but to the page n + 1.
+    let horizontalOffset = fmax(nextFullWidthHorizontalOffset, nextFullPageHorizontalOffset)
     
     // Make sure we don't go over.
-    guard newX < pager.contentSize.width else { return }
+    guard horizontalOffset < pager.contentSize.width else { return }
     
-    pager.setContentOffset(CGPoint(x: newX, y: 0), animated: animated)
+    pager.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: animated)
+    
+    // Update the tracking property.
+    lastHorizontalOffset = horizontalOffset
   }
   
   func moveBackward(animated: Bool = true) {
@@ -145,6 +161,7 @@ class TGPageCardView: TGCardView {
       card.didBuild(cardView: view, headerView: nil)
       return view
     }
+    
     fill(with: contents)
   }
   
