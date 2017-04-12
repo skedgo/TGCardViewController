@@ -146,6 +146,14 @@ class TGPageCardView: TGCardView {
     }
     
     fill(with: contents)
+    
+    // Page card doesn't always start with page 0. But, in order to 
+    // set the content offset properly, we do a layout pass so that
+    // the constraints set above are considered, before moving card.
+    setNeedsUpdateConstraints()
+    layoutIfNeeded()
+    
+    move(to: card.initialPageIndex)
   }
   
   override func allowContentScrolling(_ allowScrolling: Bool) {
