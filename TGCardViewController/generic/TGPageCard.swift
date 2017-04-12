@@ -43,11 +43,10 @@ public class TGPageCard: TGCard {
   
   public let defaultPosition: TGCardPosition
   
-  
   /// The cards displayed by the page card
   let cards: [TGCard]
   
-  fileprivate let initialPageIndex: Int
+  let initialPageIndex: Int
   
   fileprivate var currentPageIndex: Int {
     return cardView?.currentPage ?? initialPageIndex
