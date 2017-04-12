@@ -43,7 +43,6 @@ public class TGPageCard: TGCard {
   
   public let defaultPosition: TGCardPosition
   
-  
   /// The cards displayed by the page card
   let cards: [TGCard]
   
@@ -239,6 +238,15 @@ public class TGPageCard: TGCard {
   
   // MARK: - Card life cycle
   public func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+    guard let pageView = cardView as? TGPageCardView else {
+      preconditionFailure("Page card didn't build page card view?!")
+    }
+    
+    // Page card doesn't always start at page 0
+    pageView.move(to: initialPageIndex, animated: false)
+    
+    // Don't forget to adjust the header view as well.
+    updateHeader(for: cards[initialPageIndex], atIndex: initialPageIndex)
   }
   
   public func willAppear(animated: Bool) {
