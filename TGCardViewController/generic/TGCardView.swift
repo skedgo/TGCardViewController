@@ -113,8 +113,9 @@ public class TGCardView: TGCornerView {
     super.awakeFromNib()
     
     if let floatie = floatingButton {
-      floatie.layer.cornerRadius = floatie.frame.width * 0.5
       floatie.isHidden = true
+      floatie.setImage(TGCardStyleKit.imageOfFloatingButton, for: .normal)
+      floatie.setTitle(nil, for: .normal)      
     }
     
     // Here we set the minimum width and height to provide sufficient hit

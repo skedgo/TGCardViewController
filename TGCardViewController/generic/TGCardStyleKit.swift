@@ -20,6 +20,8 @@ public class TGCardStyleKit : NSObject {
     private struct Cache {
         static var imageOfCardCloseIcon: UIImage?
         static var cardCloseIconTargets: [AnyObject]?
+        static var imageOfFloatingButton: UIImage?
+        static var floatingButtonTargets: [AnyObject]?
     }
 
     //// Drawing Methods
@@ -72,7 +74,41 @@ public class TGCardStyleKit : NSObject {
         context.restoreGState()
         
         context.restoreGState()
-
+    }
+  
+    public dynamic class func drawFloatingButton(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 60, height: 60), resizing: ResizingBehavior = .aspectFit) {
+      //// General Declarations
+      let context = UIGraphicsGetCurrentContext()!
+      
+      //// Resize to Target Frame
+      context.saveGState()
+      let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 60, height: 60), target: targetFrame)
+      context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
+      context.scaleBy(x: resizedFrame.width / 60, y: resizedFrame.height / 60)
+      
+      
+      //// Color Declarations
+      let color = UIColor(red: 0.000, green: 0.800, blue: 0.400, alpha: 1.000)
+      
+      //// Oval Drawing
+      let ovalPath = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 60, height: 60))
+      color.setFill()
+      ovalPath.fill()
+      
+      
+      //// Bezier Drawing
+      let bezierPath = UIBezierPath()
+      bezierPath.move(to: CGPoint(x: 21.5, y: 29.19))
+      bezierPath.addLine(to: CGPoint(x: 39.5, y: 29.19))
+      bezierPath.move(to: CGPoint(x: 31, y: 20.5))
+      bezierPath.addLine(to: CGPoint(x: 31, y: 38.5))
+      color.setFill()
+      bezierPath.fill()
+      UIColor.white.setStroke()
+      bezierPath.lineWidth = 1
+      bezierPath.stroke()
+      
+      context.restoreGState()
     }
 
     public dynamic class func drawHeaderNextIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, lineWidth: CGFloat = 3) {
@@ -197,6 +233,20 @@ public class TGCardStyleKit : NSObject {
 
         return imageOfHeaderNextIcon
     }
+  
+    public dynamic class var imageOfFloatingButton: UIImage {
+      if Cache.imageOfFloatingButton != nil {
+        return Cache.imageOfFloatingButton!
+      }
+      
+      UIGraphicsBeginImageContextWithOptions(CGSize(width: 60, height: 60), false, 0)
+      TGCardStyleKit.drawFloatingButton()
+      
+      Cache.imageOfFloatingButton = UIGraphicsGetImageFromCurrentImageContext()!.withRenderingMode(.alwaysOriginal)
+      UIGraphicsEndImageContext()
+      
+      return Cache.imageOfFloatingButton!
+    }
 
     public dynamic class var imageOfCardCloseIcon: UIImage {
         if Cache.imageOfCardCloseIcon != nil {
@@ -223,9 +273,16 @@ public class TGCardStyleKit : NSObject {
             }
         }
     }
-
-
-
+  
+    @IBOutlet dynamic var floatingButtonTargets: [AnyObject]! {
+      get { return Cache.floatingButtonTargets }
+      set {
+        Cache.floatingButtonTargets = newValue
+        for target: AnyObject in newValue {
+          let _ = target.perform(NSSelectorFromString("setImage:"), with: TGCardStyleKit.imageOfFloatingButton)
+        }
+      }
+    }
 
     @objc(TGCardStyleKitResizingBehavior)
     public enum ResizingBehavior: Int {

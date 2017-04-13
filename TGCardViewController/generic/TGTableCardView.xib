@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -19,6 +19,14 @@
                     <rect key="frame" x="0.0" y="137" width="375" height="526"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8CX-8x-KQh">
+                    <rect key="frame" x="309" y="593" width="50" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="50" id="7h8-1D-VSK"/>
+                        <constraint firstAttribute="height" constant="50" id="LPw-ci-An0"/>
+                    </constraints>
+                    <state key="normal" title="Button"/>
+                </button>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="lf5-YV-zqk" userLabel="Grab handle" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -79,7 +87,9 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4TM-kT-hhY"/>
+                <constraint firstAttribute="trailing" secondItem="8CX-8x-KQh" secondAttribute="trailing" constant="16" id="526-vy-eNr"/>
                 <constraint firstItem="TwM-rE-f4a" firstAttribute="top" secondItem="Otm-sh-8EH" secondAttribute="bottom" constant="8" id="Bms-6F-je2"/>
+                <constraint firstAttribute="bottom" secondItem="8CX-8x-KQh" secondAttribute="bottom" constant="20" id="GdD-xC-t2f"/>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="JhJ-X6-bzM"/>
                 <constraint firstAttribute="trailing" secondItem="Otm-sh-8EH" secondAttribute="trailing" constant="8" id="KJK-c3-I6I"/>
                 <constraint firstItem="TwM-rE-f4a" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="MDl-un-wgE"/>
@@ -93,6 +103,7 @@
             <connections>
                 <outlet property="accessoryWrapperView" destination="bXd-mR-IBX" id="JZs-7j-lEw"/>
                 <outlet property="closeButton" destination="gaZ-Nm-Ttn" id="8ec-H2-bUv"/>
+                <outlet property="floatingButton" destination="8CX-8x-KQh" id="YP1-li-oqc"/>
                 <outlet property="grabHandle" destination="lf5-YV-zqk" id="fmS-0K-Vki"/>
                 <outlet property="headerStack" destination="Otm-sh-8EH" id="Zzg-RG-XYL"/>
                 <outlet property="headerStackTopConstraint" destination="PTa-je-2f9" id="dAe-Xz-xge"/>
