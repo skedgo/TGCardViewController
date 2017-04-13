@@ -16,7 +16,8 @@ open class TGAgendaCard: TGTableCard {
   // MARK: - Initializers
   
   public init(title: String, subtitle: String? = nil,
-              dataSource: UITableViewDataSource, delegate: UITableViewDelegate? = nil,
+              dataSource: UITableViewDataSource? = nil,
+              delegate: UITableViewDelegate? = nil,
               bottomContent: UIView? = nil,
               mapManager: TGMapManager? = nil) {
     self.bottomContentView = bottomContent
