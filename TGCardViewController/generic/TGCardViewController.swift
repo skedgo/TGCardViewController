@@ -269,7 +269,7 @@ extension TGCardViewController {
     
     // 1. Determine where the new card will go
     let forceExtended = (top.mapManager == nil)
-    let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.defaultPosition, direction: .down)
+    let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.initialPosition, direction: .down)
 
     // 2. Updating card logic and informing of transition
     let oldTop = cardWithView(atIndex: cards.count - 1)

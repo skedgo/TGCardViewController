@@ -35,7 +35,11 @@ public class TGTableCardView: TGCardView {
   }
   
   
-  func configure(with card: TGTableCard, showClose: Bool, includeHeader: Bool) {
+  override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
+    guard let card = card as? TGTableCard else {
+      preconditionFailure()
+    }
+    
     super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
     
     if includeHeader {
