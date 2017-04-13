@@ -101,7 +101,7 @@ fileprivate enum Mockup {
   case agenda
   case routes
   case event
-  case trips([Trip])
+  case trips([Trip], Int)
   case modeByMode([ModeByMode])
   
   var card: TGCard {
@@ -119,20 +119,20 @@ fileprivate enum Mockup {
       
     case .event:
       return MockupImageCard(title: "Work Laureate", image: #imageLiteral(resourceName: "agenda-event"), locations: [MKPointAnnotation.laureate], targets: [
-          (0.025 ..< 0.14, Mockup.trips([.walkBus]).card)
+          (0.025 ..< 0.14, Mockup.trips([.walkBus], 0).card)
         ])
       
     case .routes:
       return MockupImageCard(title: "Routes", image: #imageLiteral(resourceName: "routes"), targets: [
-          (0    ..< 0.12, Mockup.trips([.walkBus, .walkBus]).card),
-          (0.12 ..< 0.24, Mockup.trips([.walkBus, .walkBus]).card),
+          (0    ..< 0.12, Mockup.trips([.walkBus, .walkBus], 0).card),
+          (0.12 ..< 0.24, Mockup.trips([.walkBus, .walkBus], 1).card),
         ])
       
-    case .trips(let trips):
+    case .trips(let trips, let index):
       if trips.count == 1, let trip = trips.first {
         return trip.card
       } else {
-        let tripsPager = TGPageCard(title: "Trips", cards: trips.map { $0.card })
+        let tripsPager = TGPageCard(title: "Trips", cards: trips.map { $0.card }, initialPage: index)
         tripsPager.headerRightAction = (title: "Start", onPress: { [unowned tripsPager] index in
           tripsPager.controller?.push(trips[index].modeByModePager(start: 0))
         })

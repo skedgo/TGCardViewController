@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -15,6 +15,10 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="663"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TwM-rE-f4a">
+                    <rect key="frame" x="0.0" y="137" width="375" height="526"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="lf5-YV-zqk" userLabel="Grab handle" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -71,24 +75,6 @@
                         </stackView>
                     </subviews>
                 </stackView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TwM-rE-f4a">
-                    <rect key="frame" x="0.0" y="137" width="375" height="526"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HDw-VM-igQ">
-                    <rect key="frame" x="309" y="593" width="50" height="50"/>
-                    <color key="backgroundColor" red="1" green="0.47157064539999999" blue="0.42593104329999998" alpha="1" colorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="50" id="Wnq-1z-fpD"/>
-                        <constraint firstAttribute="width" constant="50" id="xSE-sy-Pbk"/>
-                    </constraints>
-                    <state key="normal" title="Button">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="floatingButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="R1B-8l-wHg"/>
-                    </connections>
-                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
@@ -99,9 +85,7 @@
                 <constraint firstItem="TwM-rE-f4a" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="MDl-un-wgE"/>
                 <constraint firstItem="Otm-sh-8EH" firstAttribute="top" secondItem="lf5-YV-zqk" secondAttribute="bottom" constant="8" id="PTa-je-2f9"/>
                 <constraint firstItem="Otm-sh-8EH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="RHA-y3-jrl"/>
-                <constraint firstAttribute="bottom" secondItem="HDw-VM-igQ" secondAttribute="bottom" constant="20" id="ZaP-m0-o5o"/>
                 <constraint firstAttribute="trailing" secondItem="TwM-rE-f4a" secondAttribute="trailing" id="a3D-GX-97y"/>
-                <constraint firstAttribute="trailing" secondItem="HDw-VM-igQ" secondAttribute="trailing" constant="16" id="mDV-PT-CXM"/>
                 <constraint firstAttribute="bottom" secondItem="TwM-rE-f4a" secondAttribute="bottom" id="pQS-TT-hRY"/>
                 <constraint firstAttribute="trailing" secondItem="lf5-YV-zqk" secondAttribute="trailing" id="wU3-bz-Tc8"/>
             </constraints>
@@ -109,7 +93,6 @@
             <connections>
                 <outlet property="accessoryWrapperView" destination="bXd-mR-IBX" id="JZs-7j-lEw"/>
                 <outlet property="closeButton" destination="gaZ-Nm-Ttn" id="8ec-H2-bUv"/>
-                <outlet property="floatingButton" destination="HDw-VM-igQ" id="fFj-CX-Gl9"/>
                 <outlet property="grabHandle" destination="lf5-YV-zqk" id="fmS-0K-Vki"/>
                 <outlet property="headerStack" destination="Otm-sh-8EH" id="Zzg-RG-XYL"/>
                 <outlet property="headerStackTopConstraint" destination="PTa-je-2f9" id="dAe-Xz-xge"/>

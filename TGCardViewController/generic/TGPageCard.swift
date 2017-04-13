@@ -43,11 +43,10 @@ public class TGPageCard: TGCard {
   
   public let defaultPosition: TGCardPosition
   
-  
   /// The cards displayed by the page card
   let cards: [TGCard]
   
-  fileprivate let initialPageIndex: Int
+  let initialPageIndex: Int
   
   fileprivate var currentPageIndex: Int {
     return cardView?.currentPage ?? initialPageIndex
@@ -72,13 +71,13 @@ public class TGPageCard: TGCard {
   /// as the single parameter.
   ///
   /// - note: If this is not set the default "next" button will be used.
-  var headerRightAction: (title: String, onPress: (Int) -> Void)?
+  public var headerRightAction: (title: String, onPress: (Int) -> Void)?
   
   /// Customisation of the header's accessory view
   ///
   /// - note: If this is not set a default `UIPageControl will be used
   ///         indicating the current page.
-  var headerAccessoryView: UIView?
+  public var headerAccessoryView: UIView?
   
   /// Initialise a new page card.
   ///
