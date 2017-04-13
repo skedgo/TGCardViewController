@@ -40,6 +40,10 @@ public class TGCardView: TGCornerView {
   /// from the stack.
   @IBOutlet weak var closeButton: UIButton?
   
+  /// This is the line separating the header and content parts of a
+  /// card view.
+  @IBOutlet weak var contentSeparator: UIView?
+  
   /// Each card view needs a scroll view where the main content of the
   /// card goes. The card controller need access to it, in order to
   /// handling dragging the card up and down.
@@ -99,6 +103,8 @@ public class TGCardView: TGCornerView {
   
   override public func awakeFromNib() {
     super.awakeFromNib()
+    
+    contentSeparator?.isHidden = true
     
     // Here we set the minimum width and height to provide sufficient hit
     // target. The priority is lowered because we may need to hide the

@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
-                    <rect key="frame" x="0.0" y="137" width="375" height="349"/>
+                    <rect key="frame" x="0.0" y="138" width="375" height="348"/>
                     <subviews>
                         <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="348" translatesAutoresizingMaskIntoConstraints="NO" id="fpj-MI-D7T">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="348"/>
@@ -38,6 +38,13 @@
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="JFj-Bl-Nt0" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vtx-um-a3g">
+                    <rect key="frame" x="0.0" y="137" width="375" height="1"/>
+                    <color key="backgroundColor" red="1" green="0.27304439139999997" blue="0.32756929099999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="UGl-hS-o9n"/>
+                    </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="GFR-f4-rZW">
                     <rect key="frame" x="8" y="29" width="359" height="100"/>
@@ -97,12 +104,16 @@
                 <constraint firstAttribute="trailing" secondItem="Dar-6n-Caw" secondAttribute="trailing" id="EeC-BN-kQR"/>
                 <constraint firstItem="Dar-6n-Caw" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="GxS-7a-gUP"/>
                 <constraint firstItem="JFj-Bl-Nt0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="OuN-YF-8oH"/>
+                <constraint firstItem="vtx-um-a3g" firstAttribute="top" secondItem="GFR-f4-rZW" secondAttribute="bottom" constant="8" id="Pdi-sx-DdX"/>
                 <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" priority="250" id="aSh-Kf-Nmj"/>
                 <constraint firstItem="GFR-f4-rZW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="aoZ-RM-npN"/>
+                <constraint firstItem="Dar-6n-Caw" firstAttribute="top" secondItem="vtx-um-a3g" secondAttribute="bottom" id="dyW-GU-EFI"/>
                 <constraint firstAttribute="bottom" secondItem="Dar-6n-Caw" secondAttribute="bottom" id="gnL-8s-eXj"/>
                 <constraint firstItem="GFR-f4-rZW" firstAttribute="top" secondItem="JFj-Bl-Nt0" secondAttribute="bottom" constant="8" id="hP0-p5-p83"/>
                 <constraint firstItem="Dar-6n-Caw" firstAttribute="top" secondItem="GFR-f4-rZW" secondAttribute="bottom" constant="8" id="jNv-qi-xFY"/>
                 <constraint firstItem="JFj-Bl-Nt0" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="mkQ-ym-714"/>
+                <constraint firstItem="vtx-um-a3g" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="mpT-a0-w5l"/>
+                <constraint firstAttribute="trailing" secondItem="vtx-um-a3g" secondAttribute="trailing" id="nLK-5k-Jzd"/>
                 <constraint firstAttribute="trailing" secondItem="JFj-Bl-Nt0" secondAttribute="trailing" id="tqI-dg-XCt"/>
                 <constraint firstItem="fpj-MI-D7T" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="xRh-jD-2kN"/>
             </constraints>
@@ -112,6 +123,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="jNv-qi-xFY"/>
                     <exclude reference="aSh-Kf-Nmj"/>
                 </mask>
             </variation>
@@ -119,6 +131,7 @@
                 <outlet property="accessoryWrapperView" destination="cc3-uK-hIh" id="P96-Em-jrh"/>
                 <outlet property="closeButton" destination="S0E-UZ-jgN" id="PTX-DA-6fw"/>
                 <outlet property="contentScrollView" destination="Dar-6n-Caw" id="cgp-sH-B9w"/>
+                <outlet property="contentSeparator" destination="vtx-um-a3g" id="3RP-lx-xw6"/>
                 <outlet property="contentView" destination="fpj-MI-D7T" id="xMy-mv-ixq"/>
                 <outlet property="grabHandle" destination="JFj-Bl-Nt0" id="RDe-nF-gpP"/>
                 <outlet property="headerStack" destination="GFR-f4-rZW" id="7aS-kU-3bM"/>

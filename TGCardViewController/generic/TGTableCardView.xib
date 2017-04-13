@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -16,18 +16,25 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TwM-rE-f4a">
-                    <rect key="frame" x="0.0" y="137" width="375" height="526"/>
+                    <rect key="frame" x="0.0" y="138" width="375" height="525"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="lf5-YV-zqk" userLabel="Grab handle" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Otm-sh-8EH">
-                    <rect key="frame" x="8" y="29" width="359" height="100"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iDl-lU-dcf">
+                    <rect key="frame" x="0.0" y="137" width="375" height="1"/>
+                    <color key="backgroundColor" red="0.8784313725490196" green="0.8784313725490196" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="4cw-O2-5te"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Otm-sh-8EH">
+                    <rect key="frame" x="0.0" y="29" width="375" height="100"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gvv-ct-Fot">
-                            <rect key="frame" x="0.0" y="0.0" width="359" height="50"/>
+                            <rect key="frame" x="8" y="0.0" width="359" height="50"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="AET-EB-dGo">
                                     <rect key="frame" x="0.0" y="0.0" width="359" height="50"/>
@@ -65,7 +72,7 @@
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="359" placeholderIntrinsicHeight="50" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="fId-RM-gAl">
-                            <rect key="frame" x="0.0" y="50" width="359" height="50"/>
+                            <rect key="frame" x="8" y="50" width="359" height="50"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bXd-mR-IBX">
                                     <rect key="frame" x="0.0" y="0.0" width="359" height="50"/>
@@ -74,6 +81,12 @@
                             </subviews>
                         </stackView>
                     </subviews>
+                    <constraints>
+                        <constraint firstItem="fId-RM-gAl" firstAttribute="leading" secondItem="Otm-sh-8EH" secondAttribute="leading" constant="8" id="Wd3-OQ-Wb6"/>
+                        <constraint firstItem="gvv-ct-Fot" firstAttribute="leading" secondItem="Otm-sh-8EH" secondAttribute="leading" constant="8" id="aTF-pd-0VG"/>
+                        <constraint firstAttribute="trailing" secondItem="gvv-ct-Fot" secondAttribute="trailing" constant="8" id="mBd-Jw-uq3"/>
+                        <constraint firstAttribute="trailing" secondItem="fId-RM-gAl" secondAttribute="trailing" constant="8" id="uwH-oB-sb2"/>
+                    </constraints>
                 </stackView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -81,18 +94,28 @@
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4TM-kT-hhY"/>
                 <constraint firstItem="TwM-rE-f4a" firstAttribute="top" secondItem="Otm-sh-8EH" secondAttribute="bottom" constant="8" id="Bms-6F-je2"/>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="JhJ-X6-bzM"/>
-                <constraint firstAttribute="trailing" secondItem="Otm-sh-8EH" secondAttribute="trailing" constant="8" id="KJK-c3-I6I"/>
+                <constraint firstAttribute="trailing" secondItem="Otm-sh-8EH" secondAttribute="trailing" id="KJK-c3-I6I"/>
                 <constraint firstItem="TwM-rE-f4a" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="MDl-un-wgE"/>
                 <constraint firstItem="Otm-sh-8EH" firstAttribute="top" secondItem="lf5-YV-zqk" secondAttribute="bottom" constant="8" id="PTa-je-2f9"/>
-                <constraint firstItem="Otm-sh-8EH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="RHA-y3-jrl"/>
+                <constraint firstItem="Otm-sh-8EH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="RHA-y3-jrl"/>
+                <constraint firstItem="iDl-lU-dcf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Sqe-Dz-7SX"/>
+                <constraint firstItem="TwM-rE-f4a" firstAttribute="top" secondItem="iDl-lU-dcf" secondAttribute="bottom" id="XEf-yU-9uo"/>
                 <constraint firstAttribute="trailing" secondItem="TwM-rE-f4a" secondAttribute="trailing" id="a3D-GX-97y"/>
+                <constraint firstItem="iDl-lU-dcf" firstAttribute="top" secondItem="Otm-sh-8EH" secondAttribute="bottom" constant="8" id="dJq-MC-XaK"/>
                 <constraint firstAttribute="bottom" secondItem="TwM-rE-f4a" secondAttribute="bottom" id="pQS-TT-hRY"/>
                 <constraint firstAttribute="trailing" secondItem="lf5-YV-zqk" secondAttribute="trailing" id="wU3-bz-Tc8"/>
+                <constraint firstAttribute="trailing" secondItem="iDl-lU-dcf" secondAttribute="trailing" id="zl6-73-Ma6"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="Bms-6F-je2"/>
+                </mask>
+            </variation>
             <connections>
                 <outlet property="accessoryWrapperView" destination="bXd-mR-IBX" id="JZs-7j-lEw"/>
                 <outlet property="closeButton" destination="gaZ-Nm-Ttn" id="8ec-H2-bUv"/>
+                <outlet property="contentSeparator" destination="iDl-lU-dcf" id="N4a-WH-j8w"/>
                 <outlet property="grabHandle" destination="lf5-YV-zqk" id="fmS-0K-Vki"/>
                 <outlet property="headerStack" destination="Otm-sh-8EH" id="Zzg-RG-XYL"/>
                 <outlet property="headerStackTopConstraint" destination="PTa-je-2f9" id="dAe-Xz-xge"/>
@@ -101,7 +124,7 @@
                 <outlet property="tableWrapper" destination="TwM-rE-f4a" id="A5e-oU-sUI"/>
                 <outlet property="titleLabel" destination="Y7e-Bs-jau" id="syo-l0-lMd"/>
             </connections>
-            <point key="canvasLocation" x="121.5" y="151.5"/>
+            <point key="canvasLocation" x="-308" y="83"/>
         </view>
     </objects>
 </document>

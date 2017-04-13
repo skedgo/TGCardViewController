@@ -152,7 +152,6 @@ open class TGCardViewController: UIViewController {
     // Dispose of any resources that can be recreated.
   }
   
-  
   // MARK: - Card positioning
   
   fileprivate var cardPosition: TGCardPosition {
@@ -188,13 +187,11 @@ open class TGCardViewController: UIViewController {
     return (collapsedMinY - extendedMinY) / 2
   }
   
-  
   /// The current amount of points of content at the top of the view
   /// that's overlapping with the map. Includes status bar, if visible.
   fileprivate var topOverlap: CGFloat {
     return UIApplication.shared.statusBarFrame.height
   }
-  
   
   /// The edge padding for the map that map managers should use
   /// to determine the zoom and scroll position of the map.
@@ -229,7 +226,6 @@ open class TGCardViewController: UIViewController {
     return UIEdgeInsets(top: topOverlap, left: leftOverlap, bottom: bottomOverlap, right: 0)
   }
   
-  
   /// Call this whenever the card position changes to properly configure the map shadow
   ///
   /// - Parameter position: New card position
@@ -237,8 +233,8 @@ open class TGCardViewController: UIViewController {
     mapShadow.alpha = position == .extended ? Constants.mapShadowVisibleAlpha : 0
     mapShadow.isUserInteractionEnabled = position == .extended
   }
+  
 }
-
 
 // MARK: - Card stack management
 
@@ -293,9 +289,17 @@ extension TGCardViewController {
     // 4. Create and configure the new view
     let cardView = top.buildCardView(showClose: cards.count > 1, includeHeader: true)
     cardView.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+    
+    // This allows us to continuously pull down the card view while its
+    // content is scrolled to the top. Note this only applies when the
+    // card isn't being forced into the extended position.
     if !forceExtended {
       cardView.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
     }
+    
+    // This allows us to adjust the visibility of the line separating the
+    // header and content parts of a card view.
+    cardView.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleContentSeparatorVisibility(_:)))
     
     // 5. Place the new view coming, preparing to animate in from the bottom
     cardView.frame = cardWrapperContent.bounds
@@ -467,6 +471,7 @@ extension TGCardViewController {
 
 
 // MARK: - Dragging the card up and down
+
 extension TGCardViewController {
 
   fileprivate enum Direction {
@@ -525,6 +530,41 @@ extension TGCardViewController {
     
   }
   
+  fileprivate func animateCardSnap(forVelocity velocity: CGPoint, completion: (() -> Void)? = nil) {
+    let snapTo = determineSnap(for: velocity)
+    let currentCardY = cardWrapperDesiredTopConstraint.constant
+    
+    // Now we can animate to the new position
+    let direction = Direction(ofVelocity: velocity)
+    var duration = direction == .up
+      ? Double((currentCardY - snapTo.y) / -velocity.y)
+      : Double((snapTo.y - currentCardY) / velocity.y )
+    
+    // We add a max to not make it super slow when there was
+    // barely any velocity.
+    // We add a min to it to make sure the alpha transition
+    // animates nicely and not too suddenly.
+    duration = min(max(duration, 0.25), 1.3)
+    
+    cardWrapperDesiredTopConstraint.constant = snapTo.y
+    view.setNeedsUpdateConstraints()
+    
+    UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
+      self.updateMapShadow(for: snapTo.position)
+      
+      self.view.layoutIfNeeded()
+      
+      // If the separator is currently visible, then its visibility when snapping
+      // completes depends on the position of the card.
+      if let separator = self.topCardView?.contentSeparator, separator.isHidden == false {
+        separator.isHidden = snapTo.position != .extended
+      }
+    }, completion: { _ in
+      self.topCardView?.allowContentScrolling(snapTo.position == .extended)
+      completion?()
+    })
+  }
+  
   @objc
   fileprivate func handlePan(_ recogniser: UIPanGestureRecognizer) {
     let translation = recogniser.translation(in: cardWrapperContent)
@@ -548,78 +588,6 @@ extension TGCardViewController {
     animateCardSnap(forVelocity: velocity)
   }
   
-  
-  fileprivate func animateCardSnap(forVelocity velocity: CGPoint, completion: (() -> Void)? = nil) {
-    let snapTo = determineSnap(for: velocity)
-    let currentCardY = cardWrapperDesiredTopConstraint.constant
-    
-    // Now we can animate to the new position
-    let direction = Direction(ofVelocity: velocity)
-    var duration = direction == .up
-      ? Double((currentCardY - snapTo.y) / -velocity.y)
-      : Double((snapTo.y - currentCardY) / velocity.y )
-    
-    // We add a max to not make it super slow when there was
-    // barely any velocity.
-    // We add a min to it to make sure the alpha transition
-    // animates nicely and not too suddenly.
-    duration = min(max(duration, 0.25), 1.3)
-    
-    cardWrapperDesiredTopConstraint.constant = snapTo.y
-    view.setNeedsUpdateConstraints()
-    
-    UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
-      self.updateMapShadow(for: snapTo.position)
-      self.view.layoutIfNeeded()
-      
-    }, completion: { _ in
-      self.topCardView?.allowContentScrolling(snapTo.position == .extended)
-      completion?()
-    })
-  }
-  
-  
-  @objc
-  fileprivate func handleInnerPan(_ recogniser: UIPanGestureRecognizer) {
-    guard
-      let scrollView = recogniser.view as? UIScrollView,
-      scrollView == topCardView?.contentScrollView
-      else { return }
-
-    let negativity = scrollView.contentOffset.y
-
-    switch (negativity, recogniser.state) {
-      
-    case (0 ..< CGFloat.infinity, _):
-      // Reset the transformation whenever we get back to positive offset
-      scrollView.transform = .identity
-      scrollView.scrollIndicatorInsets = .zero
-      
-    case (_, .ended), (_, .cancelled):
-      // When we finish up, we bring the scroll view back to the state how
-      // it's appearing: scrolled to the top with zero inset
-      scrollView.transform = .identity
-      scrollView.scrollIndicatorInsets = .zero
-      scrollView.contentOffset = .zero
-
-      let velocity = recogniser.velocity(in: cardWrapperContent)
-      animateCardSnap(forVelocity: velocity)
-      
-    case (_, .changed):
-      // This is where the magic happens: We move the card down and make
-      // the scroll view appear to stay in place (it's important to not
-      // set the content offset to zero here!)
-      cardWrapperDesiredTopConstraint.constant = extendedMinY - negativity
-      scrollView.transform = CGAffineTransform(translationX: 0, y: negativity)
-      scrollView.scrollIndicatorInsets.top = negativity * -1
-      
-    default:
-      // Ignore other states such as began, failed, etc.
-      break
-    }
-  }
-  
-  
   @objc
   fileprivate func handleCardTap(_ recogniser: UITapGestureRecognizer) {
     
@@ -638,6 +606,75 @@ extension TGCardViewController {
     guard cardPosition == .extended, topCard?.mapManager != nil else { return }
     
     switchTo(.peaking, direction: .down, animated: true)
+  }
+  
+  @objc
+  fileprivate func handleInnerPan(_ recogniser: UIPanGestureRecognizer) {
+    guard
+      let scrollView = recogniser.view as? UIScrollView,
+      scrollView == topCardView?.contentScrollView
+      else { return }
+    
+    let negativity = scrollView.contentOffset.y
+    
+    switch (negativity, recogniser.state) {
+      
+    case (0 ..< CGFloat.infinity, _):
+      // Reset the transformation whenever we get back to positive offset
+      scrollView.transform = .identity
+      scrollView.scrollIndicatorInsets = .zero
+      
+    case (_, .ended), (_, .cancelled):
+      // When we finish up, we bring the scroll view back to the state how
+      // it's appearing: scrolled to the top with zero inset
+      scrollView.transform = .identity
+      scrollView.scrollIndicatorInsets = .zero
+      scrollView.contentOffset = .zero
+      
+      let velocity = recogniser.velocity(in: cardWrapperContent)
+      animateCardSnap(forVelocity: velocity)
+      
+    case (_, .changed):
+      // This is where the magic happens: We move the card down and make
+      // the scroll view appear to stay in place (it's important to not
+      // set the content offset to zero here!)
+      cardWrapperDesiredTopConstraint.constant = extendedMinY - negativity
+      scrollView.transform = CGAffineTransform(translationX: 0, y: negativity)
+      scrollView.scrollIndicatorInsets.top = negativity * -1
+      
+    default:
+      // Ignore other states such as began, failed, etc.
+      break
+    }
+  }
+  
+  @objc
+  fileprivate func handleContentSeparatorVisibility(_ recogniser: UIPanGestureRecognizer) {
+    guard
+      let scrollView = recogniser.view as? UIScrollView,
+      let separator = topCardView?.contentSeparator,
+      scrollView == topCardView?.contentScrollView
+      else { return }
+    
+    let verticalOffset = scrollView.contentOffset.y
+    
+    UIView.animate(withDuration: 0.5) {
+      switch (verticalOffset, recogniser.state) {
+      case (-1 * CGFloat.infinity ... 0, _):
+        // When the content is scrolled to the top, hide the separator.
+        separator.isHidden = true
+        
+      case (_, .changed):
+        // As long as the content isn't at the top and is still being
+        // scrolled, show separator.
+        separator.isHidden = false
+        
+      default:
+        // When the gesture recogniser is in all other states, we only
+        // hide the separator if the scroll view isn't at the top.
+        separator.isHidden = verticalOffset <= 0
+      }
+    }
   }
   
   fileprivate func switchTo(_ position: TGCardPosition, direction: Direction, animated: Bool) {
@@ -665,6 +702,7 @@ extension TGCardViewController {
 
 
 // MARK: - Card-specific header view
+
 extension TGCardViewController {
 
   fileprivate var isShowingHeader: Bool {
@@ -824,7 +862,6 @@ extension TGCardViewController {
 
 extension TGCardViewController: UIGestureRecognizerDelegate {
   
-  
   public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
     if cardTapper == gestureRecognizer {
       // Only intercept any taps on the title.
@@ -911,12 +948,12 @@ extension TGCardViewController: TGCardDelegate {
     card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: cardPosition), animated: true)
   }
   
-  
   public func contentScrollViewDidChange(old: UIScrollView?, for card: TGCard) {
     guard card === topCard, let view = topCardView else { return }
     
     old?.panGestureRecognizer.removeTarget(self, action: nil)
     view.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
+    view.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleContentSeparatorVisibility(_:)))
   }
   
 }
