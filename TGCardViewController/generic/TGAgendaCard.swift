@@ -19,12 +19,13 @@ open class TGAgendaCard: TGTableCard {
               dataSource: UITableViewDataSource? = nil,
               delegate: UITableViewDelegate? = nil,
               bottomContent: UIView? = nil,
-              mapManager: TGMapManager? = nil) {
+              mapManager: TGMapManager? = nil,
+              initialPosition: TGCardPosition? = nil) {
     self.bottomContentView = bottomContent
     super.init(title: title, subtitle: subtitle,
                dataSource: dataSource, delegate: delegate,
                style: .plain, accessoryView: nil,
-               mapManager: mapManager)
+               mapManager: mapManager, initialPosition: initialPosition)
   }
   
   // MARK: - Constructing views.

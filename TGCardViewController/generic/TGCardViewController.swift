@@ -244,10 +244,10 @@ open class TGCardViewController: UIViewController {
 
 extension TGCardViewController {
   
-  fileprivate func cardLocation(forDesired position: TGCardPosition?, direction: Direction)
+  fileprivate func cardLocation(forDesired desired: TGCardPosition?, direction: Direction)
       -> (position: TGCardPosition, y: CGFloat) {
-    
-    guard let position = position else { return (.collapsed, collapsedMinY) }
+        
+    let position = desired ?? cardPosition
     
     switch (position, traitCollection.verticalSizeClass, direction) {
     case (.extended, _, _):         return (.extended, extendedMinY)

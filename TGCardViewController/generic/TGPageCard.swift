@@ -68,8 +68,7 @@ public class TGPageCard: TGCard {
   ///   - title: duh!
   ///   - cards: these are the child cards that will be displayed by the page card as pages.
   ///   - initialPage: the index of the first child card (page) to display when the page card is pushed.
-  ///   - initialPosition: the position to anchor the page card when it is pushed.
-  public init(title: String, cards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
+  public init(title: String, cards: [TGCard], initialPage: Int = 0) {
     guard initialPage < cards.count else {
       preconditionFailure()
     }
@@ -87,7 +86,7 @@ public class TGPageCard: TGCard {
     // set on intialising and then updated whenever we scroll.
     let mapManager = cards[initialPage].mapManager
     
-    super.init(title: title, subtitle: nil, mapManager: mapManager, initialPosition: initialPosition)
+    super.init(title: title, subtitle: nil, mapManager: mapManager, initialPosition: .peaking)
   }
   
   fileprivate static func allCardsHaveMapManagers(in cards: [TGCard]) -> Bool {

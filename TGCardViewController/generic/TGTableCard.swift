@@ -22,7 +22,8 @@ open class TGTableCard: TGCard {
               delegate: UITableViewDelegate? = nil,
               style: UITableViewStyle = .plain,
               accessoryView: UIView? = nil,
-              mapManager: TGMapManager? = nil) {
+              mapManager: TGMapManager? = nil,
+              initialPosition: TGCardPosition? = nil) {
     
     self.tableViewDataSource = dataSource
     self.tableViewDelegate = delegate
@@ -30,7 +31,7 @@ open class TGTableCard: TGCard {
     self.accessoryView = accessoryView
     
     super.init(title: title, subtitle: subtitle,
-               mapManager: mapManager, initialPosition: mapManager != nil ? .peaking : .extended)
+               mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
   
   public override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
