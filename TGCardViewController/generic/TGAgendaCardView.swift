@@ -49,7 +49,11 @@ public class TGAgendaCardView: TGCardView {
   
   // MARK: - Configuration
   
-  func configure(with card: TGAgendaCard, showClose: Bool, includeHeader: Bool) {
+  override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
+    guard let card = card as? TGAgendaCard else {
+      preconditionFailure()
+    }
+    
     super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
     
     tableView.delegate = card.tableViewDelegate

@@ -29,7 +29,11 @@ class TGPlainCardView: TGCardView {
     closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
   
-  func configure(with card: TGPlainCard, showClose: Bool, includeHeader: Bool) {
+  override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
+    guard let card = card as? TGPlainCard else {
+      preconditionFailure()
+    }
+    
     super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
     
     if includeHeader {
