@@ -215,10 +215,10 @@ public class TGCardStyleKit : NSObject {
     
     //// Bezier Drawing
     let bezierPath = UIBezierPath()
-    bezierPath.move(to: CGPoint(x: 14.5, y: 29.98))
-    bezierPath.addLine(to: CGPoint(x: 44.5, y: 29.98))
-    bezierPath.move(to: CGPoint(x: 30.33, y: 15.5))
-    bezierPath.addLine(to: CGPoint(x: 30.33, y: 45.5))
+    bezierPath.move(to: CGPoint(x: 19.5, y: 30.16))
+    bezierPath.addLine(to: CGPoint(x: 39.5, y: 30.16))
+    bezierPath.move(to: CGPoint(x: 30.06, y: 20.5))
+    bezierPath.addLine(to: CGPoint(x: 30.06, y: 40.5))
     color.setFill()
     bezierPath.fill()
     UIColor.white.setStroke()
