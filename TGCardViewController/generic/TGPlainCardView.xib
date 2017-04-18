@@ -15,26 +15,6 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="486"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
-                    <rect key="frame" x="0.0" y="137" width="375" height="349"/>
-                    <subviews>
-                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="348" translatesAutoresizingMaskIntoConstraints="NO" id="fpj-MI-D7T">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="348"/>
-                        </view>
-                    </subviews>
-                    <constraints>
-                        <constraint firstItem="fpj-MI-D7T" firstAttribute="leading" secondItem="Dar-6n-Caw" secondAttribute="leading" id="3fi-nu-PFE"/>
-                        <constraint firstAttribute="bottom" secondItem="fpj-MI-D7T" secondAttribute="bottom" id="JEJ-ob-UKD"/>
-                        <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="Dar-6n-Caw" secondAttribute="height" priority="250" id="cge-oP-lBy"/>
-                        <constraint firstAttribute="trailing" secondItem="fpj-MI-D7T" secondAttribute="trailing" id="lhK-ti-Rb8"/>
-                        <constraint firstItem="fpj-MI-D7T" firstAttribute="top" secondItem="Dar-6n-Caw" secondAttribute="top" id="p6T-g1-McS"/>
-                    </constraints>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="cge-oP-lBy"/>
-                        </mask>
-                    </variation>
-                </scrollView>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="JFj-Bl-Nt0" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -90,13 +70,48 @@
                         </stackView>
                     </subviews>
                 </stackView>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
+                    <rect key="frame" x="0.0" y="137" width="375" height="349"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="348" translatesAutoresizingMaskIntoConstraints="NO" id="fpj-MI-D7T">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="348"/>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="fpj-MI-D7T" firstAttribute="leading" secondItem="Dar-6n-Caw" secondAttribute="leading" id="3fi-nu-PFE"/>
+                        <constraint firstAttribute="bottom" secondItem="fpj-MI-D7T" secondAttribute="bottom" id="JEJ-ob-UKD"/>
+                        <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="Dar-6n-Caw" secondAttribute="height" priority="250" id="cge-oP-lBy"/>
+                        <constraint firstAttribute="trailing" secondItem="fpj-MI-D7T" secondAttribute="trailing" id="lhK-ti-Rb8"/>
+                        <constraint firstItem="fpj-MI-D7T" firstAttribute="top" secondItem="Dar-6n-Caw" secondAttribute="top" id="p6T-g1-McS"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="cge-oP-lBy"/>
+                        </mask>
+                    </variation>
+                </scrollView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nd-sh-0Ix">
+                    <rect key="frame" x="299" y="406" width="60" height="60"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="60" id="7ZP-C3-aEX"/>
+                        <constraint firstAttribute="height" constant="60" id="ATe-Ig-GPI"/>
+                    </constraints>
+                    <state key="normal" title="Button">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="floatingButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="Qfp-Ez-FAg"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="GFR-f4-rZW" secondAttribute="trailing" constant="8" id="7Qr-Sq-ECp"/>
                 <constraint firstAttribute="trailing" secondItem="Dar-6n-Caw" secondAttribute="trailing" id="EeC-BN-kQR"/>
+                <constraint firstAttribute="trailing" secondItem="4nd-sh-0Ix" secondAttribute="trailing" constant="16" id="GnZ-2v-ue3"/>
                 <constraint firstItem="Dar-6n-Caw" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="GxS-7a-gUP"/>
                 <constraint firstItem="JFj-Bl-Nt0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="OuN-YF-8oH"/>
+                <constraint firstAttribute="bottom" secondItem="4nd-sh-0Ix" secondAttribute="bottom" constant="20" id="PZz-Gq-neg"/>
                 <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" priority="250" id="aSh-Kf-Nmj"/>
                 <constraint firstItem="GFR-f4-rZW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="aoZ-RM-npN"/>
                 <constraint firstAttribute="bottom" secondItem="Dar-6n-Caw" secondAttribute="bottom" id="gnL-8s-eXj"/>
@@ -120,6 +135,7 @@
                 <outlet property="closeButton" destination="S0E-UZ-jgN" id="PTX-DA-6fw"/>
                 <outlet property="contentScrollView" destination="Dar-6n-Caw" id="cgp-sH-B9w"/>
                 <outlet property="contentView" destination="fpj-MI-D7T" id="xMy-mv-ixq"/>
+                <outlet property="floatingButton" destination="4nd-sh-0Ix" id="Dfx-Mg-Sgd"/>
                 <outlet property="grabHandle" destination="JFj-Bl-Nt0" id="RDe-nF-gpP"/>
                 <outlet property="headerStack" destination="GFR-f4-rZW" id="7aS-kU-3bM"/>
                 <outlet property="headerStackBottomConstraint" destination="jNv-qi-xFY" id="GeW-4B-mET"/>

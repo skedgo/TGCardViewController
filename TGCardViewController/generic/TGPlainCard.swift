@@ -19,7 +19,7 @@ open class TGPlainCard: TGCard {
   /// The view immediately below title + subtitle but above the
   /// content view.
   let accessoryView: UIView?
-
+  
   public init(title: String, subtitle: String? = nil,
               contentView: UIView? = nil, accessoryView: UIView? = nil,
               mapManager: TGMapManager? = nil,
