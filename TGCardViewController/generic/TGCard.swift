@@ -14,6 +14,11 @@ import UIKit
 /// various UIKit protocols in subclasses
 open class TGCard: NSObject {
   
+  public enum FloatingButtonStyle {
+    case add
+    case custom(UIImage)
+  }
+  
   /// The card controller currently displaying the card
   ///
   /// Set by the card controller itself
@@ -42,6 +47,9 @@ open class TGCard: NSObject {
   
   /// The position to display the card in, when pushing
   public let initialPosition: TGCardPosition?
+  
+  /// The action to execute when floating button is pressed.
+  public var floatingButtonAction: (style: FloatingButtonStyle, onPressed: (Void) -> (Void))?
   
   public private(set) var viewIsVisible: Bool = false
   

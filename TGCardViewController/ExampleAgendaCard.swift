@@ -19,14 +19,14 @@ class ExampleAgendaCard: TGAgendaCard {
     label.center(on: container)
     super.init(title: "Agenda", dataSource: source, delegate: source, bottomContent: container)
     
-    floatingButtonAction = { [unowned self] in
+    floatingButtonAction = (style: .add, onPressed: { [unowned self] in
       let dummyController = UIViewController()
       dummyController.view.backgroundColor = .white
       let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancelButtonPressed(_:)))
       dummyController.navigationItem.leftBarButtonItem = cancel
       let modal = UINavigationController(rootViewController: dummyController)
       self.controller?.present(modal, animated: true, completion: nil)
-    }
+    })
   }
   
   @objc

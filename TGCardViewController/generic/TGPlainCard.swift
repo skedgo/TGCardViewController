@@ -20,8 +20,6 @@ open class TGPlainCard: TGCard {
   /// content view.
   let accessoryView: UIView?
   
-  public var floatingButtonAction: ((Void) -> Void)?
-  
   public init(title: String, subtitle: String? = nil,
               contentView: UIView? = nil, accessoryView: UIView? = nil,
               mapManager: TGMapManager? = nil,

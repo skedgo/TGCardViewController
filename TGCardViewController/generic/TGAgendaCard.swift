@@ -13,8 +13,6 @@ open class TGAgendaCard: TGTableCard {
   /// This is the content for the bottom view.
   let bottomContentView: UIView?
   
-  public var floatingButtonAction: ((Void) -> Void)?
-  
   // MARK: - Initializers
   
   public init(title: String, subtitle: String? = nil,
@@ -24,6 +22,7 @@ open class TGAgendaCard: TGTableCard {
               mapManager: TGMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     self.bottomContentView = bottomContent
+    
     super.init(title: title, subtitle: subtitle,
                dataSource: dataSource, delegate: delegate,
                style: .plain, accessoryView: nil,

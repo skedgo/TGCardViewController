@@ -101,9 +101,10 @@ public class TGCardView: TGCornerView {
     }
   }
   
-  var floatingButtonAction: ((Void) -> Void)? {
+  /// The closure to execute when the button is pressed.
+  var onFloatingButtonPressed: ((Void) -> (Void))? {
     didSet {
-      floatingButton?.isHidden = (floatingButtonAction == nil)
+      floatingButton?.isHidden = onFloatingButtonPressed == nil
     }
   }
   
@@ -139,6 +140,19 @@ public class TGCardView: TGCornerView {
     labelStack?.spacing = includeHeader && card.subtitle != nil ? 3 : 0
     headerStackTopConstraint?.constant = includeHeader ? 8 : 0
     headerStackBottomConstraint?.constant = includeHeader ? 8 : 0
+    
+    if let action = card.floatingButtonAction {
+      floatingButton?.setTitle(nil, for: .normal)
+      
+      switch action.style {
+      case .add:
+        floatingButton?.setImage(TGCardStyleKit.imageOfFloatingButton, for: .normal)
+      case .custom(let image):
+        floatingButton?.setImage(image, for: .normal)
+      }
+      
+      onFloatingButtonPressed = action.onPressed
+    }
   }
   
   
@@ -182,6 +196,6 @@ public class TGCardView: TGCornerView {
   }
   
   @IBAction func floatingButtonTapped(_ sender: Any) {
-    floatingButtonAction?()
+    onFloatingButtonPressed?()
   }
 }

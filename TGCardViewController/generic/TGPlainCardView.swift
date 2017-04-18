@@ -40,8 +40,6 @@ class TGPlainCardView: TGCardView {
       accessoryView = card.accessoryView
     }
     
-    self.floatingButtonAction = card.floatingButtonAction
-    
     if let content = card.contentView {
       content.translatesAutoresizingMaskIntoConstraints = false
       contentView.addSubview(content)
