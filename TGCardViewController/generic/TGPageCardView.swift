@@ -29,6 +29,8 @@ class TGPageCardView: TGCardView {
   @IBOutlet weak var pagerTrailingConstant: NSLayoutConstraint!
   
   fileprivate var lastHorizontalOffset: CGFloat = 0
+  
+  fileprivate var initialPage: Int = 0
 
   weak var delegate: TGPageCardViewDelegate?
   
@@ -168,17 +170,23 @@ class TGPageCardView: TGCardView {
     
     fill(with: contents)
     
+    // Page card doesn't always start with page 0. So we keep a reference
+    // to the first page index, which can then be used at a later point.
+    initialPage = card.initialPageIndex
+    
     // This will be used in both `moveForward` and `moveBackward`, so
     // it's important to "initailise" this value correctly.
     lastHorizontalOffset = CGFloat(card.initialPageIndex) * (frame.width + Constants.spaceBetweenCards)
+  }
+  
+  override func layoutIfNeeded() {
+    super.layoutIfNeeded()
     
-    // Page card doesn't always start with page 0. But, in order to 
-    // set the content offset properly, we do a layout pass so that
-    // the constraints set above are considered, before moving card.
-    setNeedsUpdateConstraints()
-    layoutIfNeeded()
-    
-    move(to: card.initialPageIndex)
+    // At this point, auto layout has considered all the constraints and
+    // has all the correct sizes and positions of all the views. So we 
+    // can move the content of paging scroll view to the desired first
+    // page.
+    move(to: initialPage, animated: false)
   }
   
   override func allowContentScrolling(_ allowScrolling: Bool) {
