@@ -142,6 +142,8 @@ public class TGCardView: TGCornerView {
     headerStackBottomConstraint?.constant = includeHeader ? 8 : 0
     
     if let action = card.floatingButtonAction {
+      // TODO: We should add an accessibility label here
+      // See: https://gitlab.com/SkedGo/tripgo-cards-ios/merge_requests/14#note_27632714
       floatingButton?.setTitle(nil, for: .normal)
       
       switch action.style {
