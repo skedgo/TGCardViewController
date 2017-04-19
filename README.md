@@ -81,9 +81,9 @@ Map content:
 
 Map widget:
 
-- [x] Optional widget such as a search bar or the from/to/at widget that floats on top of the map (!10)
-- [x] Map content properly considers that the widget is there (map content and map controls such as the compass) (!10)
-- [x] When dragging up the card the widget scrolls away to the top (!10)
+- [ ] Optional widget such as a search bar or the from/to/at widget that floats on top of the map (!10)
+- [ ] Map content properly considers that the widget is there (map content and map controls such as the compass) (!10)
+- [ ] When dragging up the card the widget scrolls away to the top (!10)
 
 Map buttons:
 
