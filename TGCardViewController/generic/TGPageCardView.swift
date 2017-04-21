@@ -30,7 +30,7 @@ class TGPageCardView: TGCardView {
   
   fileprivate var lastHorizontalOffset: CGFloat = 0
   
-  fileprivate var initialPage: Int = 0
+  fileprivate var visiblePage: Int = 0
 
   weak var delegate: TGPageCardViewDelegate?
   
@@ -79,6 +79,8 @@ class TGPageCardView: TGCardView {
     
     // remove corner as we want each card to show its own corners
     layer.mask = nil
+    
+    move(to: visiblePage, animated: false)
   }
   
   // MARK: - New instance
@@ -138,7 +140,7 @@ class TGPageCardView: TGCardView {
     guard horizontalOffset >= 0 else { return }
     
     pager.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: animated)
-    
+
     lastHorizontalOffset = horizontalOffset
   }
   
@@ -172,21 +174,11 @@ class TGPageCardView: TGCardView {
     
     // Page card doesn't always start with page 0. So we keep a reference
     // to the first page index, which can then be used at a later point.
-    initialPage = card.initialPageIndex
+    visiblePage = card.initialPageIndex
     
     // This will be used in both `moveForward` and `moveBackward`, so
     // it's important to "initailise" this value correctly.
     lastHorizontalOffset = CGFloat(card.initialPageIndex) * (frame.width + Constants.spaceBetweenCards)
-  }
-  
-  override func layoutIfNeeded() {
-    super.layoutIfNeeded()
-    
-    // At this point, auto layout has considered all the constraints and
-    // has all the correct sizes and positions of all the views. So we 
-    // can move the content of paging scroll view to the desired first
-    // page.
-    move(to: initialPage, animated: false)
   }
   
   override func allowContentScrolling(_ allowScrolling: Bool) {
@@ -244,14 +236,20 @@ extension TGPageCardView: UIScrollViewDelegate {
   // We use it here to detect the end of scrolling due to user pressing a
   // button, i.e., scrolling programmatically.
   func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-    delegate?.didChangeCurrentPage(to: currentPage)
+    scrollViewDidComeToCompleteStop(scrollView)
   }
   
   // This delegate is called in response to actual user scrolling. We use
   // it here to detect the end of scrolling due to users actually swiping
   // between pages.
   func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    scrollViewDidComeToCompleteStop(scrollView)
+  }
+  
+  fileprivate func scrollViewDidComeToCompleteStop(_ scrollView: UIScrollView) {
     delegate?.didChangeCurrentPage(to: currentPage)
+    visiblePage = currentPage
+    lastHorizontalOffset = scrollView.contentOffset.y
   }
   
 }
