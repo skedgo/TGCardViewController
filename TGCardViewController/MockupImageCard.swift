@@ -27,7 +27,7 @@ class MockupImageCard : TGPlainCard {
     mapManager?.annotations = locations
     mapManager?.preferredZoomLevel = .road
     
-    super.init(title: title, subtitle: subtitle, contentView: content, mapManager: mapManager, position: .peaking)
+    super.init(title: title, subtitle: subtitle, contentView: content, mapManager: mapManager)
 
     let tapper = UITapGestureRecognizer()
     tapper.addTarget(self, action: #selector(handleTap))

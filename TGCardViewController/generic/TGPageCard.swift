@@ -18,30 +18,13 @@ import UIKit
 /// for cards.
 public class TGPageCard: TGCard {
   
-  public weak var controller: TGCardViewController? {
+  public override weak var controller: TGCardViewController? {
     didSet {
       cards.forEach {
         $0.controller = controller
       }
     }
   }
-  
-  public weak var delegate: TGCardDelegate?
-  
-  public let title: String
-  
-  public let subtitle: String? = nil
-  
-  // Scroll card itself doesn't have a map manager. Instead, it passes through
-  // the manager that handles the map view for the current card. This is
-  // set on intialising and then updated whenever we scroll.
-  public var mapManager: TGMapManager? {
-    didSet {
-      delegate?.mapManagerDidChange(old: oldValue, for: self)
-    }
-  }
-  
-  public let defaultPosition: TGCardPosition
   
   /// The cards displayed by the page card
   let cards: [TGCard]
@@ -85,8 +68,7 @@ public class TGPageCard: TGCard {
   ///   - title: duh!
   ///   - cards: these are the child cards that will be displayed by the page card as pages.
   ///   - initialPage: the index of the first child card (page) to display when the page card is pushed.
-  ///   - initialPosition: the position to anchor the page card when it is pushed.
-  public init(title: String, cards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
+  public init(title: String, cards: [TGCard], initialPage: Int = 0) {
     guard initialPage < cards.count else {
       preconditionFailure()
     }
@@ -96,14 +78,15 @@ public class TGPageCard: TGCard {
       "unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck " +
       "in 'extended' mode.")
     
-    self.title = title
     self.cards = cards
     self.initialPageIndex = initialPage
-    self.defaultPosition = initialPosition
+
+    // TGPageCard itself doesn't have a map manager. Instead, it passes through
+    // the manager that handles the map view for the current card. This is
+    // set on intialising and then updated whenever we scroll.
+    let mapManager = cards[initialPage].mapManager
     
-    // Initialise map manager probably, then we'll wait for delegate
-    // callbacks to update it correctly
-    self.mapManager = cards[initialPage].mapManager
+    super.init(title: title, subtitle: nil, mapManager: mapManager, initialPosition: .peaking)
   }
   
   fileprivate static func allCardsHaveMapManagers(in cards: [TGCard]) -> Bool {
@@ -113,7 +96,7 @@ public class TGPageCard: TGCard {
     return true
   }
   
-  public func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  public override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGPageCardView.instantiate()
     view.configure(with: self)
     view.delegate = self
@@ -129,7 +112,7 @@ public class TGPageCard: TGCard {
     return view
   }
   
-  public func buildHeaderView() -> TGHeaderView? {
+  public override func buildHeaderView() -> TGHeaderView? {
     if let header = headerView {
       return header
     }
@@ -237,23 +220,21 @@ public class TGPageCard: TGCard {
   
   
   // MARK: - Card life cycle
-  public func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
-  }
   
-  public func willAppear(animated: Bool) {
+  public override func willAppear(animated: Bool) {
     currentCard.willAppear(animated: animated)
   }
   
-  public func didAppear(animated: Bool) {
+  public override func didAppear(animated: Bool) {
     previousAppearedCard = currentCard
     currentCard.didAppear(animated: animated)
   }
   
-  public func willDisappear(animated: Bool) {
+  public override func willDisappear(animated: Bool) {
     currentCard.willDisappear(animated: animated)
   }
   
-  public func didDisappear(animated: Bool) {
+  public override func didDisappear(animated: Bool) {
     currentCard.didDisappear(animated: animated)
     previousAppearedCard = nil
   }

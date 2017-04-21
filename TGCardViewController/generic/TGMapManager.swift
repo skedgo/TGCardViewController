@@ -10,7 +10,7 @@ import Foundation
 
 import MapKit
 
-open class TGMapManager {
+open class TGMapManager: NSObject {
   
   public enum Zoom: Double {
     case road     = 5  // local level => how do I navigate on the road?
@@ -32,13 +32,13 @@ open class TGMapManager {
   
   fileprivate var edgePadding: UIEdgeInsets = .zero
   
-  fileprivate weak var mapView: MKMapView?
+  public fileprivate(set) weak var mapView: MKMapView?
   
-  fileprivate var isActive: Bool {
+  public var isActive: Bool {
     return mapView != nil
   }
   
-  public init() {
+  public override init() {
   }
   
   /// Takes charge of the map view, adding the map manager's content
@@ -48,8 +48,9 @@ open class TGMapManager {
   ///   - edgePadding: Edge padding of the map view, e.g., if parts of the map view is
   /// obscured by other views.
   ///   - animated: If adding content should be animated
-  public func takeCharge(of mapView: MKMapView, edgePadding: UIEdgeInsets = .zero, animated: Bool = true) {
+  open func takeCharge(of mapView: MKMapView, edgePadding: UIEdgeInsets = .zero, animated: Bool = true) {
     self.mapView = mapView
+    mapView.delegate = self
     self.edgePadding = edgePadding
     
     mapView.addAnnotations(annotations)
@@ -67,17 +68,24 @@ open class TGMapManager {
   /// - Parameters:
   ///   - mapView: Map view to clean-up
   ///   - animated: If removing content should be animated
-  public func cleanUp(_ mapView: MKMapView, animated: Bool = true) {
+  open func cleanUp(_ mapView: MKMapView, animated: Bool = true) {
     guard mapView == self.mapView else {
       assertionFailure("Not the map view that we manage!")
       return
     }
     
     mapView.removeAnnotations(annotations)
+    mapView.delegate = nil
     self.mapView = nil
   }
   
 }
+
+
+extension TGMapManager: MKMapViewDelegate {
+  
+}
+
 
 extension MKMapView {
   
