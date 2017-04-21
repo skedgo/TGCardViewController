@@ -297,9 +297,9 @@ extension TGCardViewController {
       cardView.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
     }
     
-    // This allows us to adjust the visibility of the line separating the
-    // header and content parts of a card view.
-    cardView.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleContentSeparatorVisibility(_:)))
+//    // This allows us to adjust the visibility of the line separating the
+//    // header and content parts of a card view.
+//    cardView.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleContentSeparatorVisibility(_:)))
     
     // 5. Place the new view coming, preparing to animate in from the bottom
     cardView.frame = cardWrapperContent.bounds
@@ -953,7 +953,7 @@ extension TGCardViewController: TGCardDelegate {
     
     old?.panGestureRecognizer.removeTarget(self, action: nil)
     view.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
-    view.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleContentSeparatorVisibility(_:)))
+//    view.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleContentSeparatorVisibility(_:)))
   }
   
 }

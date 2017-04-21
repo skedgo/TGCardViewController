@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -16,12 +16,19 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5h6-Sk-RAc">
-                    <rect key="frame" x="0.0" y="81" width="375" height="522"/>
+                    <rect key="frame" x="0.0" y="82" width="375" height="521"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="j0b-zd-Ism" userLabel="Grab handle" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="beq-Oe-jvD" userLabel="Content Separator">
+                    <rect key="frame" x="0.0" y="81" width="375" height="1"/>
+                    <color key="backgroundColor" red="0.81960784310000001" green="0.81960784310000001" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="unI-Vz-9cF"/>
+                    </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="dwL-e9-2yn">
                     <rect key="frame" x="8" y="29" width="359" height="44"/>
@@ -75,14 +82,17 @@
                 <constraint firstAttribute="trailing" secondItem="dwL-e9-2yn" secondAttribute="trailing" constant="8" id="3Lc-Hq-jht"/>
                 <constraint firstAttribute="trailing" secondItem="cI1-UC-c48" secondAttribute="trailing" id="Dcy-Is-uhk"/>
                 <constraint firstItem="cI1-UC-c48" firstAttribute="leading" secondItem="Ygi-Wu-OlV" secondAttribute="leading" id="Dpy-SD-Qly"/>
+                <constraint firstItem="5h6-Sk-RAc" firstAttribute="top" secondItem="beq-Oe-jvD" secondAttribute="bottom" id="HRr-vu-BK3"/>
+                <constraint firstItem="beq-Oe-jvD" firstAttribute="leading" secondItem="Ygi-Wu-OlV" secondAttribute="leading" id="J3e-Ut-5dW"/>
                 <constraint firstAttribute="trailing" secondItem="5h6-Sk-RAc" secondAttribute="trailing" id="LpM-8L-4nq"/>
                 <constraint firstAttribute="trailing" secondItem="j0b-zd-Ism" secondAttribute="trailing" id="M4S-aF-qXU"/>
                 <constraint firstItem="cI1-UC-c48" firstAttribute="top" secondItem="5h6-Sk-RAc" secondAttribute="bottom" id="M68-r4-gjv"/>
                 <constraint firstItem="dwL-e9-2yn" firstAttribute="leading" secondItem="Ygi-Wu-OlV" secondAttribute="leading" constant="8" id="N9f-HD-Ju6"/>
-                <constraint firstItem="5h6-Sk-RAc" firstAttribute="top" secondItem="dwL-e9-2yn" secondAttribute="bottom" constant="8" id="NuA-HM-n7C"/>
+                <constraint firstAttribute="trailing" secondItem="beq-Oe-jvD" secondAttribute="trailing" id="QCy-aT-Igf"/>
                 <constraint firstItem="j0b-zd-Ism" firstAttribute="top" secondItem="Ygi-Wu-OlV" secondAttribute="top" id="QDs-AD-Wse"/>
                 <constraint firstItem="5h6-Sk-RAc" firstAttribute="leading" secondItem="Ygi-Wu-OlV" secondAttribute="leading" id="VQz-f0-hmC"/>
                 <constraint firstItem="cI1-UC-c48" firstAttribute="top" secondItem="Ygi-Wu-OlV" secondAttribute="bottom" constant="-60" id="bFz-0R-cS1"/>
+                <constraint firstItem="beq-Oe-jvD" firstAttribute="top" secondItem="dwL-e9-2yn" secondAttribute="bottom" constant="8" id="c3q-qd-3OR"/>
                 <constraint firstItem="j0b-zd-Ism" firstAttribute="leading" secondItem="Ygi-Wu-OlV" secondAttribute="leading" id="fsS-wZ-VID"/>
                 <constraint firstItem="cI1-UC-c48" firstAttribute="top" secondItem="5mR-vh-M4t" secondAttribute="bottom" constant="8" id="xWm-D3-DmI"/>
                 <constraint firstItem="dwL-e9-2yn" firstAttribute="top" secondItem="j0b-zd-Ism" secondAttribute="bottom" constant="8" id="zfb-Hq-3uh"/>
@@ -95,9 +105,9 @@
                 <outlet property="bottomViewContainerTopConstraint" destination="bFz-0R-cS1" id="SeW-se-Ml4"/>
                 <outlet property="closeButton" destination="GTh-fW-jGw" id="6zz-iI-LL1"/>
                 <outlet property="contentScrollView" destination="5h6-Sk-RAc" id="jCQ-6Z-b85"/>
+                <outlet property="contentSeparator" destination="beq-Oe-jvD" id="JYK-mr-6cP"/>
                 <outlet property="floatingButton" destination="5mR-vh-M4t" id="Z7T-ZE-9ZV"/>
                 <outlet property="grabHandle" destination="j0b-zd-Ism" id="L8I-KI-aUa"/>
-                <outlet property="headerStackBottomConstraint" destination="NuA-HM-n7C" id="YX4-Xd-0hW"/>
                 <outlet property="headerStackTopConstraint" destination="zfb-Hq-3uh" id="dTD-bk-7sZ"/>
                 <outlet property="labelStack" destination="Jcg-8l-rvb" id="iEJ-yO-P94"/>
                 <outlet property="subtitleLabel" destination="BsH-yj-EDf" id="fZA-Ed-VfB"/>
