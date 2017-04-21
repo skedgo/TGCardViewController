@@ -243,17 +243,17 @@ public class TGPageCard: TGCard {
 
 extension TGPageCard: TGPageCardViewDelegate {
   
-  func didChangeCurrentPage(to index: Int) {
-    update(forCardAtIndex: index, animated: true)
+  func didChangeCurrentPage(to index: Int, animated: Bool) {
+    update(forCardAtIndex: index, animated: animated)
     
     let previous = previousAppearedCard
     let current  = currentCard
     
-    previous?.willDisappear(animated: false)
-    current.willAppear(animated: false)
+    previous?.willDisappear(animated: false) // no time to animate
+    current.willAppear(animated: false) // no time to animate
     previousAppearedCard = current
-    current.didAppear(animated: false)
-    previous?.didDisappear(animated: false)
+    current.didAppear(animated: animated)
+    previous?.didDisappear(animated: animated)
 
     if let previousIndex = cards.index(where: { $0 === previous }),
       let previousCardView = cardView?.cardViews[previousIndex] {
