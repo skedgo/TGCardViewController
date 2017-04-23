@@ -11,7 +11,7 @@ import UIKit
 
 protocol TGPageCardViewDelegate: class {
   
-  func didChangeCurrentPage(to index: Int)
+  func didChangeCurrentPage(to index: Int, animated: Bool)
   
 }
 

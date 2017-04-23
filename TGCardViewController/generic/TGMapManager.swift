@@ -54,11 +54,7 @@ open class TGMapManager: NSObject {
     self.edgePadding = edgePadding
     
     mapView.addAnnotations(annotations)
-    
-    mapView.showAnnotations(annotations,
-                            minimumZoomLevel: preferredZoomLevel.rawValue,
-                            edgePadding: edgePadding,
-                            animated: animated)
+    zoom(to: annotations, animated: animated)
   }
   
   /// Cleanes up the map view, removing the map manager's content
@@ -77,6 +73,13 @@ open class TGMapManager: NSObject {
     mapView.removeAnnotations(annotations)
     mapView.delegate = nil
     self.mapView = nil
+  }
+  
+  public func zoom(to annotations: [MKAnnotation], animated: Bool) {
+    mapView?.showAnnotations(annotations,
+                             minimumZoomLevel: preferredZoomLevel.rawValue,
+                             edgePadding: edgePadding,
+                             animated: animated)
   }
   
 }
@@ -113,7 +116,7 @@ extension MKMapView {
 
 extension Array where Element == MKAnnotation {
   
-  var boundingMapRect: MKMapRect {
+  public var boundingMapRect: MKMapRect {
     return reduce(MKMapRectNull) { acc, annotation in
       let point = MKMapPointForCoordinate(annotation.coordinate)
       let miniRect = MKMapRect(origin: point, size: MKMapSize(width: 1, height: 1))
@@ -125,7 +128,7 @@ extension Array where Element == MKAnnotation {
 
 extension MKMapView {
   
-  var zoomLevel: Double {
+  public var zoomLevel: Double {
     get {
       return zoomLevel(of: visibleMapRect)
     }
