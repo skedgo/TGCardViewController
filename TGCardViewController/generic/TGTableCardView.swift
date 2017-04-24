@@ -18,6 +18,8 @@ public class TGTableCardView: TGCardView {
   // at design time.
   @IBOutlet weak var tableWrapper: UIView!
   
+  // MARK: - New instances
+  
   static func instantiate() -> TGTableCardView {
     let bundle = Bundle(for: self)
     guard
@@ -34,6 +36,7 @@ public class TGTableCardView: TGCardView {
     closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
   
+  // MARK: - Configuration
   
   override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
     guard let card = card as? TGTableCard else {
@@ -49,12 +52,33 @@ public class TGTableCardView: TGCardView {
     let tableView = UITableView(frame: .zero, style: card.tableStyle)
     tableView.dataSource = card.tableViewDataSource
     tableView.delegate = card.tableViewDelegate
+    tableView.addObserver(self, forKeyPath: "contentOffset", options: [.new], context: nil)
     
     tableWrapper.addSubview(tableView)
     tableView.snap(to: tableWrapper)
     
     self.tableView = tableView
     self.contentScrollView = tableView
+  }
+  
+  // MARK: - KVO
+  
+  deinit {
+    contentScrollView?.removeObserver(self, forKeyPath: "contentOffset")
+  }
+  
+  public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    guard
+      let path = keyPath,
+      path == "contentOffset",
+      let separator = contentSeparator,
+      let scroller = contentScrollView,
+      scroller.isScrollEnabled == true
+      else { return }
+    
+    if let point = change?[NSKeyValueChangeKey.newKey] as? CGPoint {
+      separator.isHidden = point.y <= 0
+    }
   }
   
 }

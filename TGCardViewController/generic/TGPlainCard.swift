@@ -10,8 +10,6 @@ import UIKit
 
 open class TGPlainCard: TGCard {
   
-  fileprivate var cardView: TGCardView?
-  
   /// The content to display on the card below title + subtitle
   ///
   /// Can be large as it will get embedded in a scroll view.
@@ -39,30 +37,7 @@ open class TGPlainCard: TGCard {
   public override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGPlainCardView.instantiate()
     view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
-    view.contentScrollView?.delegate = self
-    cardView = view
     return view
-  }
-  
-}
-
-extension TGPlainCard: UIScrollViewDelegate {
-  
-  fileprivate func scrollViewDidChangeContentOffset(_ scrollView: UIScrollView) {
-    switch scrollView.contentOffset.y {
-    case -1 * CGFloat.infinity ... 0:
-      cardView?.contentSeparator?.isHidden = true
-    default:
-      cardView?.contentSeparator?.isHidden = false
-    }
-  }
-  
-  public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    self.scrollViewDidChangeContentOffset(scrollView)
-  }
-  
-  public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-    self.scrollViewDidChangeContentOffset(scrollView)
   }
   
 }

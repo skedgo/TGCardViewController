@@ -46,7 +46,6 @@ public class TGAgendaCardView: TGCardView {
     closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
   
-  
   // MARK: - Configuration
   
   override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
@@ -58,6 +57,7 @@ public class TGAgendaCardView: TGCardView {
     
     tableView.delegate = card.tableViewDelegate
     tableView.dataSource = card.tableViewDataSource
+    tableView.addObserver(self, forKeyPath: "contentOffset", options: [.new], context: nil)
     
     if let bottomContent = card.bottomContentView {
       bottomViewContainer.addSubview(bottomContent)
@@ -73,6 +73,26 @@ public class TGAgendaCardView: TGCardView {
       // Don't forget to also adjust the top constraint as we want the bottom view
       // to slide up just enough to reveal its content.
       bottomViewContainerTopConstraint .constant = -1*fittingHeight
+    }
+  }
+  
+  // MARK: KVO
+  
+  deinit {
+    contentScrollView?.removeObserver(self, forKeyPath: "contentOffset")
+  }
+  
+  public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    guard
+      let path = keyPath,
+      path == "contentOffset",
+      let separator = contentSeparator,
+      let scroller = contentScrollView,
+      scroller.isScrollEnabled == true
+      else { return }
+    
+    if let point = change?[NSKeyValueChangeKey.newKey] as? CGPoint {
+      separator.isHidden = point.y <= 0
     }
   }
   
