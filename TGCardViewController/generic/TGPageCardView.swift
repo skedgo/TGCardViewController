@@ -11,7 +11,7 @@ import UIKit
 
 protocol TGPageCardViewDelegate: class {
   
-  func didChangeCurrentPage(to index: Int)
+  func didChangeCurrentPage(to index: Int, animated: Bool)
   
 }
 
@@ -244,14 +244,14 @@ extension TGPageCardView: UIScrollViewDelegate {
   // We use it here to detect the end of scrolling due to user pressing a
   // button, i.e., scrolling programmatically.
   func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-    delegate?.didChangeCurrentPage(to: currentPage)
+    delegate?.didChangeCurrentPage(to: currentPage, animated: true)
   }
   
   // This delegate is called in response to actual user scrolling. We use
   // it here to detect the end of scrolling due to users actually swiping
   // between pages.
   func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-    delegate?.didChangeCurrentPage(to: currentPage)
+    delegate?.didChangeCurrentPage(to: currentPage, animated: true)
   }
   
 }
