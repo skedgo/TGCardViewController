@@ -12,6 +12,8 @@ class TGPlainCardView: TGCardView {
 
   @IBOutlet weak var contentView: UIView!
   
+  // MARK: - New instances
+  
   static func instantiate() -> TGPlainCardView {
     let bundle = Bundle(for: self)
     guard
@@ -28,6 +30,8 @@ class TGPlainCardView: TGCardView {
     closeButton?.setTitle(nil, for: .normal)
     closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
+  
+  // MARK: - Configuration
   
   override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
     guard let card = card as? TGPlainCard else {
@@ -49,4 +53,5 @@ class TGPlainCardView: TGCardView {
       contentView.bottomAnchor.constraint(equalTo: content.bottomAnchor).isActive = true
     }
   }
+  
 }

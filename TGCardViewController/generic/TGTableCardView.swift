@@ -18,6 +18,8 @@ public class TGTableCardView: TGCardView {
   // at design time.
   @IBOutlet weak var tableWrapper: UIView!
   
+  // MARK: - New instances
+  
   static func instantiate() -> TGTableCardView {
     let bundle = Bundle(for: self)
     guard
@@ -34,6 +36,7 @@ public class TGTableCardView: TGCardView {
     closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
   
+  // MARK: - Configuration
   
   override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
     guard let card = card as? TGTableCard else {
@@ -54,7 +57,7 @@ public class TGTableCardView: TGCardView {
     tableView.snap(to: tableWrapper)
     
     self.tableView = tableView
-    self.contentScrollView = tableView
+    contentScrollView = tableView
   }
   
 }

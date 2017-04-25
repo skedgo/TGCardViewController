@@ -36,7 +36,6 @@ public class TGAgendaCardView: TGCardView {
       else { preconditionFailure() }
     return view
   }
-  
 
   override public func awakeFromNib() {
     super.awakeFromNib()
@@ -45,7 +44,6 @@ public class TGAgendaCardView: TGCardView {
     closeButton?.setTitle(nil, for: .normal)
     closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
-  
   
   // MARK: - Configuration
   

@@ -40,6 +40,10 @@ public class TGCardView: TGCornerView {
   /// from the stack.
   @IBOutlet weak var closeButton: UIButton?
   
+  /// This is the line separating the header and content parts of a
+  /// card view.
+  @IBOutlet weak var contentSeparator: UIView?
+  
   /// Optional floating button.
   ///
   /// The button is only visible when the corresponding action closure
@@ -49,7 +53,11 @@ public class TGCardView: TGCornerView {
   /// Each card view needs a scroll view where the main content of the
   /// card goes. The card controller need access to it, in order to
   /// handling dragging the card up and down.
-  @IBOutlet weak var contentScrollView: UIScrollView?
+  @IBOutlet weak var contentScrollView: UIScrollView? {
+    didSet {
+      contentScrollView?.addObserver(self, forKeyPath: "contentOffset", options: [.new], context: nil)
+    }
+  }
   
   /// Each card view needs a place to display the card's title.
   @IBOutlet weak var titleLabel: UILabel!
@@ -112,6 +120,8 @@ public class TGCardView: TGCornerView {
   
   override public func awakeFromNib() {
     super.awakeFromNib()
+    
+    contentSeparator?.isHidden = true
     
     if let floatie = floatingButton {
       floatie.isHidden = true
@@ -200,4 +210,24 @@ public class TGCardView: TGCornerView {
   @IBAction func floatingButtonTapped(_ sender: Any) {
     onFloatingButtonPressed?()
   }
+  
+  // MARK: - KVO
+  
+  deinit {
+    contentScrollView?.removeObserver(self, forKeyPath: "contentOffset")
+  }
+  
+  public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    guard
+      let path = keyPath,
+      path == "contentOffset",
+      let separator = contentSeparator,
+      let scroller = contentScrollView,
+      scroller.isScrollEnabled == true
+      else { return }
+    
+    separator.isHidden = scroller.contentOffset.y <= 0
+  }
+  
+  
 }

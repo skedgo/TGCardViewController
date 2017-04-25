@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TwM-rE-f4a">
-                    <rect key="frame" x="0.0" y="137" width="375" height="526"/>
+                    <rect key="frame" x="0.0" y="138" width="375" height="525"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8CX-8x-KQh">
@@ -33,6 +33,13 @@
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="lf5-YV-zqk" userLabel="Grab handle" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BVa-Zk-vPf" userLabel="Content Separator">
+                    <rect key="frame" x="0.0" y="137" width="375" height="1"/>
+                    <color key="backgroundColor" red="0.81960784313725488" green="0.81960784313725488" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="V4j-cP-Twe"/>
+                    </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Otm-sh-8EH">
                     <rect key="frame" x="8" y="29" width="359" height="100"/>
@@ -89,16 +96,19 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="BVa-Zk-vPf" firstAttribute="top" secondItem="Otm-sh-8EH" secondAttribute="bottom" constant="8" id="4Ai-K9-hoe"/>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4TM-kT-hhY"/>
                 <constraint firstAttribute="trailing" secondItem="8CX-8x-KQh" secondAttribute="trailing" constant="16" id="526-vy-eNr"/>
-                <constraint firstItem="TwM-rE-f4a" firstAttribute="top" secondItem="Otm-sh-8EH" secondAttribute="bottom" constant="8" id="Bms-6F-je2"/>
+                <constraint firstAttribute="trailing" secondItem="BVa-Zk-vPf" secondAttribute="trailing" id="CO8-ZL-OS1"/>
                 <constraint firstAttribute="bottom" secondItem="8CX-8x-KQh" secondAttribute="bottom" constant="20" id="GdD-xC-t2f"/>
+                <constraint firstItem="BVa-Zk-vPf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="IEb-Pd-vkL"/>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="JhJ-X6-bzM"/>
                 <constraint firstAttribute="trailing" secondItem="Otm-sh-8EH" secondAttribute="trailing" constant="8" id="KJK-c3-I6I"/>
                 <constraint firstItem="TwM-rE-f4a" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="MDl-un-wgE"/>
                 <constraint firstItem="Otm-sh-8EH" firstAttribute="top" secondItem="lf5-YV-zqk" secondAttribute="bottom" constant="8" id="PTa-je-2f9"/>
                 <constraint firstItem="Otm-sh-8EH" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="RHA-y3-jrl"/>
                 <constraint firstAttribute="trailing" secondItem="TwM-rE-f4a" secondAttribute="trailing" id="a3D-GX-97y"/>
+                <constraint firstItem="TwM-rE-f4a" firstAttribute="top" secondItem="BVa-Zk-vPf" secondAttribute="bottom" id="gWC-eO-SiJ"/>
                 <constraint firstAttribute="bottom" secondItem="TwM-rE-f4a" secondAttribute="bottom" id="pQS-TT-hRY"/>
                 <constraint firstAttribute="trailing" secondItem="lf5-YV-zqk" secondAttribute="trailing" id="wU3-bz-Tc8"/>
             </constraints>
@@ -106,6 +116,7 @@
             <connections>
                 <outlet property="accessoryWrapperView" destination="bXd-mR-IBX" id="JZs-7j-lEw"/>
                 <outlet property="closeButton" destination="gaZ-Nm-Ttn" id="8ec-H2-bUv"/>
+                <outlet property="contentSeparator" destination="BVa-Zk-vPf" id="083-IL-zVL"/>
                 <outlet property="floatingButton" destination="8CX-8x-KQh" id="YP1-li-oqc"/>
                 <outlet property="grabHandle" destination="lf5-YV-zqk" id="fmS-0K-Vki"/>
                 <outlet property="headerStack" destination="Otm-sh-8EH" id="Zzg-RG-XYL"/>

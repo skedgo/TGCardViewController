@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -15,9 +15,36 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="486"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
+                    <rect key="frame" x="0.0" y="138" width="375" height="348"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="348" translatesAutoresizingMaskIntoConstraints="NO" id="fpj-MI-D7T">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="348"/>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="fpj-MI-D7T" firstAttribute="leading" secondItem="Dar-6n-Caw" secondAttribute="leading" id="3fi-nu-PFE"/>
+                        <constraint firstAttribute="bottom" secondItem="fpj-MI-D7T" secondAttribute="bottom" id="JEJ-ob-UKD"/>
+                        <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="Dar-6n-Caw" secondAttribute="height" priority="250" id="cge-oP-lBy"/>
+                        <constraint firstAttribute="trailing" secondItem="fpj-MI-D7T" secondAttribute="trailing" id="lhK-ti-Rb8"/>
+                        <constraint firstItem="fpj-MI-D7T" firstAttribute="top" secondItem="Dar-6n-Caw" secondAttribute="top" id="p6T-g1-McS"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="cge-oP-lBy"/>
+                        </mask>
+                    </variation>
+                </scrollView>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="JFj-Bl-Nt0" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Its-ul-Cm5" userLabel="Content Separator">
+                    <rect key="frame" x="0.0" y="137" width="375" height="1"/>
+                    <color key="backgroundColor" red="0.81960784310000001" green="0.81960784310000001" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="Zg8-LF-Hmk"/>
+                    </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="GFR-f4-rZW">
                     <rect key="frame" x="8" y="29" width="359" height="100"/>
@@ -70,26 +97,6 @@
                         </stackView>
                     </subviews>
                 </stackView>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
-                    <rect key="frame" x="0.0" y="137" width="375" height="349"/>
-                    <subviews>
-                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="348" translatesAutoresizingMaskIntoConstraints="NO" id="fpj-MI-D7T">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="348"/>
-                        </view>
-                    </subviews>
-                    <constraints>
-                        <constraint firstItem="fpj-MI-D7T" firstAttribute="leading" secondItem="Dar-6n-Caw" secondAttribute="leading" id="3fi-nu-PFE"/>
-                        <constraint firstAttribute="bottom" secondItem="fpj-MI-D7T" secondAttribute="bottom" id="JEJ-ob-UKD"/>
-                        <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="Dar-6n-Caw" secondAttribute="height" priority="250" id="cge-oP-lBy"/>
-                        <constraint firstAttribute="trailing" secondItem="fpj-MI-D7T" secondAttribute="trailing" id="lhK-ti-Rb8"/>
-                        <constraint firstItem="fpj-MI-D7T" firstAttribute="top" secondItem="Dar-6n-Caw" secondAttribute="top" id="p6T-g1-McS"/>
-                    </constraints>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="cge-oP-lBy"/>
-                        </mask>
-                    </variation>
-                </scrollView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nd-sh-0Ix">
                     <rect key="frame" x="299" y="406" width="60" height="60"/>
                     <constraints>
@@ -114,12 +121,15 @@
                 <constraint firstAttribute="bottom" secondItem="4nd-sh-0Ix" secondAttribute="bottom" constant="20" id="PZz-Gq-neg"/>
                 <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" priority="250" id="aSh-Kf-Nmj"/>
                 <constraint firstItem="GFR-f4-rZW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="aoZ-RM-npN"/>
+                <constraint firstItem="Its-ul-Cm5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="eqc-mq-Atd"/>
                 <constraint firstAttribute="bottom" secondItem="Dar-6n-Caw" secondAttribute="bottom" id="gnL-8s-eXj"/>
                 <constraint firstItem="GFR-f4-rZW" firstAttribute="top" secondItem="JFj-Bl-Nt0" secondAttribute="bottom" constant="8" id="hP0-p5-p83"/>
-                <constraint firstItem="Dar-6n-Caw" firstAttribute="top" secondItem="GFR-f4-rZW" secondAttribute="bottom" constant="8" id="jNv-qi-xFY"/>
+                <constraint firstItem="Dar-6n-Caw" firstAttribute="top" secondItem="Its-ul-Cm5" secondAttribute="bottom" id="jyW-r8-JGS"/>
                 <constraint firstItem="JFj-Bl-Nt0" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="mkQ-ym-714"/>
                 <constraint firstAttribute="trailing" secondItem="JFj-Bl-Nt0" secondAttribute="trailing" id="tqI-dg-XCt"/>
                 <constraint firstItem="fpj-MI-D7T" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="xRh-jD-2kN"/>
+                <constraint firstAttribute="trailing" secondItem="Its-ul-Cm5" secondAttribute="trailing" id="zPx-8I-gHv"/>
+                <constraint firstItem="Its-ul-Cm5" firstAttribute="top" secondItem="GFR-f4-rZW" secondAttribute="bottom" constant="8" id="zi7-9m-TyG"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>
@@ -134,11 +144,11 @@
                 <outlet property="accessoryWrapperView" destination="cc3-uK-hIh" id="P96-Em-jrh"/>
                 <outlet property="closeButton" destination="S0E-UZ-jgN" id="PTX-DA-6fw"/>
                 <outlet property="contentScrollView" destination="Dar-6n-Caw" id="cgp-sH-B9w"/>
+                <outlet property="contentSeparator" destination="Its-ul-Cm5" id="20V-OO-GtA"/>
                 <outlet property="contentView" destination="fpj-MI-D7T" id="xMy-mv-ixq"/>
                 <outlet property="floatingButton" destination="4nd-sh-0Ix" id="Dfx-Mg-Sgd"/>
                 <outlet property="grabHandle" destination="JFj-Bl-Nt0" id="RDe-nF-gpP"/>
                 <outlet property="headerStack" destination="GFR-f4-rZW" id="7aS-kU-3bM"/>
-                <outlet property="headerStackBottomConstraint" destination="jNv-qi-xFY" id="GeW-4B-mET"/>
                 <outlet property="headerStackTopConstraint" destination="hP0-p5-p83" id="PKA-T5-B5s"/>
                 <outlet property="labelStack" destination="4Ms-pS-oUj" id="hWH-KT-QTw"/>
                 <outlet property="subtitleLabel" destination="kRV-RD-D8g" id="7jR-jc-hBs"/>

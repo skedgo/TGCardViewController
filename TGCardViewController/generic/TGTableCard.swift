@@ -17,6 +17,8 @@ open class TGTableCard: TGCard {
   weak var tableViewDelegate: UITableViewDelegate?
   weak var tableViewDataSource: UITableViewDataSource?
   
+  // MARK: - Initialisers
+  
   public init(title: String, subtitle: String? = nil,
               dataSource: UITableViewDataSource? = nil,
               delegate: UITableViewDelegate? = nil,
@@ -33,6 +35,8 @@ open class TGTableCard: TGCard {
     super.init(title: title, subtitle: subtitle,
                mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
+  
+  // MARK: - Constructing views
   
   public override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGTableCardView.instantiate()
