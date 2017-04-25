@@ -547,14 +547,7 @@ extension TGCardViewController {
     
     UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
       self.updateMapShadow(for: snapTo.position)
-      
       self.view.layoutIfNeeded()
-      
-      // If the separator is currently visible, then its visibility when snapping
-      // completes depends on the position of the card.
-      if let separator = self.topCardView?.contentSeparator, separator.isHidden == false {
-        separator.isHidden = snapTo.position != .extended
-      }
     }, completion: { _ in
       self.topCardView?.allowContentScrolling(snapTo.position == .extended)
       completion?()
