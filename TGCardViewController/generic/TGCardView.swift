@@ -14,7 +14,7 @@ public class TGCardView: TGCornerView {
   /// might hide and show.
   @IBOutlet weak var grabHandle: TGGrabHandleView?
   
-  /// The stack view that contains the label stack and the 
+  /// The stack view that contains the label stack and the
   /// accessory view.
   @IBOutlet private weak var headerStack: UIStackView?
   
