@@ -152,6 +152,9 @@ open class TGCardViewController: UIViewController {
     // except in the case of compact vertical size class, which does not
     // have peak state.
     if let previous = previousCardPosition {
+      // Note: Ideally, we'd determine the direction by whether the available
+      // height of VC increased or decreased, but for simplicity just using
+      // `up` is fine.
       cardWrapperDesiredTopConstraint.constant = cardLocation(forDesired: previous, direction: .up).y
     }
   }
