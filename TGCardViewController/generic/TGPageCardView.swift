@@ -247,7 +247,7 @@ extension TGPageCardView: UIScrollViewDelegate {
   }
   
   fileprivate func scrollViewDidComeToCompleteStop(_ scrollView: UIScrollView) {
-    delegate?.didChangeCurrentPage(to: currentPage)
+    delegate?.didChangeCurrentPage(to: currentPage, animated: true)
     visiblePage = currentPage
     lastHorizontalOffset = scrollView.contentOffset.y
   }
