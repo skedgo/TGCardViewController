@@ -151,16 +151,8 @@ open class TGCardViewController: UIViewController {
     // When trait collection changes, try to keep the same card position, 
     // except in the case of compact vertical size class, which does not
     // have peak state.
-    let newConstant: CGFloat
     if let previous = previousCardPosition {
-      switch (previous, traitCollection.verticalSizeClass) {
-      case (.collapsed, _):       newConstant = collapsedMinY
-      case (.extended, _):        newConstant = extendedMinY
-      case (.peaking, .regular):  newConstant = peakY
-      case (.peaking, .compact):  newConstant = extendedMinY
-      case (.peaking, _):         newConstant = peakY
-      }
-      cardWrapperDesiredTopConstraint.constant = newConstant
+      cardWrapperDesiredTopConstraint.constant = cardLocation(forDesired: previous, direction: .up).y
     }
   }
 
