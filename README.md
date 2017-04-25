@@ -28,11 +28,14 @@ Behaviour:
 - Cards are draggable
 	- [x] Snap to collapsed (only title), peaking (near half-way showing both map and card content), extended (still shows a bit of the map on top, but darkened) (!3)
 	- [x] Cards can be dragged up and down anywhere on the card
-	- [x] When scrolling to the top and keeping to scroll, start dragging card (!12)
 	- [x] Tap title when collapsed: go to peaking (!3)
 	- [x] Tap title when peaking: go to extended (!3)
 	- [x] Tap title when extended: do nothing
 	- [x] Tap map when extended: go to peaking (!3)
+- Cards are scrollable
+    - [x] Cards typically have scrolling content: when scrolling down the card's header stays at the top and a  bit of the map still keeps peaking through at the top.
+	- [x] When scrolling down show a thin separator line between the card's scrolling content and the card's header (!18)
+	- [x] When scrolling to the top and keeping to scroll, start dragging card (!12)
 - Sticky bar at the top
 	- [x] Set content rather than just showing (!1)
 	- [x] Cross-fade content if it was showing already and there’s new content (!1)

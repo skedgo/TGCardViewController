@@ -56,6 +56,8 @@ open class TGCardViewController: UIViewController {
   
   fileprivate var isVisible = false
   
+  fileprivate var previousCardPosition: TGCardPosition?
+  
   fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
   
   fileprivate var topCard: TGCard? {
@@ -145,6 +147,16 @@ open class TGCardViewController: UIViewController {
     
     statusBarBlurHeightConstraint.constant = UIApplication.shared.statusBarFrame.height
     cardWrapperHeightConstraint.constant = extendedMinY * -1
+    
+    // When trait collection changes, try to keep the same card position, 
+    // except in the case of compact vertical size class, which does not
+    // have peak state.
+    if let previous = previousCardPosition {
+      // Note: Ideally, we'd determine the direction by whether the available
+      // height of VC increased or decreased, but for simplicity just using
+      // `up` is fine.
+      cardWrapperDesiredTopConstraint.constant = cardLocation(forDesired: previous, direction: .up).y
+    }
   }
 
   override open func didReceiveMemoryWarning() {
@@ -352,6 +364,7 @@ extension TGCardViewController {
       },
       completion: { _ in
         cardView.allowContentScrolling(animateTo.position == .extended)
+        self.previousCardPosition = animateTo.position
         oldTop?.view.alpha = 0
         if notify {
           oldTop?.card.didDisappear(animated: animated)
@@ -550,6 +563,7 @@ extension TGCardViewController {
       self.view.layoutIfNeeded()
     }, completion: { _ in
       self.topCardView?.allowContentScrolling(snapTo.position == .extended)
+      self.previousCardPosition = snapTo.position
       completion?()
     })
   }
@@ -655,6 +669,7 @@ extension TGCardViewController {
     },
       completion: { _ in
         self.topCardView?.allowContentScrolling(animateTo.position == .extended)
+        self.previousCardPosition = animateTo.position
     })
   }
   
