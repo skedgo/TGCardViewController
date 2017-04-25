@@ -297,10 +297,6 @@ extension TGCardViewController {
       cardView.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
     }
     
-//    // This allows us to adjust the visibility of the line separating the
-//    // header and content parts of a card view.
-//    cardView.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleContentSeparatorVisibility(_:)))
-    
     // 5. Place the new view coming, preparing to animate in from the bottom
     cardView.frame = cardWrapperContent.bounds
     if animated {
@@ -648,35 +644,6 @@ extension TGCardViewController {
     }
   }
   
-  @objc
-  fileprivate func handleContentSeparatorVisibility(_ recogniser: UIPanGestureRecognizer) {
-    guard
-      let scrollView = recogniser.view as? UIScrollView,
-      let separator = topCardView?.contentSeparator,
-      scrollView == topCardView?.contentScrollView
-      else { return }
-    
-    let verticalOffset = scrollView.contentOffset.y
-    
-    UIView.animate(withDuration: 0.5) {
-      switch (verticalOffset, recogniser.state) {
-      case (-1 * CGFloat.infinity ... 0, _):
-        // When the content is scrolled to the top, hide the separator.
-        separator.isHidden = true
-        
-      case (_, .changed):
-        // As long as the content isn't at the top and is still being
-        // scrolled, show separator.
-        separator.isHidden = false
-        
-      default:
-        // When the gesture recogniser is in all other states, we only
-        // hide the separator if the scroll view isn't at the top.
-        separator.isHidden = verticalOffset <= 0
-      }
-    }
-  }
-  
   fileprivate func switchTo(_ position: TGCardPosition, direction: Direction, animated: Bool) {
     let animateTo = cardLocation(forDesired: position, direction: direction)
     
@@ -953,7 +920,6 @@ extension TGCardViewController: TGCardDelegate {
     
     old?.panGestureRecognizer.removeTarget(self, action: nil)
     view.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
-//    view.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleContentSeparatorVisibility(_:)))
   }
   
 }
