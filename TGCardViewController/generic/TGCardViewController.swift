@@ -573,13 +573,24 @@ extension TGCardViewController {
     let translation = recogniser.translation(in: cardWrapperContent)
     let velocity = recogniser.velocity(in: cardWrapperContent)
     
-    let previousCardY = cardWrapperDesiredTopConstraint.constant
+    var currentCardY = cardWrapperDesiredTopConstraint.constant
+    
+    // Recall that we have a minimum overlap constraint set on the card 
+    // view, so that a card does not collapse all the way below the view
+    // but has its header remained visible. This min overlap needs to be
+    // exceeded if we want to move the card upwards from the collapsed
+    // state. This causes a disconnect between gesture and the movement
+    // of the card, which is undesirable.
+    if let topCardView = topCardView, cardPosition == .collapsed {
+      let offset = topCardView.headerHeight(for: .collapsed)
+      currentCardY -= offset
+    }
     
     // Reposition the card according to the pan as long as the user
     // is dragging in the range of extended and collapsed
-    if (previousCardY + translation.y >= extendedMinY) && (previousCardY + translation.y <= collapsedMinY) {
+    if (currentCardY + translation.y >= extendedMinY) && (currentCardY + translation.y <= collapsedMinY) {
       recogniser.setTranslation(.zero, in: cardWrapperContent)
-      cardWrapperDesiredTopConstraint.constant = previousCardY + translation.y
+      cardWrapperDesiredTopConstraint.constant = currentCardY + translation.y
       view.setNeedsUpdateConstraints()
       view.layoutIfNeeded()
     }
