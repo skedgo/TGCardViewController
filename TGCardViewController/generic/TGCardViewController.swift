@@ -581,7 +581,14 @@ extension TGCardViewController {
     // exceeded if we want to move the card upwards from the collapsed
     // state. This causes a disconnect between gesture and the movement
     // of the card, which is undesirable.
-    if let topCardView = topCardView, cardPosition == .collapsed {
+    // 
+    // Care needs to be taken when accounting for the card view header.
+    // When the device's size class is v(C), card only has two states:
+    // collapsed and extended. Until the card has been moved past the
+    // extendedY, it remains in collapsed state and we don't want to 
+    // adjust the header repeatedly. Instead, we do it only when at the
+    // start of recognising gesture.
+    if let topCardView = topCardView, cardPosition == .collapsed, recogniser.state == .began {
       let offset = topCardView.headerHeight(for: .collapsed)
       currentCardY -= offset
     }
