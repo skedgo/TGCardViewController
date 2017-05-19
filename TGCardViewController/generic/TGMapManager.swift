@@ -31,7 +31,9 @@ open class TGMapManager: NSObject {
   public var preferredZoomLevel: Zoom = .city
   
   fileprivate var edgePadding: UIEdgeInsets = .zero
-  
+
+  fileprivate var previousMapState: MapState?
+
   public fileprivate(set) weak var mapView: MKMapView?
   
   public var isActive: Bool {
@@ -49,6 +51,8 @@ open class TGMapManager: NSObject {
   /// obscured by other views.
   ///   - animated: If adding content should be animated
   open func takeCharge(of mapView: MKMapView, edgePadding: UIEdgeInsets = .zero, animated: Bool = true) {
+    previousMapState = MapState(for: mapView)
+    
     self.mapView = mapView
     mapView.delegate = self
     self.edgePadding = edgePadding
@@ -73,6 +77,8 @@ open class TGMapManager: NSObject {
     mapView.removeAnnotations(annotations)
     mapView.delegate = nil
     self.mapView = nil
+
+    previousMapState?.restore(for: mapView)
   }
   
   public func zoom(to annotations: [MKAnnotation], animated: Bool) {
@@ -160,3 +166,22 @@ extension MKMapView {
   }
   
 }
+
+fileprivate struct MapState {
+  let showsScale: Bool
+  let showsUserLocation: Bool
+  let showsTraffic: Bool
+  
+  init(for mapView: MKMapView) {
+    showsScale = mapView.showsScale
+    showsUserLocation = mapView.showsUserLocation
+    showsTraffic = mapView.showsTraffic
+  }
+  
+  func restore(for mapView: MKMapView) {
+    mapView.showsScale = showsScale
+    mapView.showsUserLocation = showsUserLocation
+    mapView.showsTraffic = showsTraffic
+  }
+}
+
