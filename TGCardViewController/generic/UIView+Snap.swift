@@ -10,7 +10,7 @@ import UIKit
 
 extension UIView {
   
-  func snap(to superView: UIView) {
+  public func snap(to superView: UIView) {
     translatesAutoresizingMaskIntoConstraints = false
     topAnchor.constraint(equalTo: superView.topAnchor).isActive = true
     leadingAnchor.constraint(equalTo: superView.leadingAnchor).isActive = true
