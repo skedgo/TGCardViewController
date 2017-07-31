@@ -72,7 +72,7 @@ public class TGHeaderView: UIView {
   }
   
   
-  var rightAction: ((Void) -> Void)? {
+  var rightAction: (() -> Void)? {
     didSet {
       rightButton?.isHidden = (rightAction == nil)
     }
