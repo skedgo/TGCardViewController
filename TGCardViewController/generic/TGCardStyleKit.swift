@@ -26,7 +26,7 @@ public class TGCardStyleKit : NSObject {
   
   //// Drawing Methods
   
-  public dynamic class func drawHeaderCloseIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, lineWidth: CGFloat = 3) {
+  public class func drawHeaderCloseIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, lineWidth: CGFloat = 3) {
     //// General Declarations
     let context = UIGraphicsGetCurrentContext()!
     
@@ -77,7 +77,7 @@ public class TGCardStyleKit : NSObject {
     
   }
   
-  public dynamic class func drawHeaderNextIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, lineWidth: CGFloat = 3) {
+  public class func drawHeaderNextIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, lineWidth: CGFloat = 3) {
     //// General Declarations
     let context = UIGraphicsGetCurrentContext()!
     
@@ -114,7 +114,7 @@ public class TGCardStyleKit : NSObject {
     
   }
   
-  public dynamic class func drawCardCloseIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit) {
+  public class func drawCardCloseIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit) {
     //// General Declarations
     let context = UIGraphicsGetCurrentContext()!
     
@@ -178,7 +178,7 @@ public class TGCardStyleKit : NSObject {
     
   }
   
-  public dynamic class func drawFloatingButton(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 60, height: 60), resizing: ResizingBehavior = .aspectFit) {
+  public class func drawFloatingButton(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 60, height: 60), resizing: ResizingBehavior = .aspectFit) {
     //// General Declarations
     let context = UIGraphicsGetCurrentContext()!
     
@@ -231,7 +231,7 @@ public class TGCardStyleKit : NSObject {
   
   //// Generated Images
   
-  public dynamic class func imageOfHeaderCloseIcon(lineWidth: CGFloat = 3) -> UIImage {
+  public class func imageOfHeaderCloseIcon(lineWidth: CGFloat = 3) -> UIImage {
     UIGraphicsBeginImageContextWithOptions(CGSize(width: 20, height: 20), false, 0)
     TGCardStyleKit.drawHeaderCloseIcon(lineWidth: lineWidth)
     
@@ -241,7 +241,7 @@ public class TGCardStyleKit : NSObject {
     return imageOfHeaderCloseIcon
   }
   
-  public dynamic class func imageOfHeaderNextIcon(lineWidth: CGFloat = 3) -> UIImage {
+  public class func imageOfHeaderNextIcon(lineWidth: CGFloat = 3) -> UIImage {
     UIGraphicsBeginImageContextWithOptions(CGSize(width: 20, height: 20), false, 0)
     TGCardStyleKit.drawHeaderNextIcon(lineWidth: lineWidth)
     
@@ -251,7 +251,7 @@ public class TGCardStyleKit : NSObject {
     return imageOfHeaderNextIcon
   }
   
-  public dynamic class var imageOfCardCloseIcon: UIImage {
+  public class var imageOfCardCloseIcon: UIImage {
     if Cache.imageOfCardCloseIcon != nil {
       return Cache.imageOfCardCloseIcon!
     }
@@ -265,7 +265,7 @@ public class TGCardStyleKit : NSObject {
     return Cache.imageOfCardCloseIcon!
   }
   
-  public dynamic class var imageOfFloatingButton: UIImage {
+  public class var imageOfFloatingButton: UIImage {
     if Cache.imageOfFloatingButton != nil {
       return Cache.imageOfFloatingButton!
     }

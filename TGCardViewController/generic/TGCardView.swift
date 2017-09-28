@@ -134,11 +134,11 @@ public class TGCardView: TGCornerView {
     // button and in such case, stack view will reduce its size to zero,
     // hence creating conflicting constraints.
     let widthConstraint = closeButton?.widthAnchor.constraint(equalToConstant: 44)
-    widthConstraint?.priority = 999
+    widthConstraint?.priority = .defaultHigh
     widthConstraint?.isActive = true
     
     let heightConstraint = closeButton?.heightAnchor.constraint(equalToConstant: 44)
-    heightConstraint?.priority = 999
+    heightConstraint?.priority = .defaultHigh
     heightConstraint?.isActive = true
   }
   
