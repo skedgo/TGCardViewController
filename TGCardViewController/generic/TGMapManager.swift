@@ -103,7 +103,7 @@ extension MKMapView {
                        edgePadding: UIEdgeInsets = .zero,
                        animated: Bool) {
     
-    guard annotations.count > 0 else { return }
+    guard !annotations.isEmpty else { return }
     
     // Note: Using zero insets here as we'll respect the inspect already in the
     //       call below when setting the visible map rect - otherwise we adjust

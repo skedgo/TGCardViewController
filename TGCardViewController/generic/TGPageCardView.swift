@@ -39,7 +39,7 @@ class TGPageCardView: TGCardView {
   }
   
   override var headerHeight: CGFloat {
-    guard contentView.subviews.count > 0 else { return 0 }
+    guard !contentView.subviews.isEmpty else { return 0 }
     
     var currentContent: UIView?
     
