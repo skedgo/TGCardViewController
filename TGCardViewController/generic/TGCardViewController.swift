@@ -145,7 +145,7 @@ open class TGCardViewController: UIViewController {
   override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
     
-    statusBarBlurHeightConstraint.constant = UIApplication.shared.statusBarFrame.height
+    statusBarBlurHeightConstraint.constant = topOverlap
     cardWrapperHeightConstraint.constant = extendedMinY * -1
     
     // When trait collection changes, try to keep the same card position, 
@@ -177,7 +177,7 @@ open class TGCardViewController: UIViewController {
   }
   
   fileprivate var extendedMinY: CGFloat {
-    var value: CGFloat = UIApplication.shared.statusBarFrame.height
+    var value = topOverlap
     
     if let navigationBar = navigationController?.navigationBar {
       value += navigationBar.frame.height
@@ -202,7 +202,7 @@ open class TGCardViewController: UIViewController {
   /// The current amount of points of content at the top of the view
   /// that's overlapping with the map. Includes status bar, if visible.
   fileprivate var topOverlap: CGFloat {
-    return UIApplication.shared.statusBarFrame.height
+    return 20  // FIXME: Get status bar height properly
   }
   
   /// The edge padding for the map that map managers should use
