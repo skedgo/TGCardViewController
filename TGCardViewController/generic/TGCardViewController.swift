@@ -13,6 +13,10 @@ import UIKit
 
 import MapKit
 
+public protocol TGCardViewControllerDelegate: class {
+  func requestsDismissal(for controller: TGCardViewController)
+}
+
 open class TGCardViewController: UIViewController {
   
   fileprivate enum Constants {
@@ -24,6 +28,8 @@ open class TGCardViewController: UIViewController {
     
     fileprivate static let mapShadowVisibleAlpha: CGFloat = 0.25
   }
+  
+  open weak var delegate: TGCardViewControllerDelegate?
 
   @IBOutlet weak var stickyBar: UIView!
   @IBOutlet weak var headerView: UIView!
@@ -299,7 +305,8 @@ extension TGCardViewController {
     top.delegate = self
     
     // 4. Create and configure the new view
-    let cardView = top.buildCardView(showClose: cards.count > 1, includeHeader: true)
+    let showClose = delegate != nil || cards.count > 1
+    let cardView = top.buildCardView(showClose: showClose, includeHeader: true)
     cardView.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     
     // This allows us to continuously pull down the card view while its
@@ -384,6 +391,12 @@ extension TGCardViewController {
   }
   
   public func pop(animated: Bool = true) {
+    if let delegate = delegate, cards.count == 1 {
+      // popping last one, let delegate dismiss
+      delegate.requestsDismissal(for: self)
+      return
+    }
+    
     guard let top = topCard, let topView = topCardView else {
       print("Nothing to pop")
       return
