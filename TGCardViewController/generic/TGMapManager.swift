@@ -184,4 +184,3 @@ fileprivate struct MapState {
     mapView.showsTraffic = showsTraffic
   }
 }
-

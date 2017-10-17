@@ -110,7 +110,7 @@ public class TGCardView: TGCornerView {
   }
   
   /// The closure to execute when the button is pressed.
-  var onFloatingButtonPressed: (() -> (Void))? {
+  var onFloatingButtonPressed: (() -> Void)? {
     didSet {
       floatingButton?.isHidden = onFloatingButtonPressed == nil
     }

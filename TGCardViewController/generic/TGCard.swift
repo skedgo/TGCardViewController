@@ -49,7 +49,7 @@ open class TGCard: NSObject {
   public let initialPosition: TGCardPosition?
   
   /// The action to execute when floating button is pressed.
-  public var floatingButtonAction: (style: FloatingButtonStyle, onPressed: () -> (Void))?
+  public var floatingButtonAction: (style: FloatingButtonStyle, onPressed: () -> Void)?
   
   public private(set) var viewIsVisible: Bool = false
   
