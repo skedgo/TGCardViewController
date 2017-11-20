@@ -55,9 +55,15 @@ public class TGCardView: TGCornerView {
   /// handling dragging the card up and down.
   @IBOutlet weak var contentScrollView: UIScrollView? {
     didSet {
-      contentScrollView?.addObserver(self, forKeyPath: "contentOffset", options: [.new], context: nil)
+      contentScrollViewObservation = contentScrollView?
+        .observe(\UIScrollView.contentOffset) { [weak self] scrollView, _ in
+        guard let separator = self?.contentSeparator, scrollView.isScrollEnabled else { return }
+        separator.isHidden = scrollView.contentOffset.y <= 0
+      }
     }
   }
+  
+  private var contentScrollViewObservation: NSKeyValueObservation?
   
   /// Each card view needs a place to display the card's title.
   @IBOutlet weak var titleLabel: UILabel!
@@ -210,24 +216,5 @@ public class TGCardView: TGCornerView {
   @IBAction func floatingButtonTapped(_ sender: Any) {
     onFloatingButtonPressed?()
   }
-  
-  // MARK: - KVO
-  
-  deinit {
-    contentScrollView?.removeObserver(self, forKeyPath: "contentOffset")
-  }
-  
-  public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-    guard
-      let path = keyPath,
-      path == "contentOffset",
-      let separator = contentSeparator,
-      let scroller = contentScrollView,
-      scroller.isScrollEnabled == true
-      else { return }
-    
-    separator.isHidden = scroller.contentOffset.y <= 0
-  }
-  
   
 }

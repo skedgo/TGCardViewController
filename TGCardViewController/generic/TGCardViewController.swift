@@ -536,6 +536,7 @@ extension TGCardViewController {
     }
     
     // Otherwise we look into the direction and snap to the next one that way
+    // swiftlint:disable fallthrough
     let direction = Direction(ofVelocity: velocity)
     switch (direction, traitCollection.verticalSizeClass) {
     case (.up, .compact): fallthrough
@@ -549,6 +550,7 @@ extension TGCardViewController {
     default:
       return (.peaking, peakY)
     }
+    // swiftlint:enable fallthrough
     
   }
   

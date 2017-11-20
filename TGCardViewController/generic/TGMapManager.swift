@@ -32,7 +32,7 @@ open class TGMapManager: NSObject {
   
   fileprivate var edgePadding: UIEdgeInsets = .zero
 
-  fileprivate var previousMapState: MapState?
+  private var previousMapState: MapState?
 
   public fileprivate(set) weak var mapView: MKMapView?
   
@@ -167,20 +167,22 @@ extension MKMapView {
   
 }
 
-fileprivate struct MapState {
-  let showsScale: Bool
-  let showsUserLocation: Bool
-  let showsTraffic: Bool
-  
-  init(for mapView: MKMapView) {
-    showsScale = mapView.showsScale
-    showsUserLocation = mapView.showsUserLocation
-    showsTraffic = mapView.showsTraffic
-  }
-  
-  func restore(for mapView: MKMapView) {
-    mapView.showsScale = showsScale
-    mapView.showsUserLocation = showsUserLocation
-    mapView.showsTraffic = showsTraffic
+extension TGMapManager {
+  private struct MapState {
+    let showsScale: Bool
+    let showsUserLocation: Bool
+    let showsTraffic: Bool
+    
+    init(for mapView: MKMapView) {
+      showsScale = mapView.showsScale
+      showsUserLocation = mapView.showsUserLocation
+      showsTraffic = mapView.showsTraffic
+    }
+    
+    func restore(for mapView: MKMapView) {
+      mapView.showsScale = showsScale
+      mapView.showsUserLocation = showsUserLocation
+      mapView.showsTraffic = showsTraffic
+    }
   }
 }
