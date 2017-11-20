@@ -19,6 +19,8 @@ public class TGHeaderView: UIView {
   @IBOutlet weak var accessoryWrapperView: UIView!
   @IBOutlet weak var accessoryWrapperHeightConstraint: NSLayoutConstraint!
   
+  @IBOutlet weak var topSpaceConstraint: NSLayoutConstraint!
+  
   static func instantiate() -> TGHeaderView {
     let bundle = Bundle(for: self)
     guard
@@ -78,6 +80,14 @@ public class TGHeaderView: UIView {
     }
   }
   
+  var topSpace: CGFloat {
+    get {
+      return topSpaceConstraint.constant
+    }
+    set {
+      topSpaceConstraint.constant = newValue
+    }
+  }
   
   // MARK: - Button actions
   
