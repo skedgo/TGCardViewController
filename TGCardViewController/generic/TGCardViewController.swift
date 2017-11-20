@@ -208,7 +208,7 @@ open class TGCardViewController: UIViewController {
   /// The current amount of points of content at the top of the view
   /// that's overlapping with the map. Includes status bar, if visible.
   fileprivate var topOverlap: CGFloat {
-    return 20  // FIXME: Get status bar height properly
+    return UIApplication.shared.statusBarFrame.height
   }
   
   /// The edge padding for the map that map managers should use
