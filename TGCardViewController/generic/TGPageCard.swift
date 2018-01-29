@@ -16,6 +16,8 @@ import UIKit
 ///
 /// Think of this class as an equivalent of `UIPageViewController`, but
 /// for cards.
+///
+/// This class is generally used as-is, but can also be subclassed.
 open class TGPageCard: TGCard {
   
   public override weak var controller: TGCardViewController? {

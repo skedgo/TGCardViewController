@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(*, deprecated, message: "Scheduled for deletion. Use a custom class instead.")
 public class TGAgendaCardView: TGCardView {
   
   @IBOutlet weak var tableView: UITableView!

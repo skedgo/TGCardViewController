@@ -8,6 +8,10 @@
 
 import UIKit
 
+/// A table card is used for when you need a `UITableView`
+/// as the card's content.
+///
+/// This class is generally subclassed.
 open class TGTableCard: TGCard {
   
   public let tableStyle: UITableViewStyle

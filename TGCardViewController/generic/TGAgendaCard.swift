@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(*, deprecated, message: "Scheduled for deletion. Use TGTableCard instead.")
 open class TGAgendaCard: TGTableCard {
   
   /// This is the content for the bottom view.

@@ -10,8 +10,19 @@ import UIKit
 
 /// A card representing the content currently displayed
 ///
-/// Implements NSObject to make it easy to implement
-/// various UIKit protocols in subclasses
+/// - warning: In normal usage, you won't use this
+///     directly nor will you subclass this direct.
+///     Instead you'll use the subclasses:
+///
+/// - `TGPlainCard`: For cards with a title and a content view
+/// - `TGTableCard`: For cards with a title and table view as the content
+/// - `TGPageCard`: For displaying several cards on the same hierarchy,
+///      allowing to swipe between them.
+///
+/// See those classes for more information and how to use them.
+///
+/// - note: Implements NSObject to make it easy to implement
+/// various UIKit protocols in subclasses.
 open class TGCard: NSObject {
   
   public enum FloatingButtonStyle {

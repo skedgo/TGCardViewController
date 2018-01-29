@@ -8,6 +8,14 @@
 
 import UIKit
 
+/// A plain card let's you display an arbitrary content view,
+/// accessory view, along with respective map content through
+/// the map manager.
+///
+/// - warning: It's not recommended to use a `UITableView` as
+///     the content. For that use `TGTableCard` instead.
+///
+/// This class is generally subclassed.
 open class TGPlainCard: TGCard {
   
   /// The content to display on the card below title + subtitle
