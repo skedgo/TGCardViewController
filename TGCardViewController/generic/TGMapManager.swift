@@ -18,6 +18,25 @@ open class TGMapManager: NSObject {
     case country  = 15 // can fit a country => where in the world/in this country are we?
   }
   
+  private struct MapState {
+    let showsScale: Bool
+    let showsUserLocation: Bool
+    let showsTraffic: Bool
+    
+    init(for mapView: MKMapView) {
+      showsScale = mapView.showsScale
+      showsUserLocation = mapView.showsUserLocation
+      showsTraffic = mapView.showsTraffic
+    }
+    
+    func restore(for mapView: MKMapView) {
+      mapView.showsScale = showsScale
+      mapView.showsUserLocation = showsUserLocation
+      mapView.showsTraffic = showsTraffic
+    }
+  }
+
+  
   public var annotations = [MKAnnotation]() {
     didSet {
       guard let mapView = mapView else { return }
@@ -30,9 +49,9 @@ open class TGMapManager: NSObject {
   /// content the first time.
   public var preferredZoomLevel: Zoom = .city
   
-  fileprivate var edgePadding: UIEdgeInsets = .zero
+  private var edgePadding: UIEdgeInsets = .zero
 
-  fileprivate var previousMapState: MapState?
+  private var previousMapState: MapState?
 
   public fileprivate(set) weak var mapView: MKMapView?
   
@@ -165,22 +184,4 @@ extension MKMapView {
                      size: MKMapSize(width: width, height: height))
   }
   
-}
-
-fileprivate struct MapState {
-  let showsScale: Bool
-  let showsUserLocation: Bool
-  let showsTraffic: Bool
-  
-  init(for mapView: MKMapView) {
-    showsScale = mapView.showsScale
-    showsUserLocation = mapView.showsUserLocation
-    showsTraffic = mapView.showsTraffic
-  }
-  
-  func restore(for mapView: MKMapView) {
-    mapView.showsScale = showsScale
-    mapView.showsUserLocation = showsUserLocation
-    mapView.showsTraffic = showsTraffic
-  }
 }
