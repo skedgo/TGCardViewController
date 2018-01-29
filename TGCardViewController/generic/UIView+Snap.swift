@@ -18,7 +18,7 @@ extension UIView {
     bottomAnchor.constraint(equalTo: superView.bottomAnchor).isActive = true
   }
   
-  func center(on superView: UIView) {
+  public func center(on superView: UIView) {
     translatesAutoresizingMaskIntoConstraints = false
     superView.addSubview(self)
     topAnchor.constraint(equalTo: superView.topAnchor, constant: 8).isActive = true

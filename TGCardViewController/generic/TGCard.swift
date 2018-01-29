@@ -64,7 +64,7 @@ open class TGCard: NSObject {
   /// Builds the card view to represent the card
   ///
   /// - Returns: Card view configured with the content of this card
-  public func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  open func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     preconditionFailure("Override this in subclasses, but don't call super to `TGCard`.")
   }
   

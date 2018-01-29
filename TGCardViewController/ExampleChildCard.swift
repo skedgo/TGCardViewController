@@ -9,6 +9,8 @@
 import UIKit
 import MapKit
 
+import TGCardViewController
+
 class ExampleChildCard : TGPlainCard {
   
   init() {

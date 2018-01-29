@@ -31,7 +31,7 @@ open class TGAgendaCard: TGTableCard {
   
   // MARK: - Constructing views.
   
-  override public func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  override open func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGAgendaCardView.instantiate()
     view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
     return view
