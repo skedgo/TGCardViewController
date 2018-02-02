@@ -616,7 +616,11 @@ extension TGCardViewController {
     // start of recognising gesture.
     if let topCardView = topCardView, cardPosition == .collapsed, recogniser.state == .began {
       let offset = topCardView.headerHeight(for: .collapsed)
-      currentCardY -= offset
+      if #available(iOS 11, *) {
+        currentCardY -= (offset + view.safeAreaInsets.bottom)
+      } else {
+        currentCardY -= (offset + bottomLayoutGuide.length)
+      }
     }
     
     // Reposition the card according to the pan as long as the user
