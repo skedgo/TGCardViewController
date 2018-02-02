@@ -125,6 +125,8 @@ open class TGCardViewController: UIViewController {
   override open func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
+    cardWrapperDesiredTopConstraint.constant = collapsedMinY
+    
     topCard?.willAppear(animated: animated)
   }
   
