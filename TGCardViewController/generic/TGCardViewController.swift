@@ -309,6 +309,13 @@ extension TGCardViewController {
     let cardView = top.buildCardView(showClose: showClose, includeHeader: true)
     cardView.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     
+    // On device with home indicator, we want only the header part of a card view is
+    // visible when the card is in collapsed state. If we don't adjust the alpha as
+    // below, since the card view is placed on the top of the bottom safe layout guide,
+    // which is an additional 34px on iPhone X, we will see part of the card content
+    // coming through.
+    cardView.contentScrollView?.alpha = animateTo.position == .collapsed ? 0 : 1
+    
     // This allows us to continuously pull down the card view while its
     // content is scrolled to the top. Note this only applies when the
     // card isn't being forced into the extended position.
@@ -575,9 +582,11 @@ extension TGCardViewController {
     
     UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
       self.updateMapShadow(for: snapTo.position)
+      self.topCardView?.contentScrollView?.alpha = snapTo.position == .collapsed ? 0 : 1
       self.view.layoutIfNeeded()
     }, completion: { _ in
       self.topCardView?.allowContentScrolling(snapTo.position == .extended)
+      
       self.previousCardPosition = snapTo.position
       completion?()
     })
@@ -613,6 +622,8 @@ extension TGCardViewController {
     if (currentCardY + translation.y >= extendedMinY) && (currentCardY + translation.y <= collapsedMinY) {
       recogniser.setTranslation(.zero, in: cardWrapperContent)
       cardWrapperDesiredTopConstraint.constant = currentCardY + translation.y
+      // TODO: need to math to make the alpha transition less abrupt.
+      topCardView?.contentScrollView?.alpha = 1
       view.setNeedsUpdateConstraints()
       view.layoutIfNeeded()
     }
@@ -698,6 +709,7 @@ extension TGCardViewController {
       options: [.curveEaseOut],
       animations: {
         self.updateMapShadow(for: animateTo.position)
+        self.topCardView?.contentScrollView?.alpha = animateTo.position == .collapsed ? 0 : 1
         self.view.layoutIfNeeded()
     },
       completion: { _ in
@@ -813,9 +825,8 @@ extension TGCardViewController {
     
     // Ask the AL for the most fitting height.
     let stickyHeight = content.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
-    
     stickyBarHeightConstraint.constant = stickyHeight
-    stickyBarTopConstraint.constant = 0
+    stickyBarTopConstraint.constant = 0 + UIApplication.shared.statusBarFrame.height
     view.setNeedsUpdateConstraints()
 
     UIView.animate(
@@ -832,8 +843,7 @@ extension TGCardViewController {
   }
   
   func hideStickyBar(animated: Bool) {
-    let stickyHeight = stickyBarHeightConstraint.constant
-    
+    let stickyHeight = stickyBarHeightConstraint.constant    
     stickyBarTopConstraint.constant = stickyHeight * -1
     view.setNeedsUpdateConstraints()
 

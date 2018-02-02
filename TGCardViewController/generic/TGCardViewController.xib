@@ -110,7 +110,7 @@
                         <constraint firstItem="zI8-lz-Md7" firstAttribute="leading" secondItem="XA2-1g-kYz" secondAttribute="leading" id="qWk-nn-wsJ"/>
                         <constraint firstAttribute="bottom" secondItem="zI8-lz-Md7" secondAttribute="bottom" id="sRh-ZW-PW0"/>
                         <constraint firstItem="ewk-8T-6Fw" firstAttribute="leading" secondItem="Bui-Tf-j0O" secondAttribute="leading" id="xxs-tH-iF9"/>
-                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Bui-Tf-j0O" secondAttribute="top" constant="100" id="zKc-st-3DD"/>
+                        <constraint firstItem="p4A-z3-3Ce" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Bui-Tf-j0O" secondAttribute="top" constant="100" id="zKc-st-3DD"/>
                     </constraints>
                     <viewLayoutGuide key="safeArea" id="p4A-z3-3Ce"/>
                     <variation key="default">
@@ -156,7 +156,7 @@
                     <blurEffect style="light"/>
                 </visualEffectView>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="Byv-0L-fUC" secondAttribute="trailing" id="1YK-c2-p4c"/>
                 <constraint firstAttribute="bottom" secondItem="XA2-1g-kYz" secondAttribute="bottom" id="5G9-6V-snY"/>
