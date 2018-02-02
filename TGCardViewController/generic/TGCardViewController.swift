@@ -619,11 +619,15 @@ extension TGCardViewController {
     
     // Reposition the card according to the pan as long as the user
     // is dragging in the range of extended and collapsed
-    if (currentCardY + translation.y >= extendedMinY) && (currentCardY + translation.y <= collapsedMinY) {
+    let newY = currentCardY + translation.y
+    if (newY >= extendedMinY) && (newY <= collapsedMinY) {
       recogniser.setTranslation(.zero, in: cardWrapperContent)
-      cardWrapperDesiredTopConstraint.constant = currentCardY + translation.y
-      // TODO: need to math to make the alpha transition less abrupt.
-      topCardView?.contentScrollView?.alpha = 1
+      cardWrapperDesiredTopConstraint.constant = newY
+      
+      // Set alpha according to scrolling state, for a smooth transition
+      // Collapsed: 0, peakY: 1
+      topCardView?.contentScrollView?.alpha = min(1, max(0, (collapsedMinY - newY) / (collapsedMinY - peakY)))
+      
       view.setNeedsUpdateConstraints()
       view.layoutIfNeeded()
     }
