@@ -46,23 +46,23 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                     <subviews>
                         <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7">
-                            <rect key="frame" x="0.0" y="80" width="414" height="656"/>
+                            <rect key="frame" x="0.0" y="60" width="414" height="676"/>
                         </mapView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewk-8T-6Fw" userLabel="Header View">
-                            <rect key="frame" x="0.0" y="20" width="414" height="60"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                             <constraints>
                                 <constraint firstAttribute="height" priority="750" constant="60" id="dMP-Sd-KN9"/>
                             </constraints>
                         </view>
                         <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1uG-yl-0le">
-                            <rect key="frame" x="0.0" y="80" width="414" height="656"/>
+                            <rect key="frame" x="0.0" y="60" width="414" height="676"/>
                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O" userLabel="Card Wrapper Shadow">
-                            <rect key="frame" x="0.0" y="180" width="414" height="606"/>
+                            <rect key="frame" x="0.0" y="160" width="414" height="626"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aqL-1W-7nJ" userLabel="Card Wrapper Content">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="606"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="626"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </subviews>
@@ -102,7 +102,7 @@
                         <constraint firstItem="1uG-yl-0le" firstAttribute="centerY" secondItem="zI8-lz-Md7" secondAttribute="centerY" id="Q0s-vO-Y4E"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="height" secondItem="zI8-lz-Md7" secondAttribute="height" id="QhJ-7r-spa"/>
                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Bui-Tf-j0O" secondAttribute="trailing" constant="408" id="QkK-q5-x7Y"/>
-                        <constraint firstItem="ewk-8T-6Fw" firstAttribute="top" secondItem="p4A-z3-3Ce" secondAttribute="top" id="Vi9-1z-ei1"/>
+                        <constraint firstItem="ewk-8T-6Fw" firstAttribute="top" secondItem="XA2-1g-kYz" secondAttribute="top" id="Vi9-1z-ei1"/>
                         <constraint firstAttribute="trailing" secondItem="zI8-lz-Md7" secondAttribute="trailing" id="a3k-8B-nAB"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="width" secondItem="zI8-lz-Md7" secondAttribute="width" id="ehb-Zi-cMv"/>
                         <constraint firstItem="Bui-Tf-j0O" firstAttribute="height" secondItem="zI8-lz-Md7" secondAttribute="height" constant="-50" id="hEc-8X-109"/>

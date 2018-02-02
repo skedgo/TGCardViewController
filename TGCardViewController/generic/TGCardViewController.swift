@@ -748,9 +748,14 @@ extension TGCardViewController {
     
     // Ask the AL for the most fitting height.
     let headerHeight = content.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
-    
     headerViewHeightConstraint.constant = headerHeight
-    headerViewTopConstraint.constant = 0
+    
+    if #available(iOS 11, *) {
+      headerViewTopConstraint.constant = 0 + view.safeAreaInsets.top
+    } else {
+      headerViewTopConstraint.constant = 0 + topLayoutGuide.length
+    }
+    
     view.setNeedsUpdateConstraints()
 
     UIView.animate(
