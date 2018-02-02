@@ -337,7 +337,6 @@ extension TGCardViewController {
     cardWrapperMinOverlapTopConstraint.constant = cardView.headerHeight(for: .collapsed)
     let header = top.buildHeaderView()
     if let header = header {
-      header.topSpace = topOverlap
       header.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
       showHeader(content: header, animated: animated)
     } else if isShowingHeader {
