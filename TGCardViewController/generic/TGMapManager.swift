@@ -106,6 +106,13 @@ open class TGMapManager: NSObject {
                              edgePadding: edgePadding,
                              animated: animated)
   }
+
+  public func zoom(to mapRect: MKMapRect, animated: Bool) {
+    mapView?.showMapRect(mapRect,
+                         minimumZoomLevel: preferredZoomLevel.rawValue,
+                         edgePadding: edgePadding,
+                         animated: animated)
+  }
   
 }
 
@@ -127,14 +134,26 @@ extension MKMapView {
     // Note: Using zero insets here as we'll respect the inspect already in the
     //       call below when setting the visible map rect - otherwise we adjust
     //       for it twice.
-    var mapRect = mapRectThatFits(annotations.boundingMapRect, edgePadding: .zero)
+    let mapRect = mapRectThatFits(annotations.boundingMapRect, edgePadding: .zero)
     
-    if zoomLevel(of: mapRect) < minimumZoomLevel {
+    showMapRect(mapRect, minimumZoomLevel: minimumZoomLevel, edgePadding: edgePadding, animated: animated)
+  }
+  
+  func showMapRect(_ mapRect: MKMapRect,
+                   minimumZoomLevel: Double,
+                   edgePadding: UIEdgeInsets = .zero,
+                   animated: Bool) {
+    
+    guard !MKMapRectIsNull(mapRect) else { return }
+    
+    var mapRectToShow = mapRect
+    
+    if zoomLevel(of: mapRectToShow) < minimumZoomLevel {
       let center = MKMapPoint(x: MKMapRectGetMidX(mapRect), y: MKMapRectGetMidY(mapRect))
-      mapRect = self.mapRect(forZoomLevel: minimumZoomLevel, centeredOn: center)
+      mapRectToShow = self.mapRect(forZoomLevel: minimumZoomLevel, centeredOn: center)
     }
     
-    setVisibleMapRect(mapRect, edgePadding: edgePadding, animated: animated)
+    setVisibleMapRect(mapRectToShow, edgePadding: edgePadding, animated: animated)
   }
   
 }

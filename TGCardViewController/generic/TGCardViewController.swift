@@ -683,6 +683,18 @@ extension TGCardViewController {
       break
     }
   }
+
+  /// Moves the card to the provided position.
+  ///
+  /// If position is specified as `peaking` is, but this isn't allowed
+  /// due to the trait collections, then it will move to `extended` instead.
+  ///
+  /// - Parameters:
+  ///   - position: Desired position
+  ///   - animated: If transition should be animated
+  public func moveCard(to position: TGCardPosition, animated: Bool) {
+    switchTo(position, direction: .up, animated: animated)
+  }
   
   fileprivate func switchTo(_ position: TGCardPosition, direction: Direction, animated: Bool) {
     let animateTo = cardLocation(forDesired: position, direction: direction)
