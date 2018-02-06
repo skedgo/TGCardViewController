@@ -46,7 +46,7 @@ open class TGMapManager: NSObject {
   }
   
   /// How zoomed in/out the map should be when displaying the
-  /// content the first time.
+  /// content the first time. Defaults to `.city`
   public var preferredZoomLevel: Zoom = .city
   
   private var edgePadding: UIEdgeInsets = .zero
