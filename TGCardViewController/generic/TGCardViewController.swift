@@ -406,7 +406,7 @@ extension TGCardViewController {
       return
     }
     
-    guard let top = topCard, let topView = topCardView else {
+    guard let currentTopCard = topCard, let topView = topCardView else {
       print("Nothing to pop")
       return
     }
@@ -417,7 +417,7 @@ extension TGCardViewController {
     let notify = isVisible
     if notify {
       newTop?.card.willAppear(animated: animated)
-      top.willDisappear(animated: animated)
+      currentTopCard.willDisappear(animated: animated)
     }
     topView.contentScrollView?.panGestureRecognizer.removeTarget(self, action: nil)
 
@@ -426,7 +426,7 @@ extension TGCardViewController {
     cards.remove(at: cards.count - 1)
     
     // 2. Hand over the map
-    top.mapManager?.cleanUp(mapView)
+    currentTopCard.mapManager?.cleanUp(mapView)
     newTop?.card.mapManager?.takeCharge(of: mapView,
                                         edgePadding: mapEdgePadding(for: newTop?.position ?? .collapsed),
                                         animated: animated)
@@ -478,12 +478,13 @@ extension TGCardViewController {
         self.updateMapShadow(for: animateTo.position)
         topView.frame.origin.y = self.cardWrapperContent.frame.maxY
         self.cardTransitionShadow?.alpha = 0
+        newTop?.view.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
       },
       completion: { _ in
         newTop?.view.allowContentScrolling(animateTo.position == .extended)
-        top.controller = nil
+        currentTopCard.controller = nil
         if notify {
-          top.didDisappear(animated: animated)
+          currentTopCard.didDisappear(animated: animated)
           newTop?.card.didAppear(animated: animated)
         }
         topView.removeFromSuperview()
