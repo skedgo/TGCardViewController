@@ -316,7 +316,7 @@ extension TGCardViewController {
     // below, since the card view is placed on the top of the bottom safe layout guide,
     // which is an additional 34px on iPhone X, we will see part of the card content
     // coming through.
-    cardView.contentScrollView?.alpha = animateTo.position == .collapsed ? 0 : 1
+    cardView.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
     
     // This allows us to continuously pull down the card view while its
     // content is scrolled to the top. Note this only applies when the
@@ -584,7 +584,7 @@ extension TGCardViewController {
     
     UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
       self.updateMapShadow(for: snapTo.position)
-      self.topCardView?.contentScrollView?.alpha = snapTo.position == .collapsed ? 0 : 1
+      self.topCardView?.adjustContentAlpha(to: snapTo.position == .collapsed ? 0 : 1)
       self.view.layoutIfNeeded()
     }, completion: { _ in
       self.topCardView?.allowContentScrolling(snapTo.position == .extended)
@@ -632,7 +632,8 @@ extension TGCardViewController {
       
       // Set alpha according to scrolling state, for a smooth transition
       // Collapsed: 0, peakY: 1
-      topCardView?.contentScrollView?.alpha = min(1, max(0, (collapsedMinY - newY) / (collapsedMinY - peakY)))
+      let contentAlpha = min(1, max(0, (collapsedMinY - newY) / (collapsedMinY - peakY)))
+      topCardView?.adjustContentAlpha(to: contentAlpha)
       
       view.setNeedsUpdateConstraints()
       view.layoutIfNeeded()

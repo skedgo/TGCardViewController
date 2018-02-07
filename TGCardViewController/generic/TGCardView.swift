@@ -122,8 +122,6 @@ public class TGCardView: TGCornerView {
     }
   }
   
-  // MARK: - Configuration
-  
   override public func awakeFromNib() {
     super.awakeFromNib()
     
@@ -148,6 +146,7 @@ public class TGCardView: TGCornerView {
     heightConstraint?.isActive = true
   }
   
+  // MARK: - Full card view configuration
   
   func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
     titleLabel.text = includeHeader ? card.title : nil
@@ -173,11 +172,7 @@ public class TGCardView: TGCornerView {
     }
   }
   
-  
-  func allowContentScrolling(_ allowScrolling: Bool) {
-    contentScrollView?.isScrollEnabled = allowScrolling
-  }
-  
+  // MARK: - Header view configuration
   
   func headerHeight(for position: TGCardPosition) -> CGFloat {
     guard let scrollView = contentScrollView else {
@@ -189,7 +184,7 @@ public class TGCardView: TGCornerView {
       var frame: CGRect
       
       if let wrapper = accessoryWrapperView,
-         let accessory = accessoryView {
+        let accessory = accessoryView {
         // The frame of the accessory view in the coordinate system
         // of card view itself
         frame = wrapper.convert(accessory.frame, to: self)
@@ -213,8 +208,19 @@ public class TGCardView: TGCornerView {
     }
   }
   
+  // MARK: - Content view configuration
+  
+  func allowContentScrolling(_ allowScrolling: Bool) {
+    contentScrollView?.isScrollEnabled = allowScrolling
+  }
+  
+  func adjustContentAlpha(to value: CGFloat) {
+    contentScrollView?.alpha = value
+  }
+  
+  // MARK: - User interaction
+  
   @IBAction func floatingButtonTapped(_ sender: Any) {
     onFloatingButtonPressed?()
   }
-  
 }
