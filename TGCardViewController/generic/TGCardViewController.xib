@@ -91,7 +91,6 @@
                         <constraint firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="DGx-yq-huX"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="centerY" secondItem="zI8-lz-Md7" secondAttribute="centerY" id="Q0s-vO-Y4E"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="height" secondItem="zI8-lz-Md7" secondAttribute="height" id="QhJ-7r-spa"/>
-                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Bui-Tf-j0O" secondAttribute="trailing" constant="408" id="QkK-q5-x7Y"/>
                         <constraint firstItem="ewk-8T-6Fw" firstAttribute="top" secondItem="XA2-1g-kYz" secondAttribute="top" id="Vi9-1z-ei1"/>
                         <constraint firstAttribute="trailing" secondItem="zI8-lz-Md7" secondAttribute="trailing" id="a3k-8B-nAB"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="width" secondItem="zI8-lz-Md7" secondAttribute="width" id="ehb-Zi-cMv"/>
@@ -106,7 +105,6 @@
                     <variation key="default">
                         <mask key="constraints">
                             <exclude reference="0es-h4-clN"/>
-                            <exclude reference="QkK-q5-x7Y"/>
                         </mask>
                     </variation>
                     <variation key="widthClass=regular">
@@ -117,7 +115,6 @@
                             <include reference="0es-h4-clN"/>
                             <exclude reference="1Mc-Uh-pXD"/>
                             <exclude reference="DGx-yq-huX"/>
-                            <exclude reference="QkK-q5-x7Y"/>
                         </mask>
                     </variation>
                 </view>
