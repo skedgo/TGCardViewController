@@ -160,6 +160,12 @@ open class TGCardViewController: UIViewController {
       cardWrapperDesiredTopConstraint.constant = cardLocation(forDesired: previous, direction: .up).y
     }
   }
+  
+  open override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    
+    topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
+  }
 
   override open func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
