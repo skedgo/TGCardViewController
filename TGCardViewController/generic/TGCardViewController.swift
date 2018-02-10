@@ -260,6 +260,7 @@ extension TGCardViewController {
     let position = desired ?? cardPosition
     
     switch (position, traitCollection.verticalSizeClass, direction) {
+    case (_, .compact, _):          return (.extended, extendedMinY)
     case (.extended, _, _):         return (.extended, extendedMinY)
     case (.peaking, .regular, _):   return (.peaking, peakY)
     case (.peaking, _, .up):        return (.extended, extendedMinY)
