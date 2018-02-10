@@ -30,8 +30,7 @@ open class TGCardViewController: UIViewController {
   }
   
   open weak var delegate: TGCardViewControllerDelegate?
-
-  @IBOutlet weak var stickyBar: UIView!
+  
   @IBOutlet weak var headerView: UIView!
   @IBOutlet weak var mapView: MKMapView!
   @IBOutlet weak var mapShadow: UIView!
@@ -48,10 +47,6 @@ open class TGCardViewController: UIViewController {
   // Positioning the header view
   @IBOutlet weak var headerViewHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var headerViewTopConstraint: NSLayoutConstraint!
-  
-  // Positioning the sticky bar
-  @IBOutlet weak var stickyBarHeightConstraint: NSLayoutConstraint!
-  @IBOutlet weak var stickyBarTopConstraint: NSLayoutConstraint!
   
   // Dynamic constraints
   @IBOutlet weak var statusBarBlurHeightConstraint: NSLayoutConstraint!
@@ -109,7 +104,6 @@ open class TGCardViewController: UIViewController {
     cardWrapperMinOverlapTopConstraint.constant = 0
     
     // Hide the bars at first
-    hideStickyBar(animated: false)
     hideHeader(animated: false)
 
     // Collapse card at first
@@ -814,84 +808,6 @@ extension TGCardViewController {
   }
   
 }
-
-// MARK: - Sticky bar at the top
-
-extension TGCardViewController {
-
-  var isShowingSticky: Bool {
-    return stickyBarTopConstraint.constant > -1
-  }
-  
-  func showStickyBar(content: UIView, animated: Bool) {
-    // It's okay to do replacement here, even though the height of the
-    // sticky bar may not fit the content. This is because the height
-    // constraint on the sticky bar has lower priority, so AL can break
-    // it if conflicts arise.
-    overwriteStickyBarContent(with: content)
-    
-    // The content view passed in here may be loaded from xib, to get
-    // the correct height, we need to adjust its width and ask the AL
-    // to compute the fitting height.
-    content.frame.size.width = stickyBar.frame.width
-    
-    // Do a layout pass, just to make sure its subviews are still laid
-    // out correctly after the change in width.
-    content.setNeedsLayout()
-    content.layoutIfNeeded()
-    
-    // Ask the AL for the most fitting height.
-    let stickyHeight = content.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
-    stickyBarHeightConstraint.constant = stickyHeight
-    stickyBarTopConstraint.constant = 0 + UIApplication.shared.statusBarFrame.height
-    view.setNeedsUpdateConstraints()
-
-    UIView.animate(
-      withDuration: animated ? 0.35 : 0,
-      delay: 0,
-      usingSpringWithDamping: 0.75,
-      initialSpringVelocity: 0,
-      options: [.curveEaseOut],
-      animations: {
-        self.view.layoutIfNeeded()
-      },
-      completion: nil
-    )
-  }
-  
-  func hideStickyBar(animated: Bool) {
-    let stickyHeight = stickyBarHeightConstraint.constant    
-    stickyBarTopConstraint.constant = stickyHeight * -1
-    view.setNeedsUpdateConstraints()
-
-    UIView.animate(
-      withDuration: animated ? 0.35 : 0,
-      delay: 0,
-      usingSpringWithDamping: 0.75,
-      initialSpringVelocity: 0,
-      options: [.curveEaseIn],
-      animations: {
-        self.view.layoutIfNeeded()
-      },
-      completion: { finished in
-        guard finished else { return }
-        self.stickyBar.subviews.forEach { $0.removeFromSuperview() }
-      }
-    )
-  }
-  
-  fileprivate func overwriteStickyBarContent(with content: UIView) {
-    stickyBar.subviews.forEach { $0.removeFromSuperview() }
-    content.translatesAutoresizingMaskIntoConstraints = false
-    stickyBar.addSubview(content)
-    content.leadingAnchor.constraint(equalTo: stickyBar.leadingAnchor).isActive = true
-    content.trailingAnchor.constraint(equalTo: stickyBar.trailingAnchor).isActive = true
-    content.topAnchor.constraint(equalTo: stickyBar.topAnchor).isActive = true
-    content.bottomAnchor.constraint(equalTo: stickyBar.bottomAnchor).isActive = true
-  }
-  
-}
-
 
 // MARK: - UIGestureRecognizerDelegate
 
