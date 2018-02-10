@@ -159,6 +159,10 @@ open class TGCardViewController: UIViewController {
       // `up` is fine.
       cardWrapperDesiredTopConstraint.constant = cardLocation(forDesired: previous, direction: .up).y
     }
+    
+    // Card header position and corner radius depends on vertical size class
+    updateHeaderConstraints()
+    headerView.layer.cornerRadius = traitCollection.verticalSizeClass == .compact ? 8 : 0
   }
   
   open override func viewDidLayoutSubviews() {
@@ -743,35 +747,29 @@ extension TGCardViewController {
     return headerViewTopConstraint.constant > -1
   }
   
-  fileprivate func showHeader(content: UIView, animated: Bool) {
-    // It's okay to do replacement here, even though the height of the
-    // sticky bar may not fit the content. This is because the height
-    // constraint on the sticky bar has lower priority, so AL can break
-    // it if conflicts arise.
-    overwriteHeaderContent(with: content)
+  private func updateHeaderConstraints() {
+    guard isShowingHeader else { return }
     
-    // The content view passed in here may be loaded from xib, to get
-    // the correct height, we need to adjust its width and ask the AL
-    // to compute the fitting height.
-    content.frame.size.width = headerView.frame.width
-    
-    // Do a layout pass, just to make sure its subviews are still laid
-    // out correctly after the change in width.
-    content.setNeedsLayout()
-    content.layoutIfNeeded()
-    
-    // Ask the AL for the most fitting height.
-    let headerHeight = content.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
-    headerViewHeightConstraint.constant = headerHeight
-    
-    if #available(iOS 11, *) {
-      headerViewTopConstraint.constant = 0 + view.safeAreaInsets.top
+    if traitCollection.verticalSizeClass == .compact {
+      // TODO: move 20pt to Constants.
+      headerViewTopConstraint.constant = topOverlap + 20
     } else {
-      headerViewTopConstraint.constant = 0 + topLayoutGuide.length
+      headerViewTopConstraint.constant = topOverlap
     }
     
     view.setNeedsUpdateConstraints()
+  }
+  
+  fileprivate func showHeader(content: UIView, animated: Bool) {
+    // update the header content.
+    overwriteHeaderContent(with: content)
+    
+    // update header constraints
+    headerViewTopConstraint.constant = topOverlap
+    headerViewHeightConstraint.constant = content.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+    view.setNeedsUpdateConstraints()
 
+    // animate in
     UIView.animate(
       withDuration: animated ? 0.35 : 0,
       delay: 0,
