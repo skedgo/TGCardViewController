@@ -165,6 +165,7 @@ open class TGCardViewController: UIViewController {
     super.viewDidLayoutSubviews()
     
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
+    topCardView?.grabHandle?.isHidden = traitCollection.verticalSizeClass == .compact
   }
 
   override open func didReceiveMemoryWarning() {
@@ -435,7 +436,7 @@ extension TGCardViewController {
     // 3. Special handling of when the new top card has no map content
     let forceExtended = (newTop?.card.mapManager == nil)
     panner.isEnabled = !forceExtended
-    newTop?.view.grabHandle?.isHidden = forceExtended
+    newTop?.view.grabHandle?.isHidden = forceExtended || traitCollection.verticalSizeClass == .compact
     
     // 4. Determine and set new position of the card wrapper
     newTop?.view.alpha = 1
