@@ -217,7 +217,11 @@ open class TGCardViewController: UIViewController {
   /// The current amount of points of content at the top of the view
   /// that's overlapping with the map. Includes status bar, if visible.
   fileprivate var topOverlap: CGFloat {
-    return UIApplication.shared.statusBarFrame.height
+    if #available(iOS 11, *) {
+      return view.safeAreaInsets.top
+    } else {
+      return topLayoutGuide.length
+    }
   }
   
   /// The edge padding for the map that map managers should use
@@ -769,24 +773,33 @@ extension TGCardViewController {
   
   private func updateHeaderConstraints() {
     guard isShowingHeader else { return }
-    
+    adjustHeaderPositioningConstraint()
+    view.setNeedsUpdateConstraints()
+  }
+  
+  private func adjustHeaderPositioningConstraint() {
     if traitCollection.verticalSizeClass == .compact {
       // TODO: move 20pt to Constants.
       headerViewTopConstraint.constant = topOverlap + 20
     } else {
       headerViewTopConstraint.constant = topOverlap
     }
-    
-    view.setNeedsUpdateConstraints()
+  }
+  
+  private func adjustHeaderHeightConstraint(toFit content: UIView) {
+    let size = content.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+    headerViewHeightConstraint.constant = size.height
   }
   
   fileprivate func showHeader(content: UIView, animated: Bool) {
     // update the header content.
     overwriteHeaderContent(with: content)
+   
+    // adjust constraints
+    adjustHeaderPositioningConstraint()
+    adjustHeaderHeightConstraint(toFit: content)
     
-    // update header constraints
-    headerViewTopConstraint.constant = topOverlap
-    headerViewHeightConstraint.constant = content.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+    // notify UIKit the header's contraints need to be updated.
     view.setNeedsUpdateConstraints()
 
     // animate in
