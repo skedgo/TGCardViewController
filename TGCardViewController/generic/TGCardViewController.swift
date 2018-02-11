@@ -160,7 +160,10 @@ open class TGCardViewController: UIViewController {
       cardWrapperDesiredTopConstraint.constant = cardLocation(forDesired: previous, direction: .up).y
     }
     
-    // Card header position and corner radius depends on vertical size class
+    // The visibility of a card's grab handle depends on vertical size class
+    updateGrabHandleVisibility()
+    
+    // The position of a card's header also depends on vertical size class
     updateHeaderConstraints()
     headerView.layer.cornerRadius = traitCollection.verticalSizeClass == .compact ? 8 : 0
   }
@@ -169,7 +172,6 @@ open class TGCardViewController: UIViewController {
     super.viewDidLayoutSubviews()
     
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
-    topCardView?.grabHandle?.isHidden = traitCollection.verticalSizeClass == .compact
   }
 
   override open func didReceiveMemoryWarning() {
@@ -339,13 +341,13 @@ extension TGCardViewController {
     cardWrapperContent.addSubview(cardView)
     
     // Give AutoLayout a nudge to layout the card view, now that we have
-    // the right hight. This is so that we can use `cardView.headerHeight`.
+    // the right height. This is so that we can use `cardView.headerHeight`.
     cardView.setNeedsUpdateConstraints()
     cardView.layoutIfNeeded()
     
     // 6. Special handling of when the new top card has no map content
     panner.isEnabled = !forceExtended
-    cardView.grabHandle?.isHidden = forceExtended
+    updateGrabHandleVisibility()
     
     // 7. Set new position of the wrapper
     cardWrapperDesiredTopConstraint.constant = animateTo.y
@@ -440,7 +442,7 @@ extension TGCardViewController {
     // 3. Special handling of when the new top card has no map content
     let forceExtended = (newTop?.card.mapManager == nil)
     panner.isEnabled = !forceExtended
-    newTop?.view.grabHandle?.isHidden = forceExtended || traitCollection.verticalSizeClass == .compact
+    updateGrabHandleVisibility(for: newTop)
     
     // 4. Determine and set new position of the card wrapper
     newTop?.view.alpha = 1
@@ -736,6 +738,24 @@ extension TGCardViewController {
     })
   }
   
+}
+
+// MARK: - Grab handle
+
+extension TGCardViewController {
+  
+  private func updateGrabHandleVisibility(for cardElement: (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
+    if traitCollection.verticalSizeClass == .compact {
+      let position = cardElement?.position ?? cardPosition
+      let cardView = cardElement?.view ?? topCardView
+      cardView?.grabHandle?.isHidden = position == .extended
+    } else {
+      let card = cardElement?.card ?? topCard
+      let view = cardElement?.view ?? topCardView
+      let isForceExtended = card?.mapManager == nil
+      view?.grabHandle?.isHidden = isForceExtended
+    }
+  }
 }
 
 
