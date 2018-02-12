@@ -242,9 +242,12 @@ open class TGCardViewController: UIViewController {
     let bottomOverlap: CGFloat
     let leftOverlap: CGFloat
     
-    if traitCollection.horizontalSizeClass == .compact {
-      // In compact width the map will always be between the card
-      // and the top.
+    if cardIsNextToMap(in: traitCollection) {
+      // The map is to the right of the card, which we account for when not collapsed
+      leftOverlap = (position != .collapsed) ? cardWrapperShadow.frame.maxX : 0
+      bottomOverlap = 0
+    } else {
+      // Map is always between the top and the cad
       leftOverlap = 0
       let cardY: CGFloat
       switch position {
@@ -252,12 +255,6 @@ open class TGCardViewController: UIViewController {
       case .collapsed:          cardY = collapsedMinY - 75 // not entirely true, but close enough
       }
       bottomOverlap = mapView.frame.height - cardY
-
-    } else {
-      // In regular width the map will be to the right of the card, which
-      // we account for when not collapsed
-      leftOverlap = (position != .collapsed) ? cardWrapperShadow.frame.maxX : 0
-      bottomOverlap = 0
     }
     
     return UIEdgeInsets(top: topOverlap, left: leftOverlap, bottom: bottomOverlap, right: 0)
@@ -269,6 +266,14 @@ open class TGCardViewController: UIViewController {
   fileprivate func updateMapShadow(for position: TGCardPosition) {
     mapShadow.alpha = position == .extended ? Constants.mapShadowVisibleAlpha : 0
     mapShadow.isUserInteractionEnabled = position == .extended
+  }
+  
+  private func cardIsNextToMap(in traitCollections: UITraitCollection) -> Bool {
+    switch (traitCollections.verticalSizeClass, traitCollections.horizontalSizeClass) {
+    case (.compact, _): return true
+    case (_, .regular): return true
+    default: return false
+    }
   }
   
 }
@@ -769,7 +774,8 @@ extension TGCardViewController {
     })
   }
   
-  private func updatePannerInteractivity(for cardElement: (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
+  private func updatePannerInteractivity(for cardElement:
+      (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
     if traitCollection.verticalSizeClass == .compact {
       let position = cardElement?.position ?? cardPosition
       panner.isEnabled = position != .extended
@@ -787,7 +793,8 @@ extension TGCardViewController {
 
 extension TGCardViewController {
   
-  private func updateGrabHandleVisibility(for cardElement: (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
+  private func updateGrabHandleVisibility(for cardElement:
+      (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
     if traitCollection.verticalSizeClass == .compact {
       let position = cardElement?.position ?? cardPosition
       let cardView = cardElement?.view ?? topCardView
