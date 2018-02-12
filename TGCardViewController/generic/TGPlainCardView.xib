@@ -149,6 +149,7 @@
                 <outlet property="floatingButton" destination="4nd-sh-0Ix" id="Dfx-Mg-Sgd"/>
                 <outlet property="grabHandle" destination="JFj-Bl-Nt0" id="RDe-nF-gpP"/>
                 <outlet property="headerStack" destination="GFR-f4-rZW" id="7aS-kU-3bM"/>
+                <outlet property="headerStackBottomConstraint" destination="zi7-9m-TyG" id="fFo-GL-aci"/>
                 <outlet property="headerStackTopConstraint" destination="hP0-p5-p83" id="PKA-T5-B5s"/>
                 <outlet property="labelStack" destination="4Ms-pS-oUj" id="hWH-KT-QTw"/>
                 <outlet property="subtitleLabel" destination="kRV-RD-D8g" id="7jR-jc-hBs"/>
