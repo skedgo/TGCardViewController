@@ -35,7 +35,7 @@ open class TGCardViewController: UIViewController {
   @IBOutlet weak var mapView: MKMapView!
   @IBOutlet weak var mapShadow: UIView!
   @IBOutlet weak var cardWrapperShadow: UIView!
-  @IBOutlet weak var cardWrapperContent: UIView!
+  @IBOutlet public weak var cardWrapperContent: UIView!
   fileprivate weak var cardTransitionShadow: UIView?
   @IBOutlet weak var statusBarBlurView: UIVisualEffectView!
 
@@ -165,7 +165,7 @@ open class TGCardViewController: UIViewController {
     
     // The position of a card's header also depends on size classes
     updateHeaderConstraints()
-    headerView.layer.cornerRadius = traitCollection.verticalSizeClass == .compact ? 8 : 0
+    headerView.layer.cornerRadius = cardIsNextToMap(in: traitCollection) ? 8 : 0
     
     // The interactivity of gesture recognisers depends on size classes as well
     updatePannerInteractivity()
@@ -242,9 +242,12 @@ open class TGCardViewController: UIViewController {
     let bottomOverlap: CGFloat
     let leftOverlap: CGFloat
     
-    if traitCollection.horizontalSizeClass == .compact {
-      // In compact width the map will always be between the card
-      // and the top.
+    if cardIsNextToMap(in: traitCollection) {
+      // The map is to the right of the card, which we account for when not collapsed
+      leftOverlap = (position != .collapsed) ? cardWrapperShadow.frame.maxX : 0
+      bottomOverlap = 0
+    } else {
+      // Map is always between the top and the cad
       leftOverlap = 0
       let cardY: CGFloat
       switch position {
@@ -252,12 +255,6 @@ open class TGCardViewController: UIViewController {
       case .collapsed:          cardY = collapsedMinY - 75 // not entirely true, but close enough
       }
       bottomOverlap = mapView.frame.height - cardY
-
-    } else {
-      // In regular width the map will be to the right of the card, which
-      // we account for when not collapsed
-      leftOverlap = (position != .collapsed) ? cardWrapperShadow.frame.maxX : 0
-      bottomOverlap = 0
     }
     
     return UIEdgeInsets(top: topOverlap, left: leftOverlap, bottom: bottomOverlap, right: 0)
@@ -269,6 +266,14 @@ open class TGCardViewController: UIViewController {
   fileprivate func updateMapShadow(for position: TGCardPosition) {
     mapShadow.alpha = position == .extended ? Constants.mapShadowVisibleAlpha : 0
     mapShadow.isUserInteractionEnabled = position == .extended
+  }
+  
+  private func cardIsNextToMap(in traitCollections: UITraitCollection) -> Bool {
+    switch (traitCollections.verticalSizeClass, traitCollections.horizontalSizeClass) {
+    case (.compact, _): return true
+    case (_, .regular): return true
+    default: return false
+    }
   }
   
 }
@@ -356,7 +361,6 @@ extension TGCardViewController {
     cardView.layoutIfNeeded()
     
     // 6. Special handling of when the new top card has no map content
-//    panner.isEnabled = !forceExtended
     updatePannerInteractivity()
     updateGrabHandleVisibility()
     
@@ -451,8 +455,6 @@ extension TGCardViewController {
                                         animated: animated)
     
     // 3. Special handling of when the new top card has no map content
-    let forceExtended = (newTop?.card.mapManager == nil)
-//    panner.isEnabled = !forceExtended
     updatePannerInteractivity(for: newTop)
     updateGrabHandleVisibility(for: newTop)
     
@@ -566,7 +568,7 @@ extension TGCardViewController {
     }
     
     // Otherwise we look into the direction and snap to the next one that way
-    // swiftlint:disable fallthrough
+    // swiftlint:disable fallthrough (makes sense here)
     let direction = Direction(ofVelocity: velocity)
     switch (direction, traitCollection.verticalSizeClass) {
     case (.up, .compact): fallthrough
@@ -733,6 +735,18 @@ extension TGCardViewController {
       break
     }
   }
+
+  /// Moves the card to the provided position.
+  ///
+  /// If position is specified as `peaking` is, but this isn't allowed
+  /// due to the trait collections, then it will move to `extended` instead.
+  ///
+  /// - Parameters:
+  ///   - position: Desired position
+  ///   - animated: If transition should be animated
+  public func moveCard(to position: TGCardPosition, animated: Bool) {
+    switchTo(position, direction: .up, animated: animated)
+  }
   
   fileprivate func switchTo(_ position: TGCardPosition, direction: Direction, animated: Bool) {
     let animateTo = cardLocation(forDesired: position, direction: direction)
@@ -757,7 +771,8 @@ extension TGCardViewController {
     })
   }
   
-  private func updatePannerInteractivity(for cardElement: (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
+  private func updatePannerInteractivity(for cardElement:
+      (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
     if traitCollection.verticalSizeClass == .compact {
       let position = cardElement?.position ?? cardPosition
       panner.isEnabled = position != .extended
@@ -775,7 +790,8 @@ extension TGCardViewController {
 
 extension TGCardViewController {
   
-  private func updateGrabHandleVisibility(for cardElement: (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
+  private func updateGrabHandleVisibility(for cardElement:
+      (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
     if traitCollection.verticalSizeClass == .compact {
       let position = cardElement?.position ?? cardPosition
       let cardView = cardElement?.view ?? topCardView

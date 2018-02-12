@@ -7,8 +7,9 @@
 //
 
 import Foundation
-
 import MapKit
+
+import TGCardViewController
 
 extension TGMapManager {
   

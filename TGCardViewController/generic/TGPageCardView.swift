@@ -185,7 +185,8 @@ class TGPageCardView: TGCardView {
   // MARK: - Navigation
   
   var currentPage: Int {
-    return Int(pager.contentOffset.x / (frame.width + Constants.spaceBetweenCards))
+    // Using `floor` here as we're getting fractions here, e.g., on iPhone X in landscape
+    return Int(floor(pager.contentOffset.x) / (floor(frame.width) + Constants.spaceBetweenCards))
   }
   
   func moveForward(animated: Bool = true) {

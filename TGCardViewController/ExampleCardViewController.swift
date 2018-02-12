@@ -9,12 +9,14 @@
 import UIKit
 import MapKit
 
+import TGCardViewController
+
 class ExampleCardViewController: TGCardViewController {
 
   required init(coder aDecoder: NSCoder) {
     // When loading from the storyboard we don't want to use the controller
     // as defined in the storyboard but instead use the TGCardViewController.xib
-    super.init(nibName: "TGCardViewController", bundle: .main)
+    super.init(nibName: "TGCardViewController", bundle: Bundle(for: TGCardViewController.self))
   }
   
   override func viewDidLoad() {

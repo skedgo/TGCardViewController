@@ -8,6 +8,10 @@
 
 import UIKit
 
+/// A table card is used for when you need a `UITableView`
+/// as the card's content.
+///
+/// This class is generally subclassed.
 open class TGTableCard: TGCard {
   
   public let tableStyle: UITableViewStyle
@@ -38,7 +42,7 @@ open class TGTableCard: TGCard {
   
   // MARK: - Constructing views
   
-  public override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  open override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGTableCardView.instantiate()
     view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
     return view

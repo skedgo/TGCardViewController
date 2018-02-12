@@ -5,6 +5,7 @@ Ultimately this might turn into a (private) CocoaPod with the current project
 being broken up into a generic part that goes in the pod itself and an example
 project for showing how to use it and easily testing all the different cases.
 
+
 ## Specs
 
 ### 1. Basic functionality of cards
@@ -102,3 +103,56 @@ Map buttons:
 - [ ] State restoration
 - [ ] VoiceOver Accessibility
 - [ ] `NSUserActivity`
+
+
+## Installation and usage
+
+### Install
+
+Via CocoaPods:
+
+1. Check out the repo and make it accessible to your project, e.g., as a git submodule
+2. Add it to your `Podfile`, e.g.:
+
+    `pod 'TGCardViewController',   path: 'Libraries/TGCardViewController'`
+
+3. Run `pod update`
+
+Via Carthage
+
+1. Add it to your `Cartfile`, e.g.:
+
+    `git "git@gitlab.com:SkedGo/tripgo-cards-ios.git" "17-carthage-support"`
+
+2. Run `carthage update` and follow [the usual instructions](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application) to add it to your project.
+
+### Add it to your app
+
+1. Create a `TGCardViewController` subclass and use it in your storyboard
+2. Override `init(coder:)` so that the instance from the storyboard isn't used, but instead `TGCardViewController.xib`:
+
+    ```swift
+    import TGCardViewController
+    
+    class CardViewController: TGCardViewController {
+
+      required init(coder aDecoder: NSCoder) {
+        // When loading from the storyboard we don't want to use the controller
+        // as defined in the storyboard but instead use the TGCardViewController.xib
+        super.init(nibName: "TGCardViewController", bundle: Bundle(for: TGCardViewController.self))
+      }
+
+      ...
+    }
+    ```
+
+3. Create a `TGCard` subclass, that represents the card at the top level, and add then push that in your view controller's `viewDidLoad`:
+
+    ```swift
+      override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        push(MyRootCard())
+      }
+    ```
+

@@ -8,6 +8,8 @@
 
 import UIKit
 
+import TGCardViewController
+
 class ExampleChildContentView: UIView {
 
   @IBOutlet weak var showStickyButton: UIButton!

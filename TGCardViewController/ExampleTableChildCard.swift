@@ -9,6 +9,8 @@
 import UIKit
 import MapKit
 
+import TGCardViewController
+
 class ExampleTableChildCard : TGPlainCard {
   
   init(annotation: MKAnnotation) {
