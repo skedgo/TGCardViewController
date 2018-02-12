@@ -361,7 +361,6 @@ extension TGCardViewController {
     cardView.layoutIfNeeded()
     
     // 6. Special handling of when the new top card has no map content
-//    panner.isEnabled = !forceExtended
     updatePannerInteractivity()
     updateGrabHandleVisibility()
     
@@ -456,8 +455,6 @@ extension TGCardViewController {
                                         animated: animated)
     
     // 3. Special handling of when the new top card has no map content
-    let forceExtended = (newTop?.card.mapManager == nil)
-//    panner.isEnabled = !forceExtended
     updatePannerInteractivity(for: newTop)
     updateGrabHandleVisibility(for: newTop)
     
