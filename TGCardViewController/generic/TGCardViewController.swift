@@ -165,7 +165,7 @@ open class TGCardViewController: UIViewController {
     
     // The position of a card's header also depends on size classes
     updateHeaderConstraints()
-    headerView.layer.cornerRadius = traitCollection.verticalSizeClass == .compact ? 8 : 0
+    headerView.layer.cornerRadius = cardIsNextToMap(in: traitCollection) ? 8 : 0
     
     // The interactivity of gesture recognisers depends on size classes as well
     updatePannerInteractivity()
