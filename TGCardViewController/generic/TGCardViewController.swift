@@ -36,7 +36,7 @@ open class TGCardViewController: UIViewController {
   @IBOutlet weak var mapView: MKMapView!
   @IBOutlet weak var mapShadow: UIView!
   @IBOutlet weak var cardWrapperShadow: UIView!
-  @IBOutlet weak var cardWrapperContent: UIView!
+  @IBOutlet public weak var cardWrapperContent: UIView!
   fileprivate weak var cardTransitionShadow: UIView?
   @IBOutlet weak var statusBarBlurView: UIVisualEffectView!
 
@@ -536,6 +536,7 @@ extension TGCardViewController {
     }
     
     // Otherwise we look into the direction and snap to the next one that way
+    // swiftlint:disable fallthrough (makes sense here)
     let direction = Direction(ofVelocity: velocity)
     switch (direction, traitCollection.verticalSizeClass) {
     case (.up, .compact): fallthrough
@@ -549,6 +550,7 @@ extension TGCardViewController {
     default:
       return (.peaking, peakY)
     }
+    // swiftlint:enable fallthrough
     
   }
   
@@ -800,11 +802,11 @@ extension TGCardViewController {
 
 extension TGCardViewController {
 
-  var isShowingSticky: Bool {
+  public var isShowingSticky: Bool {
     return stickyBarTopConstraint.constant > -1
   }
   
-  func showStickyBar(content: UIView, animated: Bool) {
+  public func showStickyBar(content: UIView, animated: Bool) {
     // It's okay to do replacement here, even though the height of the
     // sticky bar may not fit the content. This is because the height
     // constraint on the sticky bar has lower priority, so AL can break
@@ -841,7 +843,7 @@ extension TGCardViewController {
     )
   }
   
-  func hideStickyBar(animated: Bool) {
+  public func hideStickyBar(animated: Bool) {
     let stickyHeight = stickyBarHeightConstraint.constant
     
     stickyBarTopConstraint.constant = stickyHeight * -1

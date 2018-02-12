@@ -8,6 +8,8 @@
 
 import UIKit
 
+import TGCardViewController
+
 class ExampleTableCard : TGTableCard {
 
   fileprivate let source = ExampleTableDataSource()

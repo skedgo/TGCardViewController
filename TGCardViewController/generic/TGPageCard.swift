@@ -16,7 +16,9 @@ import UIKit
 ///
 /// Think of this class as an equivalent of `UIPageViewController`, but
 /// for cards.
-public class TGPageCard: TGCard {
+///
+/// This class is generally used as-is, but can also be subclassed.
+open class TGPageCard: TGCard {
   
   public override weak var controller: TGCardViewController? {
     didSet {
@@ -27,7 +29,7 @@ public class TGPageCard: TGCard {
   }
   
   /// The cards displayed by the page card
-  let cards: [TGCard]
+  public let cards: [TGCard]
   
   let initialPageIndex: Int
   
@@ -96,7 +98,7 @@ public class TGPageCard: TGCard {
     return true
   }
   
-  public override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  open override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGPageCardView.instantiate()
     view.configure(with: self)
     view.delegate = self
@@ -202,39 +204,39 @@ public class TGPageCard: TGCard {
   // MARK: - Navigation
   
   /// Navigates to the next card, animated
-  func moveForward() {
+  public func moveForward() {
     cardView?.moveForward()
   }
   
   /// Navigates to the previous card, animated
-  func moveBackward() {
+  public func moveBackward() {
     cardView?.moveBackward()
   }
   
   /// Navigates to the card at the provided index, animated
   ///
   /// - Parameter page: Index of the card
-  func move(to page: Int) {
+  public func move(to page: Int) {
     cardView?.move(to: page)
   }
   
   
   // MARK: - Card life cycle
   
-  public override func willAppear(animated: Bool) {
+  open override func willAppear(animated: Bool) {
     currentCard.willAppear(animated: animated)
   }
   
-  public override func didAppear(animated: Bool) {
+  open override func didAppear(animated: Bool) {
     previousAppearedCard = currentCard
     currentCard.didAppear(animated: animated)
   }
   
-  public override func willDisappear(animated: Bool) {
+  open override func willDisappear(animated: Bool) {
     currentCard.willDisappear(animated: animated)
   }
   
-  public override func didDisappear(animated: Bool) {
+  open override func didDisappear(animated: Bool) {
     currentCard.didDisappear(animated: animated)
     previousAppearedCard = nil
   }
