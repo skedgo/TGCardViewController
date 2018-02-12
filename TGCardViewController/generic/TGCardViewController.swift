@@ -160,12 +160,18 @@ open class TGCardViewController: UIViewController {
       cardWrapperDesiredTopConstraint.constant = cardLocation(forDesired: previous, direction: .up).y
     }
     
-    // The visibility of a card's grab handle depends on vertical size class
+    // The visibility of a card's grab handle depends on size classes
     updateGrabHandleVisibility()
     
-    // The position of a card's header also depends on vertical size class
+    // The position of a card's header also depends on size classes
     updateHeaderConstraints()
     headerView.layer.cornerRadius = traitCollection.verticalSizeClass == .compact ? 8 : 0
+    
+    // The interactivity of gesture recognisers depends on size classes as well
+    updatePannerInteractivity()
+    
+    // We re-enable
+    topCardView?.contentScrollView?.isScrollEnabled = true
   }
   
   open override func viewDidLayoutSubviews() {
@@ -350,7 +356,8 @@ extension TGCardViewController {
     cardView.layoutIfNeeded()
     
     // 6. Special handling of when the new top card has no map content
-    panner.isEnabled = !forceExtended
+//    panner.isEnabled = !forceExtended
+    updatePannerInteractivity()
     updateGrabHandleVisibility()
     
     // 7. Set new position of the wrapper
@@ -445,7 +452,8 @@ extension TGCardViewController {
     
     // 3. Special handling of when the new top card has no map content
     let forceExtended = (newTop?.card.mapManager == nil)
-    panner.isEnabled = !forceExtended
+//    panner.isEnabled = !forceExtended
+    updatePannerInteractivity(for: newTop)
     updateGrabHandleVisibility(for: newTop)
     
     // 4. Determine and set new position of the card wrapper
@@ -689,7 +697,6 @@ extension TGCardViewController {
     let negativity = scrollView.contentOffset.y
     
     switch (negativity, recogniser.state) {
-      
     case (0 ..< CGFloat.infinity, _):
       // Reset the transformation whenever we get back to positive offset
       scrollView.transform = .identity
@@ -702,10 +709,18 @@ extension TGCardViewController {
       scrollView.scrollIndicatorInsets = .zero
       scrollView.contentOffset = .zero
       
+      guard traitCollection.verticalSizeClass != .compact else {
+        return
+      }
+      
       let velocity = recogniser.velocity(in: cardWrapperContent)
       animateCardSnap(forVelocity: velocity)
       
     case (_, .changed):
+      guard traitCollection.verticalSizeClass != .compact else {
+        return
+      }
+      
       // This is where the magic happens: We move the card down and make
       // the scroll view appear to stay in place (it's important to not
       // set the content offset to zero here!)
@@ -740,6 +755,18 @@ extension TGCardViewController {
         self.topCardView?.allowContentScrolling(animateTo.position == .extended)
         self.previousCardPosition = animateTo.position
     })
+  }
+  
+  private func updatePannerInteractivity(for cardElement: (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
+    if traitCollection.verticalSizeClass == .compact {
+      let position = cardElement?.position ?? cardPosition
+      panner.isEnabled = position != .extended
+      
+    } else {
+      let card = cardElement?.card ?? topCard
+      let isForceExtended = card?.mapManager == nil
+      panner.isEnabled = !isForceExtended
+    }
   }
   
 }
