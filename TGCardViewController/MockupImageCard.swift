@@ -11,6 +11,8 @@ import Foundation
 import UIKit
 import MapKit
 
+import TGCardViewController
+
 class MockupImageCard : TGPlainCard {
   
   typealias Target = (range: Range<CGFloat>, card: TGCard)

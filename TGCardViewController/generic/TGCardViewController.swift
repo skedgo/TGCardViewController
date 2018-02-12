@@ -35,7 +35,7 @@ open class TGCardViewController: UIViewController {
   @IBOutlet weak var mapView: MKMapView!
   @IBOutlet weak var mapShadow: UIView!
   @IBOutlet weak var cardWrapperShadow: UIView!
-  @IBOutlet weak var cardWrapperContent: UIView!
+  @IBOutlet public weak var cardWrapperContent: UIView!
   fileprivate weak var cardTransitionShadow: UIView?
   @IBOutlet weak var statusBarBlurView: UIVisualEffectView!
 
@@ -566,7 +566,7 @@ extension TGCardViewController {
     }
     
     // Otherwise we look into the direction and snap to the next one that way
-    // swiftlint:disable fallthrough
+    // swiftlint:disable fallthrough (makes sense here)
     let direction = Direction(ofVelocity: velocity)
     switch (direction, traitCollection.verticalSizeClass) {
     case (.up, .compact): fallthrough
@@ -732,6 +732,18 @@ extension TGCardViewController {
       // Ignore other states such as began, failed, etc.
       break
     }
+  }
+
+  /// Moves the card to the provided position.
+  ///
+  /// If position is specified as `peaking` is, but this isn't allowed
+  /// due to the trait collections, then it will move to `extended` instead.
+  ///
+  /// - Parameters:
+  ///   - position: Desired position
+  ///   - animated: If transition should be animated
+  public func moveCard(to position: TGCardPosition, animated: Bool) {
+    switchTo(position, direction: .up, animated: animated)
   }
   
   fileprivate func switchTo(_ position: TGCardPosition, direction: Direction, animated: Bool) {

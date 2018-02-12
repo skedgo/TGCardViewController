@@ -8,6 +8,8 @@
 
 import UIKit
 
+import TGCardViewController
+
 class ExampleChildStickyView: UIView {
 
   static func instantiate() -> ExampleChildStickyView {

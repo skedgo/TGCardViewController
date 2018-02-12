@@ -18,6 +18,25 @@ open class TGMapManager: NSObject {
     case country  = 15 // can fit a country => where in the world/in this country are we?
   }
   
+  private struct MapState {
+    let showsScale: Bool
+    let showsUserLocation: Bool
+    let showsTraffic: Bool
+    
+    init(for mapView: MKMapView) {
+      showsScale = mapView.showsScale
+      showsUserLocation = mapView.showsUserLocation
+      showsTraffic = mapView.showsTraffic
+    }
+    
+    func restore(for mapView: MKMapView) {
+      mapView.showsScale = showsScale
+      mapView.showsUserLocation = showsUserLocation
+      mapView.showsTraffic = showsTraffic
+    }
+  }
+
+  
   public var annotations = [MKAnnotation]() {
     didSet {
       guard let mapView = mapView else { return }
@@ -27,10 +46,10 @@ open class TGMapManager: NSObject {
   }
   
   /// How zoomed in/out the map should be when displaying the
-  /// content the first time.
+  /// content the first time. Defaults to `.city`
   public var preferredZoomLevel: Zoom = .city
   
-  fileprivate var edgePadding: UIEdgeInsets = .zero
+  private var edgePadding: UIEdgeInsets = .zero
 
   private var previousMapState: MapState?
 
@@ -87,6 +106,13 @@ open class TGMapManager: NSObject {
                              edgePadding: edgePadding,
                              animated: animated)
   }
+
+  public func zoom(to mapRect: MKMapRect, animated: Bool) {
+    mapView?.showMapRect(mapRect,
+                         minimumZoomLevel: preferredZoomLevel.rawValue,
+                         edgePadding: edgePadding,
+                         animated: animated)
+  }
   
 }
 
@@ -108,14 +134,26 @@ extension MKMapView {
     // Note: Using zero insets here as we'll respect the inspect already in the
     //       call below when setting the visible map rect - otherwise we adjust
     //       for it twice.
-    var mapRect = mapRectThatFits(annotations.boundingMapRect, edgePadding: .zero)
+    let mapRect = mapRectThatFits(annotations.boundingMapRect, edgePadding: .zero)
     
-    if zoomLevel(of: mapRect) < minimumZoomLevel {
+    showMapRect(mapRect, minimumZoomLevel: minimumZoomLevel, edgePadding: edgePadding, animated: animated)
+  }
+  
+  func showMapRect(_ mapRect: MKMapRect,
+                   minimumZoomLevel: Double,
+                   edgePadding: UIEdgeInsets = .zero,
+                   animated: Bool) {
+    
+    guard !MKMapRectIsNull(mapRect) else { return }
+    
+    var mapRectToShow = mapRect
+    
+    if zoomLevel(of: mapRectToShow) < minimumZoomLevel {
       let center = MKMapPoint(x: MKMapRectGetMidX(mapRect), y: MKMapRectGetMidY(mapRect))
-      mapRect = self.mapRect(forZoomLevel: minimumZoomLevel, centeredOn: center)
+      mapRectToShow = self.mapRect(forZoomLevel: minimumZoomLevel, centeredOn: center)
     }
     
-    setVisibleMapRect(mapRect, edgePadding: edgePadding, animated: animated)
+    setVisibleMapRect(mapRectToShow, edgePadding: edgePadding, animated: animated)
   }
   
 }
@@ -165,24 +203,4 @@ extension MKMapView {
                      size: MKMapSize(width: width, height: height))
   }
   
-}
-
-extension TGMapManager {
-  private struct MapState {
-    let showsScale: Bool
-    let showsUserLocation: Bool
-    let showsTraffic: Bool
-    
-    init(for mapView: MKMapView) {
-      showsScale = mapView.showsScale
-      showsUserLocation = mapView.showsUserLocation
-      showsTraffic = mapView.showsTraffic
-    }
-    
-    func restore(for mapView: MKMapView) {
-      mapView.showsScale = showsScale
-      mapView.showsUserLocation = showsUserLocation
-      mapView.showsTraffic = showsTraffic
-    }
-  }
 }

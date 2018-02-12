@@ -8,6 +8,8 @@
 
 import UIKit
 
+import TGCardViewController
+
 class ExampleAccessoryView: UIView {
   
   static func instantiate() -> ExampleAccessoryView {
