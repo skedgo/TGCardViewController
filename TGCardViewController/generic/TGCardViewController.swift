@@ -144,6 +144,14 @@ open class TGCardViewController: UIViewController {
     topCard?.didDisappear(animated: animated)
   }
   
+  open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
+    
+    coordinator.animate(alongsideTransition: { [unowned self] _ in
+      self.updateContentWrapperHeightConstraint()
+    }, completion: nil)
+  }
+  
   override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
     
@@ -268,6 +276,31 @@ open class TGCardViewController: UIViewController {
     mapShadow.isUserInteractionEnabled = position == .extended
   }
   
+  /// This method updates the constraint controlling the height of the card's content
+  /// wrapper.
+  private func updateContentWrapperHeightConstraint() {
+    // It is important to keep in mind that this constraint is relative to the height
+    // of the map view.
+    
+    // This is the base value and is used when the card takes up the entire width of
+    // the screen, i.e., when the isn't placed on the side. In this case, we are not
+    // required to account for the space taken up by the header view as the map sits
+    // directly below the header.
+    var adjustment = extendedMinY
+    
+    if cardIsNextToMap(in: traitCollection) {
+      // When the card is placed on the side, the map view takes up the entire screen,
+      // as such, we need to add any space taken up by the header view.
+      if isShowingHeader {
+        adjustment += 20 + self.headerView.frame.height
+      }
+    }
+    
+    // This reads the height of the card's content wrapper is equal to the height of
+    // the map view minus the adjustment.
+    cardWrapperHeightConstraint.constant = -1 * adjustment
+  }
+  
   private func cardIsNextToMap(in traitCollections: UITraitCollection) -> Bool {
     switch (traitCollections.verticalSizeClass, traitCollections.horizontalSizeClass) {
     case (.compact, _): return true
@@ -367,6 +400,7 @@ extension TGCardViewController {
     // 7. Set new position of the wrapper
     cardWrapperDesiredTopConstraint.constant = animateTo.y
     cardWrapperMinOverlapTopConstraint.constant = cardView.headerHeight(for: .collapsed)
+    
     let header = top.buildHeaderView()
     if let header = header {
       header.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
@@ -374,7 +408,14 @@ extension TGCardViewController {
     } else if isShowingHeader {
       hideHeader(animated: animated)
     }
+    
+    // Notify that we have completed building the card view and its header view.
     top.didBuild(cardView: cardView, headerView: header)
+    
+    // Since the header view may be animated in & out, it's best to update the
+    // height of the card's content wrapper.
+    updateContentWrapperHeightConstraint()
+    
     view.setNeedsUpdateConstraints()
     
     // 8. Do the transition, optionally animated
@@ -476,6 +517,11 @@ extension TGCardViewController {
     } else if isShowingHeader {
       hideHeader(animated: animated)
     }
+    
+    // Since the header may be animated in and out, it's safer to update the height
+    // of the card's content wrapper.
+    updateContentWrapperHeightConstraint()
+    
     view.setNeedsUpdateConstraints()
 
     // 5. Do the transition, optionally animated.
