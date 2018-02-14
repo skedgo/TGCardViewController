@@ -808,7 +808,7 @@ extension TGCardViewController {
       options: [.curveEaseOut],
       animations: {
         self.updateMapShadow(for: animateTo.position)
-        self.topCardView?.contentScrollView?.alpha = animateTo.position == .collapsed ? 0 : 1
+        self.topCardView?.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
         self.view.layoutIfNeeded()
     },
       completion: { _ in
