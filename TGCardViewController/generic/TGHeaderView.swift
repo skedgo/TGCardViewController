@@ -78,7 +78,6 @@ public class TGHeaderView: UIView {
     }
   }
   
-  
   // MARK: - Button actions
   
   @IBAction func rightButtonTapped(_ sender: UIButton) {

@@ -55,15 +55,15 @@ public class TGCardView: TGCornerView {
   /// handling dragging the card up and down.
   @IBOutlet weak var contentScrollView: UIScrollView? {
     didSet {
-      contentScrollViewOffsetObserver = contentScrollView?.observe(\.contentOffset) { [weak self] scroller, _ in
-        guard
-          let separator = self?.contentSeparator, scroller.isScrollEnabled == true
-          else { return }
-        separator.isHidden = scroller.contentOffset.y <= 0
+      contentScrollViewObservation = contentScrollView?
+        .observe(\UIScrollView.contentOffset) { [weak self] scrollView, _ in
+        guard let separator = self?.contentSeparator, scrollView.isScrollEnabled else { return }
+        separator.isHidden = scrollView.contentOffset.y <= 0
       }
     }
   }
-  private var contentScrollViewOffsetObserver: NSKeyValueObservation?
+  
+  private var contentScrollViewObservation: NSKeyValueObservation?
   
   /// Each card view needs a place to display the card's title.
   @IBOutlet weak var titleLabel: UILabel!
@@ -122,8 +122,6 @@ public class TGCardView: TGCornerView {
     }
   }
   
-  // MARK: - Configuration
-  
   override public func awakeFromNib() {
     super.awakeFromNib()
     
@@ -148,6 +146,7 @@ public class TGCardView: TGCornerView {
     heightConstraint?.isActive = true
   }
   
+  // MARK: - Full card view configuration
   
   func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
     titleLabel.text = includeHeader ? card.title : nil
@@ -173,11 +172,7 @@ public class TGCardView: TGCornerView {
     }
   }
   
-  
-  func allowContentScrolling(_ allowScrolling: Bool) {
-    contentScrollView?.isScrollEnabled = allowScrolling
-  }
-  
+  // MARK: - Header view configuration
   
   func headerHeight(for position: TGCardPosition) -> CGFloat {
     guard let scrollView = contentScrollView else {
@@ -189,7 +184,7 @@ public class TGCardView: TGCornerView {
       var frame: CGRect
       
       if let wrapper = accessoryWrapperView,
-         let accessory = accessoryView {
+        let accessory = accessoryView {
         // The frame of the accessory view in the coordinate system
         // of card view itself
         frame = wrapper.convert(accessory.frame, to: self)
@@ -213,12 +208,19 @@ public class TGCardView: TGCornerView {
     }
   }
   
+  // MARK: - Content view configuration
+  
+  func allowContentScrolling(_ allowScrolling: Bool) {
+    contentScrollView?.isScrollEnabled = allowScrolling
+  }
+  
+  func adjustContentAlpha(to value: CGFloat) {
+    contentScrollView?.alpha = value
+  }
+  
+  // MARK: - User interaction
+  
   @IBAction func floatingButtonTapped(_ sender: Any) {
     onFloatingButtonPressed?()
   }
-  
-  deinit {
-    contentScrollViewOffsetObserver = nil
-  }
-  
 }

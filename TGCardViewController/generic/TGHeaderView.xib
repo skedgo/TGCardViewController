@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,24 +16,24 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Mf5-6t-ox4">
-                    <rect key="frame" x="8" y="20" width="359" height="100"/>
+                    <rect key="frame" x="8" y="0.0" width="359" height="120"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5Ak-zD-zBO">
-                            <rect key="frame" x="0.0" y="0.0" width="359" height="50"/>
+                            <rect key="frame" x="0.0" y="0.0" width="359" height="70"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WrS-XT-0Zp">
-                                    <rect key="frame" x="0.0" y="3" width="44" height="44"/>
+                                    <rect key="frame" x="0.0" y="13" width="44" height="44"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="755" constant="44" id="MNr-zt-guZ"/>
-                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="URA-T3-YmD"/>
+                                        <constraint firstAttribute="width" constant="44" id="MNr-zt-guZ"/>
+                                        <constraint firstAttribute="height" constant="44" id="URA-T3-YmD"/>
                                     </constraints>
                                     <state key="normal" title="Close"/>
                                 </button>
                                 <view contentMode="scaleToFill" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="arw-E3-CF2">
-                                    <rect key="frame" x="52" y="0.0" width="255" height="50"/>
+                                    <rect key="frame" x="52" y="6" width="255" height="58"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="253" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="TjZ-eI-Fpj">
-                                            <rect key="frame" x="101" y="0.0" width="53" height="50"/>
+                                            <rect key="frame" x="101" y="8" width="53" height="42"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="253" verticalCompressionResistancePriority="752" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="llr-Qv-YHg">
                                                     <rect key="frame" x="0.0" y="0.0" width="53" height="24"/>
@@ -42,7 +42,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="752" text="Subtitle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="36W-q6-I4y">
-                                                    <rect key="frame" x="0.0" y="24" width="53" height="26"/>
+                                                    <rect key="frame" x="0.0" y="24" width="53" height="18"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -52,8 +52,8 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="TjZ-eI-Fpj" firstAttribute="centerY" secondItem="arw-E3-CF2" secondAttribute="centerY" id="0b2-bE-c23"/>
-                                        <constraint firstAttribute="bottom" secondItem="TjZ-eI-Fpj" secondAttribute="bottom" id="E1G-yK-J6j"/>
-                                        <constraint firstItem="TjZ-eI-Fpj" firstAttribute="top" secondItem="arw-E3-CF2" secondAttribute="top" id="rv7-Sz-mb8"/>
+                                        <constraint firstAttribute="bottom" secondItem="TjZ-eI-Fpj" secondAttribute="bottom" constant="8" id="E1G-yK-J6j"/>
+                                        <constraint firstItem="TjZ-eI-Fpj" firstAttribute="top" secondItem="arw-E3-CF2" secondAttribute="top" constant="8" id="rv7-Sz-mb8"/>
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">
@@ -62,10 +62,10 @@
                                     </variation>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lxe-5l-7gl">
-                                    <rect key="frame" x="315" y="3" width="44" height="44"/>
+                                    <rect key="frame" x="315" y="13" width="44" height="44"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="755" constant="44" id="6Fw-y9-8ep"/>
-                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="lj3-c7-WnY"/>
+                                        <constraint firstAttribute="width" constant="44" id="6Fw-y9-8ep"/>
+                                        <constraint firstAttribute="height" constant="44" id="lj3-c7-WnY"/>
                                     </constraints>
                                     <state key="normal" title="Next"/>
                                     <connections>
@@ -75,8 +75,8 @@
                             </subviews>
                         </stackView>
                         <view contentMode="scaleToFill" horizontalHuggingPriority="254" verticalHuggingPriority="254" translatesAutoresizingMaskIntoConstraints="NO" id="OCh-my-Dlb">
-                            <rect key="frame" x="0.0" y="50" width="359" height="50"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <rect key="frame" x="0.0" y="70" width="359" height="50"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="999" constant="44" id="0l9-rR-FKT"/>
                             </constraints>
@@ -85,8 +85,8 @@
                 </stackView>
             </subviews>
             <constraints>
+                <constraint firstItem="Mf5-6t-ox4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="AXC-Hk-kFe"/>
                 <constraint firstItem="Mf5-6t-ox4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="Bfy-Dj-WPh"/>
-                <constraint firstItem="Mf5-6t-ox4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="CWM-Br-2ua"/>
                 <constraint firstItem="TjZ-eI-Fpj" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Kp1-Bf-zbC"/>
                 <constraint firstAttribute="bottom" secondItem="Mf5-6t-ox4" secondAttribute="bottom" id="YBA-fX-Fri"/>
                 <constraint firstAttribute="trailing" secondItem="Mf5-6t-ox4" secondAttribute="trailing" constant="8" id="g0L-aS-aTK"/>
@@ -101,7 +101,7 @@
                 <outlet property="subtitleLabel" destination="36W-q6-I4y" id="ygJ-C6-Px8"/>
                 <outlet property="titleLabel" destination="llr-Qv-YHg" id="0Ss-X4-Lvh"/>
             </connections>
-            <point key="canvasLocation" x="34.5" y="74"/>
+            <point key="canvasLocation" x="92" y="30"/>
         </view>
     </objects>
 </document>

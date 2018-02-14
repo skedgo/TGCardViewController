@@ -100,60 +100,7 @@ class TGPageCardView: TGCardView {
     pagerTrailingConstant.constant = Constants.spaceBetweenCards
   }
   
-  // MARK: - Navigation
-  
-  var currentPage: Int {
-    return Int(pager.contentOffset.x / (frame.width + Constants.spaceBetweenCards))
-  }
-  
-  func moveForward(animated: Bool = true) {
-    // Shift by the entire width of the card view
-    let nextFullWidthHorizontalOffset = pager.contentOffset.x + frame.width + Constants.spaceBetweenCards
-    
-    // It's possible that the scroll view is in the middle of scrolling
-    // when this method is called. In this case, the content offset may
-    // not be at the start of the next full page. We use the variable
-    // below to calculate where the start of the next full page should be.
-    let nextFullPageHorizontalOffset = lastHorizontalOffset + frame.width + Constants.spaceBetweenCards
-    
-    // Maximum ensures we are always at the start of a page. It also
-    // helps when the page view doesn't start with page 0 -> In this
-    // case, we won't be moving to page 1, but to the page n + 1.
-    let horizontalOffset = fmax(nextFullWidthHorizontalOffset, nextFullPageHorizontalOffset)
-    
-    // Make sure we don't go over.
-    guard horizontalOffset < pager.contentSize.width else { return }
-    
-    pager.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: animated)
-    
-    // Update the tracking property.
-    lastHorizontalOffset = horizontalOffset
-  }
-  
-  func moveBackward(animated: Bool = true) {
-    // See `moveForward()` for comments.
-    let nextFullWidthHorizontalOffset = pager.contentOffset.x - frame.width - Constants.spaceBetweenCards
-    let nextFullPageHorizontalOffset = lastHorizontalOffset - frame.width - Constants.spaceBetweenCards
-    let horizontalOffset = fmin(nextFullPageHorizontalOffset, nextFullWidthHorizontalOffset)
-    
-    // We don't wanna go off screen.
-    guard horizontalOffset >= 0 else { return }
-    
-    pager.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: animated)
-
-    lastHorizontalOffset = horizontalOffset
-  }
-  
-  func move(to cardIndex: Int, animated: Bool = true) {
-    // index must fall within the range of available content cards.
-    guard 0..<contentView.subviews.count ~= cardIndex else { return }
-    
-    let newX = (frame.width + Constants.spaceBetweenCards) * CGFloat(cardIndex)
-    
-    pager.setContentOffset(CGPoint(x: newX, y: 0), animated: animated)
-  }
-  
-  // MARK: - Configuration
+  // MARK: - Full card view configuration
   
   func configure(with card: TGPageCard) {
     // TODO: This does a lot of work by building all the child cards
@@ -179,10 +126,6 @@ class TGPageCardView: TGCardView {
     // This will be used in both `moveForward` and `moveBackward`, so
     // it's important to "initailise" this value correctly.
     lastHorizontalOffset = CGFloat(card.initialPageIndex) * (frame.width + Constants.spaceBetweenCards)
-  }
-  
-  override func allowContentScrolling(_ allowScrolling: Bool) {
-    cardViews.forEach { $0.contentScrollView?.isScrollEnabled = allowScrolling }
   }
   
   private func fill(with contentViews: [UIView]) {
@@ -228,7 +171,74 @@ class TGPageCardView: TGCardView {
     }
   }
   
+  // MARK: - Content view configuration
+  
+  override func allowContentScrolling(_ allowScrolling: Bool) {
+    cardViews.forEach { $0.contentScrollView?.isScrollEnabled = allowScrolling }
+  }
+  
+  override func adjustContentAlpha(to value: CGFloat) {
+    // not calling super on purpose.
+    cardViews.forEach { $0.adjustContentAlpha(to: value) }
+  }
+  
+  // MARK: - Navigation
+  
+  var currentPage: Int {
+    // Using `floor` here as we're getting fractions here, e.g., on iPhone X in landscape
+    return Int(floor(pager.contentOffset.x) / (floor(frame.width) + Constants.spaceBetweenCards))
+  }
+  
+  func moveForward(animated: Bool = true) {
+    // Shift by the entire width of the card view
+    let nextFullWidthHorizontalOffset = pager.contentOffset.x + frame.width + Constants.spaceBetweenCards
+    
+    // It's possible that the scroll view is in the middle of scrolling
+    // when this method is called. In this case, the content offset may
+    // not be at the start of the next full page. We use the variable
+    // below to calculate where the start of the next full page should be.
+    let nextFullPageHorizontalOffset = lastHorizontalOffset + frame.width + Constants.spaceBetweenCards
+    
+    // Maximum ensures we are always at the start of a page. It also
+    // helps when the page view doesn't start with page 0 -> In this
+    // case, we won't be moving to page 1, but to the page n + 1.
+    let horizontalOffset = fmax(nextFullWidthHorizontalOffset, nextFullPageHorizontalOffset)
+    
+    // Make sure we don't go over.
+    guard horizontalOffset < pager.contentSize.width else { return }
+    
+    pager.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: animated)
+    
+    // Update the tracking property.
+    lastHorizontalOffset = horizontalOffset
+  }
+  
+  func moveBackward(animated: Bool = true) {
+    // See `moveForward()` for comments.
+    let nextFullWidthHorizontalOffset = pager.contentOffset.x - frame.width - Constants.spaceBetweenCards
+    let nextFullPageHorizontalOffset = lastHorizontalOffset - frame.width - Constants.spaceBetweenCards
+    let horizontalOffset = fmin(nextFullPageHorizontalOffset, nextFullWidthHorizontalOffset)
+    
+    // We don't wanna go off screen.
+    guard horizontalOffset >= 0 else { return }
+    
+    pager.setContentOffset(CGPoint(x: horizontalOffset, y: 0), animated: animated)
+    
+    lastHorizontalOffset = horizontalOffset
+  }
+  
+  func move(to cardIndex: Int, animated: Bool = true) {
+    // index must fall within the range of available content cards.
+    guard 0..<contentView.subviews.count ~= cardIndex else { return }
+    
+    let newX = (frame.width + Constants.spaceBetweenCards) * CGFloat(cardIndex)
+    
+    pager.setContentOffset(CGPoint(x: newX, y: 0), animated: animated)
+  }
+  
 }
+
+// MARK: -
 
 extension TGPageCardView: UIScrollViewDelegate {
   
