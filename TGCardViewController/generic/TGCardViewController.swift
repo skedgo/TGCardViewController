@@ -178,8 +178,11 @@ open class TGCardViewController: UIViewController {
     // The interactivity of gesture recognisers depends on size classes as well
     updatePannerInteractivity()
     
-    // We re-enable
-    topCardView?.contentScrollView?.isScrollEnabled = true
+    // When we started a paging card in the peak state while the device is in
+    // portrait mode, all of its contents are not scrollable. If we now switch
+    // to landscape mode, the card will be in the extended state, which requires
+    // the card's contents to be scrollable. Hence, we reenable the scolling.
+    topCardView?.allowContentScrolling(true)
   }
   
   open override func viewDidLayoutSubviews() {
