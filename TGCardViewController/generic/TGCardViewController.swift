@@ -155,7 +155,6 @@ open class TGCardViewController: UIViewController {
   override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
     
-    statusBarBlurHeightConstraint.constant = topOverlap
     cardWrapperHeightConstraint.constant = extendedMinY * -1
     
     // When trait collection changes, try to keep the same card position, 
@@ -188,6 +187,7 @@ open class TGCardViewController: UIViewController {
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     
+    statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
   }
 
