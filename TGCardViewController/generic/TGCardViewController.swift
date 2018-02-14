@@ -819,7 +819,7 @@ extension TGCardViewController {
   
   private func updatePannerInteractivity(for cardElement:
       (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
-    if traitCollection.verticalSizeClass == .compact {
+    if cardIsNextToMap(in: traitCollection) {
       let position = cardElement?.position ?? cardPosition
       panner.isEnabled = position != .extended
       
@@ -838,7 +838,7 @@ extension TGCardViewController {
   
   private func updateGrabHandleVisibility(for cardElement:
       (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
-    if traitCollection.verticalSizeClass == .compact {
+    if cardIsNextToMap(in: traitCollection) {
       let position = cardElement?.position ?? cardPosition
       let cardView = cardElement?.view ?? topCardView
       cardView?.grabHandle?.isHidden = position == .extended
