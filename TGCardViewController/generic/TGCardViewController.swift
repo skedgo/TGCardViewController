@@ -27,6 +27,8 @@ open class TGCardViewController: UIViewController {
     fileprivate static let pushAnimationDuration = 0.4
     
     fileprivate static let mapShadowVisibleAlpha: CGFloat = 0.25
+    
+    fileprivate static let floatingHeaderTopMargin: CGFloat = 20
   }
   
   open weak var delegate: TGCardViewControllerDelegate?
@@ -870,9 +872,8 @@ extension TGCardViewController {
   }
   
   private func adjustHeaderPositioningConstraint() {
-    if traitCollection.verticalSizeClass == .compact {
-      // TODO: move 20pt to Constants.
-      headerViewTopConstraint.constant = topOverlap + 20
+    if cardIsNextToMap(in: traitCollection) {
+      headerViewTopConstraint.constant = topOverlap + Constants.floatingHeaderTopMargin
     } else {
       headerViewTopConstraint.constant = topOverlap
     }
