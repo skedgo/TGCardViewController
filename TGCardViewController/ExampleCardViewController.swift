@@ -22,6 +22,7 @@ class ExampleCardViewController: TGCardViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    navigationButtonsAreSpringLoaded = true
     push(ExampleRootCard(), animated: false)
   }
 
@@ -30,7 +31,4 @@ class ExampleCardViewController: TGCardViewController {
     // Dispose of any resources that can be recreated.
   }
 
-
 }
-
-

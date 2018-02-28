@@ -33,6 +33,13 @@ open class TGCardViewController: UIViewController {
   
   open weak var delegate: TGCardViewControllerDelegate?
   
+  /// A Boolean value that specifies whether the close buttons
+  /// on cards and headers are participating in spring-loaded
+  /// interaction for a drag and drop activity.
+  ///
+  /// - Note: Only has an impact on iOS 11+
+  public var navigationButtonsAreSpringLoaded: Bool = false
+  
   @IBOutlet weak var headerView: UIView!
   @IBOutlet weak var mapView: MKMapView!
   @IBOutlet weak var mapShadow: UIView!
@@ -378,6 +385,9 @@ extension TGCardViewController {
     let showClose = delegate != nil || cards.count > 1
     let cardView = top.buildCardView(showClose: showClose, includeHeader: true)
     cardView.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+    if #available(iOS 11.0, *) {
+      cardView.closeButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
+    }
     
     // On device with home indicator, we want only the header part of a card view is
     // visible when the card is in collapsed state. If we don't adjust the alpha as
@@ -416,6 +426,10 @@ extension TGCardViewController {
     let header = top.buildHeaderView()
     if let header = header {
       header.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+      if #available(iOS 11.0, *) {
+        header.closeButton.isSpringLoaded = navigationButtonsAreSpringLoaded
+        header.rightButton.isSpringLoaded = navigationButtonsAreSpringLoaded
+      }
       showHeader(content: header, animated: animated)
     } else if isShowingHeader {
       hideHeader(animated: animated)
