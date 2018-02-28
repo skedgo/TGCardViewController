@@ -23,6 +23,16 @@ class ExampleRootCard : TGTableCard {
     }
   }
   
+  override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+    super.didBuild(cardView: cardView, headerView: headerView)
+    
+    guard let tableView = (cardView as? TGTableCardView)?.tableView else { return }
+    
+    if #available(iOS 11.0, *) {
+      tableView.isSpringLoaded = true
+    }
+  }
+  
 }
 
 fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSource {
@@ -34,7 +44,7 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
   let items: [Item] = [
     (title: "Show Mock-up", card: MockupRootCard()),
     (title: "Show Erlking", card: ExampleChildCard()),
-    (title: "Show Table",   card: ExampleTableCard()),
+    (title: "Show Table",   card: ExampleTableCard(mapManager: .london)),
     (title: "Show Agenda",  card: ExampleAgendaCard()),
     (title: "Show Pages",   card: ExamplePageCard()),
   ]

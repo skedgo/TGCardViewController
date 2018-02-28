@@ -33,6 +33,13 @@ open class TGCardViewController: UIViewController {
   
   open weak var delegate: TGCardViewControllerDelegate?
   
+  /// A Boolean value that specifies whether the close buttons
+  /// on cards and headers are participating in spring-loaded
+  /// interaction for a drag and drop activity.
+  ///
+  /// - Note: Only has an impact on iOS 11+
+  public var navigationButtonsAreSpringLoaded: Bool = false
+  
   @IBOutlet weak var headerView: UIView!
   @IBOutlet weak var mapView: MKMapView!
   @IBOutlet weak var mapShadow: UIView!
@@ -56,6 +63,11 @@ open class TGCardViewController: UIViewController {
   var panner: UIPanGestureRecognizer!
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
+  
+  /// This is just for debugging issues where it helps to disable
+  /// everything related to panning. Otherwise it should always
+  /// be set to `true`.
+  private let panningAllowed = true
   
   fileprivate var isVisible = false
   
@@ -81,11 +93,13 @@ open class TGCardViewController: UIViewController {
     super.viewDidLoad()
 
     // Panner for dragging cards up and down
-    let panGesture = UIPanGestureRecognizer()
-    panGesture.addTarget(self, action: #selector(handlePan))
-    panGesture.delegate = self
-    cardWrapperContent.addGestureRecognizer(panGesture)
-    panner = panGesture
+    if panningAllowed {
+      let panGesture = UIPanGestureRecognizer()
+      panGesture.addTarget(self, action: #selector(handlePan))
+      panGesture.delegate = self
+      cardWrapperContent.addGestureRecognizer(panGesture)
+      panner = panGesture
+    }
     
     // Tapper for tapping the title of the cards
     let cardTapper = UITapGestureRecognizer()
@@ -371,6 +385,9 @@ extension TGCardViewController {
     let showClose = delegate != nil || cards.count > 1
     let cardView = top.buildCardView(showClose: showClose, includeHeader: true)
     cardView.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+    if #available(iOS 11.0, *) {
+      cardView.closeButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
+    }
     
     // On device with home indicator, we want only the header part of a card view is
     // visible when the card is in collapsed state. If we don't adjust the alpha as
@@ -382,7 +399,7 @@ extension TGCardViewController {
     // This allows us to continuously pull down the card view while its
     // content is scrolled to the top. Note this only applies when the
     // card isn't being forced into the extended position.
-    if !forceExtended {
+    if !forceExtended && panningAllowed {
       cardView.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
     }
     
@@ -409,6 +426,10 @@ extension TGCardViewController {
     let header = top.buildHeaderView()
     if let header = header {
       header.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+      if #available(iOS 11.0, *) {
+        header.closeButton.isSpringLoaded = navigationButtonsAreSpringLoaded
+        header.rightButton.isSpringLoaded = navigationButtonsAreSpringLoaded
+      }
       showHeader(content: header, animated: animated)
     } else if isShowingHeader {
       hideHeader(animated: animated)
@@ -488,7 +509,9 @@ extension TGCardViewController {
       newTop?.card.willAppear(animated: animated)
       currentTopCard.willDisappear(animated: animated)
     }
-    topView.contentScrollView?.panGestureRecognizer.removeTarget(self, action: nil)
+    if panningAllowed {
+      topView.contentScrollView?.panGestureRecognizer.removeTarget(self, action: nil)
+    }
 
     // We update the stack immediately to allow calling this many times
     // while we're still animating without issues
@@ -673,6 +696,15 @@ extension TGCardViewController {
     let translation = recogniser.translation(in: cardWrapperContent)
     let velocity = recogniser.velocity(in: cardWrapperContent)
     
+    let swipeHorizontally = fabs(velocity.x) > fabs(velocity.y)
+    if swipeHorizontally {
+      // Cancel our panner, so that we don't keep dragging the card
+      // up and down while paging or when swiping to delete.
+      recogniser.isEnabled = false
+      recogniser.isEnabled = true
+      return
+    }
+    
     var currentCardY = cardWrapperDesiredTopConstraint.constant
     
     // Recall that we have a minimum overlap constraint set on the card 
@@ -824,6 +856,7 @@ extension TGCardViewController {
   
   private func updatePannerInteractivity(for cardElement:
       (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
+    guard panningAllowed else { return }
     if cardIsNextToMap(in: traitCollection) {
       let position = cardElement?.position ?? cardPosition
       panner.isEnabled = position != .extended
@@ -967,16 +1000,29 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
   }
   
   public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                                shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer)
-    -> Bool {
-      
-    guard
-      let scrollView = topCardView?.contentScrollView,
-      let panner = gestureRecognizer as? UIPanGestureRecognizer
-      else {
-        return false
-    }
+                                shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool {
     
+    // As per UIKit defaults, no two gesture recognisers should fire together
+    guard panningAllowed, gestureRecognizer == panner else { return false }
+    
+    if let scrollView = topCardView?.contentScrollView, other == scrollView.panGestureRecognizer {
+      // This does special handling for dragging down the card by its scroll view content
+      return pannerShouldRecognizeSimultaneouslyWithPanner(in: scrollView)
+    
+    } else if let pager = (topCardView as? TGPageCardView)?.pager, other == pager.panGestureRecognizer {
+      // When our panner fires, block panning of the page card
+      return false
+    
+    } else {
+      // We don't want to interfere with any existing horizontal swipes, e.g., swipe to delete
+      // We cancel our gesture recogniser then in `handlePan`.
+      let velocity = panner.velocity(in: cardWrapperContent)
+      let swipeHorizontally = fabs(velocity.x) > fabs(velocity.y)
+      return swipeHorizontally
+    }
+  }
+  
+  private func pannerShouldRecognizeSimultaneouslyWithPanner(in scrollView: UIScrollView) -> Bool {
     let direction = Direction(ofVelocity: panner.velocity(in: cardWrapperContent))
     
     let velocity = panner.velocity(in: cardWrapperContent)
@@ -993,7 +1039,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     case (extendedMinY, 0, _, true):
       // while the top card is at the extended position, we are more interested
       // in finding out first if the user is panning horizontally, that is,
-      // paing between pages. If they are, don't make any changes.
+      // paging between pages. If they are, don't make any changes.
       break
       
     case (extendedMinY, 0, .down, _):
@@ -1032,7 +1078,7 @@ extension TGCardViewController: TGCardDelegate {
   }
   
   public func contentScrollViewDidChange(old: UIScrollView?, for card: TGCard) {
-    guard card === topCard, let view = topCardView else { return }
+    guard panningAllowed, card === topCard, let view = topCardView else { return }
     
     old?.panGestureRecognizer.removeTarget(self, action: nil)
     view.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
