@@ -53,6 +53,13 @@ public class TGTableCardView: TGCardView {
     tableView.dataSource = card.tableViewDataSource
     tableView.delegate = card.tableViewDelegate
     
+    if #available(iOS 11.0, *) {
+      // For convenience, we also assign the delegate for dragging
+      // and dropping directly if possible.
+      tableView.dragDelegate = card.tableViewDelegate as? UITableViewDragDelegate
+      tableView.dropDelegate = card.tableViewDelegate as? UITableViewDropDelegate
+    }
+    
     tableWrapper.addSubview(tableView)
     tableView.snap(to: tableWrapper)
     

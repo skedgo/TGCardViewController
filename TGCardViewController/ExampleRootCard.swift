@@ -34,7 +34,7 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
   let items: [Item] = [
     (title: "Show Mock-up", card: MockupRootCard()),
     (title: "Show Erlking", card: ExampleChildCard()),
-    (title: "Show Table",   card: ExampleTableCard()),
+    (title: "Show Table",   card: ExampleTableCard(mapManager: .london)),
     (title: "Show Agenda",  card: ExampleAgendaCard()),
     (title: "Show Pages",   card: ExamplePageCard()),
   ]

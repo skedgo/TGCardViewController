@@ -57,6 +57,11 @@ open class TGCardViewController: UIViewController {
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
   
+  /// This is just for debugging issues where it helps to disable
+  /// everything related to panning. Otherwise it should always
+  /// be set to `true`.
+  private let panningAllowed = true
+  
   fileprivate var isVisible = false
   
   fileprivate var previousCardPosition: TGCardPosition?
@@ -81,11 +86,13 @@ open class TGCardViewController: UIViewController {
     super.viewDidLoad()
 
     // Panner for dragging cards up and down
-    let panGesture = UIPanGestureRecognizer()
-    panGesture.addTarget(self, action: #selector(handlePan))
-    panGesture.delegate = self
-    cardWrapperContent.addGestureRecognizer(panGesture)
-    panner = panGesture
+    if panningAllowed {
+      let panGesture = UIPanGestureRecognizer()
+      panGesture.addTarget(self, action: #selector(handlePan))
+      panGesture.delegate = self
+      cardWrapperContent.addGestureRecognizer(panGesture)
+      panner = panGesture
+    }
     
     // Tapper for tapping the title of the cards
     let cardTapper = UITapGestureRecognizer()
@@ -382,7 +389,7 @@ extension TGCardViewController {
     // This allows us to continuously pull down the card view while its
     // content is scrolled to the top. Note this only applies when the
     // card isn't being forced into the extended position.
-    if !forceExtended {
+    if !forceExtended && panningAllowed {
       cardView.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
     }
     
@@ -488,7 +495,9 @@ extension TGCardViewController {
       newTop?.card.willAppear(animated: animated)
       currentTopCard.willDisappear(animated: animated)
     }
-    topView.contentScrollView?.panGestureRecognizer.removeTarget(self, action: nil)
+    if panningAllowed {
+      topView.contentScrollView?.panGestureRecognizer.removeTarget(self, action: nil)
+    }
 
     // We update the stack immediately to allow calling this many times
     // while we're still animating without issues
@@ -824,6 +833,7 @@ extension TGCardViewController {
   
   private func updatePannerInteractivity(for cardElement:
       (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
+    guard panningAllowed else { return }
     if cardIsNextToMap(in: traitCollection) {
       let position = cardElement?.position ?? cardPosition
       panner.isEnabled = position != .extended
@@ -971,6 +981,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     -> Bool {
       
     guard
+      panningAllowed,
       let scrollView = topCardView?.contentScrollView,
       let panner = gestureRecognizer as? UIPanGestureRecognizer
       else {
@@ -1032,7 +1043,7 @@ extension TGCardViewController: TGCardDelegate {
   }
   
   public func contentScrollViewDidChange(old: UIScrollView?, for card: TGCard) {
-    guard card === topCard, let view = topCardView else { return }
+    guard panningAllowed, card === topCard, let view = topCardView else { return }
     
     old?.panGestureRecognizer.removeTarget(self, action: nil)
     view.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
