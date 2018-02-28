@@ -696,6 +696,15 @@ extension TGCardViewController {
     let translation = recogniser.translation(in: cardWrapperContent)
     let velocity = recogniser.velocity(in: cardWrapperContent)
     
+    let swipeHorizontally = fabs(velocity.x) > fabs(velocity.y)
+    if swipeHorizontally {
+      // Cancel our panner, so that we don't keep dragging the card
+      // up and down while paging or when swiping to delete.
+      recogniser.isEnabled = false
+      recogniser.isEnabled = true
+      return
+    }
+    
     var currentCardY = cardWrapperDesiredTopConstraint.constant
     
     // Recall that we have a minimum overlap constraint set on the card 
@@ -991,17 +1000,29 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
   }
   
   public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                                shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer)
-    -> Bool {
-      
-    guard
-      panningAllowed,
-      let scrollView = topCardView?.contentScrollView,
-      let panner = gestureRecognizer as? UIPanGestureRecognizer
-      else {
-        return false
-    }
+                                shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool {
     
+    // As per UIKit defaults, no two gesture recognisers should fire together
+    guard panningAllowed, gestureRecognizer == panner else { return false }
+    
+    if let scrollView = topCardView?.contentScrollView, other == scrollView.panGestureRecognizer {
+      // This does special handling for dragging down the card by its scroll view content
+      return pannerShouldRecognizeSimultaneouslyWithPanner(in: scrollView)
+    
+    } else if let pager = (topCardView as? TGPageCardView)?.pager, other == pager.panGestureRecognizer {
+      // When our panner fires, block panning of the page card
+      return false
+    
+    } else {
+      // We don't want to interfere with any existing horizontal swipes, e.g., swipe to delete
+      // We cancel our gesture recogniser then in `handlePan`.
+      let velocity = panner.velocity(in: cardWrapperContent)
+      let swipeHorizontally = fabs(velocity.x) > fabs(velocity.y)
+      return swipeHorizontally
+    }
+  }
+  
+  private func pannerShouldRecognizeSimultaneouslyWithPanner(in scrollView: UIScrollView) -> Bool {
     let direction = Direction(ofVelocity: panner.velocity(in: cardWrapperContent))
     
     let velocity = panner.velocity(in: cardWrapperContent)
@@ -1018,7 +1039,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     case (extendedMinY, 0, _, true):
       // while the top card is at the extended position, we are more interested
       // in finding out first if the user is panning horizontally, that is,
-      // paing between pages. If they are, don't make any changes.
+      // paging between pages. If they are, don't make any changes.
       break
       
     case (extendedMinY, 0, .down, _):
