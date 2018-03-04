@@ -113,7 +113,12 @@ open class TGMapManager: NSObject {
                          edgePadding: edgePadding,
                          animated: animated)
   }
+
   
+  public func setCenter(_ coordinate: CLLocationCoordinate2D, animated: Bool) {
+    mapView?.setCenter(coordinate, edgePadding: edgePadding, animated: animated)
+  }
+
 }
 
 
@@ -153,6 +158,16 @@ extension MKMapView {
       mapRectToShow = self.mapRect(forZoomLevel: minimumZoomLevel, centeredOn: center)
     }
     
+    setVisibleMapRect(mapRectToShow, edgePadding: edgePadding, animated: animated)
+  }
+  
+  func setCenter(_ coordinate: CLLocationCoordinate2D,
+                   edgePadding: UIEdgeInsets,
+                   animated: Bool) {
+    
+    var mapRectToShow = self.visibleMapRect
+    visible.origin = MKMapPointForCoordinate(coordinate)
+    guard !MKMapRectIsNull(mapRect) else { return }
     setVisibleMapRect(mapRectToShow, edgePadding: edgePadding, animated: animated)
   }
   
