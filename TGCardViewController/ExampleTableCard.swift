@@ -17,6 +17,8 @@ class ExampleTableCard : TGTableCard {
   init(mapManager: TGMapManager? = nil, pushOnTap: Bool = true) {
     let accessory = ExampleAccessoryView.instantiate()
     
+    mapManager?.annotations = source.stops
+    
     super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: accessory, mapManager: mapManager)
     
     if pushOnTap {

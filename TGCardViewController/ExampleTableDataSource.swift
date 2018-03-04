@@ -15,7 +15,7 @@ class ExampleTableDataSource: NSObject {
   
   var onSelect: ((MKAnnotation) -> Void)?
   
-  fileprivate var stops = [
+  var stops = [
     [
       "lat": 51.4642,
       "lng": -0.1703,

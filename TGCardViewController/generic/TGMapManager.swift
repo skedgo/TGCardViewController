@@ -165,16 +165,19 @@ extension MKMapView {
                  edgePadding: UIEdgeInsets,
                  animated: Bool) {
 
-    // First take the visible map rect, set the center, and adjust for the padding
-    // This *will* result in zooming out a lot if there's an edge padding
-    var mapRectToShow = self.visibleMapRect
-    mapRectToShow.origin = MKMapPointForCoordinate(coordinate)
-    mapRectToShow = mapRectThatFits(mapRectToShow, edgePadding: edgePadding)
+    // Coordinate at the top left considering the edge padding
+    let visibleTopLeft = convert(CGPoint(x: edgePadding.left, y: edgePadding.top), toCoordinateFrom: self)
     
-    // Then zoom back in, and show it - note that we then ignore the edge padding
-    // as that's already accounted for
-    mapRectToShow.size = self.visibleMapRect.size
-    setVisibleMapRect(mapRectToShow, edgePadding: .zero, animated: animated)
+    // Coordinate at the top left of the map, ignoring edge padding
+    let unadjustedTopLeft = MKCoordinateForMapPoint(visibleMapRect.origin)
+    
+    // The new center is the desired centre minus half vector defining the difference of the two above
+    let newCenter = CLLocationCoordinate2D(
+      latitude: coordinate.latitude - (visibleTopLeft.latitude - unadjustedTopLeft.latitude) / 2,
+      longitude: coordinate.longitude - (visibleTopLeft.longitude - unadjustedTopLeft.longitude) / 2
+    )
+    
+    setCenter(newCenter, animated: animated)
   }
   
 }
