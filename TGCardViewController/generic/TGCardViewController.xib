@@ -41,7 +41,6 @@
                         </mapView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewk-8T-6Fw" userLabel="Header View">
                             <rect key="frame" x="8" y="0.0" width="253.5" height="60"/>
-                            <color key="backgroundColor" red="0.21565510035898214" green="0.84705882349999995" blue="0.81126555736230965" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" priority="750" constant="60" id="dMP-Sd-KN9"/>
                             </constraints>
@@ -127,9 +126,9 @@
                             <exclude reference="1uG-yl-0le"/>
                         </mask>
                         <mask key="constraints">
-                            <include reference="Vi9-1z-ei1"/>
                             <include reference="0es-h4-clN"/>
                             <exclude reference="1Mc-Uh-pXD"/>
+                            <include reference="Vi9-1z-ei1"/>
                             <include reference="52A-gC-vvw"/>
                             <exclude reference="DGx-yq-huX"/>
                         </mask>
