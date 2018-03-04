@@ -162,12 +162,19 @@ extension MKMapView {
   }
   
   func setCenter(_ coordinate: CLLocationCoordinate2D,
-                   edgePadding: UIEdgeInsets,
-                   animated: Bool) {
-    
+                 edgePadding: UIEdgeInsets,
+                 animated: Bool) {
+
+    // First take the visible map rect, set the center, and adjust for the padding
+    // This *will* result in zooming out a lot if there's an edge padding
     var mapRectToShow = self.visibleMapRect
     mapRectToShow.origin = MKMapPointForCoordinate(coordinate)
-    setVisibleMapRect(mapRectToShow, edgePadding: edgePadding, animated: animated)
+    mapRectToShow = mapRectThatFits(mapRectToShow, edgePadding: edgePadding)
+    
+    // Then zoom back in, and show it - note that we then ignore the edge padding
+    // as that's already accounted for
+    mapRectToShow.size = self.visibleMapRect.size
+    setVisibleMapRect(mapRectToShow, edgePadding: .zero, animated: animated)
   }
   
 }

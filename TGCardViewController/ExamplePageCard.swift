@@ -15,7 +15,7 @@ class ExamplePageCard: TGPageCard {
   
   init() {
     let card1 = TGPlainCard(title: "Hello Sydney", mapManager: .sydney)
-    let card2 = ExampleTableCard(mapManager: .london)
+    let card2 = ExampleTableCard(mapManager: .london, pushOnTap: false)
     let card3 = ExampleChildCard()
     let card4 = TGPlainCard(title: "Hello Nuremberg", mapManager: .nuremberg)
     super.init(title: "Paging views", cards: [card1, card2, card3, card4])

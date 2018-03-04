@@ -14,14 +14,21 @@ class ExampleTableCard : TGTableCard {
 
   fileprivate let source = ExampleTableDataSource()
 
-  init(mapManager: TGMapManager? = nil) {
+  init(mapManager: TGMapManager? = nil, pushOnTap: Bool = true) {
     let accessory = ExampleAccessoryView.instantiate()
     
     super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: accessory, mapManager: mapManager)
     
-    source.onSelect = {
-      let card = ExampleTableChildCard(annotation: $0)
-      self.controller?.push(card, animated: true)
+    if pushOnTap {
+      source.onSelect = {
+        let card = ExampleTableChildCard(annotation: $0)
+        self.controller?.push(card, animated: true)
+      }
+    } else {
+      source.onSelect = {
+        let annotation = $0
+        self.mapManager?.setCenter(annotation.coordinate, animated: true)
+      }
     }
   }
   
