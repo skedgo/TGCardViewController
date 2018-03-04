@@ -166,8 +166,7 @@ extension MKMapView {
                    animated: Bool) {
     
     var mapRectToShow = self.visibleMapRect
-    visible.origin = MKMapPointForCoordinate(coordinate)
-    guard !MKMapRectIsNull(mapRect) else { return }
+    mapRectToShow.origin = MKMapPointForCoordinate(coordinate)
     setVisibleMapRect(mapRectToShow, edgePadding: edgePadding, animated: animated)
   }
   
