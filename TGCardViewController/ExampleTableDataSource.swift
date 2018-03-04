@@ -15,7 +15,7 @@ class ExampleTableDataSource: NSObject {
   
   var onSelect: ((MKAnnotation) -> Void)?
   
-  fileprivate let stops = [
+  var stops = [
     [
       "lat": 51.4642,
       "lng": -0.1703,
@@ -226,6 +226,24 @@ extension ExampleTableDataSource : UITableViewDelegate {
     onSelect?(stops[indexPath.row])
   }
   
+  func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    return true
+  }
+  
+  func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+    return [
+      UITableViewRowAction(style: .destructive, title: "Delete") { _, ip in
+        self.stops.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+      }
+    ]
+  }
+  
+  func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    let item = stops.remove(at: sourceIndexPath.row)
+    stops.insert(item, at: destinationIndexPath.row)
+  }
+  
 }
 
 extension ExampleTableDataSource : UITableViewDataSource {
@@ -243,6 +261,34 @@ extension ExampleTableDataSource : UITableViewDataSource {
     let row = indexPath.row
     tableCell.textLabel?.text = "#\(row): \(stops[row].title!!)"
     return tableCell
+  }
+  
+}
+
+@available(iOS 11.0, *)
+extension ExampleTableDataSource : UITableViewDragDelegate {
+
+  func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+    let string = (stops[indexPath.row].title ?? nil) ?? "Hello"
+    let item = UIDragItem(itemProvider: NSItemProvider(item: string as NSString, typeIdentifier: "public.text"))
+    return [ item ]
+  }
+  
+}
+
+@available(iOS 11.0, *)
+extension ExampleTableDataSource : UITableViewDropDelegate {
+  
+  func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+  }
+  
+  func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+    // To allow iPhone specific re-ordering
+    if session.localDragSession != nil {
+      return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    } else {
+      return UITableViewDropProposal(operation: .copy, intent: .automatic)
+    }
   }
   
 }

@@ -113,7 +113,12 @@ open class TGMapManager: NSObject {
                          edgePadding: edgePadding,
                          animated: animated)
   }
+
   
+  public func setCenter(_ coordinate: CLLocationCoordinate2D, animated: Bool) {
+    mapView?.setCenter(coordinate, edgePadding: edgePadding, animated: animated)
+  }
+
 }
 
 
@@ -154,6 +159,25 @@ extension MKMapView {
     }
     
     setVisibleMapRect(mapRectToShow, edgePadding: edgePadding, animated: animated)
+  }
+  
+  func setCenter(_ coordinate: CLLocationCoordinate2D,
+                 edgePadding: UIEdgeInsets,
+                 animated: Bool) {
+
+    // Coordinate at the top left considering the edge padding
+    let visibleTopLeft = convert(CGPoint(x: edgePadding.left, y: edgePadding.top), toCoordinateFrom: self)
+    
+    // Coordinate at the top left of the map, ignoring edge padding
+    let unadjustedTopLeft = MKCoordinateForMapPoint(visibleMapRect.origin)
+    
+    // The new center is the desired centre minus half vector defining the difference of the two above
+    let newCenter = CLLocationCoordinate2D(
+      latitude: coordinate.latitude - (visibleTopLeft.latitude - unadjustedTopLeft.latitude) / 2,
+      longitude: coordinate.longitude - (visibleTopLeft.longitude - unadjustedTopLeft.longitude) / 2
+    )
+    
+    setCenter(newCenter, animated: animated)
   }
   
 }
