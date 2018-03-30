@@ -18,8 +18,17 @@ open class TGTableCard: TGCard {
   
   let accessoryView: UIView?
 
-  weak var tableViewDelegate: UITableViewDelegate?
-  weak var tableViewDataSource: UITableViewDataSource?
+  /// The delegate to be used for the card view's table view.
+  ///
+  /// Only has an effect, if it is set before `buildCardView` is called, i.e.,
+  /// before the card is pushed.
+  public weak var tableViewDelegate: UITableViewDelegate?
+  
+  /// The data source to be used for the card view's table view.
+  ///
+  /// Only has an effect, if it is set before `buildCardView` is called, i.e.,
+  /// before the card is pushed.
+  public weak var tableViewDataSource: UITableViewDataSource?
   
   // MARK: - Initialisers
   
