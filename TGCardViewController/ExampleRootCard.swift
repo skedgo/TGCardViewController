@@ -22,8 +22,25 @@ class ExampleRootCard : TGTableCard {
       self.controller?.push(item.card)
     }
     
-    self.topFloatingViews = [UIButton.dummySystemButton()]
-    self.bottomFloatingViews = [UIButton.dummySystemButton()]
+    let infoButton = UIButton(type: .infoLight)
+    infoButton.backgroundColor = #colorLiteral(red: 1, green: 0.7137254902, blue: 0.7568627451, alpha: 1)
+    infoButton.tintColor = .white
+    NSLayoutConstraint.activate([
+        infoButton.widthAnchor.constraint(equalToConstant: 45),
+        infoButton.heightAnchor.constraint(equalToConstant: 45)
+      ])
+    infoButton.addTarget(self, action: #selector(infoButtonPressed), for: .touchUpInside)
+    self.topFloatingViews = [infoButton]
+    
+    let contactAddButton = UIButton(type: .contactAdd)
+    contactAddButton.backgroundColor = #colorLiteral(red: 1, green: 0.7137254902, blue: 0.7568627451, alpha: 1)
+    contactAddButton.tintColor = .white
+    NSLayoutConstraint.activate([
+        contactAddButton.widthAnchor.constraint(equalToConstant: 45),
+        contactAddButton.heightAnchor.constraint(equalToConstant: 45)
+      ])
+    contactAddButton.addTarget(self, action: #selector(addContactButtonPressed), for: .touchUpInside)
+    self.bottomFloatingViews = [contactAddButton]
   }
   
   override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
@@ -36,7 +53,25 @@ class ExampleRootCard : TGTableCard {
     }
   }
   
+  // MARK: - User interaction
+  
+  @objc
+  private func infoButtonPressed() {
+    let alertCtr = UIAlertController(title: "Alert", message: "I'm an info button", preferredStyle: .alert)
+    alertCtr.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+    controller?.present(alertCtr, animated: true, completion: nil)
+  }
+  
+  @objc
+  private func addContactButtonPressed() {
+    let alertCtr = UIAlertController(title: "Alert", message: "I'm an contact add button", preferredStyle: .alert)
+    alertCtr.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+    controller?.present(alertCtr, animated: true, completion: nil)
+  }
+  
 }
+
+// MARK: -
 
 extension UIButton {
   
@@ -49,6 +84,8 @@ extension UIButton {
     return dummy
   }
 }
+
+// MARK: -
 
 fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSource {
   
