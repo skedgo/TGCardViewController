@@ -916,7 +916,7 @@ extension TGCardViewController {
   }
 }
 
-// MARK: - Map floating views
+// MARK: - Floating views
 
 extension TGCardViewController {
   
@@ -938,13 +938,28 @@ extension TGCardViewController {
   }
   
   private func updateFloatingViewsContent() {
-    populateFloatingView(self.topFloatingView, with: topCard?.topFloatingViews ?? [])
-    populateFloatingView(self.bottomFloatingView, with: topCard?.bottomFloatingViews ?? [])
+    populateFloatingView(topFloatingView, with: topCard?.topFloatingViews ?? [])
+    populateFloatingView(bottomFloatingView, with: topCard?.bottomFloatingViews ?? [])
   }
   
   private func populateFloatingView(_ floatingView: UIStackView, with views: [UIView]) {
+    // Make sure we start fresh
     cleanUpFloatingView(floatingView)
-    views.forEach { floatingView.addArrangedSubview($0) }
+    
+    // Now we add views to the stack
+    for (index, view) in views.enumerated() {
+      if index != 0 {
+        let separator = UIView(frame: .zero)
+        if floatingView.axis == .vertical {
+          separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        } else {
+          separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
+        }
+        separator.backgroundColor = UIColor(white: 1.0, alpha: 0.85)
+        floatingView.addArrangedSubview(separator)
+      }
+      floatingView.addArrangedSubview(view)
+    }
   }
   
   private func cleanUpFloatingView(_ stackView: UIStackView) {
