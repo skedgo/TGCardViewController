@@ -80,7 +80,7 @@ open class TGCardViewController: UIViewController {
   }
   
   fileprivate var cardViews: [TGCardView] {
-    return cardWrapperContent.subviews.flatMap { $0 as? TGCardView }
+    return cardWrapperContent.subviews.compactMap { $0 as? TGCardView }
   }
   
   fileprivate var topCardView: TGCardView? {
