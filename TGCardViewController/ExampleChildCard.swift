@@ -23,8 +23,9 @@ class ExampleChildCard : TGPlainCard {
     accessoryLabel.sizeToFit()
     
     super.init(title: "Child", subtitle: "With sticky button", contentView: content, accessoryView: accessoryLabel, mapManager: .sydney)
+    
+    self.topFloatingViews = [UIButton.dummySystemButton(), UIButton.dummySystemButton()]
   }
-  
 
   fileprivate enum StickyMode {
     case image

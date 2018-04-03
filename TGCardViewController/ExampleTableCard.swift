@@ -32,6 +32,8 @@ class ExampleTableCard : TGTableCard {
         self.mapManager?.setCenter(annotation.coordinate, animated: true)
       }
     }
+    
+    self.topFloatingViews = [UIButton.dummySystemButton()]
   }
   
   override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {

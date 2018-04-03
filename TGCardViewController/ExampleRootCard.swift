@@ -21,6 +21,9 @@ class ExampleRootCard : TGTableCard {
     source.onSelect = { item in
       self.controller?.push(item.card)
     }
+    
+    self.topFloatingViews = [UIButton.dummySystemButton()]
+    self.bottomFloatingViews = [UIButton.dummySystemButton()]
   }
   
   override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
@@ -33,6 +36,18 @@ class ExampleRootCard : TGTableCard {
     }
   }
   
+}
+
+extension UIButton {
+  
+  static func dummySystemButton() -> UIButton {
+    let dummy = UIButton(type: .detailDisclosure)
+    dummy.widthAnchor.constraint(equalToConstant: 45).isActive = true
+    dummy.heightAnchor.constraint(equalToConstant: 45).isActive = true
+    dummy.backgroundColor = #colorLiteral(red: 1, green: 0.7137254902, blue: 0.7568627451, alpha: 1)
+    dummy.tintColor = .white
+    return dummy
+  }
 }
 
 fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSource {

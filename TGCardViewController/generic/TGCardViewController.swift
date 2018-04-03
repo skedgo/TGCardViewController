@@ -445,6 +445,9 @@ extension TGCardViewController {
     // Notify that we have completed building the card view and its header view.
     top.didBuild(cardView: cardView, headerView: header)
     
+    // Incoming card has its own top and bottom floating views.
+    updateFloatingViewsContent()
+    
     // Since the header view may be animated in & out, it's best to update the
     // height of the card's content wrapper.
     updateContentWrapperHeightConstraint()
@@ -472,6 +475,7 @@ extension TGCardViewController {
       animations: {
         self.view.layoutIfNeeded()
         self.updateMapShadow(for: animateTo.position)
+        self.updateFloatingViewsVisibility()
         cardView.frame = self.cardWrapperContent.bounds
         self.cardTransitionShadow?.alpha = 0.15
       },
@@ -557,6 +561,11 @@ extension TGCardViewController {
     // of the card's content wrapper.
     updateContentWrapperHeightConstraint()
     
+    // Before animating views in and out, restore both top and bottom floating views
+    // to previous card's values.
+    updateFloatingViewsContent()
+    
+    // Notify that constraints need to be updated in the next cycle.
     view.setNeedsUpdateConstraints()
 
     // 5. Do the transition, optionally animated.
@@ -579,6 +588,7 @@ extension TGCardViewController {
       animations: {
         self.view.layoutIfNeeded()
         self.updateMapShadow(for: animateTo.position)
+        self.updateFloatingViewsVisibility()
         topView.frame.origin.y = self.cardWrapperContent.frame.maxY
         self.cardTransitionShadow?.alpha = 0
         newTop?.view.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
@@ -919,11 +929,29 @@ extension TGCardViewController {
   
   private func updateFloatingViewsVisibility() {
     guard !cardIsNextToMap(in: traitCollection) else {
+      // When card is on the side of the map, always show the floating views.
       fadeMapFloatingViews(false)
       return
     }
     
     fadeMapFloatingViews(cardPosition == .extended)
+  }
+  
+  private func updateFloatingViewsContent() {
+    populateFloatingView(self.topFloatingView, with: topCard?.topFloatingViews ?? [])
+    populateFloatingView(self.bottomFloatingView, with: topCard?.bottomFloatingViews ?? [])
+  }
+  
+  private func populateFloatingView(_ floatingView: UIStackView, with views: [UIView]) {
+    cleanUpFloatingView(floatingView)
+    views.forEach { floatingView.addArrangedSubview($0) }
+  }
+  
+  private func cleanUpFloatingView(_ stackView: UIStackView) {
+    stackView.arrangedSubviews.forEach {
+      stackView.removeArrangedSubview($0)
+      $0.removeFromSuperview()
+    }
   }
   
 }

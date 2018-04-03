@@ -69,6 +69,12 @@
                                                 </constraints>
                                             </button>
                                         </subviews>
+                                        <variation key="default">
+                                            <mask key="subviews">
+                                                <exclude reference="vUA-9F-ExZ"/>
+                                                <exclude reference="b1T-bq-vSZ"/>
+                                            </mask>
+                                        </variation>
                                     </stackView>
                                 </subviews>
                                 <constraints>
@@ -96,13 +102,13 @@
                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
                         <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="60" placeholderIntrinsicHeight="35" translatesAutoresizingMaskIntoConstraints="NO" id="u6M-z2-2xb">
-                            <rect key="frame" x="276" y="507" width="91" height="45"/>
+                            <rect key="frame" x="307" y="517" width="60" height="35"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="qM8-dd-KXi">
-                                <rect key="frame" x="0.0" y="0.0" width="91" height="45"/>
+                                <rect key="frame" x="0.0" y="0.0" width="60" height="35"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="vXo-Av-jHv" userLabel="Bottom floating view">
-                                        <rect key="frame" x="0.0" y="0.0" width="91" height="45"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="60" height="35"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tGF-Ui-va6">
                                                 <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
@@ -121,6 +127,12 @@
                                                 </constraints>
                                             </button>
                                         </subviews>
+                                        <variation key="default">
+                                            <mask key="subviews">
+                                                <exclude reference="tGF-Ui-va6"/>
+                                                <exclude reference="mrK-If-kHx"/>
+                                            </mask>
+                                        </variation>
                                     </stackView>
                                 </subviews>
                                 <constraints>
@@ -227,9 +239,9 @@
                             <exclude reference="1uG-yl-0le"/>
                         </mask>
                         <mask key="constraints">
+                            <include reference="Vi9-1z-ei1"/>
                             <include reference="0es-h4-clN"/>
                             <exclude reference="1Mc-Uh-pXD"/>
-                            <include reference="Vi9-1z-ei1"/>
                             <include reference="52A-gC-vvw"/>
                             <exclude reference="DGx-yq-huX"/>
                         </mask>
