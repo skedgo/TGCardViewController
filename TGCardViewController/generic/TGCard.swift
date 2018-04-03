@@ -46,6 +46,24 @@ open class TGCard: NSObject {
   /// Localised subtitle of the card
   public let subtitle: String?
   
+  /// Each card can have its own background color.
+  public var backgroundColor: UIColor?
+  
+  /// Each card can specify a color for darker texts.
+  ///
+  /// @default Black
+  public var darkTextColor: UIColor?
+  
+  /// Each card can specify a color for lighter texts
+  ///
+  /// @default Light grey
+  public var lightTextColor: UIColor?
+  
+  /// Each card can specify a preferred font.
+  ///
+  /// @default System font.
+  public var font: UIFont?
+  
   /// The manager that handles the content of the map for this card
   public var mapManager: TGMapManager? {
     didSet {
