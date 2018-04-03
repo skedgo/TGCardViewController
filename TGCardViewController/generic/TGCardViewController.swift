@@ -47,7 +47,11 @@ open class TGCardViewController: UIViewController {
   @IBOutlet public weak var cardWrapperContent: UIView!
   fileprivate weak var cardTransitionShadow: UIView?
   @IBOutlet weak var statusBarBlurView: UIVisualEffectView!
-
+  @IBOutlet weak var topFloatingView: UIStackView!
+  @IBOutlet weak var bottomFloatingView: UIStackView!
+  @IBOutlet weak var topFloatingViewWrapper: UIVisualEffectView!
+  @IBOutlet weak var bottomFloatingViewWrapper: UIVisualEffectView!
+  
   // Positioning the cards
   @IBOutlet weak var cardWrapperDesiredTopConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperMinOverlapTopConstraint: NSLayoutConstraint!
@@ -192,6 +196,9 @@ open class TGCardViewController: UIViewController {
     
     // The interactivity of gesture recognisers depends on size classes as well
     updatePannerInteractivity()
+    
+    // The visibility of floating views depends on size classes too.
+    updateFloatingViewsVisibility()
     
     // When we started a paging card in the peak state while the device is in
     // portrait mode, all of its contents are not scrollable. If we now switch
@@ -682,10 +689,10 @@ extension TGCardViewController {
     UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
       self.updateMapShadow(for: snapTo.position)
       self.topCardView?.adjustContentAlpha(to: snapTo.position == .collapsed ? 0 : 1)
+      self.fadeMapFloatingViews(snapTo.position == .extended)
       self.view.layoutIfNeeded()
     }, completion: { _ in
       self.topCardView?.allowContentScrolling(snapTo.position == .extended)
-      
       self.previousCardPosition = snapTo.position
       completion?()
     })
@@ -740,6 +747,15 @@ extension TGCardViewController {
       // Collapsed: 0, peakY: 1
       let contentAlpha = min(1, max(0, (collapsedMinY - newY) / (collapsedMinY - peakY)))
       topCardView?.adjustContentAlpha(to: contentAlpha)
+      
+      // Start fading out the floating views when we move away from the peak state position
+      // and fading in when we move towards it. The 0.3 is introduced so the fading out
+      // happens sooner, i.e., not too far up the peak state position.
+      if newY <= peakY {
+        let floatingViewAlpha = min(1, max(0, (peakY - newY) / ((peakY - extendedMinY)*0.3)))
+        topFloatingViewWrapper.alpha = 1 - floatingViewAlpha
+        bottomFloatingViewWrapper.alpha = 1 - floatingViewAlpha
+      }
       
       view.setNeedsUpdateConstraints()
       view.layoutIfNeeded()
@@ -846,6 +862,7 @@ extension TGCardViewController {
       animations: {
         self.updateMapShadow(for: animateTo.position)
         self.topCardView?.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
+        self.fadeMapFloatingViews(animateTo.position == .extended)
         self.view.layoutIfNeeded()
     },
       completion: { _ in
@@ -889,6 +906,27 @@ extension TGCardViewController {
   }
 }
 
+// MARK: - Map floating views
+
+extension TGCardViewController {
+  
+  private func fadeMapFloatingViews(_ fade: Bool, animated: Bool = false) {
+    UIView.animate(withDuration: animated ? 0.25: 0) {
+      self.topFloatingViewWrapper.alpha = fade ? 0 : 1
+      self.bottomFloatingViewWrapper.alpha = fade ? 0 : 1
+    }
+  }
+  
+  private func updateFloatingViewsVisibility() {
+    guard !cardIsNextToMap(in: traitCollection) else {
+      fadeMapFloatingViews(false)
+      return
+    }
+    
+    fadeMapFloatingViews(cardPosition == .extended)
+  }
+  
+}
 
 // MARK: - Card-specific header view
 
