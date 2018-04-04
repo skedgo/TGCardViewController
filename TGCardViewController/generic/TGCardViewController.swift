@@ -572,8 +572,10 @@ extension TGCardViewController {
     updateContentWrapperHeightConstraint()
     
     // Before animating views in and out, restore both top and bottom floating views
-    // to previous card's values.
-    updateFloatingViewsContent()
+    // to previous card's values. Note that, we force a clean up of floating views
+    // because the popping card may have added views that are only applicable to it-
+    // self.
+    updateFloatingViewsContent(forcedCleanUp: true)
     
     // Notify that constraints need to be updated in the next cycle.
     view.setNeedsUpdateConstraints()
@@ -930,7 +932,7 @@ extension TGCardViewController {
 
 extension TGCardViewController {
   
-  private func isDeviceiPhoneX() -> Bool {
+  private func deviceIsiPhoneX() -> Bool {
     if #available(iOS 11, *) {
       return view.safeAreaInsets.bottom > 0
     } else {
@@ -955,15 +957,25 @@ extension TGCardViewController {
     fadeMapFloatingViews(cardPosition == .extended)
   }
   
-  private func updateFloatingViewsContent() {
-    populateFloatingView(topFloatingView, with: topCard?.topFloatingViews ?? [])
-    populateFloatingView(bottomFloatingView, with: topCard?.bottomFloatingViews ?? [])
+  private func updateFloatingViewsContent(forcedCleanUp: Bool = false) {
+    if forcedCleanUp {
+      cleanUpFloatingView(topFloatingView)
+      cleanUpFloatingView(bottomFloatingView)
+    }
+    
+    if let newTops = topCard?.topFloatingViews {
+      populateFloatingView(topFloatingView, with: newTops)
+    }
+    
+    if let newBottoms = topCard?.bottomFloatingViews {
+      populateFloatingView(bottomFloatingView, with: newBottoms)
+    }
   }
   
   private func updateFloatingViewsConstraints() {
     if cardIsNextToMap(in: traitCollection) {
-      bottomFloatingViewBottomConstraint.constant = isDeviceiPhoneX() ? 0 : 8
-      if isDeviceiPhoneX() {
+      bottomFloatingViewBottomConstraint.constant = deviceIsiPhoneX() ? 0 : 8
+      if deviceIsiPhoneX() {
         if #available(iOS 11, *) {
           topFloatingViewTopConstraint.constant = view.safeAreaInsets.bottom
         }

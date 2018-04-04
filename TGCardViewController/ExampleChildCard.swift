@@ -25,6 +25,7 @@ class ExampleChildCard : TGPlainCard {
     super.init(title: "Child", subtitle: "With sticky button", contentView: content, accessoryView: accessoryLabel, mapManager: .sydney)
     
     self.topFloatingViews = [UIButton.dummySystemButton(), UIButton.dummySystemButton()]
+    self.bottomFloatingViews = [] // This forces an empty bottom floating view
   }
 
   fileprivate enum StickyMode {

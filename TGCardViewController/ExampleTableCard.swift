@@ -33,7 +33,7 @@ class ExampleTableCard : TGTableCard {
       }
     }
     
-    self.topFloatingViews = [UIButton.dummySystemButton()]
+    self.bottomFloatingViews = [UIButton.dummySystemButton()]
   }
   
   override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
