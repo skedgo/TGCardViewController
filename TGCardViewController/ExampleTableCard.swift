@@ -21,6 +21,9 @@ class ExampleTableCard : TGTableCard {
     
     super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: accessory, mapManager: mapManager)
     
+    darkTextColor = #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1)
+    backgroundColor = #colorLiteral(red: 1, green: 0.7137254902, blue: 0.7568627451, alpha: 1)
+    
     if pushOnTap {
       source.onSelect = {
         let card = ExampleTableChildCard(annotation: $0)

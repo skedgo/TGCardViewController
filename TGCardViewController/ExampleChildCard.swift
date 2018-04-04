@@ -23,8 +23,11 @@ class ExampleChildCard : TGPlainCard {
     accessoryLabel.sizeToFit()
     
     super.init(title: "Child", subtitle: "With sticky button", contentView: content, accessoryView: accessoryLabel, mapManager: .sydney)
+    
+    darkTextColor = UIColor(white: 1, alpha: 1)
+    lightTextColor = #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)
+    backgroundColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
   }
-  
 
   fileprivate enum StickyMode {
     case image

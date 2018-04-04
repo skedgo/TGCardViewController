@@ -40,11 +40,18 @@ open class TGPlainCard: TGCard {
     self.accessoryView = accessoryView
     
     super.init(title: title, subtitle: subtitle, mapManager: mapManager, initialPosition: initialPosition)
+    
+    self.darkTextColor = .black
+    self.lightTextColor = .lightGray
+    self.backgroundColor = .white
   }
   
   open override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGPlainCardView.instantiate()
     view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
+    view.titleLabel.textColor = darkTextColor
+    view.subtitleLabel.textColor = lightTextColor
+    view.backgroundColor = backgroundColor
     return view
   }
   
