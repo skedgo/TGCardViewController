@@ -412,8 +412,10 @@ extension TGCardViewController {
     cards.append( (top, animateTo.position) )
     
     // 3. Hand over the map
-    oldTop?.card.mapManager?.cleanUp(mapView)
-    top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
+    if oldTop?.card.mapManager !== top.mapManager {
+      oldTop?.card.mapManager?.cleanUp(mapView)
+      top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
+    }
     top.delegate = self
     
     // 4. Create and configure the new view
@@ -557,10 +559,12 @@ extension TGCardViewController {
     cards.remove(at: cards.count - 1)
     
     // 2. Hand over the map
-    currentTopCard.mapManager?.cleanUp(mapView)
-    newTop?.card.mapManager?.takeCharge(of: mapView,
-                                        edgePadding: mapEdgePadding(for: newTop?.position ?? .collapsed),
-                                        animated: animated)
+    if currentTopCard.mapManager !== newTop?.card.mapManager {
+      currentTopCard.mapManager?.cleanUp(mapView)
+      newTop?.card.mapManager?.takeCharge(of: mapView,
+                                          edgePadding: mapEdgePadding(for: newTop?.position ?? .collapsed),
+                                          animated: animated)
+    }
     
     // 3. Special handling of when the new top card has no map content
     updatePannerInteractivity(for: newTop)
