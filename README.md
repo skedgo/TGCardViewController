@@ -85,13 +85,14 @@ Map content:
 
 Map widget:
 
-- [ ] Optional widget such as a search bar or the from/to/at widget that floats on top of the map (!10)
-- [ ] Map content properly considers that the widget is there (map content and map controls such as the compass) (!10)
-- [ ] When dragging up the card the widget scrolls away to the top (!10)
+- [ ] Optional widget such as a search bar or the from/to/at widget that floats on top of the map
+- [ ] Map content properly considers that the widget is there (map content and map controls such as the compass)
+- [ ] When dragging up the card the widget scrolls away to the top
 
 Map buttons:
 
-- [ ] Optional list of buttons that float on the right above the card (when collapsed or peaking)(!10)
+- [x] Optional list of buttons that float on the right above the card (when collapsed or peaking) (!27)
+- [x] When dragging up the card to `extended`, the buttons fade away (!27)
 
 ### 4. Large screens (iPad + iPhone Plus in landscape)
 
