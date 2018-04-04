@@ -62,6 +62,12 @@ open class TGCard: NSObject {
   /// The action to execute when floating button is pressed.
   public var floatingButtonAction: (style: FloatingButtonStyle, onPressed: () -> Void)?
   
+  /// Each card can specify what views to display in the top floating view
+  public var topFloatingViews: [UIView]?
+  
+  /// Each card can specify what views to display in the bottom floating view
+  public var bottomFloatingViews: [UIView]?
+  
   public private(set) var viewIsVisible: Bool = false
   
   public init(title: String, subtitle: String? = nil,
