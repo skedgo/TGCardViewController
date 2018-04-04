@@ -49,7 +49,7 @@ open class TGMapManager: NSObject {
   /// content the first time. Defaults to `.city`
   public var preferredZoomLevel: Zoom = .city
   
-  private var edgePadding: UIEdgeInsets = .zero
+  var edgePadding: UIEdgeInsets = .zero
 
   private var previousMapState: MapState?
 

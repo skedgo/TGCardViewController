@@ -732,6 +732,7 @@ extension TGCardViewController {
       self.fadeMapFloatingViews(snapTo.position == .extended)
       self.view.layoutIfNeeded()
     }, completion: { _ in
+      self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: snapTo.position)
       self.topCardView?.allowContentScrolling(snapTo.position == .extended)
       self.previousCardPosition = snapTo.position
       completion?()
@@ -906,6 +907,7 @@ extension TGCardViewController {
         self.view.layoutIfNeeded()
     },
       completion: { _ in
+        self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: animateTo.position)
         self.topCardView?.allowContentScrolling(animateTo.position == .extended)
         self.previousCardPosition = animateTo.position
     })
