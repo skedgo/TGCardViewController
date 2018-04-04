@@ -9,7 +9,12 @@
 import Foundation
 
 public enum TGCardPosition {
-  case extended   // showing full card, with small bit of map on top
-  case peaking    // showing card and map, each about half
-  case collapsed  // showing only title of card
+  /// Showing full card, with small bit of map on top
+  case extended
+  
+  /// Showing card and map, each about half
+  case peaking
+  
+  /// Showing only title of card
+  case collapsed
 }

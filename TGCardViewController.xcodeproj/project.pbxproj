@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A462B5A2074BF4F00AF41EF /* TGCardViewController+UserTrackingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A462B592074BF4F00AF41EF /* TGCardViewController+UserTrackingButton.swift */; };
+		3A462B5C2074C64400AF41EF /* TGButtonPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A462B5B2074C64400AF41EF /* TGButtonPosition.swift */; };
 		3A59798B1E7955FE0065A5FF /* ExampleTableChildCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */; };
 		3A7C3487201F2C0B00F66A35 /* TGCardViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A7C3485201F2C0B00F66A35 /* TGCardViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A7C348A201F2C0B00F66A35 /* TGCardViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7C3483201F2C0B00F66A35 /* TGCardViewController.framework */; };
@@ -95,6 +97,8 @@
 /* Begin PBXFileReference section */
 		3A377BD61E95121600A8C8F0 /* UIView+Snap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+Snap.swift"; path = "generic/UIView+Snap.swift"; sourceTree = "<group>"; };
 		3A3E89C11E8BF49000773897 /* TGCardStyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCardStyleKit.swift; path = generic/TGCardStyleKit.swift; sourceTree = "<group>"; };
+		3A462B592074BF4F00AF41EF /* TGCardViewController+UserTrackingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "TGCardViewController+UserTrackingButton.swift"; path = "generic/TGCardViewController+UserTrackingButton.swift"; sourceTree = "<group>"; };
+		3A462B5B2074C64400AF41EF /* TGButtonPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TGButtonPosition.swift; path = generic/TGButtonPosition.swift; sourceTree = "<group>"; };
 		3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableChildCard.swift; sourceTree = "<group>"; };
 		3A59798C1E79DA530065A5FF /* TGCardPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCardPosition.swift; path = generic/TGCardPosition.swift; sourceTree = "<group>"; };
 		3A7C3483201F2C0B00F66A35 /* TGCardViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TGCardViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -273,8 +277,10 @@
 			children = (
 				3AB8944D1E7AB1E400267A06 /* cards */,
 				3A3E89C31E8BF4B600773897 /* style */,
+				3A462B5B2074C64400AF41EF /* TGButtonPosition.swift */,
 				3A59798C1E79DA530065A5FF /* TGCardPosition.swift */,
 				3ACA74A41E716CB900408678 /* TGCardViewController.swift */,
+				3A462B592074BF4F00AF41EF /* TGCardViewController+UserTrackingButton.swift */,
 				3ACA74AE1E71718800408678 /* TGCardViewController.xib */,
 				3ACA74C41E71D10E00408678 /* TGMapManager.swift */,
 				3A377BD61E95121600A8C8F0 /* UIView+Snap.swift */,
@@ -506,8 +512,10 @@
 				3A7C34BD201F2C9100F66A35 /* TGTableCard.swift in Sources */,
 				3A7C34B5201F2C9100F66A35 /* TGHeaderView.swift in Sources */,
 				3A7C34BE201F2C9100F66A35 /* TGTableCardView.swift in Sources */,
+				3A462B5C2074C64400AF41EF /* TGButtonPosition.swift in Sources */,
 				3A7C34B7201F2C9100F66A35 /* TGPageCard.swift in Sources */,
 				3A7C34B4201F2C9100F66A35 /* TGCardView.swift in Sources */,
+				3A462B5A2074BF4F00AF41EF /* TGCardViewController+UserTrackingButton.swift in Sources */,
 				3A7C34B0201F2C9100F66A35 /* TGAgendaCard.swift in Sources */,
 				3A7C34AB201F2C8D00F66A35 /* TGCardPosition.swift in Sources */,
 				3A7C34BA201F2C9100F66A35 /* TGPlainCard.swift in Sources */,

@@ -77,6 +77,17 @@ open class TGCardViewController: UIViewController {
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
   
+  /// If you want a current location button on the map, provide this method which will be
+  /// called if the user didn't yet grant access to the current location and the current
+  /// location button is pressed.
+  /// Your function should ask for permissions and then call the block indicating whether
+  /// the user did grant permissions.
+  public var askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)?
+  
+  public var locationButtonPosition: TGButtonPosition = .top
+  
+  private var defaultButtons: [UIView]!
+
   /// This is just for debugging issues where it helps to disable
   /// everything related to panning. Otherwise it should always
   /// be set to `true`.
@@ -127,6 +138,13 @@ open class TGCardViewController: UIViewController {
     mapTapper.delegate = self
     mapShadow.addGestureRecognizer(mapTapper)
     self.mapShadowTapper = mapTapper
+    
+    // Create the default buttons
+    if #available(iOS 11.0, *), let tracker = buildUserTrackingButton(for: mapView) {
+      self.defaultButtons = [tracker]
+    } else {
+      self.defaultButtons = []
+    }
     
     // Setting up additional constraints
     cardWrapperHeightConstraint.constant = extendedMinY * -1
@@ -963,12 +981,26 @@ extension TGCardViewController {
       cleanUpFloatingView(bottomFloatingView)
     }
     
-    if let newTops = topCard?.topFloatingViews {
-      populateFloatingView(topFloatingView, with: newTops)
+    var topViews: [UIView] = []
+    var bottomViews: [UIView] = []
+    
+    switch locationButtonPosition {
+    case .top: topViews = defaultButtons
+    case .bottom: bottomViews = defaultButtons
     }
     
+    if let newTops = topCard?.topFloatingViews {
+      topViews.append(contentsOf: newTops)
+    }
+    if !topViews.isEmpty {
+      populateFloatingView(topFloatingView, with: topViews)
+    }
+
     if let newBottoms = topCard?.bottomFloatingViews {
-      populateFloatingView(bottomFloatingView, with: newBottoms)
+      bottomViews.append(contentsOf: newBottoms)
+    }
+    if !bottomViews.isEmpty {
+      populateFloatingView(bottomFloatingView, with: bottomViews)
     }
   }
   
