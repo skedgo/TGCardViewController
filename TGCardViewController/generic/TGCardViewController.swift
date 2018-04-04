@@ -61,6 +61,15 @@ open class TGCardViewController: UIViewController {
   @IBOutlet weak var headerViewHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var headerViewTopConstraint: NSLayoutConstraint!
   
+  
+  // Positioning the floating views.
+  @IBOutlet weak var topFloatingViewTopConstraint: NSLayoutConstraint!
+  @IBOutlet weak var topFloatingViewTrailingToSuperConstraint: NSLayoutConstraint!
+  @IBOutlet weak var topFloatingViewTrailingToSafeAreaConstraint: NSLayoutConstraint!
+  @IBOutlet weak var bottomFloatingViewTrailingToSuperConstraint: NSLayoutConstraint!
+  @IBOutlet weak var bottomFloatingViewTrailingToSafeAreaConstraint: NSLayoutConstraint!
+  @IBOutlet weak var bottomFloatingViewBottomConstraint: NSLayoutConstraint! // only active in landscape
+  
   // Dynamic constraints
   @IBOutlet weak var statusBarBlurHeightConstraint: NSLayoutConstraint!
 
@@ -212,8 +221,9 @@ open class TGCardViewController: UIViewController {
     
     statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
+    updateFloatingViewsConstraints()
   }
-
+  
   override open func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
@@ -920,6 +930,14 @@ extension TGCardViewController {
 
 extension TGCardViewController {
   
+  private func isDeviceiPhoneX() -> Bool {
+    if #available(iOS 11, *) {
+      return view.safeAreaInsets.bottom > 0
+    } else {
+      return false
+    }
+  }
+  
   private func fadeMapFloatingViews(_ fade: Bool, animated: Bool = false) {
     UIView.animate(withDuration: animated ? 0.25: 0) {
       self.topFloatingViewWrapper.alpha = fade ? 0 : 1
@@ -940,6 +958,45 @@ extension TGCardViewController {
   private func updateFloatingViewsContent() {
     populateFloatingView(topFloatingView, with: topCard?.topFloatingViews ?? [])
     populateFloatingView(bottomFloatingView, with: topCard?.bottomFloatingViews ?? [])
+  }
+  
+  private func updateFloatingViewsConstraints() {
+    if cardIsNextToMap(in: traitCollection) {
+      bottomFloatingViewBottomConstraint.constant = isDeviceiPhoneX() ? 0 : 8
+      if isDeviceiPhoneX() {
+        if #available(iOS 11, *) {
+          topFloatingViewTopConstraint.constant = view.safeAreaInsets.bottom
+        }
+        NSLayoutConstraint.deactivate([
+          topFloatingViewTrailingToSafeAreaConstraint,
+          bottomFloatingViewTrailingToSafeAreaConstraint
+          ])
+        NSLayoutConstraint.activate([
+          topFloatingViewTrailingToSuperConstraint,
+          bottomFloatingViewTrailingToSuperConstraint
+          ])
+      } else {
+        topFloatingViewTopConstraint.constant = 8
+        NSLayoutConstraint.deactivate([
+          topFloatingViewTrailingToSuperConstraint,
+          bottomFloatingViewTrailingToSuperConstraint
+          ])
+        NSLayoutConstraint.activate([
+          topFloatingViewTrailingToSafeAreaConstraint,
+          bottomFloatingViewTrailingToSafeAreaConstraint
+          ])
+      }
+    } else {
+      topFloatingViewTopConstraint.constant = 8
+      NSLayoutConstraint.deactivate([
+        topFloatingViewTrailingToSuperConstraint,
+        bottomFloatingViewTrailingToSuperConstraint
+        ])
+      NSLayoutConstraint.activate([
+        topFloatingViewTrailingToSafeAreaConstraint,
+        bottomFloatingViewTrailingToSafeAreaConstraint
+        ])
+    }
   }
   
   private func populateFloatingView(_ floatingView: UIStackView, with views: [UIView]) {
