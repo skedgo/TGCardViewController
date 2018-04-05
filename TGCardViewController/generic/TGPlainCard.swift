@@ -45,11 +45,6 @@ open class TGPlainCard: TGCard {
   open override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGPlainCardView.instantiate()
     view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
-    view.titleLabel.font = titleFont
-    view.titleLabel.textColor = titleTextColor
-    view.subtitleLabel.font = subtitleFont
-    view.subtitleLabel.textColor = subtitleTextColor
-    view.backgroundColor = backgroundColor
     return view
   }
   
