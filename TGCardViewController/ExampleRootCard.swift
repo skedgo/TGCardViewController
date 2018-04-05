@@ -19,9 +19,7 @@ class ExampleRootCard : TGTableCard {
     super.init(title: "Card Demo", dataSource: source, delegate: source, mapManager: .nuremberg)
     
     source.onSelect = { item in
-      let newCard = item.card
-      newCard.copyStyling(from: self)
-      self.controller?.push(newCard)
+      self.controller?.push(item.card)
     }
     
     // Custom styling
