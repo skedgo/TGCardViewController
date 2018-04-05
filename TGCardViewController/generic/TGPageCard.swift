@@ -34,7 +34,8 @@ open class TGPageCard: TGCard {
   let initialPageIndex: Int
   
   fileprivate var currentPageIndex: Int {
-    return cardView?.currentPage ?? initialPageIndex
+    guard let pageCard = cardView as? TGPageCardView else { return initialPageIndex }
+    return pageCard.currentPage
   }
   
   fileprivate var currentCard: TGCard {
@@ -42,9 +43,7 @@ open class TGPageCard: TGCard {
   }
   
   fileprivate var previousAppearedCard: TGCard?
-  
-  fileprivate var cardView: TGPageCardView?
-  
+    
   fileprivate var headerView: TGHeaderView?
   
   fileprivate weak var headerPageControl: UIPageControl?
@@ -102,7 +101,6 @@ open class TGPageCard: TGCard {
     let view = TGPageCardView.instantiate()
     view.configure(with: self)
     view.delegate = self
-    cardView = view
     
     // reset the header, too, so that it's not left
     // in an outdated state
@@ -205,19 +203,22 @@ open class TGPageCard: TGCard {
   
   /// Navigates to the next card, animated
   public func moveForward() {
-    cardView?.moveForward()
+    guard let pageCard = cardView as? TGPageCardView else { return  }
+    pageCard.moveForward()
   }
   
   /// Navigates to the previous card, animated
   public func moveBackward() {
-    cardView?.moveBackward()
+    guard let pageCard = cardView as? TGPageCardView else { return  }
+    pageCard.moveBackward()
   }
   
   /// Navigates to the card at the provided index, animated
   ///
   /// - Parameter page: Index of the card
   public func move(to page: Int) {
-    cardView?.move(to: page)
+    guard let pageCard = cardView as? TGPageCardView else { return  }
+    pageCard.move(to: page)
   }
   
   
@@ -258,7 +259,8 @@ extension TGPageCard: TGPageCardViewDelegate {
     previous?.didDisappear(animated: animated)
 
     if let previousIndex = cards.index(where: { $0 === previous }),
-      let previousCardView = cardView?.cardViews[previousIndex] {
+      let pageCard = cardView as? TGPageCardView {
+      let previousCardView = pageCard.cardViews[previousIndex]
       delegate?.contentScrollViewDidChange(old: previousCardView.contentScrollView, for: self)
     } else {
       delegate?.contentScrollViewDidChange(old: nil, for: self)

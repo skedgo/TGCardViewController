@@ -479,6 +479,7 @@ extension TGCardViewController {
     }
     
     // Notify that we have completed building the card view and its header view.
+    top.cardView = cardView
     top.didBuild(cardView: cardView, headerView: header)
     
     // Incoming card has its own top and bottom floating views.

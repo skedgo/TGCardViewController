@@ -157,12 +157,7 @@ public class TGCardView: TGCornerView {
     headerStackBottomConstraint?.constant = includeHeader ? 8 : 0
     
     // Apply custom styling
-    titleLabel.font = card.titleFont
-    titleLabel.textColor = card.titleTextColor
-    subtitleLabel.font = card.subtitleFont
-    subtitleLabel.textColor = card.subtitleTextColor
-    grabHandle?.handleColor = card.grabHandleColor
-    backgroundColor = card.backgroundColor
+    applyStyling(for: card)
     
     if let action = card.floatingButtonAction {
       // TODO: We should add an accessibility label here
@@ -178,6 +173,15 @@ public class TGCardView: TGCornerView {
       
       onFloatingButtonPressed = action.onPressed
     }
+  }
+  
+  func applyStyling(for card: TGCard) {
+    titleLabel.font = card.titleFont
+    titleLabel.textColor = card.titleTextColor
+    subtitleLabel.font = card.subtitleFont
+    subtitleLabel.textColor = card.subtitleTextColor
+    grabHandle?.handleColor = card.grabHandleColor
+    backgroundColor = card.backgroundColor
   }
   
   // MARK: - Header view configuration

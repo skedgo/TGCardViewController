@@ -113,6 +113,7 @@ class TGPageCardView: TGCardView {
     
     let contents = card.cards.map { card -> UIView in
       let view = card.buildCardView(showClose: false, includeHeader: false)
+      card.cardView = view
       card.didBuild(cardView: view, headerView: nil)
       return view
     }
