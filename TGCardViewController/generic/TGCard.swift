@@ -46,24 +46,6 @@ open class TGCard: NSObject {
   /// Localised subtitle of the card
   public let subtitle: String?
   
-  /// Each card can have its own background color.
-  public var backgroundColor: UIColor?
-  
-  /// Each card can specify a color for darker texts.
-  ///
-  /// @default Black
-  public var darkTextColor: UIColor?
-  
-  /// Each card can specify a color for lighter texts
-  ///
-  /// @default Light grey
-  public var lightTextColor: UIColor?
-  
-  /// Each card can specify a preferred font.
-  ///
-  /// @default System font.
-  public var font: UIFont?
-  
   /// The manager that handles the content of the map for this card
   public var mapManager: TGMapManager? {
     didSet {
@@ -80,13 +62,7 @@ open class TGCard: NSObject {
   /// The action to execute when floating button is pressed.
   public var floatingButtonAction: (style: FloatingButtonStyle, onPressed: () -> Void)?
   
-  /// Each card can specify what views to display in the top floating view
-  public var topFloatingViews: [UIView]?
-  
-  /// Each card can specify what views to display in the bottom floating view
-  public var bottomFloatingViews: [UIView]?
-  
-  public private(set) var viewIsVisible: Bool = false
+  // MARK: - Creating Cards
   
   public init(title: String, subtitle: String? = nil,
               mapManager: TGMapManager? = nil, initialPosition: TGCardPosition? = nil) {
@@ -96,12 +72,23 @@ open class TGCard: NSObject {
     self.initialPosition = mapManager != nil ? initialPosition : .extended
   }
   
-  /// Builds the card view to represent the card
+  // MARK: - Creating Card Views.
+  
+  /// Each card can specify what to overlay on the top right of the map.
   ///
-  /// - Returns: Card view configured with the content of this card
-  open func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
-    preconditionFailure("Override this in subclasses, but don't call super to `TGCard`.")
-  }
+  /// - SeeAlso: `bottomMapToolBarItems`, if you want to overlay on the
+  ///             bottom right of the map
+  ///
+  /// - warning: items are arranged vertically
+  public var topMapToolBarItems: [UIView]?
+  
+  /// Each card can specify what to overlay on the bottom right of the map.
+  ///
+  ///- SeeAlso: `topMapToolBarItems`', if you want to overlay on the top
+  ///            right of the map.
+  ///
+  /// - warning: items are arranged horizontally
+  public var bottomMapToolBarItems: [UIView]?
   
   /// Builds the card's optional header which will be pinned to the top
   ///
@@ -110,6 +97,13 @@ open class TGCard: NSObject {
   /// - Returns: Header view configured with the card's title content
   public func buildHeaderView() -> TGHeaderView? {
     return nil
+  }
+  
+  /// Builds the card view to represent the card
+  ///
+  /// - Returns: Card view configured with the content of this card
+  open func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+    preconditionFailure("Override this in subclasses, but don't call super to `TGCard`.")
   }
   
   /// Called when the views have been built the first time
@@ -121,6 +115,48 @@ open class TGCard: NSObject {
   ///   - headerView: The header view, typically used by `TGPageCard`.
   open func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
   }
+  
+  // MARK: - Managing Card Appearance
+  
+  public private(set) var viewIsVisible: Bool = false
+  
+  /// Each card can have its own background color.
+  ///
+  /// @default: white
+  public var backgroundColor: UIColor? = .white
+  
+  /// Each card can specify a text color for title.
+  ///
+  /// @default Black
+  public var titleTextColor: UIColor? = .black
+  
+  /// Each card can specify a text color for subtitle.
+  ///
+  /// @default Light grey
+  public var subtitleTextColor: UIColor? = .lightGray
+  
+  /// Each card can specify a font for title.
+  ///
+  /// @default Bold system font with size 17pt.
+  public var titleFont: UIFont? = UIFont.boldSystemFont(ofSize: 17)
+  
+  /// Each card can specify a font for subtitle.
+  ///
+  /// @default Regular system font with size 15pt.
+  public var subtitleFont: UIFont? = UIFont.systemFont(ofSize: 15)
+  
+  /// Called to copy styling from a given card
+  ///
+  /// - Parameter card: card from which styling is taken.
+  open func copyStyling(from card: TGCard) {
+    titleFont = card.titleFont
+    titleTextColor = card.titleTextColor
+    subtitleFont = card.subtitleFont
+    subtitleTextColor = card.subtitleTextColor
+    backgroundColor = card.backgroundColor
+  }
+  
+  // MARK: - Managing Card Life Cycle
   
   /// Called just before the card becomes visible
   ///
@@ -163,6 +199,8 @@ open class TGCard: NSObject {
     viewIsVisible = false
   }
 }
+
+// MARK: -
 
 public protocol TGCardDelegate: class {
   /// Called whenever the map manager of the card is changing

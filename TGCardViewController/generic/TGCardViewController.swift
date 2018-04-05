@@ -995,14 +995,14 @@ extension TGCardViewController {
     case .bottom: bottomViews = defaultButtons
     }
     
-    if let newTops = topCard?.topFloatingViews {
+    if let newTops = topCard?.topMapToolBarItems {
       topViews.append(contentsOf: newTops)
     }
     if !topViews.isEmpty {
       populateFloatingView(topFloatingView, with: topViews)
     }
 
-    if let newBottoms = topCard?.bottomFloatingViews {
+    if let newBottoms = topCard?.bottomMapToolBarItems {
       bottomViews.append(contentsOf: newBottoms)
     }
     if !bottomViews.isEmpty {

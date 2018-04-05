@@ -47,10 +47,6 @@ open class TGTableCard: TGCard {
     
     super.init(title: title, subtitle: subtitle,
                mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
-    
-    self.darkTextColor = .black
-    self.lightTextColor = .lightGray
-    self.backgroundColor = .white
   }
   
   // MARK: - Constructing views
@@ -58,8 +54,10 @@ open class TGTableCard: TGCard {
   open override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
     let view = TGTableCardView.instantiate()
     view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
-    view.titleLabel.textColor = darkTextColor
-    view.subtitleLabel.textColor = lightTextColor
+    view.titleLabel.font = titleFont
+    view.titleLabel.textColor = titleTextColor
+    view.subtitleLabel.font = subtitleFont
+    view.subtitleLabel.textColor = subtitleTextColor
     view.backgroundColor = backgroundColor
     return view
   }
