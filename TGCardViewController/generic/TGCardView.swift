@@ -156,6 +156,14 @@ public class TGCardView: TGCornerView {
     headerStackTopConstraint?.constant = includeHeader ? 8 : 0
     headerStackBottomConstraint?.constant = includeHeader ? 8 : 0
     
+    // Apply custom styling
+    titleLabel.font = card.titleFont
+    titleLabel.textColor = card.titleTextColor
+    subtitleLabel.font = card.subtitleFont
+    subtitleLabel.textColor = card.subtitleTextColor
+    grabHandle?.handleColor = card.grabHandleColor
+    backgroundColor = card.backgroundColor
+    
     if let action = card.floatingButtonAction {
       // TODO: We should add an accessibility label here
       // See: https://gitlab.com/SkedGo/tripgo-cards-ios/merge_requests/14#note_27632714

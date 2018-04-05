@@ -387,7 +387,7 @@ extension TGCardViewController {
   // Yes, these are long. We rather keep them together like this (for now).
   // swiftlint:disable function_body_length
   
-  public func push(_ top: TGCard, animated: Bool = true) {
+  public func push(_ top: TGCard, animated: Bool = true, copyStyle: Bool = true) {
     // Set the controller on the top card earlier, because we may want
     // to ask the card to do something on willAppear, e.g., show sticky 
     // bar, which requires access to this property.
@@ -419,8 +419,14 @@ extension TGCardViewController {
     top.delegate = self
     
     // 4. Create and configure the new view
-    let showClose = delegate != nil || cards.count > 1
-    let cardView = top.buildCardView(showClose: showClose, includeHeader: true)
+    
+    // Copying style from old card to new card MUST be called before
+    // new card builds its card view.
+    if let oldCard = oldTop?.card, copyStyle {
+      top.copyStyling(from: oldCard)
+    }
+    
+    let cardView = top.buildCardView(showClose: delegate != nil || cards.count > 1, includeHeader: true)
     cardView.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
     if #available(iOS 11.0, *) {
       cardView.closeButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
@@ -995,14 +1001,14 @@ extension TGCardViewController {
     case .bottom: bottomViews = defaultButtons
     }
     
-    if let newTops = topCard?.topFloatingViews {
+    if let newTops = topCard?.topMapToolBarItems {
       topViews.append(contentsOf: newTops)
     }
     if !topViews.isEmpty {
       populateFloatingView(topFloatingView, with: topViews)
     }
 
-    if let newBottoms = topCard?.bottomFloatingViews {
+    if let newBottoms = topCard?.bottomMapToolBarItems {
       bottomViews.append(contentsOf: newBottoms)
     }
     if !bottomViews.isEmpty {

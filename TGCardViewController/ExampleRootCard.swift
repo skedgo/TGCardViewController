@@ -22,6 +22,14 @@ class ExampleRootCard : TGTableCard {
       self.controller?.push(item.card)
     }
     
+    // Custom styling
+    self.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)
+    self.titleTextColor = .white
+    self.subtitleTextColor = .white
+    self.subtitleFont = UIFont.italicSystemFont(ofSize: 15)
+    self.grabHandleColor = .white
+    
+    // Floating views
     let infoButton = UIButton(type: .infoLight)
     infoButton.backgroundColor = #colorLiteral(red: 1, green: 0.7137254902, blue: 0.7568627451, alpha: 1)
     infoButton.tintColor = .white
@@ -30,7 +38,7 @@ class ExampleRootCard : TGTableCard {
         infoButton.heightAnchor.constraint(equalToConstant: 45)
       ])
     infoButton.addTarget(self, action: #selector(infoButtonPressed), for: .touchUpInside)
-    self.topFloatingViews = [infoButton]
+    self.topMapToolBarItems = [infoButton]
     
     let contactAddButton = UIButton(type: .contactAdd)
     contactAddButton.backgroundColor = #colorLiteral(red: 1, green: 0.7137254902, blue: 0.7568627451, alpha: 1)
@@ -40,7 +48,7 @@ class ExampleRootCard : TGTableCard {
         contactAddButton.heightAnchor.constraint(equalToConstant: 45)
       ])
     contactAddButton.addTarget(self, action: #selector(addContactButtonPressed), for: .touchUpInside)
-    self.bottomFloatingViews = [contactAddButton]
+    self.bottomMapToolBarItems = [contactAddButton]
   }
   
   override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
