@@ -47,7 +47,11 @@ open class TGCardViewController: UIViewController {
   @IBOutlet public weak var cardWrapperContent: UIView!
   fileprivate weak var cardTransitionShadow: UIView?
   @IBOutlet weak var statusBarBlurView: UIVisualEffectView!
-
+  @IBOutlet weak var topFloatingView: UIStackView!
+  @IBOutlet weak var bottomFloatingView: UIStackView!
+  @IBOutlet weak var topFloatingViewWrapper: UIVisualEffectView!
+  @IBOutlet weak var bottomFloatingViewWrapper: UIVisualEffectView!
+  
   // Positioning the cards
   @IBOutlet weak var cardWrapperDesiredTopConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperMinOverlapTopConstraint: NSLayoutConstraint!
@@ -57,6 +61,15 @@ open class TGCardViewController: UIViewController {
   @IBOutlet weak var headerViewHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var headerViewTopConstraint: NSLayoutConstraint!
   
+  
+  // Positioning the floating views.
+  @IBOutlet weak var topFloatingViewTopConstraint: NSLayoutConstraint!
+  @IBOutlet weak var topFloatingViewTrailingToSuperConstraint: NSLayoutConstraint!
+  @IBOutlet weak var topFloatingViewTrailingToSafeAreaConstraint: NSLayoutConstraint!
+  @IBOutlet weak var bottomFloatingViewTrailingToSuperConstraint: NSLayoutConstraint!
+  @IBOutlet weak var bottomFloatingViewTrailingToSafeAreaConstraint: NSLayoutConstraint!
+  @IBOutlet weak var bottomFloatingViewBottomConstraint: NSLayoutConstraint! // only active in landscape
+  
   // Dynamic constraints
   @IBOutlet weak var statusBarBlurHeightConstraint: NSLayoutConstraint!
 
@@ -64,6 +77,17 @@ open class TGCardViewController: UIViewController {
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
   
+  /// If you want a current location button on the map, provide this method which will be
+  /// called if the user didn't yet grant access to the current location and the current
+  /// location button is pressed.
+  /// Your function should ask for permissions and then call the block indicating whether
+  /// the user did grant permissions.
+  public var askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)?
+  
+  public var locationButtonPosition: TGButtonPosition = .top
+  
+  private var defaultButtons: [UIView]!
+
   /// This is just for debugging issues where it helps to disable
   /// everything related to panning. Otherwise it should always
   /// be set to `true`.
@@ -80,7 +104,7 @@ open class TGCardViewController: UIViewController {
   }
   
   fileprivate var cardViews: [TGCardView] {
-    return cardWrapperContent.subviews.flatMap { $0 as? TGCardView }
+    return cardWrapperContent.subviews.compactMap { $0 as? TGCardView }
   }
   
   fileprivate var topCardView: TGCardView? {
@@ -114,6 +138,13 @@ open class TGCardViewController: UIViewController {
     mapTapper.delegate = self
     mapShadow.addGestureRecognizer(mapTapper)
     self.mapShadowTapper = mapTapper
+    
+    // Create the default buttons
+    if #available(iOS 11.0, *), let tracker = buildUserTrackingButton(for: mapView) {
+      self.defaultButtons = [tracker]
+    } else {
+      self.defaultButtons = []
+    }
     
     // Setting up additional constraints
     cardWrapperHeightConstraint.constant = extendedMinY * -1
@@ -193,6 +224,9 @@ open class TGCardViewController: UIViewController {
     // The interactivity of gesture recognisers depends on size classes as well
     updatePannerInteractivity()
     
+    // The visibility of floating views depends on size classes too.
+    updateFloatingViewsVisibility()
+    
     // When we started a paging card in the peak state while the device is in
     // portrait mode, all of its contents are not scrollable. If we now switch
     // to landscape mode, the card will be in the extended state, which requires
@@ -205,8 +239,9 @@ open class TGCardViewController: UIViewController {
     
     statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
+    updateFloatingViewsConstraints()
   }
-
+  
   override open func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
@@ -377,8 +412,10 @@ extension TGCardViewController {
     cards.append( (top, animateTo.position) )
     
     // 3. Hand over the map
-    oldTop?.card.mapManager?.cleanUp(mapView)
-    top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
+    if oldTop?.card.mapManager !== top.mapManager {
+      oldTop?.card.mapManager?.cleanUp(mapView)
+      top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
+    }
     top.delegate = self
     
     // 4. Create and configure the new view
@@ -438,6 +475,9 @@ extension TGCardViewController {
     // Notify that we have completed building the card view and its header view.
     top.didBuild(cardView: cardView, headerView: header)
     
+    // Incoming card has its own top and bottom floating views.
+    updateFloatingViewsContent()
+    
     // Since the header view may be animated in & out, it's best to update the
     // height of the card's content wrapper.
     updateContentWrapperHeightConstraint()
@@ -465,6 +505,7 @@ extension TGCardViewController {
       animations: {
         self.view.layoutIfNeeded()
         self.updateMapShadow(for: animateTo.position)
+        self.updateFloatingViewsVisibility()
         cardView.frame = self.cardWrapperContent.bounds
         self.cardTransitionShadow?.alpha = 0.15
       },
@@ -518,10 +559,12 @@ extension TGCardViewController {
     cards.remove(at: cards.count - 1)
     
     // 2. Hand over the map
-    currentTopCard.mapManager?.cleanUp(mapView)
-    newTop?.card.mapManager?.takeCharge(of: mapView,
-                                        edgePadding: mapEdgePadding(for: newTop?.position ?? .collapsed),
-                                        animated: animated)
+    if currentTopCard.mapManager !== newTop?.card.mapManager {
+      currentTopCard.mapManager?.cleanUp(mapView)
+      newTop?.card.mapManager?.takeCharge(of: mapView,
+                                          edgePadding: mapEdgePadding(for: newTop?.position ?? .collapsed),
+                                          animated: animated)
+    }
     
     // 3. Special handling of when the new top card has no map content
     updatePannerInteractivity(for: newTop)
@@ -550,6 +593,13 @@ extension TGCardViewController {
     // of the card's content wrapper.
     updateContentWrapperHeightConstraint()
     
+    // Before animating views in and out, restore both top and bottom floating views
+    // to previous card's values. Note that, we force a clean up of floating views
+    // because the popping card may have added views that are only applicable to it-
+    // self.
+    updateFloatingViewsContent(forcedCleanUp: true)
+    
+    // Notify that constraints need to be updated in the next cycle.
     view.setNeedsUpdateConstraints()
 
     // 5. Do the transition, optionally animated.
@@ -572,6 +622,7 @@ extension TGCardViewController {
       animations: {
         self.view.layoutIfNeeded()
         self.updateMapShadow(for: animateTo.position)
+        self.updateFloatingViewsVisibility()
         topView.frame.origin.y = self.cardWrapperContent.frame.maxY
         self.cardTransitionShadow?.alpha = 0
         newTop?.view.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
@@ -682,10 +733,11 @@ extension TGCardViewController {
     UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
       self.updateMapShadow(for: snapTo.position)
       self.topCardView?.adjustContentAlpha(to: snapTo.position == .collapsed ? 0 : 1)
+      self.fadeMapFloatingViews(snapTo.position == .extended)
       self.view.layoutIfNeeded()
     }, completion: { _ in
+      self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: snapTo.position)
       self.topCardView?.allowContentScrolling(snapTo.position == .extended)
-      
       self.previousCardPosition = snapTo.position
       completion?()
     })
@@ -740,6 +792,15 @@ extension TGCardViewController {
       // Collapsed: 0, peakY: 1
       let contentAlpha = min(1, max(0, (collapsedMinY - newY) / (collapsedMinY - peakY)))
       topCardView?.adjustContentAlpha(to: contentAlpha)
+      
+      // Start fading out the floating views when we move away from the peak state position
+      // and fading in when we move towards it. The 0.3 is introduced so the fading out
+      // happens sooner, i.e., not too far up the peak state position.
+      if newY <= peakY {
+        let floatingViewAlpha = min(1, max(0, (peakY - newY) / ((peakY - extendedMinY)*0.3)))
+        topFloatingViewWrapper.alpha = 1 - floatingViewAlpha
+        bottomFloatingViewWrapper.alpha = 1 - floatingViewAlpha
+      }
       
       view.setNeedsUpdateConstraints()
       view.layoutIfNeeded()
@@ -846,9 +907,11 @@ extension TGCardViewController {
       animations: {
         self.updateMapShadow(for: animateTo.position)
         self.topCardView?.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
+        self.fadeMapFloatingViews(animateTo.position == .extended)
         self.view.layoutIfNeeded()
     },
       completion: { _ in
+        self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: animateTo.position)
         self.topCardView?.allowContentScrolling(animateTo.position == .extended)
         self.previousCardPosition = animateTo.position
     })
@@ -889,6 +952,131 @@ extension TGCardViewController {
   }
 }
 
+// MARK: - Floating views
+
+extension TGCardViewController {
+  
+  private func deviceIsiPhoneX() -> Bool {
+    if #available(iOS 11, *) {
+      return view.safeAreaInsets.bottom > 0
+    } else {
+      return false
+    }
+  }
+  
+  private func fadeMapFloatingViews(_ fade: Bool, animated: Bool = false) {
+    UIView.animate(withDuration: animated ? 0.25: 0) {
+      self.topFloatingViewWrapper.alpha = fade ? 0 : 1
+      self.bottomFloatingViewWrapper.alpha = fade ? 0 : 1
+    }
+  }
+  
+  private func updateFloatingViewsVisibility() {
+    guard !cardIsNextToMap(in: traitCollection) else {
+      // When card is on the side of the map, always show the floating views.
+      fadeMapFloatingViews(false)
+      return
+    }
+    
+    fadeMapFloatingViews(cardPosition == .extended)
+  }
+  
+  private func updateFloatingViewsContent(forcedCleanUp: Bool = false) {
+    if forcedCleanUp {
+      cleanUpFloatingView(topFloatingView)
+      cleanUpFloatingView(bottomFloatingView)
+    }
+    
+    var topViews: [UIView] = []
+    var bottomViews: [UIView] = []
+    
+    switch locationButtonPosition {
+    case .top: topViews = defaultButtons
+    case .bottom: bottomViews = defaultButtons
+    }
+    
+    if let newTops = topCard?.topFloatingViews {
+      topViews.append(contentsOf: newTops)
+    }
+    if !topViews.isEmpty {
+      populateFloatingView(topFloatingView, with: topViews)
+    }
+
+    if let newBottoms = topCard?.bottomFloatingViews {
+      bottomViews.append(contentsOf: newBottoms)
+    }
+    if !bottomViews.isEmpty {
+      populateFloatingView(bottomFloatingView, with: bottomViews)
+    }
+  }
+  
+  private func updateFloatingViewsConstraints() {
+    if cardIsNextToMap(in: traitCollection) {
+      bottomFloatingViewBottomConstraint.constant = deviceIsiPhoneX() ? 0 : 8
+      if deviceIsiPhoneX() {
+        if #available(iOS 11, *) {
+          topFloatingViewTopConstraint.constant = view.safeAreaInsets.bottom
+        }
+        NSLayoutConstraint.deactivate([
+          topFloatingViewTrailingToSafeAreaConstraint,
+          bottomFloatingViewTrailingToSafeAreaConstraint
+          ])
+        NSLayoutConstraint.activate([
+          topFloatingViewTrailingToSuperConstraint,
+          bottomFloatingViewTrailingToSuperConstraint
+          ])
+      } else {
+        topFloatingViewTopConstraint.constant = 8
+        NSLayoutConstraint.deactivate([
+          topFloatingViewTrailingToSuperConstraint,
+          bottomFloatingViewTrailingToSuperConstraint
+          ])
+        NSLayoutConstraint.activate([
+          topFloatingViewTrailingToSafeAreaConstraint,
+          bottomFloatingViewTrailingToSafeAreaConstraint
+          ])
+      }
+    } else {
+      topFloatingViewTopConstraint.constant = 8
+      NSLayoutConstraint.deactivate([
+        topFloatingViewTrailingToSuperConstraint,
+        bottomFloatingViewTrailingToSuperConstraint
+        ])
+      NSLayoutConstraint.activate([
+        topFloatingViewTrailingToSafeAreaConstraint,
+        bottomFloatingViewTrailingToSafeAreaConstraint
+        ])
+    }
+  }
+  
+  private func populateFloatingView(_ floatingView: UIStackView, with views: [UIView]) {
+    // Make sure we start fresh
+    cleanUpFloatingView(floatingView)
+    
+    // Now we add views to the stack
+    for (index, view) in views.enumerated() {
+      if index != 0 {
+        let separator = UIView(frame: .zero)
+        if floatingView.axis == .vertical {
+          separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        } else {
+          separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
+        }
+        separator.backgroundColor = UIColor(white: 1.0, alpha: 0.85)
+        floatingView.addArrangedSubview(separator)
+      }
+      floatingView.addArrangedSubview(view)
+    }
+  }
+  
+  private func cleanUpFloatingView(_ stackView: UIStackView) {
+    stackView.arrangedSubviews.forEach {
+      stackView.removeArrangedSubview($0)
+      $0.removeFromSuperview()
+    }
+  }
+  
+}
 
 // MARK: - Card-specific header view
 

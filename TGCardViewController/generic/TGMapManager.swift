@@ -49,7 +49,7 @@ open class TGMapManager: NSObject {
   /// content the first time. Defaults to `.city`
   public var preferredZoomLevel: Zoom = .city
   
-  private var edgePadding: UIEdgeInsets = .zero
+  var edgePadding: UIEdgeInsets = .zero
 
   private var previousMapState: MapState?
 
@@ -114,11 +114,20 @@ open class TGMapManager: NSObject {
                          animated: animated)
   }
 
+  public var centerCoordinate: CLLocationCoordinate2D? {
+    guard let mapView = mapView else { return nil }
+    
+    let visibleWidth = mapView.frame.width - edgePadding.left - edgePadding.right
+    let visibleHeight = mapView.frame.height - edgePadding.top - edgePadding.bottom
+    
+    let centerPoint = CGPoint(x: edgePadding.left + visibleWidth / 2, y: edgePadding.top + visibleHeight / 2)
+    return mapView.convert(centerPoint, toCoordinateFrom: mapView)
+  }
   
   public func setCenter(_ coordinate: CLLocationCoordinate2D, animated: Bool) {
     mapView?.setCenter(coordinate, edgePadding: edgePadding, animated: animated)
   }
-
+  
 }
 
 
