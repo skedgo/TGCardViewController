@@ -29,6 +29,7 @@ class ExampleRootCard : TGTableCard {
     self.titleTextColor = .white
     self.subtitleTextColor = .white
     self.subtitleFont = UIFont.italicSystemFont(ofSize: 15)
+    self.grabHandleColor = .white
     
     // Floating views
     let infoButton = UIButton(type: .infoLight)

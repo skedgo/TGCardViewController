@@ -161,6 +161,7 @@ public class TGCardView: TGCornerView {
     titleLabel.textColor = card.titleTextColor
     subtitleLabel.font = card.subtitleFont
     subtitleLabel.textColor = card.subtitleTextColor
+    grabHandle?.handleColor = card.grabHandleColor
     backgroundColor = card.backgroundColor
     
     if let action = card.floatingButtonAction {

@@ -120,6 +120,16 @@ open class TGCard: NSObject {
   
   public private(set) var viewIsVisible: Bool = false
   
+  /// Each card can specify a font for title.
+  ///
+  /// @default Bold system font with size 17pt.
+  public var titleFont: UIFont? = UIFont.boldSystemFont(ofSize: 17)
+  
+  /// Each card can specify a font for subtitle.
+  ///
+  /// @default Regular system font with size 15pt.
+  public var subtitleFont: UIFont? = UIFont.systemFont(ofSize: 15)
+  
   /// Each card can have its own background color.
   ///
   /// @default: white
@@ -135,15 +145,10 @@ open class TGCard: NSObject {
   /// @default Light grey
   public var subtitleTextColor: UIColor? = .lightGray
   
-  /// Each card can specify a font for title.
+  // Each card can specify a color for the grab handle.
   ///
-  /// @default Bold system font with size 17pt.
-  public var titleFont: UIFont? = UIFont.boldSystemFont(ofSize: 17)
-  
-  /// Each card can specify a font for subtitle.
-  ///
-  /// @default Regular system font with size 15pt.
-  public var subtitleFont: UIFont? = UIFont.systemFont(ofSize: 15)
+  /// @default Grayscale @ 70%.
+  public var grabHandleColor: UIColor? = #colorLiteral(red: 0.7552321553, green: 0.7552321553, blue: 0.7552321553, alpha: 1)
   
   /// Called to copy styling from a given card
   ///
@@ -154,6 +159,7 @@ open class TGCard: NSObject {
     subtitleFont = card.subtitleFont
     subtitleTextColor = card.subtitleTextColor
     backgroundColor = card.backgroundColor
+    grabHandleColor = card.grabHandleColor
   }
   
   // MARK: - Managing Card Life Cycle

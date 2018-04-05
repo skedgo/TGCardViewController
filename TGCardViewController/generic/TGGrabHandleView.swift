@@ -9,11 +9,9 @@
 import UIKit
 
 class TGGrabHandleView: UIView {
-  
-  private var handleHeightConstraint: NSLayoutConstraint?
-  private var handleTopSpaceConstraint: NSLayoutConstraint?
-  private var handleBottomSpaceConstraint: NSLayoutConstraint?
 
+  // MARK: - Creating New Grab Handle Views
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     didInit()
@@ -25,27 +23,49 @@ class TGGrabHandleView: UIView {
   }
   
   private func didInit() {
+    backgroundColor = .clear
+    
     let handle = UIView()
     handle.layer.cornerRadius = 3
     handle.backgroundColor = UIColor(white: 0.7, alpha: 1.0)
     handle.translatesAutoresizingMaskIntoConstraints = false
     addSubview(handle)
+    self.handle = handle
     
-    handle.widthAnchor.constraint(equalToConstant: 50).isActive = true
-    handle.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+    // Position the handle
+    NSLayoutConstraint.activate([
+      handle.widthAnchor.constraint(equalToConstant: 50),
+      handle.centerXAnchor.constraint(equalTo: centerXAnchor)
+      ])
     
     // We keep references to the following constraints because they need
     // to be adjusted when the handle is hideen. See `isHidden`.
-    let heightConstraint = handle.heightAnchor.constraint(equalToConstant: 5)
-    self.handleHeightConstraint = heightConstraint
+    let handleHeightConstraint = handle.heightAnchor.constraint(equalToConstant: 5)
+    self.handleHeightConstraint = handleHeightConstraint
     
-    let topSpaceConstraint = handle.topAnchor.constraint(equalTo: topAnchor, constant: 8)
-    self.handleTopSpaceConstraint = topSpaceConstraint
+    let handleTopSpaceConstraint = handle.topAnchor.constraint(equalTo: topAnchor, constant: 8)
+    self.handleTopSpaceConstraint = handleTopSpaceConstraint
     
-    let bottomSpaceConstraint = bottomAnchor.constraint(equalTo: handle.bottomAnchor, constant: 8)
-    self.handleBottomSpaceConstraint = bottomSpaceConstraint
+    let handleBottomSpaceConstraint = bottomAnchor.constraint(equalTo: handle.bottomAnchor, constant: 8)
+    self.handleBottomSpaceConstraint = handleBottomSpaceConstraint
     
-    [heightConstraint, topSpaceConstraint, bottomSpaceConstraint].forEach { $0.isActive = true }
+    NSLayoutConstraint.activate([handleHeightConstraint, handleTopSpaceConstraint, handleBottomSpaceConstraint])
+  }
+  
+  // MARK: - Layout Support
+  
+  private var handleHeightConstraint: NSLayoutConstraint?
+  private var handleTopSpaceConstraint: NSLayoutConstraint?
+  private var handleBottomSpaceConstraint: NSLayoutConstraint?
+  
+  // MARK: - Managing Handle Appearance
+  
+  private(set) var handle: UIView!
+  
+  var handleColor: UIColor? {
+    willSet {
+      handle.backgroundColor = newValue ?? UIColor(white: 0.7, alpha: 1.0)
+    }
   }
   
   override var isHidden: Bool {
