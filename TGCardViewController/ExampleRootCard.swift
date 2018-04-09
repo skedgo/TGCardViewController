@@ -16,7 +16,7 @@ class ExampleRootCard : TGTableCard {
   fileprivate let source = DataSource()
   
   init() {
-    super.init(title: "Card Demo", dataSource: source, delegate: source, mapManager: .nuremberg)
+    super.init(title: "Card Demo", dataSource: source, delegate: source, mapManager: TGMapManager.nuremberg)
     
     source.onSelect = { item in
       self.controller?.push(item.card)

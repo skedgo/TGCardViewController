@@ -47,7 +47,7 @@ open class TGCard: NSObject {
   public let subtitle: String?
   
   /// The manager that handles the content of the map for this card
-  public var mapManager: TGMapManager? {
+  public var mapManager: TGCompatibleMapManager? {
     didSet {
       guard let oldValue = oldValue, mapManager !== oldValue else {
         return
@@ -65,7 +65,7 @@ open class TGCard: NSObject {
   // MARK: - Creating Cards
   
   public init(title: String, subtitle: String? = nil,
-              mapManager: TGMapManager? = nil, initialPosition: TGCardPosition? = nil) {
+              mapManager: TGCompatibleMapManager? = nil, initialPosition: TGCardPosition? = nil) {
     self.title = title
     self.subtitle = subtitle
     self.mapManager = mapManager
@@ -232,7 +232,7 @@ public protocol TGCardDelegate: class {
   /// - Parameters:
   ///   - old: Previous map manager, if any
   ///   - card: The card whose map manager changed
-  func mapManagerDidChange(old: TGMapManager?, for card: TGCard)
+  func mapManagerDidChange(old: TGCompatibleMapManager?, for card: TGCard)
 
   
   /// Called whenever the content scroll view of the card is changing

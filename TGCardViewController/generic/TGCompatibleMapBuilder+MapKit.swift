@@ -1,20 +1,25 @@
 //
-//  TGCardViewController+UserTrackingButton.swift
+//  TGCompatibleMapBuilder+MapKit.swift
 //  TGCardViewController
 //
-//  Created by Adrian Schönig on 04.04.18.
+//  Created by Adrian Schönig on 07.04.18.
 //  Copyright © 2018 SkedGo Pty Ltd. All rights reserved.
 //
 
 import Foundation
-import CoreLocation
 import MapKit
 
-@available(iOS 11.0, *)
-extension TGCardViewController {
+public class TGMapKitBuilder: TGCompatibleMapBuilder {
   
-  func buildUserTrackingButton(for mapView: MKMapView) -> UIView? {
-    guard askForLocationPermissions != nil else { return nil }
+  public var askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)?
+  
+  public func buildMapView() -> UIView {
+    return MKMapView()
+  }
+  
+  public func buildUserTrackingButton(for mapView: UIView) -> UIView? {
+    guard #available(iOS 11.0, *), askForLocationPermissions != nil else { return nil }
+    guard let mapView = mapView as? MKMapView else { preconditionFailure() }
     
     let background = UIView()
     background.isUserInteractionEnabled = true
@@ -46,6 +51,7 @@ extension TGCardViewController {
   
   @objc
   private func trackerButtonPressed(_ recogniser: UITapGestureRecognizer) {
+    guard #available(iOS 11.0, *) else { return }
     guard let tracker = recogniser.view?.subviews.first as? MKUserTrackingButton else {
       preconditionFailure()
     }
@@ -56,7 +62,7 @@ extension TGCardViewController {
       tracker.isUserInteractionEnabled = true
       tracker.mapView?.userTrackingMode = .follow
     }
-
+    
   }
-  
+
 }

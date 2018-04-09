@@ -29,7 +29,7 @@ class ExampleTableCard : TGTableCard {
     } else {
       source.onSelect = {
         let annotation = $0
-        self.mapManager?.setCenter(annotation.coordinate, animated: true)
+        mapManager?.setCenter(annotation.coordinate, animated: true)
       }
     }
     

@@ -41,7 +41,8 @@ open class TGCardViewController: UIViewController {
   public var navigationButtonsAreSpringLoaded: Bool = false
   
   @IBOutlet weak var headerView: UIView!
-  @IBOutlet weak var mapView: MKMapView!
+  @IBOutlet weak var mapViewWrapper: UIView!
+  weak var mapView: UIView!
   @IBOutlet weak var mapShadow: UIView!
   @IBOutlet weak var cardWrapperShadow: UIView!
   @IBOutlet public weak var cardWrapperContent: UIView!
@@ -77,12 +78,7 @@ open class TGCardViewController: UIViewController {
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
   
-  /// If you want a current location button on the map, provide this method which will be
-  /// called if the user didn't yet grant access to the current location and the current
-  /// location button is pressed.
-  /// Your function should ask for permissions and then call the block indicating whether
-  /// the user did grant permissions.
-  public var askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)?
+  public var builder: TGCompatibleMapBuilder = TGMapKitBuilder()
   
   public var locationButtonPosition: TGButtonPosition = .top
   
@@ -115,6 +111,15 @@ open class TGCardViewController: UIViewController {
   
   override open func viewDidLoad() {
     super.viewDidLoad()
+    
+    let mapView = builder.buildMapView()
+    mapViewWrapper.addSubview(mapView)
+    mapView.topAnchor.constraint(equalTo: mapViewWrapper.topAnchor).isActive = true
+    mapView.trailingAnchor.constraint(equalTo: mapViewWrapper.trailingAnchor).isActive = true
+    mapView.bottomAnchor.constraint(equalTo: mapViewWrapper.bottomAnchor).isActive = true
+    mapView.leadingAnchor.constraint(equalTo: mapViewWrapper.leadingAnchor).isActive = true
+    mapView.translatesAutoresizingMaskIntoConstraints = false
+    self.mapView = mapView
 
     // Panner for dragging cards up and down
     if panningAllowed {
@@ -140,7 +145,7 @@ open class TGCardViewController: UIViewController {
     self.mapShadowTapper = mapTapper
     
     // Create the default buttons
-    if #available(iOS 11.0, *), let tracker = buildUserTrackingButton(for: mapView) {
+    if #available(iOS 11.0, *), let tracker = builder.buildUserTrackingButton(for: mapView) {
       self.defaultButtons = [tracker]
     } else {
       self.defaultButtons = []
@@ -413,7 +418,7 @@ extension TGCardViewController {
     
     // 3. Hand over the map
     if oldTop?.card.mapManager !== top.mapManager {
-      oldTop?.card.mapManager?.cleanUp(mapView)
+      oldTop?.card.mapManager?.cleanUp(mapView, animated: animated)
       top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
     }
     top.delegate = self
@@ -567,7 +572,7 @@ extension TGCardViewController {
     
     // 2. Hand over the map
     if currentTopCard.mapManager !== newTop?.card.mapManager {
-      currentTopCard.mapManager?.cleanUp(mapView)
+      currentTopCard.mapManager?.cleanUp(mapView, animated: animated)
       newTop?.card.mapManager?.takeCharge(of: mapView,
                                           edgePadding: mapEdgePadding(for: newTop?.position ?? .collapsed),
                                           animated: animated)
@@ -1265,10 +1270,10 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
 
 extension TGCardViewController: TGCardDelegate {
   
-  public func mapManagerDidChange(old: TGMapManager?, for card: TGCard) {
+  public func mapManagerDidChange(old: TGCompatibleMapManager?, for card: TGCard) {
     guard card === topCard else { return }
     
-    old?.cleanUp(mapView)
+    old?.cleanUp(mapView, animated: true)
     card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: cardPosition), animated: true)
   }
   

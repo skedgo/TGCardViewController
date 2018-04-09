@@ -22,7 +22,7 @@ class ExampleChildCard : TGPlainCard {
     accessoryLabel.textAlignment = .center
     accessoryLabel.sizeToFit()
     
-    super.init(title: "Child", subtitle: "With sticky button", contentView: content, accessoryView: accessoryLabel, mapManager: .sydney)
+    super.init(title: "Child", subtitle: "With sticky button", contentView: content, accessoryView: accessoryLabel, mapManager: TGMapManager.sydney)
     
     self.topMapToolBarItems = [UIButton.dummySystemButton(), UIButton.dummySystemButton()]
     self.bottomMapToolBarItems = [] // This forces an empty bottom floating view

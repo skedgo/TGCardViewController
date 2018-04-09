@@ -20,7 +20,7 @@ open class TGAgendaCard: TGTableCard {
               dataSource: UITableViewDataSource? = nil,
               delegate: UITableViewDelegate? = nil,
               bottomContent: UIView? = nil,
-              mapManager: TGMapManager? = nil,
+              mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     self.bottomContentView = bottomContent
     

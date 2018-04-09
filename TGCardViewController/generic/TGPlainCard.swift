@@ -30,7 +30,7 @@ open class TGPlainCard: TGCard {
   
   public init(title: String, subtitle: String? = nil,
               contentView: UIView? = nil, accessoryView: UIView? = nil,
-              mapManager: TGMapManager? = nil,
+              mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     assert(!(contentView is UIScrollView),
             "This card is not meant for content views that are itself" +
