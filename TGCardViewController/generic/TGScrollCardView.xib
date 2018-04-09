@@ -12,7 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TGTableCardView" customModule="TGCardViewController" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TGScrollCardView" customModule="TGCardViewController" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="663"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -124,8 +124,8 @@
                 <outlet property="headerStack" destination="Otm-sh-8EH" id="Zzg-RG-XYL"/>
                 <outlet property="headerStackTopConstraint" destination="PTa-je-2f9" id="dAe-Xz-xge"/>
                 <outlet property="labelStack" destination="fzr-SN-jeB" id="jVg-K4-pnY"/>
+                <outlet property="scrollViewWrapper" destination="TwM-rE-f4a" id="dRz-Vf-Je9"/>
                 <outlet property="subtitleLabel" destination="Aj9-Wv-1Z7" id="VM0-dj-53r"/>
-                <outlet property="tableWrapper" destination="TwM-rE-f4a" id="A5e-oU-sUI"/>
                 <outlet property="titleLabel" destination="Y7e-Bs-jau" id="syo-l0-lMd"/>
             </connections>
             <point key="canvasLocation" x="121.5" y="151.5"/>

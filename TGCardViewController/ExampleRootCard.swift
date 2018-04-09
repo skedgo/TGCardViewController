@@ -54,7 +54,7 @@ class ExampleRootCard : TGTableCard {
   override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
     super.didBuild(cardView: cardView, headerView: headerView)
     
-    guard let tableView = (cardView as? TGTableCardView)?.tableView else { return }
+    guard let tableView = (cardView as? TGScrollCardView)?.tableView else { return }
     
     if #available(iOS 11.0, *) {
       tableView.isSpringLoaded = true

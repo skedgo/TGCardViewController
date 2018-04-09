@@ -1,49 +1,49 @@
 //
-//  TGTableCard.swift
+//  TGCollectionCard.swift
 //  TGCardViewController
 //
-//  Created by Adrian Schoenig on 10/3/17.
-//  Copyright © 2017 SkedGo Pty Ltd. All rights reserved.
+//  Created by Adrian Schönig on 09.04.18.
+//  Copyright © 2018 SkedGo Pty Ltd. All rights reserved.
 //
 
 import UIKit
 
-/// A table card is used for when you need a `UITableView`
+/// A collection card is used for when you need a `UICollectionView`
 /// as the card's content.
 ///
 /// This class is generally subclassed.
-open class TGTableCard: TGCard {
-  
-  public let tableStyle: UITableViewStyle
+open class TGCollectionCard: TGCard {
   
   let accessoryView: UIView?
-
-  /// The delegate to be used for the card view's table view.
-  ///
-  /// Only has an effect, if it is set before `buildCardView` is called, i.e.,
-  /// before the card is pushed.
-  public weak var tableViewDelegate: UITableViewDelegate?
   
-  /// The data source to be used for the card view's table view.
+  public let collectionViewLayout: UICollectionViewLayout
+  
+  /// The delegate to be used for the card view's collection view.
   ///
   /// Only has an effect, if it is set before `buildCardView` is called, i.e.,
   /// before the card is pushed.
-  public weak var tableViewDataSource: UITableViewDataSource?
+  public weak var collectionViewDelegate: UICollectionViewDelegate?
+  
+  /// The data source to be used for the card view's collection view.
+  ///
+  /// Only has an effect, if it is set before `buildCardView` is called, i.e.,
+  /// before the card is pushed.
+  public weak var collectionViewDataSource: UICollectionViewDataSource?
   
   // MARK: - Initialisers
   
   public init(title: String, subtitle: String? = nil,
-              dataSource: UITableViewDataSource? = nil,
-              delegate: UITableViewDelegate? = nil,
-              style: UITableViewStyle = .plain,
+              dataSource: UICollectionViewDataSource? = nil,
+              delegate: UICollectionViewDelegate? = nil,
+              layout: UICollectionViewLayout,
               accessoryView: UIView? = nil,
               mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     
-    self.tableViewDataSource = dataSource
-    self.tableViewDelegate = delegate
-    self.tableStyle = style
+    self.collectionViewDataSource = dataSource
+    self.collectionViewDelegate = delegate
     self.accessoryView = accessoryView
+    self.collectionViewLayout = layout
     
     super.init(title: title, subtitle: subtitle,
                mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
@@ -56,5 +56,5 @@ open class TGTableCard: TGCard {
     view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
     return view
   }
- 
+  
 }

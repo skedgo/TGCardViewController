@@ -16,6 +16,7 @@ import UIKit
 ///
 /// - `TGPlainCard`: For cards with a title and a content view
 /// - `TGTableCard`: For cards with a title and table view as the content
+/// - `TGCollectionCard`: For cards with a title and collection view as the content
 /// - `TGPageCard`: For displaying several cards on the same hierarchy,
 ///      allowing to swipe between them.
 ///
@@ -95,11 +96,13 @@ open class TGCard: NSObject {
   /// - SeeAlso: `TGPageCard`, which relies on this for its navigation.
   ///
   /// - Returns: Header view configured with the card's title content
-  public func buildHeaderView() -> TGHeaderView? {
+  open func buildHeaderView() -> TGHeaderView? {
     return nil
   }
   
   /// Builds the card view to represent the card
+  ///
+  /// - Warning: Needs to be overriden by subclasses. Don't call `super`. Don't call `didBuild`. Set `cardView` when done.
   ///
   /// - Returns: Card view configured with the content of this card
   open func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {

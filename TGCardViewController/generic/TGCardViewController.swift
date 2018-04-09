@@ -473,10 +473,10 @@ extension TGCardViewController {
     
     let header = top.buildHeaderView()
     if let header = header {
-      header.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+      header.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
       if #available(iOS 11.0, *) {
-        header.closeButton.isSpringLoaded = navigationButtonsAreSpringLoaded
-        header.rightButton.isSpringLoaded = navigationButtonsAreSpringLoaded
+        header.closeButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
+        header.rightButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
       }
       showHeader(content: header, animated: animated)
     } else if isShowingHeader {
