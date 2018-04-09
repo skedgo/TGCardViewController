@@ -22,6 +22,6 @@ public protocol TGCompatibleMapBuilder {
   /// location button is pressed.
   /// Your function should ask for permissions and then call the block indicating whether
   /// the user did grant permissions.
-  var askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)? { get }
+  var askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)? { get set }
 
 }
