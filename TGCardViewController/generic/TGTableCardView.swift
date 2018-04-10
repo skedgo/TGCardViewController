@@ -43,6 +43,7 @@ public class TGTableCardView: TGCardView {
     super.configure(with: tableCard, includeTitleView: includeTitleView)
         
     let tableView = UITableView(frame: .zero, style: tableCard.tableStyle)
+    tableView.backgroundColor = .clear
     tableView.dataSource = tableCard.tableViewDataSource
     tableView.delegate = tableCard.tableViewDelegate
     
