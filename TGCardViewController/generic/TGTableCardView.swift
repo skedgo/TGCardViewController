@@ -50,6 +50,7 @@ public class TGTableCardView: TGCardView {
     }
     
     let tableView = UITableView(frame: .zero, style: card.tableStyle)
+    tableView.backgroundColor = .clear
     tableView.dataSource = card.tableViewDataSource
     tableView.delegate = card.tableViewDelegate
     
