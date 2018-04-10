@@ -76,19 +76,21 @@ public class TGCardView: TGCornerView {
   
   // MARK: - Content Configuration
   
-  func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
-    
-    if let placeholder = titleViewPlaceholder, includeHeader {
-      let titleView: UIView
+  func configure(with card: TGCard, includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) {
+    if let placeholder = titleViewPlaceholder, includeTitleView {
+      let titleView: UIView & TGDismissableTitleView
       
       if let customView = card.titleView {
-        titleView = customView
+        titleView = customView        
       } else {
         let defaultTitleView = TGCardDefaultTitleView.newInstance()
-        defaultTitleView.configure(with: card, canBeDismissed: showClose)
+        defaultTitleView.configure(with: card, canBeDismissed: whenDismiss != nil)
         defaultTitleView.accessoryView = titleAccessoryView(for: card)
         titleView = defaultTitleView
       }
+      
+      // Connect to dismiss action
+      titleView.dismissHandler = whenDismiss
       
       placeholder.addSubview(titleView)
       titleView.snap(to: placeholder)

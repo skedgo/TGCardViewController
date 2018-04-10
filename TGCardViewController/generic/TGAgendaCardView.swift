@@ -40,22 +40,22 @@ public class TGAgendaCardView: TGCardView {
   
   // MARK: - Configuration
   
-  override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
-    guard let card = card as? TGAgendaCard else {
+  override func configure(with card: TGCard, includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) {
+    guard let agendaCard = card as? TGAgendaCard else {
       preconditionFailure()
     }
     
-    super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
+    super.configure(with: agendaCard, includeTitleView: includeTitleView, whenDismiss: whenDismiss)
     
-    tableView.delegate = card.tableViewDelegate
-    tableView.dataSource = card.tableViewDataSource
+    tableView.delegate = agendaCard.tableViewDelegate
+    tableView.dataSource = agendaCard.tableViewDataSource
     
     if #available(iOS 11, *) {
-      tableView.dragDelegate = card.tableViewDelegate as? UITableViewDragDelegate
-      tableView.dropDelegate = card.tableViewDelegate as? UITableViewDropDelegate
+      tableView.dragDelegate = agendaCard.tableViewDelegate as? UITableViewDragDelegate
+      tableView.dropDelegate = agendaCard.tableViewDelegate as? UITableViewDropDelegate
     }
     
-    if let bottomContent = card.bottomContentView {
+    if let bottomContent = agendaCard.bottomContentView {
       bottomViewContainer.addSubview(bottomContent)
       bottomContent.snap(to: bottomViewContainer)
       

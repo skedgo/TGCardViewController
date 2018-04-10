@@ -31,7 +31,7 @@ open class TGPlainCard: TGCard {
   public init(
     title: String,
     subtitle: String? = nil,
-    titleView: UIView? = nil,
+    titleView: (UIView & TGDismissableTitleView)? = nil,
     contentView: UIView? = nil,
     accessoryView: UIView? = nil,
     mapManager: TGMapManager? = nil,
@@ -47,9 +47,9 @@ open class TGPlainCard: TGCard {
     super.init(title: title, subtitle: subtitle, titleView: titleView, mapManager: mapManager, initialPosition: initialPosition)
   }
   
-  open override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  open override func buildCardView(includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) -> TGCardView {
     let view = TGPlainCardView.instantiate()
-    view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
+    view.configure(with: self, includeTitleView: includeTitleView, whenDismiss: whenDismiss)
     return view
   }
   

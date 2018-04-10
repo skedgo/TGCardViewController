@@ -8,6 +8,11 @@
 
 import UIKit
 
+public protocol TGDismissableTitleView: class {
+  typealias DismissHandler = (Any) -> Void
+  var dismissHandler: DismissHandler? { get set}
+}
+
 /// A card representing the content currently displayed
 ///
 /// - warning: In normal usage, you won't use this
@@ -67,7 +72,7 @@ open class TGCard: NSObject {
   public init(
     title: String,
     subtitle: String? = nil,
-    titleView: UIView? = nil,
+    titleView: (UIView & TGDismissableTitleView)? = nil,
     mapManager: TGMapManager? = nil,
     initialPosition: TGCardPosition? = nil
     ) {
@@ -80,7 +85,7 @@ open class TGCard: NSObject {
   
   // MARK: - Creating Card Views.
   
-  public let titleView: UIView?
+  public let titleView: (UIView & TGDismissableTitleView)?
   
   /// Each card can specify what to overlay on the top right of the map.
   ///
@@ -110,7 +115,7 @@ open class TGCard: NSObject {
   /// Builds the card view to represent the card
   ///
   /// - Returns: Card view configured with the content of this card
-  open func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  open func buildCardView(includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) -> TGCardView {
     preconditionFailure("Override this in subclasses, but don't call super to `TGCard`.")
   }
   

@@ -31,12 +31,12 @@ class TGPlainCardView: TGCardView {
     return plainCard.accessoryView
   }
   
-  override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
+  override func configure(with card: TGCard, includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) {
     guard let plainCard = card as? TGPlainCard else {
       preconditionFailure()
     }
     
-    super.configure(with: plainCard, showClose: showClose, includeHeader: includeHeader)
+    super.configure(with: plainCard, includeTitleView: includeTitleView, whenDismiss: whenDismiss)
     
     if let content = plainCard.contentView {
       content.translatesAutoresizingMaskIntoConstraints = false

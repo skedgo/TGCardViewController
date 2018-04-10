@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TGCardDefaultTitleView: UIView {
+class TGCardDefaultTitleView: UIView, TGDismissableTitleView {
   
   @IBOutlet weak var topLevelStack: UIStackView!
   @IBOutlet weak var labelStack: UIStackView!
@@ -72,6 +72,15 @@ class TGCardDefaultTitleView: UIView {
     labelStack.spacing = card.subtitle != nil ? 3 : 0
     dismissButton.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)
     dismissButton.setTitle(nil, for: .normal)
+    dismissButton.addTarget(self, action: #selector(dismissButtonTapped(_:)), for: .touchUpInside)
+  }
+  
+  // MARK: - User interaction
+  
+  var dismissHandler: TGDismissableTitleView.DismissHandler?
+  
+  @objc private func dismissButtonTapped(_ sender: Any) {
+    dismissHandler?(sender)
   }
 
 }

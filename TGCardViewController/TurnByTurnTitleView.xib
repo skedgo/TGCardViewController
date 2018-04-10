@@ -83,6 +83,9 @@
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="PHi-aH-aPl"/>
+            <connections>
+                <outlet property="dismissButton" destination="cgi-sz-vUy" id="NZX-gN-2Y4"/>
+            </connections>
             <point key="canvasLocation" x="3.5" y="53.5"/>
         </view>
     </objects>

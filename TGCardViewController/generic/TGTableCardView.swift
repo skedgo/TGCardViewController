@@ -35,22 +35,22 @@ public class TGTableCardView: TGCardView {
     return tableCard.accessoryView
   }
   
-  override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
-    guard let card = card as? TGTableCard else {
+  override func configure(with card: TGCard, includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) {
+    guard let tableCard = card as? TGTableCard else {
       preconditionFailure()
     }
     
-    super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
+    super.configure(with: tableCard, includeTitleView: includeTitleView, whenDismiss: whenDismiss)
         
-    let tableView = UITableView(frame: .zero, style: card.tableStyle)
-    tableView.dataSource = card.tableViewDataSource
-    tableView.delegate = card.tableViewDelegate
+    let tableView = UITableView(frame: .zero, style: tableCard.tableStyle)
+    tableView.dataSource = tableCard.tableViewDataSource
+    tableView.delegate = tableCard.tableViewDelegate
     
     if #available(iOS 11.0, *) {
       // For convenience, we also assign the delegate for dragging
       // and dropping directly if possible.
-      tableView.dragDelegate = card.tableViewDelegate as? UITableViewDragDelegate
-      tableView.dropDelegate = card.tableViewDelegate as? UITableViewDropDelegate
+      tableView.dragDelegate = tableCard.tableViewDelegate as? UITableViewDragDelegate
+      tableView.dropDelegate = tableCard.tableViewDelegate as? UITableViewDropDelegate
     }
     
     tableWrapper.addSubview(tableView)

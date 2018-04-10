@@ -426,8 +426,10 @@ extension TGCardViewController {
       top.copyStyling(from: oldCard)
     }
     
-    let cardView = top.buildCardView(showClose: delegate != nil || cards.count > 1, includeHeader: true)
-    cardView.dismissButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+    let dismissPerform: ((Any) -> Void)? = (delegate == nil && cards.count <= 1) ? nil : { (sender) in
+      self.closeTapped(sender: sender)
+    }
+    let cardView = top.buildCardView(includeTitleView: true, whenDismiss: dismissPerform)    
     if #available(iOS 11.0, *) {
       cardView.dismissButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
     }

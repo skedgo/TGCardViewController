@@ -97,7 +97,7 @@ open class TGPageCard: TGCard {
     return true
   }
   
-  open override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  open override func buildCardView(includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) -> TGCardView {
     let view = TGPageCardView.instantiate()
     view.configure(with: self)
     view.delegate = self

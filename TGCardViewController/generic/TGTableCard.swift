@@ -51,9 +51,9 @@ open class TGTableCard: TGCard {
   
   // MARK: - Constructing views
   
-  open override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  open override func buildCardView(includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) -> TGCardView {
     let view = TGTableCardView.instantiate()
-    view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
+    view.configure(with: self, includeTitleView: includeTitleView, whenDismiss: whenDismiss)
     return view
   }
  
