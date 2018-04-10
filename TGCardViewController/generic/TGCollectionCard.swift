@@ -14,8 +14,6 @@ import UIKit
 /// This class is generally subclassed.
 open class TGCollectionCard: TGCard {
   
-  let accessoryView: UIView?
-  
   public let collectionViewLayout: UICollectionViewLayout
   
   /// The delegate to be used for the card view's collection view.
@@ -32,29 +30,26 @@ open class TGCollectionCard: TGCard {
   
   // MARK: - Initialisers
   
-  public init(title: String, subtitle: String? = nil,
+  public init(title: TGCardTitle,
               dataSource: UICollectionViewDataSource? = nil,
               delegate: UICollectionViewDelegate? = nil,
               layout: UICollectionViewLayout,
-              accessoryView: UIView? = nil,
               mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     
     self.collectionViewDataSource = dataSource
     self.collectionViewDelegate = delegate
-    self.accessoryView = accessoryView
     self.collectionViewLayout = layout
     
-    super.init(title: title, subtitle: subtitle,
-               mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
+    super.init(title: title, mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
   
   // MARK: - Constructing views
   
-  open override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  open override func buildCardView(includeTitleView: Bool) -> TGCardView {
     let view = TGScrollCardView.instantiate()
-    view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
+    view.configure(with: self, includeTitleView: includeTitleView)
     return view
   }
-  
+
 }

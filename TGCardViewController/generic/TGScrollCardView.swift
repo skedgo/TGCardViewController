@@ -31,27 +31,16 @@ public class TGScrollCardView: TGCardView {
     return view
   }
 
-  override public func awakeFromNib() {
-    super.awakeFromNib()
-    
-    closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)
-    closeButton?.setTitle(nil, for: .normal)
-    closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
-  }
-  
   // MARK: - Configuration
   
-  override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
-    super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
+  override func configure(with card: TGCard, includeTitleView: Bool) {
+    super.configure(with: card, includeTitleView: includeTitleView)
     
     let scrollView: UIScrollView
     
     if let tableCard = card as? TGTableCard {
-      if includeHeader {
-        accessoryView = tableCard.accessoryView
-      }
-      
       let tableView = UITableView(frame: .zero, style: tableCard.tableStyle)
+      tableView.backgroundColor = .clear
       tableView.dataSource = tableCard.tableViewDataSource
       tableView.delegate = tableCard.tableViewDelegate
       if #available(iOS 11.0, *) {
@@ -60,16 +49,11 @@ public class TGScrollCardView: TGCardView {
         tableView.dragDelegate = tableCard.tableViewDelegate as? UITableViewDragDelegate
         tableView.dropDelegate = tableCard.tableViewDelegate as? UITableViewDropDelegate
       }
-      
       scrollView = tableView
 
     } else if let collectionCard = card as? TGCollectionCard {
-      if includeHeader {
-        accessoryView = collectionCard.accessoryView
-      }
-      
       let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionCard.collectionViewLayout)
-      collectionView.backgroundColor = .white
+      collectionView.backgroundColor = .clear
       collectionView.dataSource = collectionCard.collectionViewDataSource
       collectionView.delegate = collectionCard.collectionViewDelegate
       if #available(iOS 11.0, *) {
@@ -78,7 +62,6 @@ public class TGScrollCardView: TGCardView {
         collectionView.dragDelegate = collectionCard.collectionViewDelegate as? UICollectionViewDragDelegate
         collectionView.dropDelegate = collectionCard.collectionViewDelegate as? UICollectionViewDropDelegate
       }
-      
       scrollView = collectionView
 
     } else {
