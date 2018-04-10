@@ -64,7 +64,7 @@ fileprivate enum Mockup {
     }
     
     func modeByModePager(start: Int) -> TGPageCard {
-      return TGPageCard(title: "Trip", cards: modeByMode.map { $0.card }, initialPage: start)
+      return TGPageCard(cards: modeByMode.map { $0.card }, initialPage: start)
     }
   }
   
@@ -134,7 +134,7 @@ fileprivate enum Mockup {
       if trips.count == 1, let trip = trips.first {
         return trip.card
       } else {
-        let tripsPager = TGPageCard(title: "Trips", cards: trips.map { $0.card }, initialPage: index)
+        let tripsPager = TGPageCard(cards: trips.map { $0.card }, initialPage: index)
         tripsPager.headerRightAction = (title: "Start", onPress: { [unowned tripsPager] index in
           tripsPager.controller?.push(trips[index].modeByModePager(start: 0))
         })
@@ -142,7 +142,7 @@ fileprivate enum Mockup {
       }
       
     case .modeByMode(let steps):
-      return TGPageCard(title: "Trip", cards: steps.map { $0.card })
+      return TGPageCard(cards: steps.map { $0.card })
     }
   }
 }
@@ -174,7 +174,7 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let tableCell = UITableViewCell(style: .default, reuseIdentifier: nil)
     let row = indexPath.row
-    tableCell.textLabel?.text = items[row].card.title
+    tableCell.textLabel?.text = items[row].title
     return tableCell
   }
   

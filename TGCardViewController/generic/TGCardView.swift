@@ -14,31 +14,7 @@ public class TGCardView: TGCornerView {
   /// might hide and show.
   @IBOutlet weak var grabHandle: TGGrabHandleView?
   
-  /// The stack view that contains the label stack and the
-  /// accessory view.
-  @IBOutlet private weak var headerStack: UIStackView?
-  
-  /// The stack view that houses the title and subtitle labels.
-  ///
-  /// This outlet exists so that we can adjust the spacing between
-  /// labels if necessary.
-  @IBOutlet weak var labelStack: UIStackView?
-  
-  /// This is the constraint that connects the top of the header 
-  /// stack view to the bottom of the grab handle. Together with
-  /// the `headerStackBottomConstraint`, we can control the amount
-  /// of white spaces when header isn't required.
-  @IBOutlet weak var headerStackTopConstraint: NSLayoutConstraint?
-  
-  /// This is the constraint that connects the bottom of the header
-  /// stack view to the top of the content view. See also
-  /// `headerStackTopConstraint'.
-  @IBOutlet weak var headerStackBottomConstraint: NSLayoutConstraint?
-  
-  /// Each card view needs a close button, which the card controller
-  /// will add itself as a target to in order to pop the current card
-  /// from the stack.
-  @IBOutlet weak var closeButton: UIButton?
+  @IBOutlet weak var titleViewPlaceholder: UIView?
   
   /// This is the line separating the header and content parts of a
   /// card view.
@@ -63,13 +39,9 @@ public class TGCardView: TGCornerView {
     }
   }
   
+  weak var titleView: UIView?
+  
   private var contentScrollViewObservation: NSKeyValueObservation?
-  
-  /// Each card view needs a place to display the card's title.
-  @IBOutlet weak var titleLabel: UILabel!
-  
-  /// Each card view needs a place to display the card's subtitle.
-  @IBOutlet weak var subtitleLabel: UILabel!
   
   /// Optional pager in which `contentScrollView` can be wrapped.
   ///
@@ -83,36 +55,6 @@ public class TGCardView: TGCornerView {
   var headerHeight: CGFloat {
     guard let scrollView = contentScrollView else { return 0 }
     return scrollView.frame.minY
-  }
-  
-  @IBOutlet private weak var accessoryWrapperView: UIView?
-  
-  /// Optional view beneath title + subtitle.
-  var accessoryView: UIView? {
-    get {
-      return accessoryWrapperView?.subviews.first
-    }
-    set {
-      guard let wrapper = accessoryWrapperView else {
-        assertionFailure("Trying to set an accessory view but we don't have a wrapper for it")
-        return
-      }
-      
-      wrapper.subviews.forEach { $0.removeFromSuperview() }
-      
-      guard let view = newValue else {
-        wrapper.isHidden = true
-        headerStack?.spacing = 0
-        return
-      }
-      
-      wrapper.addSubview(view)
-      view.snap(to: wrapper)
-      wrapper.isHidden = false
-      headerStack?.spacing = 4
-      
-      setNeedsUpdateConstraints()
-    }
   }
   
   /// The closure to execute when the button is pressed.
@@ -132,29 +74,34 @@ public class TGCardView: TGCornerView {
       floatie.setImage(TGCardStyleKit.imageOfFloatingButton, for: .normal)
       floatie.setTitle(nil, for: .normal)      
     }
-    
-    // Here we set the minimum width and height to provide sufficient hit
-    // target. The priority is lowered because we may need to hide the
-    // button and in such case, stack view will reduce its size to zero,
-    // hence creating conflicting constraints.
-    let widthConstraint = closeButton?.widthAnchor.constraint(equalToConstant: 44)
-    widthConstraint?.priority = .defaultHigh
-    widthConstraint?.isActive = true
-    
-    let heightConstraint = closeButton?.heightAnchor.constraint(equalToConstant: 44)
-    heightConstraint?.priority = .defaultHigh
-    heightConstraint?.isActive = true
   }
   
-  // MARK: - Full card view configuration
+  // MARK: - Content Configuration
   
-  func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
-    titleLabel.text = includeHeader ? card.title : nil
-    subtitleLabel.text = includeHeader ? card.subtitle : nil
-    closeButton?.isHidden = !showClose
-    labelStack?.spacing = includeHeader && card.subtitle != nil ? 3 : 0
-    headerStackTopConstraint?.constant = includeHeader ? 8 : 0
-    headerStackBottomConstraint?.constant = includeHeader ? 8 : 0
+  func configure(with card: TGCard, includeTitleView: Bool) {
+    if let placeholder = titleViewPlaceholder, includeTitleView {
+
+      let titleView: UIView?
+      switch card.title {
+      case .default(let title, let subtitle, let accessoryView):
+        let defaultTitleView = TGCardDefaultTitleView.newInstance()
+        defaultTitleView.configure(title: title, subtitle: subtitle)
+        defaultTitleView.accessoryView = accessoryView
+        titleView = defaultTitleView
+        
+      case .custom(let view):
+        titleView = view
+
+      case .none:
+        titleView = nil
+      }
+      
+      if let titleView = titleView {
+        placeholder.addSubview(titleView)
+        titleView.snap(to: placeholder)
+        self.titleView = titleView
+      }
+    }
     
     // Apply custom styling
     applyStyling(for: card)
@@ -175,16 +122,14 @@ public class TGCardView: TGCornerView {
     }
   }
   
-  func applyStyling(for card: TGCard) {
-    titleLabel.font = card.titleFont
-    titleLabel.textColor = card.titleTextColor
-    subtitleLabel.font = card.subtitleFont
-    subtitleLabel.textColor = card.subtitleTextColor
-    grabHandle?.handleColor = card.grabHandleColor
-    backgroundColor = card.backgroundColor
-  }
+  // MARK: - Title View Configuration
   
-  // MARK: - Header view configuration
+  var dismissButton: UIButton? {
+    guard let defaultTitleView = titleViewPlaceholder?.subviews.first as? TGCardDefaultTitleView else {
+      return nil
+    }
+    return defaultTitleView.dismissButton
+  }
   
   func headerHeight(for position: TGCardPosition) -> CGFloat {
     guard let scrollView = contentScrollView else {
@@ -195,11 +140,13 @@ public class TGCardView: TGCornerView {
     case .collapsed:
       var frame: CGRect
       
-      if let wrapper = accessoryWrapperView,
-        let accessory = accessoryView {
+      if let titlePlaceholder = titleViewPlaceholder,
+        let defaultTitleView = titlePlaceholder.subviews.first as? TGCardDefaultTitleView,
+        let accessoryPlaceholder = defaultTitleView.accessoryViewContainer,
+        let accessory = accessoryPlaceholder.subviews.first {
         // The frame of the accessory view in the coordinate system
         // of card view itself
-        frame = wrapper.convert(accessory.frame, to: self)
+        frame = accessoryPlaceholder.convert(accessory.frame, to: self)
       } else {
         // The frame of the scroll view in the coordinate system of
         // card view itself. Note, the scroll view may be embedded
@@ -217,6 +164,20 @@ public class TGCardView: TGCornerView {
       
     default:
       return scrollView.superview?.convert(scrollView.frame, to: self).minY ?? scrollView.frame.minY
+    }
+  }
+  
+  // MARK: - Managing Appearance
+  
+  func applyStyling(for card: TGCard) {
+    grabHandle?.handleColor = card.grabHandleColor
+    backgroundColor = card.backgroundColor
+    
+    if let defaultTitleView = titleViewPlaceholder?.subviews.first as? TGCardDefaultTitleView {
+      defaultTitleView.titleLabel.font = card.titleFont
+      defaultTitleView.titleLabel.textColor = card.titleTextColor
+      defaultTitleView.subtitleLabel.font = card.subtitleFont
+      defaultTitleView.subtitleLabel.textColor = card.subtitleTextColor
     }
   }
   

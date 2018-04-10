@@ -24,27 +24,41 @@ open class TGPlainCard: TGCard {
   /// Can have interactive elements.
   public let contentView: UIView?
   
-  /// The view immediately below title + subtitle but above the
-  /// content view.
-  public let accessoryView: UIView?
-  
-  public init(title: String, subtitle: String? = nil,
-              contentView: UIView? = nil, accessoryView: UIView? = nil,
-              mapManager: TGCompatibleMapManager? = nil,
-              initialPosition: TGCardPosition? = nil) {
+  public init(
+    title: TGCardTitle,
+    contentView: UIView? = nil,
+    mapManager: TGCompatibleMapManager? = nil,
+    initialPosition: TGCardPosition? = nil
+    ) {
     assert(!(contentView is UIScrollView),
             "This card is not meant for content views that are itself" +
             "scrolling. Use `TGTableCardView` instead.")
     
     self.contentView = contentView
-    self.accessoryView = accessoryView
     
-    super.init(title: title, subtitle: subtitle, mapManager: mapManager, initialPosition: initialPosition)
+    super.init(title: title, mapManager: mapManager, initialPosition: initialPosition)
   }
   
-  open override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  public init(
+    title: String,
+    subtitle: String? = nil,
+    contentView: UIView? = nil,
+    accessoryView: UIView? = nil,
+    mapManager: TGMapManager? = nil,
+    initialPosition: TGCardPosition? = nil
+    ) {
+    
+    assert(!(contentView is UIScrollView),
+           "This card is not meant for content views that are itself" +
+      "scrolling. Use `TGTableCardView` instead.")
+    
+    self.contentView = contentView
+    super.init(title: .default(title, subtitle, accessoryView), mapManager: mapManager, initialPosition: initialPosition)
+  }
+  
+  open override func buildCardView(includeTitleView: Bool) -> TGCardView {
     let view = TGPlainCardView.instantiate()
-    view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
+    view.configure(with: self, includeTitleView: includeTitleView)
     return view
   }
   

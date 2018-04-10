@@ -18,7 +18,7 @@ class ExamplePageCard: TGPageCard {
     let card2 = ExampleTableCard(mapManager: .london, pushOnTap: false)
     let card3 = ExampleChildCard()
     let card4 = TGPlainCard(title: "Hello Nuremberg", mapManager: TGMapManager.nuremberg)
-    super.init(title: "Paging views", cards: [card1, card2, card3, card4])
+    super.init(cards: [card1, card2, card3, card4])
    
     // Custom accessory for testing jumping around
     let jumpButton = UIButton(type: .roundedRect)

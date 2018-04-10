@@ -20,31 +20,18 @@ class TGPlainCardView: TGCardView {
       let view = bundle.loadNibNamed("TGPlainCardView", owner: nil, options: nil)!.first as? TGPlainCardView
       else { preconditionFailure() }
     return view
-
-  }
-  
-  override func awakeFromNib() {
-    super.awakeFromNib()
-    
-    closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)
-    closeButton?.setTitle(nil, for: .normal)
-    closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
   
   // MARK: - Configuration
   
-  override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
-    guard let card = card as? TGPlainCard else {
+  override func configure(with card: TGCard, includeTitleView: Bool) {
+    guard let plainCard = card as? TGPlainCard else {
       preconditionFailure()
     }
     
-    super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
+    super.configure(with: plainCard, includeTitleView: includeTitleView)
     
-    if includeHeader {
-      accessoryView = card.accessoryView
-    }
-    
-    if let content = card.contentView {
+    if let content = plainCard.contentView {
       content.translatesAutoresizingMaskIntoConstraints = false
       contentView.addSubview(content)
       content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true

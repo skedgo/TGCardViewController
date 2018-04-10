@@ -16,8 +16,6 @@ open class TGTableCard: TGCard {
   
   public let tableStyle: UITableViewStyle
   
-  let accessoryView: UIView?
-
   /// The delegate to be used for the card view's table view.
   ///
   /// Only has an effect, if it is set before `buildCardView` is called, i.e.,
@@ -32,28 +30,42 @@ open class TGTableCard: TGCard {
   
   // MARK: - Initialisers
   
-  public init(title: String, subtitle: String? = nil,
+  public init(title: TGCardTitle,
+              dataSource: UITableViewDataSource? = nil,
+              delegate: UITableViewDelegate? = nil,
+              style: UITableViewStyle = .plain,
+              mapManager: TGMapManager? = nil,
+              initialPosition: TGCardPosition? = nil) {
+    
+    self.tableViewDataSource = dataSource
+    self.tableViewDelegate = delegate
+    self.tableStyle = style
+    
+    super.init(title: title,
+               mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
+  }
+  
+  public init(title: String,
+              subtitle: String? = nil,
               dataSource: UITableViewDataSource? = nil,
               delegate: UITableViewDelegate? = nil,
               style: UITableViewStyle = .plain,
               accessoryView: UIView? = nil,
               mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
-    
     self.tableViewDataSource = dataSource
     self.tableViewDelegate = delegate
     self.tableStyle = style
-    self.accessoryView = accessoryView
     
-    super.init(title: title, subtitle: subtitle,
+    super.init(title: .default(title, subtitle, accessoryView),
                mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
   
   // MARK: - Constructing views
   
-  open override func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  open override func buildCardView(includeTitleView: Bool) -> TGCardView {
     let view = TGScrollCardView.instantiate()
-    view.configure(with: self, showClose: showClose, includeHeader: includeHeader)
+    view.configure(with: self, includeTitleView: includeTitleView)
     return view
   }
  
