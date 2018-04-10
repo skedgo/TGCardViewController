@@ -35,12 +35,12 @@ public class TGTableCardView: TGCardView {
     return tableCard.accessoryView
   }
   
-  override func configure(with card: TGCard, includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) {
+  override func configure(with card: TGCard, includeTitleView: Bool) {
     guard let tableCard = card as? TGTableCard else {
       preconditionFailure()
     }
     
-    super.configure(with: tableCard, includeTitleView: includeTitleView, whenDismiss: whenDismiss)
+    super.configure(with: tableCard, includeTitleView: includeTitleView)
         
     let tableView = UITableView(frame: .zero, style: tableCard.tableStyle)
     tableView.dataSource = tableCard.tableViewDataSource

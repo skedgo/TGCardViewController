@@ -39,6 +39,8 @@ public class TGCardView: TGCornerView {
     }
   }
   
+  weak var titleView: UIView?
+  
   private var contentScrollViewObservation: NSKeyValueObservation?
   
   /// Optional pager in which `contentScrollView` can be wrapped.
@@ -76,24 +78,29 @@ public class TGCardView: TGCornerView {
   
   // MARK: - Content Configuration
   
-  func configure(with card: TGCard, includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) {
+  func configure(with card: TGCard, includeTitleView: Bool) {
     if let placeholder = titleViewPlaceholder, includeTitleView {
-      let titleView: UIView & TGDismissableTitleView
-      
-      if let customView = card.titleView {
-        titleView = customView        
-      } else {
+
+      let titleView: UIView?
+      switch card.title {
+      case .default(let title, let subtitle):
         let defaultTitleView = TGCardDefaultTitleView.newInstance()
-        defaultTitleView.configure(with: card, canBeDismissed: whenDismiss != nil)
+        defaultTitleView.configure(title: title, subtitle: subtitle)
         defaultTitleView.accessoryView = titleAccessoryView(for: card)
         titleView = defaultTitleView
+        
+      case .custom(let view):
+        titleView = view
+
+      case .none:
+        titleView = nil
       }
       
-      // Connect to dismiss action
-      titleView.dismissHandler = whenDismiss
-      
-      placeholder.addSubview(titleView)
-      titleView.snap(to: placeholder)
+      if let titleView = titleView {
+        placeholder.addSubview(titleView)
+        titleView.snap(to: placeholder)
+        self.titleView = titleView
+      }
     }
     
     // Apply custom styling

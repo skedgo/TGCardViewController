@@ -14,7 +14,12 @@ class ExampleCustomTitleCard: TGPlainCard {
   init() {
     let content = ExampleChildContentView.instantiate()
     let titleView = TurnByTurnTitleView.newInstance()
-    super.init(title: "Custom title view", titleView: titleView, contentView: content, mapManager: .sydney)
+    super.init(title: .custom(titleView), contentView: content, mapManager: .sydney)
+    
+    titleView.dismissButton.addTarget(self, action: #selector(dismissButtonTapped(_:)), for: .touchUpInside)
   }
 
+  @objc private func dismissButtonTapped(_ sender: Any) {
+    controller?.pop()
+  }
 }

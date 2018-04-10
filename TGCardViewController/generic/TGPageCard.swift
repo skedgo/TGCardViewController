@@ -66,10 +66,9 @@ open class TGPageCard: TGCard {
   /// Initialise a new page card.
   ///
   /// - Parameters:
-  ///   - title: duh!
   ///   - cards: these are the child cards that will be displayed by the page card as pages.
   ///   - initialPage: the index of the first child card (page) to display when the page card is pushed.
-  public init(title: String, cards: [TGCard], initialPage: Int = 0) {
+  public init(cards: [TGCard], initialPage: Int = 0) {
     guard initialPage < cards.count else {
       preconditionFailure()
     }
@@ -87,7 +86,7 @@ open class TGPageCard: TGCard {
     // set on intialising and then updated whenever we scroll.
     let mapManager = cards[initialPage].mapManager
     
-    super.init(title: title, subtitle: nil, mapManager: mapManager, initialPosition: .peaking)
+    super.init(title: .none, mapManager: mapManager, initialPosition: .peaking)
   }
   
   fileprivate static func allCardsHaveMapManagers(in cards: [TGCard]) -> Bool {
@@ -97,7 +96,7 @@ open class TGPageCard: TGCard {
     return true
   }
   
-  open override func buildCardView(includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) -> TGCardView {
+  open override func buildCardView(includeTitleView: Bool) -> TGCardView {
     let view = TGPageCardView.instantiate()
     view.configure(with: self)
     view.delegate = self
@@ -159,8 +158,14 @@ open class TGPageCard: TGCard {
     
     headerPageControl?.currentPage = index
 
-    headerView.titleLabel.text = card.title
-    headerView.subtitleLabel.text = card.subtitle
+    switch card.title {
+    case .default(let title, let subtitle):
+      headerView.titleLabel.text = title
+      headerView.subtitleLabel.text = subtitle
+    case .custom, .none:
+      headerView.titleLabel.text = nil
+      headerView.subtitleLabel.text = nil
+    }
     
     if let rightAction = headerRightAction {
       headerView.rightButton.setImage(nil, for: .normal)

@@ -32,7 +32,7 @@ open class TGTableCard: TGCard {
   
   // MARK: - Initialisers
   
-  public init(title: String, subtitle: String? = nil,
+  public init(title: TGCardTitle,
               dataSource: UITableViewDataSource? = nil,
               delegate: UITableViewDelegate? = nil,
               style: UITableViewStyle = .plain,
@@ -45,15 +45,32 @@ open class TGTableCard: TGCard {
     self.tableStyle = style
     self.accessoryView = accessoryView
     
-    super.init(title: title, subtitle: subtitle,
+    super.init(title: title,
+               mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
+  }
+  
+  public init(title: String,
+              subtitle: String? = nil,
+              dataSource: UITableViewDataSource? = nil,
+              delegate: UITableViewDelegate? = nil,
+              style: UITableViewStyle = .plain,
+              accessoryView: UIView? = nil,
+              mapManager: TGMapManager? = nil,
+              initialPosition: TGCardPosition? = nil) {
+    self.tableViewDataSource = dataSource
+    self.tableViewDelegate = delegate
+    self.tableStyle = style
+    self.accessoryView = accessoryView
+    
+    super.init(title: .default(title, subtitle),
                mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
   
   // MARK: - Constructing views
   
-  open override func buildCardView(includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) -> TGCardView {
+  open override func buildCardView(includeTitleView: Bool) -> TGCardView {
     let view = TGTableCardView.instantiate()
-    view.configure(with: self, includeTitleView: includeTitleView, whenDismiss: whenDismiss)
+    view.configure(with: self, includeTitleView: includeTitleView)
     return view
   }
  

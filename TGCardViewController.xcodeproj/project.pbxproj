@@ -21,9 +21,6 @@
 		3A7C34AD201F2C8D00F66A35 /* TGCardViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA74AE1E71718800408678 /* TGCardViewController.xib */; };
 		3A7C34AE201F2C8D00F66A35 /* TGMapManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74C41E71D10E00408678 /* TGMapManager.swift */; };
 		3A7C34AF201F2C8D00F66A35 /* UIView+Snap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A377BD61E95121600A8C8F0 /* UIView+Snap.swift */; };
-		3A7C34B0201F2C9100F66A35 /* TGAgendaCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39107B41E7977660043B6B3 /* TGAgendaCard.swift */; };
-		3A7C34B1201F2C9100F66A35 /* TGAgendaCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39107AC1E7965520043B6B3 /* TGAgendaCardView.swift */; };
-		3A7C34B2201F2C9100F66A35 /* TGAgendaCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D39107AE1E79659B0043B6B3 /* TGAgendaCardView.xib */; };
 		3A7C34B3201F2C9100F66A35 /* TGCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74A81E716ED600408678 /* TGCard.swift */; };
 		3A7C34B4201F2C9100F66A35 /* TGCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74B41E717C2F00408678 /* TGCardView.swift */; };
 		3A7C34B5201F2C9100F66A35 /* TGHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8BEA491E859BEA0007B410 /* TGHeaderView.swift */; };
@@ -65,7 +62,6 @@
 		D345CC08207C6CD500A6D9F3 /* ExampleCustomTitleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D345CC06207C6C9200A6D9F3 /* ExampleCustomTitleCard.swift */; };
 		D345CC0A207C6DC500A6D9F3 /* TurnByTurnTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D345CC09207C6DC500A6D9F3 /* TurnByTurnTitleView.swift */; };
 		D345CC0B207C70D600A6D9F3 /* TurnByTurnTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D345CC04207C6A1100A6D9F3 /* TurnByTurnTitleView.xib */; };
-		D39107B11E79705D0043B6B3 /* ExampleAgendaCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39107B01E79705D0043B6B3 /* ExampleAgendaCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -157,10 +153,6 @@
 		D363B00F1E7CEAC30031EAD1 /* TGPageCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TGPageCardView.xib; path = generic/TGPageCardView.xib; sourceTree = "<group>"; };
 		D363B0111E7CEC300031EAD1 /* TGPageCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGPageCardView.swift; path = generic/TGPageCardView.swift; sourceTree = "<group>"; };
 		D363B0131E7CECDA0031EAD1 /* TGPageCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGPageCard.swift; path = generic/TGPageCard.swift; sourceTree = "<group>"; };
-		D39107AC1E7965520043B6B3 /* TGAgendaCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGAgendaCardView.swift; path = generic/TGAgendaCardView.swift; sourceTree = "<group>"; };
-		D39107AE1E79659B0043B6B3 /* TGAgendaCardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TGAgendaCardView.xib; path = generic/TGAgendaCardView.xib; sourceTree = "<group>"; };
-		D39107B01E79705D0043B6B3 /* ExampleAgendaCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleAgendaCard.swift; sourceTree = "<group>"; };
-		D39107B41E7977660043B6B3 /* TGAgendaCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGAgendaCard.swift; path = generic/TGAgendaCard.swift; sourceTree = "<group>"; };
 		D3F77BF61E7B67CB00D0DFF1 /* TGCornerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCornerView.swift; path = generic/TGCornerView.swift; sourceTree = "<group>"; };
 		D3F77BF71E7B67CB00D0DFF1 /* TGGrabHandleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGGrabHandleView.swift; path = generic/TGGrabHandleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -213,9 +205,6 @@
 		3AB8944D1E7AB1E400267A06 /* cards */ = {
 			isa = PBXGroup;
 			children = (
-				D39107B41E7977660043B6B3 /* TGAgendaCard.swift */,
-				D39107AC1E7965520043B6B3 /* TGAgendaCardView.swift */,
-				D39107AE1E79659B0043B6B3 /* TGAgendaCardView.xib */,
 				3ACA74A81E716ED600408678 /* TGCard.swift */,
 				3ACA74B41E717C2F00408678 /* TGCardView.swift */,
 				3A8BEA491E859BEA0007B410 /* TGHeaderView.swift */,
@@ -320,7 +309,6 @@
 		3ACA74C11E71A12E00408678 /* example cards */ = {
 			isa = PBXGroup;
 			children = (
-				D39107B01E79705D0043B6B3 /* ExampleAgendaCard.swift */,
 				3ACA74BC1E71A0DD00408678 /* ExampleChildCard.swift */,
 				3ACA74C21E71A14600408678 /* ExampleChildContentView.swift */,
 				3ACA74BF1E71A12200408678 /* ExampleChildContentView.xib */,
@@ -484,7 +472,6 @@
 				3A7C34BC201F2C9100F66A35 /* TGPlainCardView.xib in Resources */,
 				3A7C34BF201F2C9100F66A35 /* TGTableCardView.xib in Resources */,
 				3A7C34AD201F2C8D00F66A35 /* TGCardViewController.xib in Resources */,
-				3A7C34B2201F2C9100F66A35 /* TGAgendaCardView.xib in Resources */,
 				3A7C34B6201F2C9100F66A35 /* TGHeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -542,7 +529,6 @@
 				D345CC01207C3ADF00A6D9F3 /* TGCardDefaultTitleView.swift in Sources */,
 				3A7C34AE201F2C8D00F66A35 /* TGMapManager.swift in Sources */,
 				3A7C34BB201F2C9100F66A35 /* TGPlainCardView.swift in Sources */,
-				3A7C34B1201F2C9100F66A35 /* TGAgendaCardView.swift in Sources */,
 				3A7C34BD201F2C9100F66A35 /* TGTableCard.swift in Sources */,
 				3A7C34B5201F2C9100F66A35 /* TGHeaderView.swift in Sources */,
 				3A7C34BE201F2C9100F66A35 /* TGTableCardView.swift in Sources */,
@@ -550,7 +536,6 @@
 				3A7C34B7201F2C9100F66A35 /* TGPageCard.swift in Sources */,
 				3A7C34B4201F2C9100F66A35 /* TGCardView.swift in Sources */,
 				3A462B5A2074BF4F00AF41EF /* TGCardViewController+UserTrackingButton.swift in Sources */,
-				3A7C34B0201F2C9100F66A35 /* TGAgendaCard.swift in Sources */,
 				3A7C34AB201F2C8D00F66A35 /* TGCardPosition.swift in Sources */,
 				3A7C34BA201F2C9100F66A35 /* TGPlainCard.swift in Sources */,
 				3A7C34AA201F2C8D00F66A35 /* TGGrabHandleView.swift in Sources */,
@@ -566,7 +551,6 @@
 			files = (
 				3AB894561E7AEBB700267A06 /* MockupImageContentView.swift in Sources */,
 				3ACA74C31E71A14600408678 /* ExampleChildContentView.swift in Sources */,
-				D39107B11E79705D0043B6B3 /* ExampleAgendaCard.swift in Sources */,
 				3AB894541E7AE4A300267A06 /* MockupRootCard.swift in Sources */,
 				3ACA74B71E719A5900408678 /* ExampleRootCard.swift in Sources */,
 				3A8BEA501E87E9E00007B410 /* Helpers.swift in Sources */,

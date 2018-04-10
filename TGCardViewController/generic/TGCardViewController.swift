@@ -426,12 +426,14 @@ extension TGCardViewController {
       top.copyStyling(from: oldCard)
     }
     
-    let dismissPerform: ((Any) -> Void)? = (delegate == nil && cards.count <= 1) ? nil : { (sender) in
-      self.closeTapped(sender: sender)
-    }
-    let cardView = top.buildCardView(includeTitleView: true, whenDismiss: dismissPerform)    
-    if #available(iOS 11.0, *) {
-      cardView.dismissButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
+    let cardView = top.buildCardView(includeTitleView: true)
+    if let defaultCardTitle = cardView.titleView as? TGCardDefaultTitleView {
+      let showClose = delegate != nil || cards.count > 1
+      defaultCardTitle.dismissButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+      defaultCardTitle.dismissButton.isHidden = !showClose
+      if #available(iOS 11.0, *) {
+        defaultCardTitle.dismissButton.isSpringLoaded = navigationButtonsAreSpringLoaded
+      }
     }
     
     // On device with home indicator, we want only the header part of a card view is

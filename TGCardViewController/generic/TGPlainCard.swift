@@ -27,11 +27,9 @@ open class TGPlainCard: TGCard {
   /// The view immediately below title + subtitle but above the
   /// content view.
   public let accessoryView: UIView?
-  
+
   public init(
-    title: String,
-    subtitle: String? = nil,
-    titleView: (UIView & TGDismissableTitleView)? = nil,
+    title: TGCardTitle,
     contentView: UIView? = nil,
     accessoryView: UIView? = nil,
     mapManager: TGMapManager? = nil,
@@ -44,12 +42,30 @@ open class TGPlainCard: TGCard {
     self.contentView = contentView
     self.accessoryView = accessoryView
     
-    super.init(title: title, subtitle: subtitle, titleView: titleView, mapManager: mapManager, initialPosition: initialPosition)
+    super.init(title: title, mapManager: mapManager, initialPosition: initialPosition)
   }
   
-  open override func buildCardView(includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) -> TGCardView {
+  public init(
+    title: String,
+    subtitle: String? = nil,
+    contentView: UIView? = nil,
+    accessoryView: UIView? = nil,
+    mapManager: TGMapManager? = nil,
+    initialPosition: TGCardPosition? = nil
+    ) {
+    
+    assert(!(contentView is UIScrollView),
+           "This card is not meant for content views that are itself" +
+      "scrolling. Use `TGTableCardView` instead.")
+    
+    self.contentView = contentView
+    self.accessoryView = accessoryView
+    super.init(title: .default(title, subtitle), mapManager: mapManager, initialPosition: initialPosition)
+  }
+  
+  open override func buildCardView(includeTitleView: Bool) -> TGCardView {
     let view = TGPlainCardView.instantiate()
-    view.configure(with: self, includeTitleView: includeTitleView, whenDismiss: whenDismiss)
+    view.configure(with: self, includeTitleView: includeTitleView)
     return view
   }
   

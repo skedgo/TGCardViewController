@@ -36,7 +36,7 @@ class MockupImageCard : TGPlainCard {
     content.addGestureRecognizer(tapper)
   }
   
-  override func buildCardView(includeTitleView: Bool, whenDismiss: ((Any) -> Void)?) -> TGCardView {
+  override func buildCardView(includeTitleView: Bool) -> TGCardView {
     guard
       let content = contentView as? MockupImageContentView,
       let image = content.imageView.image,
@@ -49,7 +49,7 @@ class MockupImageCard : TGPlainCard {
     content.imageWidthConstraint.constant  = wrapper.bounds.width
     content.imageHeightConstraint.constant = wrapper.bounds.width * ratio
     
-    return super.buildCardView(includeTitleView: includeTitleView, whenDismiss: whenDismiss)
+    return super.buildCardView(includeTitleView: includeTitleView)
   }
   
   @objc
