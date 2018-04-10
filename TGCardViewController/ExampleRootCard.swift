@@ -105,8 +105,8 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
     (title: "Show Mock-up", card: MockupRootCard()),
     (title: "Show Erlking", card: ExampleChildCard()),
     (title: "Show Table",   card: ExampleTableCard(mapManager: .london)),
-    (title: "Show Agenda",  card: ExampleAgendaCard()),
     (title: "Show Pages",   card: ExamplePageCard()),
+    (title: "Custom title", card: ExampleCustomTitleCard())
   ]
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -124,7 +124,7 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let tableCell = UITableViewCell(style: .default, reuseIdentifier: nil)
     let row = indexPath.row
-    tableCell.textLabel?.text = items[row].card.title
+    tableCell.textLabel?.text = items[row].title
     return tableCell
   }
   

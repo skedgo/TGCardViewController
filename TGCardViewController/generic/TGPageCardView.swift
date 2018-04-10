@@ -112,7 +112,7 @@ class TGPageCardView: TGCardView {
     // See: https://gitlab.com/SkedGo/tripgo-cards-ios/issues/3
     
     let contents = card.cards.map { card -> UIView in
-      let view = card.buildCardView(showClose: false, includeHeader: false)
+      let view = card.buildCardView(includeTitleView: false)
       card.cardView = view
       card.didBuild(cardView: view, headerView: nil)
       return view

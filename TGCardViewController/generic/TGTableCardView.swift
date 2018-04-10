@@ -18,7 +18,7 @@ public class TGTableCardView: TGCardView {
   // at design time.
   @IBOutlet weak var tableWrapper: UIView!
   
-  // MARK: - New instances
+  // MARK: - Creating New View
   
   static func instantiate() -> TGTableCardView {
     let bundle = Bundle(for: self)
@@ -27,38 +27,26 @@ public class TGTableCardView: TGCardView {
       else { preconditionFailure() }
     return view
   }
-
-  override public func awakeFromNib() {
-    super.awakeFromNib()
-    
-    closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)
-    closeButton?.setTitle(nil, for: .normal)
-    closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
-  }
   
   // MARK: - Configuration
   
-  override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
-    guard let card = card as? TGTableCard else {
+  override func configure(with card: TGCard, includeTitleView: Bool) {
+    guard let tableCard = card as? TGTableCard else {
       preconditionFailure()
     }
     
-    super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
-    
-    if includeHeader {
-      accessoryView = card.accessoryView
-    }
-    
-    let tableView = UITableView(frame: .zero, style: card.tableStyle)
+    super.configure(with: tableCard, includeTitleView: includeTitleView)
+        
+    let tableView = UITableView(frame: .zero, style: tableCard.tableStyle)
     tableView.backgroundColor = .clear
-    tableView.dataSource = card.tableViewDataSource
-    tableView.delegate = card.tableViewDelegate
+    tableView.dataSource = tableCard.tableViewDataSource
+    tableView.delegate = tableCard.tableViewDelegate
     
     if #available(iOS 11.0, *) {
       // For convenience, we also assign the delegate for dragging
       // and dropping directly if possible.
-      tableView.dragDelegate = card.tableViewDelegate as? UITableViewDragDelegate
-      tableView.dropDelegate = card.tableViewDelegate as? UITableViewDropDelegate
+      tableView.dragDelegate = tableCard.tableViewDelegate as? UITableViewDragDelegate
+      tableView.dropDelegate = tableCard.tableViewDelegate as? UITableViewDropDelegate
     }
     
     tableWrapper.addSubview(tableView)

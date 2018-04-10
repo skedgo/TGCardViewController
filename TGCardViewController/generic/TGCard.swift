@@ -25,6 +25,19 @@ import UIKit
 /// various UIKit protocols in subclasses.
 open class TGCard: NSObject {
   
+  public enum TGCardTitle {
+    /// Default title consisting of localized title, optional subtitle, optional accessory view, and close button
+    case `default`(String, String?, UIView?)
+    
+    /// A customised title of your choosing. In this case, make sure to add a way to dismiss
+    /// this card and call `controller?.pop()` when appropriate.
+    case custom(UIView)
+    
+    /// No title at all. Make sure to call `controller?.pop()`
+    /// when appropriate.
+    case none
+  }
+  
   public enum FloatingButtonStyle {
     case add
     case custom(UIImage)
@@ -40,11 +53,8 @@ open class TGCard: NSObject {
   /// Typically, `TGCardViewController` will assign itself.
   public weak var delegate: TGCardDelegate?
   
-  /// Localised title of the card
-  public let title: String
-
-  /// Localised subtitle of the card
-  public let subtitle: String?
+  /// Title of the card
+  public let title: TGCardTitle
   
   /// The manager that handles the content of the map for this card
   public var mapManager: TGMapManager? {
@@ -64,10 +74,19 @@ open class TGCard: NSObject {
   
   // MARK: - Creating Cards
   
-  public init(title: String, subtitle: String? = nil,
-              mapManager: TGMapManager? = nil, initialPosition: TGCardPosition? = nil) {
+  /// Creates a new card
+  ///
+  /// - Parameters:
+  ///   - title: Title to display
+  ///   - mapManager:
+  ///   - initialPosition: Position of the card when first pushed. Defaults `.extended` if
+  ///       no map manager was provied.
+  public init(
+    title: TGCardTitle,
+    mapManager: TGMapManager? = nil,
+    initialPosition: TGCardPosition? = nil
+    ) {
     self.title = title
-    self.subtitle = subtitle
     self.mapManager = mapManager
     self.initialPosition = mapManager != nil ? initialPosition : .extended
   }
@@ -101,8 +120,13 @@ open class TGCard: NSObject {
   
   /// Builds the card view to represent the card
   ///
+  /// - Parameters:
+  ///   - includeTitleView: If the title view should be included or it
+  ///       should be a minimal card without a title view. This is
+  ///       typically `true` but set to `false` when the card is embedded
+  ///       in a `TGPageCard`.
   /// - Returns: Card view configured with the content of this card
-  open func buildCardView(showClose: Bool, includeHeader: Bool) -> TGCardView {
+  open func buildCardView(includeTitleView: Bool) -> TGCardView {
     preconditionFailure("Override this in subclasses, but don't call super to `TGCard`.")
   }
   

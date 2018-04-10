@@ -10,12 +10,14 @@ import UIKit
 
 extension UIView {
   
-  public func snap(to superView: UIView) {
-    translatesAutoresizingMaskIntoConstraints = false
-    topAnchor.constraint(equalTo: superView.topAnchor).isActive = true
-    leadingAnchor.constraint(equalTo: superView.leadingAnchor).isActive = true
-    trailingAnchor.constraint(equalTo: superView.trailingAnchor).isActive = true
-    bottomAnchor.constraint(equalTo: superView.bottomAnchor).isActive = true
+  public func snap(to superView: UIView, margin: CGFloat = 0) {
+    translatesAutoresizingMaskIntoConstraints = false    
+    NSLayoutConstraint.activate([
+        topAnchor.constraint(equalTo: superView.topAnchor, constant: margin),
+        leadingAnchor.constraint(equalTo: superView.leadingAnchor, constant: margin),
+        trailingAnchor.constraint(equalTo: superView.trailingAnchor, constant: -1*margin),
+        bottomAnchor.constraint(equalTo: superView.bottomAnchor, constant: -1*margin)
+      ])
   }
   
   public func center(on superView: UIView) {
