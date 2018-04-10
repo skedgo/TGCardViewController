@@ -10,7 +10,7 @@ import Foundation
 
 open class TGHeaderView: UIView {
   
-  public weak var closeButton: UIButton?
-  public weak var rightButton: UIButton?
+  @IBOutlet public weak var closeButton: UIButton?
+  @IBOutlet public weak var rightButton: UIButton?
   
 }

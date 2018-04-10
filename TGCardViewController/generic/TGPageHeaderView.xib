@@ -96,8 +96,8 @@
             <connections>
                 <outlet property="accessoryWrapperHeightConstraint" destination="0l9-rR-FKT" id="Y6r-2G-EG1"/>
                 <outlet property="accessoryWrapperView" destination="OCh-my-Dlb" id="3ch-WX-uOk"/>
-                <outlet property="closeButton" destination="WrS-XT-0Zp" id="Ncx-ax-ofs"/>
-                <outlet property="rightButton" destination="Lxe-5l-7gl" id="c59-sK-mfe"/>
+                <outlet property="closeButton" destination="WrS-XT-0Zp" id="lOO-g4-lbj"/>
+                <outlet property="rightButton" destination="Lxe-5l-7gl" id="m3l-vE-yBZ"/>
                 <outlet property="subtitleLabel" destination="36W-q6-I4y" id="ygJ-C6-Px8"/>
                 <outlet property="titleLabel" destination="llr-Qv-YHg" id="0Ss-X4-Lvh"/>
             </connections>
