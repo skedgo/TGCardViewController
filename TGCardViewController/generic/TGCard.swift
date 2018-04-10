@@ -64,15 +64,23 @@ open class TGCard: NSObject {
   
   // MARK: - Creating Cards
   
-  public init(title: String, subtitle: String? = nil,
-              mapManager: TGMapManager? = nil, initialPosition: TGCardPosition? = nil) {
+  public init(
+    title: String,
+    subtitle: String? = nil,
+    titleView: UIView? = nil,
+    mapManager: TGMapManager? = nil,
+    initialPosition: TGCardPosition? = nil
+    ) {
     self.title = title
     self.subtitle = subtitle
+    self.titleView = titleView
     self.mapManager = mapManager
     self.initialPosition = mapManager != nil ? initialPosition : .extended
   }
   
   // MARK: - Creating Card Views.
+  
+  public let titleView: UIView?
   
   /// Each card can specify what to overlay on the top right of the map.
   ///

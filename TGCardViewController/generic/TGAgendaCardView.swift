@@ -37,14 +37,6 @@ public class TGAgendaCardView: TGCardView {
       else { preconditionFailure() }
     return view
   }
-
-  override public func awakeFromNib() {
-    super.awakeFromNib()
-    
-    closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)
-    closeButton?.setTitle(nil, for: .normal)
-    closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
-  }
   
   // MARK: - Configuration
   
@@ -57,6 +49,11 @@ public class TGAgendaCardView: TGCardView {
     
     tableView.delegate = card.tableViewDelegate
     tableView.dataSource = card.tableViewDataSource
+    
+    if #available(iOS 11, *) {
+      tableView.dragDelegate = card.tableViewDelegate as? UITableViewDragDelegate
+      tableView.dropDelegate = card.tableViewDelegate as? UITableViewDropDelegate
+    }
     
     if let bottomContent = card.bottomContentView {
       bottomViewContainer.addSubview(bottomContent)

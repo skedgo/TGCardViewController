@@ -107,6 +107,7 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
     (title: "Show Table",   card: ExampleTableCard(mapManager: .london)),
     (title: "Show Agenda",  card: ExampleAgendaCard()),
     (title: "Show Pages",   card: ExamplePageCard()),
+    (title: "Custom title", card: ExampleCustomTitleCard())
   ]
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

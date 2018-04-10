@@ -18,7 +18,7 @@ public class TGTableCardView: TGCardView {
   // at design time.
   @IBOutlet weak var tableWrapper: UIView!
   
-  // MARK: - New instances
+  // MARK: - Creating New View
   
   static func instantiate() -> TGTableCardView {
     let bundle = Bundle(for: self)
@@ -27,16 +27,13 @@ public class TGTableCardView: TGCardView {
       else { preconditionFailure() }
     return view
   }
-
-  override public func awakeFromNib() {
-    super.awakeFromNib()
-    
-    closeButton?.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)
-    closeButton?.setTitle(nil, for: .normal)
-    closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
-  }
   
   // MARK: - Configuration
+  
+  override func titleAccessoryView(for card: TGCard) -> UIView? {
+    guard let tableCard = card as? TGTableCard else { return nil }
+    return tableCard.accessoryView
+  }
   
   override func configure(with card: TGCard, showClose: Bool, includeHeader: Bool) {
     guard let card = card as? TGTableCard else {
@@ -44,11 +41,7 @@ public class TGTableCardView: TGCardView {
     }
     
     super.configure(with: card, showClose: showClose, includeHeader: includeHeader)
-    
-    if includeHeader {
-      accessoryView = card.accessoryView
-    }
-    
+        
     let tableView = UITableView(frame: .zero, style: card.tableStyle)
     tableView.dataSource = card.tableViewDataSource
     tableView.delegate = card.tableViewDelegate
