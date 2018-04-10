@@ -83,10 +83,10 @@ public class TGCardView: TGCornerView {
 
       let titleView: UIView?
       switch card.title {
-      case .default(let title, let subtitle):
+      case .default(let title, let subtitle, let accessoryView):
         let defaultTitleView = TGCardDefaultTitleView.newInstance()
         defaultTitleView.configure(title: title, subtitle: subtitle)
-        defaultTitleView.accessoryView = titleAccessoryView(for: card)
+        defaultTitleView.accessoryView = accessoryView
         titleView = defaultTitleView
         
       case .custom(let view):
@@ -129,10 +129,6 @@ public class TGCardView: TGCornerView {
       return nil
     }
     return defaultTitleView.dismissButton
-  }
-  
-  func titleAccessoryView(for card: TGCard) -> UIView? {
-    return nil
   }
   
   func headerHeight(for position: TGCardPosition) -> CGFloat {

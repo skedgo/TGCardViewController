@@ -26,8 +26,8 @@ import UIKit
 open class TGCard: NSObject {
   
   public enum TGCardTitle {
-    /// Default title consisting of localized title, optional subtitle, and close button
-    case `default`(String, String?)
+    /// Default title consisting of localized title, optional subtitle, optional accessory view, and close button
+    case `default`(String, String?, UIView?)
     
     /// A customised title of your choosing. In this case, make sure to add a way to dismiss
     /// this card and call `controller?.pop()` when appropriate.

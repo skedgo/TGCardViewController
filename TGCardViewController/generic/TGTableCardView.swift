@@ -30,11 +30,6 @@ public class TGTableCardView: TGCardView {
   
   // MARK: - Configuration
   
-  override func titleAccessoryView(for card: TGCard) -> UIView? {
-    guard let tableCard = card as? TGTableCard else { return nil }
-    return tableCard.accessoryView
-  }
-  
   override func configure(with card: TGCard, includeTitleView: Bool) {
     guard let tableCard = card as? TGTableCard else {
       preconditionFailure()

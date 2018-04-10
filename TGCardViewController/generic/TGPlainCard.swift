@@ -24,14 +24,9 @@ open class TGPlainCard: TGCard {
   /// Can have interactive elements.
   public let contentView: UIView?
   
-  /// The view immediately below title + subtitle but above the
-  /// content view.
-  public let accessoryView: UIView?
-
   public init(
     title: TGCardTitle,
     contentView: UIView? = nil,
-    accessoryView: UIView? = nil,
     mapManager: TGMapManager? = nil,
     initialPosition: TGCardPosition? = nil
     ) {
@@ -40,7 +35,6 @@ open class TGPlainCard: TGCard {
             "scrolling. Use `TGTableCardView` instead.")
     
     self.contentView = contentView
-    self.accessoryView = accessoryView
     
     super.init(title: title, mapManager: mapManager, initialPosition: initialPosition)
   }
@@ -59,8 +53,7 @@ open class TGPlainCard: TGCard {
       "scrolling. Use `TGTableCardView` instead.")
     
     self.contentView = contentView
-    self.accessoryView = accessoryView
-    super.init(title: .default(title, subtitle), mapManager: mapManager, initialPosition: initialPosition)
+    super.init(title: .default(title, subtitle, accessoryView), mapManager: mapManager, initialPosition: initialPosition)
   }
   
   open override func buildCardView(includeTitleView: Bool) -> TGCardView {

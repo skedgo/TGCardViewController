@@ -24,13 +24,6 @@ class TGPlainCardView: TGCardView {
   
   // MARK: - Configuration
   
-  override func titleAccessoryView(for card: TGCard) -> UIView? {
-    guard let plainCard = card as? TGPlainCard else {
-      return nil
-    }
-    return plainCard.accessoryView
-  }
-  
   override func configure(with card: TGCard, includeTitleView: Bool) {
     guard let plainCard = card as? TGPlainCard else {
       preconditionFailure()

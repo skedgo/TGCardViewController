@@ -159,7 +159,7 @@ open class TGPageCard: TGCard {
     headerPageControl?.currentPage = index
 
     switch card.title {
-    case .default(let title, let subtitle):
+    case .default(let title, let subtitle, _):
       headerView.titleLabel.text = title
       headerView.subtitleLabel.text = subtitle
     case .custom, .none:

@@ -16,8 +16,6 @@ open class TGTableCard: TGCard {
   
   public let tableStyle: UITableViewStyle
   
-  let accessoryView: UIView?
-
   /// The delegate to be used for the card view's table view.
   ///
   /// Only has an effect, if it is set before `buildCardView` is called, i.e.,
@@ -36,14 +34,12 @@ open class TGTableCard: TGCard {
               dataSource: UITableViewDataSource? = nil,
               delegate: UITableViewDelegate? = nil,
               style: UITableViewStyle = .plain,
-              accessoryView: UIView? = nil,
               mapManager: TGMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     
     self.tableViewDataSource = dataSource
     self.tableViewDelegate = delegate
     self.tableStyle = style
-    self.accessoryView = accessoryView
     
     super.init(title: title,
                mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
@@ -60,9 +56,8 @@ open class TGTableCard: TGCard {
     self.tableViewDataSource = dataSource
     self.tableViewDelegate = delegate
     self.tableStyle = style
-    self.accessoryView = accessoryView
     
-    super.init(title: .default(title, subtitle),
+    super.init(title: .default(title, subtitle, accessoryView),
                mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
   
