@@ -28,7 +28,6 @@
 		3A7C34B3201F2C9100F66A35 /* TGCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74A81E716ED600408678 /* TGCard.swift */; };
 		3A7C34B4201F2C9100F66A35 /* TGCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74B41E717C2F00408678 /* TGCardView.swift */; };
 		3A7C34B5201F2C9100F66A35 /* TGPageHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8BEA491E859BEA0007B410 /* TGPageHeaderView.swift */; };
-		3A7C34B6201F2C9100F66A35 /* TGPageHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A8BEA4B1E859D910007B410 /* TGPageHeaderView.xib */; };
 		3A7C34B7201F2C9100F66A35 /* TGPageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D363B0131E7CECDA0031EAD1 /* TGPageCard.swift */; };
 		3A7C34B8201F2C9100F66A35 /* TGPageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D363B0111E7CEC300031EAD1 /* TGPageCardView.swift */; };
 		3A7C34B9201F2C9100F66A35 /* TGPageCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D363B00F1E7CEAC30031EAD1 /* TGPageCardView.xib */; };
@@ -60,6 +59,7 @@
 		3AE839C61E76A9170035D9B0 /* ExampleChildStickyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AE839C51E76A9170035D9B0 /* ExampleChildStickyView.xib */; };
 		3AE839C81E76A92B0035D9B0 /* ExampleChildStickyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE839C71E76A92B0035D9B0 /* ExampleChildStickyView.swift */; };
 		3AEBC26620346D560017CFA4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AEBC26520346D560017CFA4 /* Default-568h@2x.png */; };
+		3AFA2B50207E574F0005BB03 /* TGPageHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A8BEA4B1E859D910007B410 /* TGPageHeaderView.xib */; };
 		D33E34961E937BEE00C40CD2 /* ExampleAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D33E34951E937BEE00C40CD2 /* ExampleAccessoryView.xib */; };
 		D33E34981E937CB200C40CD2 /* ExampleAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33E34971E937CB200C40CD2 /* ExampleAccessoryView.swift */; };
 		D345CBFF207C36CB00A6D9F3 /* TGCardDefaultTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D345CBFE207C36CB00A6D9F3 /* TGCardDefaultTitleView.xib */; };
@@ -487,8 +487,7 @@
 				3A7C34BC201F2C9100F66A35 /* TGPlainCardView.xib in Resources */,
 				3A7C34BF201F2C9100F66A35 /* TGScrollCardView.xib in Resources */,
 				3A7C34AD201F2C8D00F66A35 /* TGCardViewController.xib in Resources */,
-				3A7C34B6201F2C9100F66A35 /* TGPageHeaderView.xib in Resources */,
-				3A7C34B6201F2C9100F66A35 /* TGPageHeaderView.xib in Resources */,
+				3AFA2B50207E574F0005BB03 /* TGPageHeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
