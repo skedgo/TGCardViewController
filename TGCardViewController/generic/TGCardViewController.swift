@@ -218,6 +218,8 @@ open class TGCardViewController: UIViewController {
       // `up` is fine.
       cardWrapperDesiredTopConstraint.constant = cardLocation(forDesired: previous, direction: .up).y
     }
+
+    topCard?.mapManager?.edgePadding = mapEdgePadding(for: cardPosition)
     
     // The visibility of a card's grab handle depends on size classes
     updateGrabHandleVisibility()
@@ -323,7 +325,13 @@ open class TGCardViewController: UIViewController {
       case .extended, .peaking: cardY = peakY
       case .collapsed:          cardY = collapsedMinY - 75 // not entirely true, but close enough
       }
-      bottomOverlap = mapView.frame.height - cardY
+      
+      // We call this method at times where the map view hasn't been resized yet. We
+      // guess the heigh tby just taking the larger side since the card is not next
+      // to the map, meaning we're in portrait.
+      let height = max(mapView.frame.width, mapView.frame.height)
+      
+      bottomOverlap = height - cardY
     }
     
     return UIEdgeInsets(top: topOverlap, left: leftOverlap, bottom: bottomOverlap, right: 0)
