@@ -18,6 +18,10 @@ class ExampleCustomTitleCard: TGPlainCard {
     
     titleView.dismissButton.addTarget(self, action: #selector(dismissButtonTapped(_:)), for: .touchUpInside)
   }
+  
+  override func buildHeaderView() -> TGHeaderView? {
+    return TurnByTurnHeaderView.newInstance()
+  }
 
   @objc private func dismissButtonTapped(_ sender: Any) {
     controller?.pop()

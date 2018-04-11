@@ -37,6 +37,8 @@
 		3A7C34BC201F2C9100F66A35 /* TGPlainCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA74B01E71763C00408678 /* TGPlainCardView.xib */; };
 		3A7C34BD201F2C9100F66A35 /* TGTableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74C61E72FA3900408678 /* TGTableCard.swift */; };
 		3A7C34BF201F2C9100F66A35 /* TGScrollCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA74CA1E72FA6E00408678 /* TGScrollCardView.xib */; };
+		3A82CE16207DE774008F747A /* TurnByTurnHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A82CE14207DE774008F747A /* TurnByTurnHeaderView.xib */; };
+		3A82CE17207DE774008F747A /* TurnByTurnHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A82CE15207DE774008F747A /* TurnByTurnHeaderView.swift */; };
 		3A8BEA4E1E85C0070007B410 /* ExamplePageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8BEA4D1E85C0070007B410 /* ExamplePageCard.swift */; };
 		3A8BEA501E87E9E00007B410 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8BEA4F1E87E9E00007B410 /* Helpers.swift */; };
 		3AB8944F1E7AB25900267A06 /* ExampleTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB8944E1E7AB25900267A06 /* ExampleTableDataSource.swift */; };
@@ -112,6 +114,8 @@
 		3A7C3483201F2C0B00F66A35 /* TGCardViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TGCardViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A7C3485201F2C0B00F66A35 /* TGCardViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TGCardViewController.h; sourceTree = "<group>"; };
 		3A7C3486201F2C0B00F66A35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A82CE14207DE774008F747A /* TurnByTurnHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TurnByTurnHeaderView.xib; sourceTree = "<group>"; };
+		3A82CE15207DE774008F747A /* TurnByTurnHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TurnByTurnHeaderView.swift; sourceTree = "<group>"; };
 		3A8BEA491E859BEA0007B410 /* TGPageHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGPageHeaderView.swift; path = generic/TGPageHeaderView.swift; sourceTree = "<group>"; };
 		3A8BEA4B1E859D910007B410 /* TGPageHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TGPageHeaderView.xib; path = generic/TGPageHeaderView.xib; sourceTree = "<group>"; };
 		3A8BEA4D1E85C0070007B410 /* ExamplePageCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExamplePageCard.swift; sourceTree = "<group>"; };
@@ -318,19 +322,19 @@
 		3ACA74C11E71A12E00408678 /* example cards */ = {
 			isa = PBXGroup;
 			children = (
+				D33E34971E937CB200C40CD2 /* ExampleAccessoryView.swift */,
+				D33E34951E937BEE00C40CD2 /* ExampleAccessoryView.xib */,
 				3ACA74BC1E71A0DD00408678 /* ExampleChildCard.swift */,
 				3ACA74C21E71A14600408678 /* ExampleChildContentView.swift */,
 				3ACA74BF1E71A12200408678 /* ExampleChildContentView.xib */,
 				3AE839C71E76A92B0035D9B0 /* ExampleChildStickyView.swift */,
 				3AE839C51E76A9170035D9B0 /* ExampleChildStickyView.xib */,
+				D345CC06207C6C9200A6D9F3 /* ExampleCustomTitleCard.swift */,
 				3A8BEA4D1E85C0070007B410 /* ExamplePageCard.swift */,
 				3ACA74B61E719A5900408678 /* ExampleRootCard.swift */,
 				3ACA74CC1E72FEAB00408678 /* ExampleTableCard.swift */,
 				3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */,
 				3AB8944E1E7AB25900267A06 /* ExampleTableDataSource.swift */,
-				D33E34951E937BEE00C40CD2 /* ExampleAccessoryView.xib */,
-				D33E34971E937CB200C40CD2 /* ExampleAccessoryView.swift */,
-				D345CC06207C6C9200A6D9F3 /* ExampleCustomTitleCard.swift */,
 			);
 			name = "example cards";
 			sourceTree = "<group>";
@@ -347,8 +351,10 @@
 		D345CC03207C69E000A6D9F3 /* example views */ = {
 			isa = PBXGroup;
 			children = (
-				D345CC04207C6A1100A6D9F3 /* TurnByTurnTitleView.xib */,
+				3A82CE15207DE774008F747A /* TurnByTurnHeaderView.swift */,
+				3A82CE14207DE774008F747A /* TurnByTurnHeaderView.xib */,
 				D345CC09207C6DC500A6D9F3 /* TurnByTurnTitleView.swift */,
+				D345CC04207C6A1100A6D9F3 /* TurnByTurnTitleView.xib */,
 			);
 			name = "example views";
 			sourceTree = "<group>";
@@ -482,7 +488,7 @@
 				3A7C34BF201F2C9100F66A35 /* TGScrollCardView.xib in Resources */,
 				3A7C34AD201F2C8D00F66A35 /* TGCardViewController.xib in Resources */,
 				3A7C34B6201F2C9100F66A35 /* TGPageHeaderView.xib in Resources */,
-				3A7C34B6201F2C9100F66A35 /* TGHeaderView.xib in Resources */,
+				3A7C34B6201F2C9100F66A35 /* TGPageHeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -498,6 +504,7 @@
 				3AB894581E7AEBC400267A06 /* MockupImageContentView.xib in Resources */,
 				3AEBC26620346D560017CFA4 /* Default-568h@2x.png in Resources */,
 				3ACA74891E716AFC00408678 /* Main.storyboard in Resources */,
+				3A82CE16207DE774008F747A /* TurnByTurnHeaderView.xib in Resources */,
 				3ACA74C01E71A12200408678 /* ExampleChildContentView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -547,7 +554,6 @@
 				3A7C34B4201F2C9100F66A35 /* TGCardView.swift in Sources */,
 				3A73E6E4207B965400DA6A15 /* TGScrollCardView.swift in Sources */,
 				3A73E6BB20793E3A00DA6A15 /* TGCompatibleMapBuilder.swift in Sources */,
-				3A462B5A2074BF4F00AF41EF /* TGCardViewController+UserTrackingButton.swift in Sources */,
 				3A7C34AB201F2C8D00F66A35 /* TGCardPosition.swift in Sources */,
 				3A7C34BA201F2C9100F66A35 /* TGPlainCard.swift in Sources */,
 				3A7C34AA201F2C8D00F66A35 /* TGGrabHandleView.swift in Sources */,
@@ -569,6 +575,7 @@
 				3ACA74B71E719A5900408678 /* ExampleRootCard.swift in Sources */,
 				3A8BEA501E87E9E00007B410 /* Helpers.swift in Sources */,
 				D345CC0A207C6DC500A6D9F3 /* TurnByTurnTitleView.swift in Sources */,
+				3A82CE17207DE774008F747A /* TurnByTurnHeaderView.swift in Sources */,
 				3ACA74BD1E71A0DD00408678 /* ExampleChildCard.swift in Sources */,
 				3ACA74861E716AFC00408678 /* ExampleCardViewController.swift in Sources */,
 				3AE839C81E76A92B0035D9B0 /* ExampleChildStickyView.swift in Sources */,
