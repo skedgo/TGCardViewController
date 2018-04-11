@@ -209,9 +209,7 @@ open class TGCardViewController: UIViewController {
     
     cardWrapperHeightConstraint.constant = extendedMinY * -1
     
-    // When trait collection changes, try to keep the same card position, 
-    // except in the case of compact vertical size class, which does not
-    // have peak state.
+    // When trait collection changes, try to keep the same card position
     if let previous = previousCardPosition {
       // Note: Ideally, we'd determine the direction by whether the available
       // height of VC increased or decreased, but for simplicity just using
@@ -219,17 +217,9 @@ open class TGCardViewController: UIViewController {
       cardWrapperDesiredTopConstraint.constant = cardLocation(forDesired: previous, direction: .up).y
     }
 
-    // The visibility of a card's grab handle depends on size classes
-    updateGrabHandleVisibility()
-    
     // The position of a card's header also depends on size classes
+    updateHeaderStyle()
     updateHeaderConstraints()
-    let cornerRadius: CGFloat = cardIsNextToMap(in: traitCollection) ? 8 : 0
-    headerView.layer.cornerRadius = cornerRadius
-    headerView.subviews.compactMap { $0 as? TGHeaderView }.forEach { $0.cornerRadius = cornerRadius }
-    
-    // The interactivity of gesture recognisers depends on size classes as well
-    updatePannerInteractivity()
     
     // The visibility of floating views depends on size classes too.
     updateFloatingViewsVisibility()
@@ -949,15 +939,9 @@ extension TGCardViewController {
   private func updatePannerInteractivity(for cardElement:
       (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
     guard panningAllowed else { return }
-    if cardIsNextToMap(in: traitCollection) {
-      let position = cardElement?.position ?? cardPosition
-      panner.isEnabled = position != .extended
-      
-    } else {
-      let card = cardElement?.card ?? topCard
-      let isForceExtended = card?.mapManager == nil
-      panner.isEnabled = !isForceExtended
-    }
+    let card = cardElement?.card ?? topCard
+    let isForceExtended = card?.mapManager == nil
+    panner.isEnabled = !isForceExtended
   }
   
 }
@@ -968,16 +952,10 @@ extension TGCardViewController {
   
   private func updateGrabHandleVisibility(for cardElement:
       (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
-    if cardIsNextToMap(in: traitCollection) {
-      let position = cardElement?.position ?? cardPosition
-      let cardView = cardElement?.view ?? topCardView
-      cardView?.grabHandle?.isHidden = position == .extended
-    } else {
-      let card = cardElement?.card ?? topCard
-      let view = cardElement?.view ?? topCardView
-      let isForceExtended = card?.mapManager == nil
-      view?.grabHandle?.isHidden = isForceExtended
-    }
+    let card = cardElement?.card ?? topCard
+    let view = cardElement?.view ?? topCardView
+    let isForceExtended = card?.mapManager == nil
+    view?.grabHandle?.isHidden = isForceExtended
   }
 }
 
@@ -1001,13 +979,12 @@ extension TGCardViewController {
   }
   
   private func updateFloatingViewsVisibility() {
-    guard !cardIsNextToMap(in: traitCollection) else {
+    if cardIsNextToMap(in: traitCollection) {
       // When card is on the side of the map, always show the floating views.
       fadeMapFloatingViews(false)
-      return
+    } else {
+      fadeMapFloatingViews(cardPosition == .extended)
     }
-    
-    fadeMapFloatingViews(cardPosition == .extended)
   }
   
   private func updateFloatingViewsContent(forcedCleanUp: Bool = false) {
@@ -1115,6 +1092,12 @@ extension TGCardViewController {
     return headerViewTopConstraint.constant > -1
   }
   
+  private func updateHeaderStyle() {
+    let cornerRadius: CGFloat = cardIsNextToMap(in: traitCollection) ? 8 : 0
+    headerView.layer.cornerRadius = cornerRadius
+    headerView.subviews.compactMap { $0 as? TGHeaderView }.forEach { $0.cornerRadius = cornerRadius }
+  }
+  
   private func updateHeaderConstraints() {
     guard isShowingHeader else { return }
     adjustHeaderPositioningConstraint()
@@ -1139,6 +1122,7 @@ extension TGCardViewController {
     overwriteHeaderContent(with: content)
    
     // adjust constraints
+    updateHeaderStyle()
     adjustHeaderPositioningConstraint()
     adjustHeaderHeightConstraint(toFit: content)
     
