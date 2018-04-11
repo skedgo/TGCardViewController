@@ -219,8 +219,6 @@ open class TGCardViewController: UIViewController {
       cardWrapperDesiredTopConstraint.constant = cardLocation(forDesired: previous, direction: .up).y
     }
 
-    topCard?.mapManager?.edgePadding = mapEdgePadding(for: cardPosition)
-    
     // The visibility of a card's grab handle depends on size classes
     updateGrabHandleVisibility()
     
@@ -249,6 +247,11 @@ open class TGCardViewController: UIViewController {
     statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
     updateFloatingViewsConstraints()
+    
+    let edgePadding = mapEdgePadding(for: cardPosition)
+    if let mapManager = topCard?.mapManager, mapManager.edgePadding != edgePadding {
+      mapManager.edgePadding = edgePadding
+    }
   }
   
   override open func didReceiveMemoryWarning() {
