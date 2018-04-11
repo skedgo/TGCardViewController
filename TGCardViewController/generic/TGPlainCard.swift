@@ -53,7 +53,10 @@ open class TGPlainCard: TGCard {
       "scrolling. Use `TGTableCardView` instead.")
     
     self.contentView = contentView
-    super.init(title: .default(title, subtitle, accessoryView), mapManager: mapManager, initialPosition: initialPosition)
+    super.init(
+      title: .default(title, subtitle, accessoryView),
+      mapManager: mapManager, initialPosition: initialPosition
+    )
   }
   
   open override func buildCardView(includeTitleView: Bool) -> TGCardView {

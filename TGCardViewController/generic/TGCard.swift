@@ -121,7 +121,8 @@ open class TGCard: NSObject {
   
   /// Builds the card view to represent the card
   ///
-  /// - Warning: Needs to be overriden by subclasses. Don't call `super`. Don't call `didBuild`. Set `cardView` when done.
+  /// - Warning: Needs to be overriden by subclasses. Don't call `super`.
+  ///     Don't call `didBuild`. No need to set `cardView` when done.
   ///
   /// - Parameters:
   ///   - includeTitleView: If the title view should be included or it
