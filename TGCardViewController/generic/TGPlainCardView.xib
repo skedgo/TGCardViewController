@@ -33,22 +33,17 @@
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
                     <rect key="frame" x="0.0" y="122" width="375" height="364"/>
                     <subviews>
-                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="348" translatesAutoresizingMaskIntoConstraints="NO" id="fpj-MI-D7T">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="348"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fpj-MI-D7T">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="364"/>
                         </view>
                     </subviews>
                     <constraints>
                         <constraint firstItem="fpj-MI-D7T" firstAttribute="leading" secondItem="Dar-6n-Caw" secondAttribute="leading" id="3fi-nu-PFE"/>
                         <constraint firstAttribute="bottom" secondItem="fpj-MI-D7T" secondAttribute="bottom" id="JEJ-ob-UKD"/>
-                        <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="Dar-6n-Caw" secondAttribute="height" priority="250" id="cge-oP-lBy"/>
                         <constraint firstAttribute="trailing" secondItem="fpj-MI-D7T" secondAttribute="trailing" id="lhK-ti-Rb8"/>
                         <constraint firstItem="fpj-MI-D7T" firstAttribute="top" secondItem="Dar-6n-Caw" secondAttribute="top" id="p6T-g1-McS"/>
+                        <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="Dar-6n-Caw" secondAttribute="height" priority="250" id="wJ2-t8-3Ec"/>
                     </constraints>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="cge-oP-lBy"/>
-                        </mask>
-                    </variation>
                 </scrollView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nd-sh-0Ix">
                     <rect key="frame" x="299" y="406" width="60" height="60"/>
@@ -73,7 +68,6 @@
                 <constraint firstItem="IKp-9B-y5N" firstAttribute="top" secondItem="JFj-Bl-Nt0" secondAttribute="bottom" id="LFt-PC-oUG"/>
                 <constraint firstItem="JFj-Bl-Nt0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="OuN-YF-8oH"/>
                 <constraint firstAttribute="bottom" secondItem="4nd-sh-0Ix" secondAttribute="bottom" constant="20" id="PZz-Gq-neg"/>
-                <constraint firstItem="fpj-MI-D7T" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" priority="250" id="aSh-Kf-Nmj"/>
                 <constraint firstItem="Its-ul-Cm5" firstAttribute="top" secondItem="IKp-9B-y5N" secondAttribute="bottom" id="afn-gy-HPN"/>
                 <constraint firstItem="Its-ul-Cm5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="eqc-mq-Atd"/>
                 <constraint firstAttribute="bottom" secondItem="Dar-6n-Caw" secondAttribute="bottom" id="gnL-8s-eXj"/>
@@ -88,11 +82,6 @@
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <variation key="default">
-                <mask key="constraints">
-                    <exclude reference="aSh-Kf-Nmj"/>
-                </mask>
-            </variation>
             <connections>
                 <outlet property="contentScrollView" destination="Dar-6n-Caw" id="cgp-sH-B9w"/>
                 <outlet property="contentSeparator" destination="Its-ul-Cm5" id="20V-OO-GtA"/>
