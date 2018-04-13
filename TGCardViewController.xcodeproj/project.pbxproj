@@ -45,6 +45,8 @@
 		3AB894541E7AE4A300267A06 /* MockupRootCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB894531E7AE4A300267A06 /* MockupRootCard.swift */; };
 		3AB894561E7AEBB700267A06 /* MockupImageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB894551E7AEBB700267A06 /* MockupImageContentView.swift */; };
 		3AB894581E7AEBC400267A06 /* MockupImageContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AB894571E7AEBC400267A06 /* MockupImageContentView.xib */; };
+		3AC17FCB2080EECB0006794F /* TGCardDefaultTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AC17FC92080EECB0006794F /* TGCardDefaultTitleView.xib */; };
+		3AC17FCC2080EECB0006794F /* TGCardDefaultTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC17FCA2080EECB0006794F /* TGCardDefaultTitleView.swift */; };
 		3ACA74841E716AFC00408678 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74831E716AFC00408678 /* AppDelegate.swift */; };
 		3ACA74861E716AFC00408678 /* ExampleCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74851E716AFC00408678 /* ExampleCardViewController.swift */; };
 		3ACA74891E716AFC00408678 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA74871E716AFC00408678 /* Main.storyboard */; };
@@ -62,8 +64,6 @@
 		3AFA2B50207E574F0005BB03 /* TGPageHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A8BEA4B1E859D910007B410 /* TGPageHeaderView.xib */; };
 		D33E34961E937BEE00C40CD2 /* ExampleAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D33E34951E937BEE00C40CD2 /* ExampleAccessoryView.xib */; };
 		D33E34981E937CB200C40CD2 /* ExampleAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33E34971E937CB200C40CD2 /* ExampleAccessoryView.swift */; };
-		D345CBFF207C36CB00A6D9F3 /* TGCardDefaultTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D345CBFE207C36CB00A6D9F3 /* TGCardDefaultTitleView.xib */; };
-		D345CC01207C3ADF00A6D9F3 /* TGCardDefaultTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D345CC00207C3ADF00A6D9F3 /* TGCardDefaultTitleView.swift */; };
 		D345CC08207C6CD500A6D9F3 /* ExampleCustomTitleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D345CC06207C6C9200A6D9F3 /* ExampleCustomTitleCard.swift */; };
 		D345CC0A207C6DC500A6D9F3 /* TurnByTurnTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D345CC09207C6DC500A6D9F3 /* TurnByTurnTitleView.swift */; };
 		D345CC0B207C70D600A6D9F3 /* TurnByTurnTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D345CC04207C6A1100A6D9F3 /* TurnByTurnTitleView.xib */; };
@@ -125,6 +125,8 @@
 		3AB894531E7AE4A300267A06 /* MockupRootCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockupRootCard.swift; sourceTree = "<group>"; };
 		3AB894551E7AEBB700267A06 /* MockupImageContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockupImageContentView.swift; sourceTree = "<group>"; };
 		3AB894571E7AEBC400267A06 /* MockupImageContentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MockupImageContentView.xib; sourceTree = "<group>"; };
+		3AC17FC92080EECB0006794F /* TGCardDefaultTitleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TGCardDefaultTitleView.xib; sourceTree = "<group>"; };
+		3AC17FCA2080EECB0006794F /* TGCardDefaultTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGCardDefaultTitleView.swift; sourceTree = "<group>"; };
 		3ACA74801E716AFC00408678 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3ACA74831E716AFC00408678 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3ACA74851E716AFC00408678 /* ExampleCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCardViewController.swift; sourceTree = "<group>"; };
@@ -155,8 +157,6 @@
 		3AEBC26520346D560017CFA4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		D33E34951E937BEE00C40CD2 /* ExampleAccessoryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleAccessoryView.xib; sourceTree = "<group>"; };
 		D33E34971E937CB200C40CD2 /* ExampleAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleAccessoryView.swift; sourceTree = "<group>"; };
-		D345CBFE207C36CB00A6D9F3 /* TGCardDefaultTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TGCardDefaultTitleView.xib; sourceTree = "<group>"; };
-		D345CC00207C3ADF00A6D9F3 /* TGCardDefaultTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TGCardDefaultTitleView.swift; sourceTree = "<group>"; };
 		D345CC04207C6A1100A6D9F3 /* TurnByTurnTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TurnByTurnTitleView.xib; sourceTree = "<group>"; };
 		D345CC06207C6C9200A6D9F3 /* ExampleCustomTitleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCustomTitleCard.swift; sourceTree = "<group>"; };
 		D345CC09207C6DC500A6D9F3 /* TurnByTurnTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TurnByTurnTitleView.swift; sourceTree = "<group>"; };
@@ -245,6 +245,17 @@
 			name = "mock-up cards";
 			sourceTree = "<group>";
 		};
+		3AC17FC82080EECB0006794F /* views */ = {
+			isa = PBXGroup;
+			children = (
+				3AC17FC92080EECB0006794F /* TGCardDefaultTitleView.xib */,
+				3AC17FCA2080EECB0006794F /* TGCardDefaultTitleView.swift */,
+			);
+			name = views;
+			path = generic/views;
+			sourceTree = "<group>";
+		};
+
 		3ACA74771E716AFC00408678 = {
 			isa = PBXGroup;
 			children = (
@@ -286,7 +297,7 @@
 		3ACA74A31E716C7F00408678 /* generic */ = {
 			isa = PBXGroup;
 			children = (
-				D345CBFD207C366700A6D9F3 /* views */,
+				3AC17FC82080EECB0006794F /* views */,
 				3AB8944D1E7AB1E400267A06 /* cards */,
 				3A3E89C31E8BF4B600773897 /* style */,
 				3A462B5B2074C64400AF41EF /* TGButtonPosition.swift */,
@@ -337,15 +348,6 @@
 				3AB8944E1E7AB25900267A06 /* ExampleTableDataSource.swift */,
 			);
 			name = "example cards";
-			sourceTree = "<group>";
-		};
-		D345CBFD207C366700A6D9F3 /* views */ = {
-			isa = PBXGroup;
-			children = (
-				D345CBFE207C36CB00A6D9F3 /* TGCardDefaultTitleView.xib */,
-				D345CC00207C3ADF00A6D9F3 /* TGCardDefaultTitleView.swift */,
-			);
-			path = views;
 			sourceTree = "<group>";
 		};
 		D345CC03207C69E000A6D9F3 /* example views */ = {
@@ -482,7 +484,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D345CBFF207C36CB00A6D9F3 /* TGCardDefaultTitleView.xib in Resources */,
+				3AC17FCB2080EECB0006794F /* TGCardDefaultTitleView.xib in Resources */,
 				3A7C34B9201F2C9100F66A35 /* TGPageCardView.xib in Resources */,
 				3A7C34BC201F2C9100F66A35 /* TGPlainCardView.xib in Resources */,
 				3A7C34BF201F2C9100F66A35 /* TGScrollCardView.xib in Resources */,
@@ -542,7 +544,6 @@
 				3A7C34B3201F2C9100F66A35 /* TGCard.swift in Sources */,
 				3A7C34A9201F2C8D00F66A35 /* TGCornerView.swift in Sources */,
 				3A7C34B8201F2C9100F66A35 /* TGPageCardView.swift in Sources */,
-				D345CC01207C3ADF00A6D9F3 /* TGCardDefaultTitleView.swift in Sources */,
 				3A7C34AE201F2C8D00F66A35 /* TGMapManager.swift in Sources */,
 				3A7C34BB201F2C9100F66A35 /* TGPlainCardView.swift in Sources */,
 				3A7C34BD201F2C9100F66A35 /* TGTableCard.swift in Sources */,
@@ -552,6 +553,7 @@
 				3A7C34B7201F2C9100F66A35 /* TGPageCard.swift in Sources */,
 				3A7C34B4201F2C9100F66A35 /* TGCardView.swift in Sources */,
 				3A73E6E4207B965400DA6A15 /* TGScrollCardView.swift in Sources */,
+				3AC17FCC2080EECB0006794F /* TGCardDefaultTitleView.swift in Sources */,
 				3A73E6BB20793E3A00DA6A15 /* TGCompatibleMapBuilder.swift in Sources */,
 				3A7C34AB201F2C8D00F66A35 /* TGCardPosition.swift in Sources */,
 				3A7C34BA201F2C9100F66A35 /* TGPlainCard.swift in Sources */,
