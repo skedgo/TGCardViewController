@@ -614,7 +614,7 @@ extension TGCardViewController {
     // to previous card's values. Note that, we force a clean up of floating views
     // because the popping card may have added views that are only applicable to it-
     // self.
-    updateFloatingViewsContent(forcedCleanUp: true)
+    updateFloatingViewsContent()
     
     // Notify that constraints need to be updated in the next cycle.
     view.setNeedsUpdateConstraints()
@@ -1010,12 +1010,7 @@ extension TGCardViewController {
     fadeMapFloatingViews(cardPosition == .extended)
   }
   
-  private func updateFloatingViewsContent(forcedCleanUp: Bool = false) {
-    if forcedCleanUp {
-      cleanUpFloatingView(topFloatingView)
-      cleanUpFloatingView(bottomFloatingView)
-    }
-    
+  private func updateFloatingViewsContent() {
     var topViews: [UIView] = []
     var bottomViews: [UIView] = []
     
@@ -1027,15 +1022,21 @@ extension TGCardViewController {
     if let newTops = topCard?.topMapToolBarItems {
       topViews.append(contentsOf: newTops)
     }
+    
     if !topViews.isEmpty {
       populateFloatingView(topFloatingView, with: topViews)
+    } else {
+      cleanUpFloatingView(topFloatingView)
     }
 
     if let newBottoms = topCard?.bottomMapToolBarItems {
       bottomViews.append(contentsOf: newBottoms)
     }
+    
     if !bottomViews.isEmpty {
       populateFloatingView(bottomFloatingView, with: bottomViews)
+    } else {
+      cleanUpFloatingView(bottomFloatingView)
     }
   }
   
