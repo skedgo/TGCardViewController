@@ -98,18 +98,6 @@ open class TGCardViewController: UIViewController {
   fileprivate var previousCardPosition: TGCardPosition?
   
   fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
-  
-  fileprivate var topCard: TGCard? {
-    return cards.last?.card
-  }
-  
-  fileprivate var cardViews: [TGCardView] {
-    return cardWrapperContent.subviews.compactMap { $0 as? TGCardView }
-  }
-  
-  fileprivate var topCardView: TGCardView? {
-    return cardViews.last
-  }
 
   // MARK: - UIViewController
   
@@ -365,6 +353,24 @@ open class TGCardViewController: UIViewController {
   
 }
 
+// MARK: - Access Cards & Card Views
+
+extension TGCardViewController {
+  
+  private var cardViews: [TGCardView] {
+    return cardWrapperContent.subviews.compactMap { $0 as? TGCardView }
+  }
+  
+  public var topCard: TGCard? {
+    return cards.last?.card
+  }
+  
+  private var topCardView: TGCardView? {
+    return cardViews.last
+  }
+  
+}
+
 // MARK: - Card stack management
 
 extension TGCardViewController {
@@ -541,7 +547,7 @@ extension TGCardViewController {
     return (cards[index].card, cards[index].lastPosition, views[index])
   }
   
-  public func pop(animated: Bool = true) {
+  public func pop(animated: Bool = true, completionHandler: (() -> Void)? = nil) {
     if let delegate = delegate, cards.count == 1 {
       // popping last one, let delegate dismiss
       delegate.requestsDismissal(for: self)
@@ -647,11 +653,23 @@ extension TGCardViewController {
         }
         topView.removeFromSuperview()
         self.cardTransitionShadow?.removeFromSuperview()
+        completionHandler?()
       }
     )
   }
   
   // swiftlint:enable function_body_length
+  
+  public func swap(for newCard: TGCard) {
+    guard cards.count > 1 else {
+      assertionFailure("Trying to swap the root card. Did you mean to `push`?")
+      return
+    }
+    
+    pop(animated: false) { [unowned self] in
+      self.push(newCard, animated: false, copyStyle: true)
+    }
+  }
   
   @objc
   func closeTapped(sender: Any) {
