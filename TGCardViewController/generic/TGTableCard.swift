@@ -34,7 +34,7 @@ open class TGTableCard: TGCard {
               dataSource: UITableViewDataSource? = nil,
               delegate: UITableViewDelegate? = nil,
               style: UITableViewStyle = .plain,
-              mapManager: TGMapManager? = nil,
+              mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     
     self.tableViewDataSource = dataSource

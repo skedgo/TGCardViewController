@@ -44,7 +44,7 @@ open class TGPlainCard: TGCard {
     subtitle: String? = nil,
     contentView: UIView? = nil,
     accessoryView: UIView? = nil,
-    mapManager: TGMapManager? = nil,
+    mapManager: TGCompatibleMapManager? = nil,
     initialPosition: TGCardPosition? = nil
     ) {
     
