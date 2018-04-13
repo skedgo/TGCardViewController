@@ -28,6 +28,33 @@ open class TGPageCard: TGCard {
     }
   }
   
+  // Styling
+  
+  public override var backgroundColor: UIColor? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+
+  public override var grabHandleColor: UIColor? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+  
+  public override var titleFont: UIFont? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+  
+  public override var titleTextColor: UIColor? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+
+  public override var subtitleFont: UIFont? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+  
+  public override var subtitleTextColor: UIColor? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+
+  
   /// The cards displayed by the page card
   public let cards: [TGCard]
   
@@ -117,6 +144,7 @@ open class TGPageCard: TGCard {
     }
     
     let view = TGPageHeaderView.instantiate()
+    view.applyStyling(for: self)
     
     if let accessory = headerAccessoryView {
       view.accessoryView = accessory

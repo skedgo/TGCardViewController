@@ -37,6 +37,12 @@ public class TGPageHeaderView: TGHeaderView {
     closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
   
+  public override var cornerRadius: CGFloat {
+    didSet {
+      layer.cornerRadius = cornerRadius
+    }
+  }
+  
   var accessoryView: UIView? {
     get {
       return accessoryWrapperView.subviews.first
@@ -73,6 +79,21 @@ public class TGPageHeaderView: TGHeaderView {
     didSet {
       rightButton?.isHidden = (rightAction == nil)
     }
+  }
+  
+  // MARK: - Managing Appearance
+
+  func applyStyling(for card: TGPageCard) {
+    backgroundColor = card.backgroundColor ?? .white
+
+    titleLabel.font = card.titleFont
+    titleLabel.textColor = card.titleTextColor
+    subtitleLabel.font = card.subtitleFont
+    subtitleLabel.textColor = card.subtitleTextColor
+
+    // Rather than introducing a new style we'll reuse the grab handle color
+    closeButton?.tintColor = card.grabHandleColor ?? tintColor
+    rightButton?.tintColor = card.grabHandleColor ?? tintColor
   }
   
   // MARK: - Button actions
