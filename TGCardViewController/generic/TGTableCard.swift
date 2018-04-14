@@ -34,7 +34,7 @@ open class TGTableCard: TGCard {
               dataSource: UITableViewDataSource? = nil,
               delegate: UITableViewDelegate? = nil,
               style: UITableViewStyle = .plain,
-              mapManager: TGMapManager? = nil,
+              mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     
     self.tableViewDataSource = dataSource
@@ -51,7 +51,7 @@ open class TGTableCard: TGCard {
               delegate: UITableViewDelegate? = nil,
               style: UITableViewStyle = .plain,
               accessoryView: UIView? = nil,
-              mapManager: TGMapManager? = nil,
+              mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     self.tableViewDataSource = dataSource
     self.tableViewDelegate = delegate
@@ -64,7 +64,7 @@ open class TGTableCard: TGCard {
   // MARK: - Constructing views
   
   open override func buildCardView(includeTitleView: Bool) -> TGCardView {
-    let view = TGTableCardView.instantiate()
+    let view = TGScrollCardView.instantiate()
     view.configure(with: self, includeTitleView: includeTitleView)
     return view
   }

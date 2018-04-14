@@ -16,6 +16,7 @@ import UIKit
 ///
 /// - `TGPlainCard`: For cards with a title and a content view
 /// - `TGTableCard`: For cards with a title and table view as the content
+/// - `TGCollectionCard`: For cards with a title and collection view as the content
 /// - `TGPageCard`: For displaying several cards on the same hierarchy,
 ///      allowing to swipe between them.
 ///
@@ -57,7 +58,7 @@ open class TGCard: NSObject {
   public let title: TGCardTitle
   
   /// The manager that handles the content of the map for this card
-  public var mapManager: TGMapManager? {
+  public var mapManager: TGCompatibleMapManager? {
     didSet {
       guard let oldValue = oldValue, mapManager !== oldValue else {
         return
@@ -83,7 +84,7 @@ open class TGCard: NSObject {
   ///       no map manager was provied.
   public init(
     title: TGCardTitle,
-    mapManager: TGMapManager? = nil,
+    mapManager: TGCompatibleMapManager? = nil,
     initialPosition: TGCardPosition? = nil
     ) {
     self.title = title
@@ -114,11 +115,14 @@ open class TGCard: NSObject {
   /// - SeeAlso: `TGPageCard`, which relies on this for its navigation.
   ///
   /// - Returns: Header view configured with the card's title content
-  public func buildHeaderView() -> TGHeaderView? {
+  open func buildHeaderView() -> TGHeaderView? {
     return nil
   }
   
   /// Builds the card view to represent the card
+  ///
+  /// - Warning: Needs to be overriden by subclasses. Don't call `super`.
+  ///     Don't call `didBuild`. No need to set `cardView` when done.
   ///
   /// - Parameters:
   ///   - includeTitleView: If the title view should be included or it
@@ -256,7 +260,7 @@ public protocol TGCardDelegate: class {
   /// - Parameters:
   ///   - old: Previous map manager, if any
   ///   - card: The card whose map manager changed
-  func mapManagerDidChange(old: TGMapManager?, for card: TGCard)
+  func mapManagerDidChange(old: TGCompatibleMapManager?, for card: TGCard)
 
   
   /// Called whenever the content scroll view of the card is changing

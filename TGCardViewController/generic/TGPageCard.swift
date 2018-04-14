@@ -28,6 +28,33 @@ open class TGPageCard: TGCard {
     }
   }
   
+  // Styling
+  
+  public override var backgroundColor: UIColor? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+
+  public override var grabHandleColor: UIColor? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+  
+  public override var titleFont: UIFont? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+  
+  public override var titleTextColor: UIColor? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+
+  public override var subtitleFont: UIFont? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+  
+  public override var subtitleTextColor: UIColor? {
+    didSet { headerView?.applyStyling(for: self) }
+  }
+
+  
   /// The cards displayed by the page card
   public let cards: [TGCard]
   
@@ -44,7 +71,7 @@ open class TGPageCard: TGCard {
   
   fileprivate var previousAppearedCard: TGCard?
     
-  fileprivate var headerView: TGHeaderView?
+  fileprivate var headerView: TGPageHeaderView?
   
   fileprivate weak var headerPageControl: UIPageControl?
   
@@ -111,12 +138,13 @@ open class TGPageCard: TGCard {
     return view
   }
   
-  public override func buildHeaderView() -> TGHeaderView? {
+  open override func buildHeaderView() -> TGHeaderView? {
     if let header = headerView {
       return header
     }
     
-    let view = TGHeaderView.instantiate()
+    let view = TGPageHeaderView.instantiate()
+    view.applyStyling(for: self)
     
     if let accessory = headerAccessoryView {
       view.accessoryView = accessory
@@ -168,17 +196,17 @@ open class TGPageCard: TGCard {
     }
     
     if let rightAction = headerRightAction {
-      headerView.rightButton.setImage(nil, for: .normal)
-      headerView.rightButton.setTitle(rightAction.title, for: .normal)
+      headerView.rightButton?.setImage(nil, for: .normal)
+      headerView.rightButton?.setTitle(rightAction.title, for: .normal)
       headerView.accessibilityLabel = rightAction.title
       headerView.rightAction = { [unowned self] in
         rightAction.onPress(self.currentPageIndex)
       }
       
     } else {
-      headerView.rightButton.setImage(TGCardStyleKit.imageOfHeaderNextIcon(), for: .normal)
-      headerView.rightButton.setTitle(nil, for: .normal)
-      headerView.rightButton.accessibilityLabel = NSLocalizedString("Next", comment: "Next button accessory title")
+      headerView.rightButton?.setImage(TGCardStyleKit.imageOfHeaderNextIcon(), for: .normal)
+      headerView.rightButton?.setTitle(nil, for: .normal)
+      headerView.rightButton?.accessibilityLabel = NSLocalizedString("Next", comment: "Next button accessory title")
       
       if index + 1 < cards.count {
         headerView.rightAction = { [unowned self] in

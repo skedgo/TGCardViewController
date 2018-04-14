@@ -10,7 +10,13 @@ import Foundation
 
 import MapKit
 
-open class TGMapManager: NSObject {
+public protocol TGCompatibleMapManager: class {
+  func takeCharge(of mapView: UIView, edgePadding: UIEdgeInsets, animated: Bool)
+  func cleanUp(_ mapView: UIView, animated: Bool)
+  var edgePadding: UIEdgeInsets { get set }
+}
+
+open class TGMapManager: NSObject, TGCompatibleMapManager {
   
   public enum Zoom: Double {
     case road     = 5  // local level => how do I navigate on the road?
@@ -49,7 +55,7 @@ open class TGMapManager: NSObject {
   /// content the first time. Defaults to `.city`
   public var preferredZoomLevel: Zoom = .city
   
-  var edgePadding: UIEdgeInsets = .zero
+  public var edgePadding: UIEdgeInsets = .zero
 
   private var previousMapState: MapState?
 
@@ -69,7 +75,8 @@ open class TGMapManager: NSObject {
   ///   - edgePadding: Edge padding of the map view, e.g., if parts of the map view is
   /// obscured by other views.
   ///   - animated: If adding content should be animated
-  open func takeCharge(of mapView: MKMapView, edgePadding: UIEdgeInsets = .zero, animated: Bool = true) {
+  open func takeCharge(of mapView: UIView, edgePadding: UIEdgeInsets, animated: Bool) {
+    guard let mapView = mapView as? MKMapView else { preconditionFailure() }
     previousMapState = MapState(for: mapView)
     
     self.mapView = mapView
@@ -87,7 +94,8 @@ open class TGMapManager: NSObject {
   /// - Parameters:
   ///   - mapView: Map view to clean-up
   ///   - animated: If removing content should be animated
-  open func cleanUp(_ mapView: MKMapView, animated: Bool = true) {
+  open func cleanUp(_ mapView: UIView, animated: Bool) {
+    guard let mapView = mapView as? MKMapView else { preconditionFailure() }
     guard mapView == self.mapView else {
       assertionFailure("Not the map view that we manage!")
       return

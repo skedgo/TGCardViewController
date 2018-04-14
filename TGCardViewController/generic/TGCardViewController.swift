@@ -41,7 +41,8 @@ open class TGCardViewController: UIViewController {
   public var navigationButtonsAreSpringLoaded: Bool = false
   
   @IBOutlet weak var headerView: UIView!
-  @IBOutlet weak var mapView: MKMapView!
+  @IBOutlet weak var mapViewWrapper: UIView!
+  weak var mapView: UIView!
   @IBOutlet weak var mapShadow: UIView!
   @IBOutlet weak var cardWrapperShadow: UIView!
   @IBOutlet public weak var cardWrapperContent: UIView!
@@ -77,12 +78,7 @@ open class TGCardViewController: UIViewController {
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
   
-  /// If you want a current location button on the map, provide this method which will be
-  /// called if the user didn't yet grant access to the current location and the current
-  /// location button is pressed.
-  /// Your function should ask for permissions and then call the block indicating whether
-  /// the user did grant permissions.
-  public var askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)?
+  public var builder: TGCompatibleMapBuilder = TGMapKitBuilder()
   
   public var locationButtonPosition: TGButtonPosition = .top
   
@@ -103,6 +99,15 @@ open class TGCardViewController: UIViewController {
   
   override open func viewDidLoad() {
     super.viewDidLoad()
+    
+    let mapView = builder.buildMapView()
+    mapViewWrapper.addSubview(mapView)
+    mapView.topAnchor.constraint(equalTo: mapViewWrapper.topAnchor).isActive = true
+    mapView.trailingAnchor.constraint(equalTo: mapViewWrapper.trailingAnchor).isActive = true
+    mapView.bottomAnchor.constraint(equalTo: mapViewWrapper.bottomAnchor).isActive = true
+    mapView.leadingAnchor.constraint(equalTo: mapViewWrapper.leadingAnchor).isActive = true
+    mapView.translatesAutoresizingMaskIntoConstraints = false
+    self.mapView = mapView
 
     // Panner for dragging cards up and down
     if panningAllowed {
@@ -128,7 +133,7 @@ open class TGCardViewController: UIViewController {
     self.mapShadowTapper = mapTapper
     
     // Create the default buttons
-    if #available(iOS 11.0, *), let tracker = buildUserTrackingButton(for: mapView) {
+    if #available(iOS 11.0, *), let tracker = builder.buildUserTrackingButton(for: mapView) {
       self.defaultButtons = [tracker]
     } else {
       self.defaultButtons = []
@@ -207,25 +212,17 @@ open class TGCardViewController: UIViewController {
     
     cardWrapperHeightConstraint.constant = extendedMinY * -1
     
-    // When trait collection changes, try to keep the same card position, 
-    // except in the case of compact vertical size class, which does not
-    // have peak state.
+    // When trait collection changes, try to keep the same card position
     if let previous = previousCardPosition {
       // Note: Ideally, we'd determine the direction by whether the available
       // height of VC increased or decreased, but for simplicity just using
       // `up` is fine.
       cardWrapperDesiredTopConstraint.constant = cardLocation(forDesired: previous, direction: .up).y
     }
-    
-    // The visibility of a card's grab handle depends on size classes
-    updateGrabHandleVisibility()
-    
+
     // The position of a card's header also depends on size classes
+    updateHeaderStyle()
     updateHeaderConstraints()
-    headerView.layer.cornerRadius = cardIsNextToMap(in: traitCollection) ? 8 : 0
-    
-    // The interactivity of gesture recognisers depends on size classes as well
-    updatePannerInteractivity()
     
     // The visibility of floating views depends on size classes too.
     updateFloatingViewsVisibility()
@@ -243,6 +240,11 @@ open class TGCardViewController: UIViewController {
     statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
     updateFloatingViewsConstraints()
+    
+    let edgePadding = mapEdgePadding(for: cardPosition)
+    if let mapManager = topCard?.mapManager, mapManager.edgePadding != edgePadding {
+      mapManager.edgePadding = edgePadding
+    }
   }
   
   override open func didReceiveMemoryWarning() {
@@ -309,7 +311,8 @@ open class TGCardViewController: UIViewController {
     
     if cardIsNextToMap(in: traitCollection) {
       // The map is to the right of the card, which we account for when not collapsed
-      leftOverlap = (position != .collapsed) ? cardWrapperShadow.frame.maxX : 0
+      let ignoreCard = position == .collapsed && traitCollection.verticalSizeClass == .regular
+      leftOverlap = ignoreCard ? 0 : cardWrapperShadow.frame.maxX
       bottomOverlap = 0
     } else {
       // Map is always between the top and the cad
@@ -319,7 +322,13 @@ open class TGCardViewController: UIViewController {
       case .extended, .peaking: cardY = peakY
       case .collapsed:          cardY = collapsedMinY - 75 // not entirely true, but close enough
       }
-      bottomOverlap = mapView.frame.height - cardY
+      
+      // We call this method at times where the map view hasn't been resized yet. We
+      // guess the heigh tby just taking the larger side since the card is not next
+      // to the map, meaning we're in portrait.
+      let height = max(mapView.frame.width, mapView.frame.height)
+      
+      bottomOverlap = height - cardY
     }
     
     return UIEdgeInsets(top: topOverlap, left: leftOverlap, bottom: bottomOverlap, right: 0)
@@ -434,7 +443,7 @@ extension TGCardViewController {
     
     // 3. Hand over the map
     if oldTop?.card.mapManager !== top.mapManager {
-      oldTop?.card.mapManager?.cleanUp(mapView)
+      oldTop?.card.mapManager?.cleanUp(mapView, animated: animated)
       top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
     }
     top.delegate = self
@@ -493,10 +502,10 @@ extension TGCardViewController {
     
     let header = top.buildHeaderView()
     if let header = header {
-      header.closeButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+      header.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
       if #available(iOS 11.0, *) {
-        header.closeButton.isSpringLoaded = navigationButtonsAreSpringLoaded
-        header.rightButton.isSpringLoaded = navigationButtonsAreSpringLoaded
+        header.closeButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
+        header.rightButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
       }
       showHeader(content: header, animated: animated)
     } else if isShowingHeader {
@@ -592,7 +601,7 @@ extension TGCardViewController {
     
     // 2. Hand over the map
     if currentTopCard.mapManager !== newTop?.card.mapManager {
-      currentTopCard.mapManager?.cleanUp(mapView)
+      currentTopCard.mapManager?.cleanUp(mapView, animated: animated)
       newTop?.card.mapManager?.takeCharge(of: mapView,
                                           edgePadding: mapEdgePadding(for: newTop?.position ?? .collapsed),
                                           animated: animated)
@@ -964,15 +973,9 @@ extension TGCardViewController {
   private func updatePannerInteractivity(for cardElement:
       (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
     guard panningAllowed else { return }
-    if cardIsNextToMap(in: traitCollection) {
-      let position = cardElement?.position ?? cardPosition
-      panner.isEnabled = position != .extended
-      
-    } else {
-      let card = cardElement?.card ?? topCard
-      let isForceExtended = card?.mapManager == nil
-      panner.isEnabled = !isForceExtended
-    }
+    let card = cardElement?.card ?? topCard
+    let isForceExtended = card?.mapManager == nil
+    panner.isEnabled = !isForceExtended
   }
   
 }
@@ -983,16 +986,10 @@ extension TGCardViewController {
   
   private func updateGrabHandleVisibility(for cardElement:
       (card: TGCard, position: TGCardPosition, view: TGCardView)? = nil) {
-    if cardIsNextToMap(in: traitCollection) {
-      let position = cardElement?.position ?? cardPosition
-      let cardView = cardElement?.view ?? topCardView
-      cardView?.grabHandle?.isHidden = position == .extended
-    } else {
-      let card = cardElement?.card ?? topCard
-      let view = cardElement?.view ?? topCardView
-      let isForceExtended = card?.mapManager == nil
-      view?.grabHandle?.isHidden = isForceExtended
-    }
+    let card = cardElement?.card ?? topCard
+    let view = cardElement?.view ?? topCardView
+    let isForceExtended = card?.mapManager == nil
+    view?.grabHandle?.isHidden = isForceExtended
   }
 }
 
@@ -1016,13 +1013,12 @@ extension TGCardViewController {
   }
   
   private func updateFloatingViewsVisibility() {
-    guard !cardIsNextToMap(in: traitCollection) else {
+    if cardIsNextToMap(in: traitCollection) {
       // When card is on the side of the map, always show the floating views.
       fadeMapFloatingViews(false)
-      return
+    } else {
+      fadeMapFloatingViews(cardPosition == .extended)
     }
-    
-    fadeMapFloatingViews(cardPosition == .extended)
   }
   
   private func updateFloatingViewsContent() {
@@ -1131,6 +1127,12 @@ extension TGCardViewController {
     return headerViewTopConstraint.constant > -1
   }
   
+  private func updateHeaderStyle() {
+    let cornerRadius: CGFloat = cardIsNextToMap(in: traitCollection) ? 8 : 0
+    headerView.layer.cornerRadius = cornerRadius
+    headerView.subviews.compactMap { $0 as? TGHeaderView }.forEach { $0.cornerRadius = cornerRadius }
+  }
+  
   private func updateHeaderConstraints() {
     guard isShowingHeader else { return }
     adjustHeaderPositioningConstraint()
@@ -1155,6 +1157,7 @@ extension TGCardViewController {
     overwriteHeaderContent(with: content)
    
     // adjust constraints
+    updateHeaderStyle()
     adjustHeaderPositioningConstraint()
     adjustHeaderHeightConstraint(toFit: content)
     
@@ -1178,9 +1181,15 @@ extension TGCardViewController {
   fileprivate func hideHeader(animated: Bool) {
     headerViewTopConstraint.constant = headerView.frame.height * -1
     view.setNeedsUpdateConstraints()
+    
+    guard animated else {
+      self.view.layoutIfNeeded()
+      self.headerView.subviews.forEach { $0.removeFromSuperview() }
+      return
+    }
 
     UIView.animate(
-      withDuration: animated ? 0.35 : 0,
+      withDuration: 0.35,
       delay: 0,
       usingSpringWithDamping: 0.75,
       initialSpringVelocity: 0,
@@ -1303,10 +1312,10 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
 
 extension TGCardViewController: TGCardDelegate {
   
-  public func mapManagerDidChange(old: TGMapManager?, for card: TGCard) {
+  public func mapManagerDidChange(old: TGCompatibleMapManager?, for card: TGCard) {
     guard card === topCard else { return }
     
-    old?.cleanUp(mapView)
+    old?.cleanUp(mapView, animated: true)
     card.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: cardPosition), animated: true)
   }
   

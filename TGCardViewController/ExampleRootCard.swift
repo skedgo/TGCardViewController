@@ -16,7 +16,7 @@ class ExampleRootCard : TGTableCard {
   fileprivate let source = DataSource()
   
   init() {
-    super.init(title: "Card Demo", dataSource: source, delegate: source, mapManager: .nuremberg)
+    super.init(title: "Card Demo", dataSource: source, delegate: source, mapManager: TGMapManager.nuremberg)
     
     source.onSelect = { item in
       self.controller?.push(item.card)
@@ -54,7 +54,7 @@ class ExampleRootCard : TGTableCard {
   override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
     super.didBuild(cardView: cardView, headerView: headerView)
     
-    guard let tableView = (cardView as? TGTableCardView)?.tableView else { return }
+    guard let tableView = (cardView as? TGScrollCardView)?.tableView else { return }
     
     if #available(iOS 11.0, *) {
       tableView.isSpringLoaded = true
