@@ -1147,9 +1147,15 @@ extension TGCardViewController {
   fileprivate func hideHeader(animated: Bool) {
     headerViewTopConstraint.constant = headerView.frame.height * -1
     view.setNeedsUpdateConstraints()
+    
+    guard animated else {
+      self.view.layoutIfNeeded()
+      self.headerView.subviews.forEach { $0.removeFromSuperview() }
+      return
+    }
 
     UIView.animate(
-      withDuration: animated ? 0.35 : 0,
+      withDuration: 0.35,
       delay: 0,
       usingSpringWithDamping: 0.75,
       initialSpringVelocity: 0,
