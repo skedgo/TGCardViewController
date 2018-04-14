@@ -94,18 +94,6 @@ open class TGCardViewController: UIViewController {
   fileprivate var previousCardPosition: TGCardPosition?
   
   fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
-  
-  fileprivate var topCard: TGCard? {
-    return cards.last?.card
-  }
-  
-  fileprivate var cardViews: [TGCardView] {
-    return cardWrapperContent.subviews.compactMap { $0 as? TGCardView }
-  }
-  
-  fileprivate var topCardView: TGCardView? {
-    return cardViews.last
-  }
 
   // MARK: - UIViewController
   
@@ -171,7 +159,22 @@ open class TGCardViewController: UIViewController {
   override open func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    cardWrapperDesiredTopConstraint.constant = collapsedMinY
+    // This is the distance from the top edge of the card to the
+    // bottom of the header view and determines where the card
+    // rests on the screen.
+    let distanceFromHeaderView: CGFloat
+    
+    // We may present another view over it and when that view is
+    // dismissed, this gets called again, so we check where the
+    // card currently sits to ensure UI is consistent before and
+    // after the view presentation.
+    switch cardPosition {
+    case .collapsed:  distanceFromHeaderView = collapsedMinY
+    case .peaking:    distanceFromHeaderView = peakY
+    case .extended:   distanceFromHeaderView = extendedMinY
+    }
+    
+    cardWrapperDesiredTopConstraint.constant = distanceFromHeaderView
     
     topCard?.willAppear(animated: animated)
   }
@@ -374,6 +377,24 @@ open class TGCardViewController: UIViewController {
   
 }
 
+// MARK: - Access Cards & Card Views
+
+extension TGCardViewController {
+  
+  private var cardViews: [TGCardView] {
+    return cardWrapperContent.subviews.compactMap { $0 as? TGCardView }
+  }
+  
+  public var topCard: TGCard? {
+    return cards.last?.card
+  }
+  
+  private var topCardView: TGCardView? {
+    return cardViews.last
+  }
+  
+}
+
 // MARK: - Card stack management
 
 extension TGCardViewController {
@@ -550,7 +571,7 @@ extension TGCardViewController {
     return (cards[index].card, cards[index].lastPosition, views[index])
   }
   
-  public func pop(animated: Bool = true) {
+  public func pop(animated: Bool = true, completionHandler: (() -> Void)? = nil) {
     if let delegate = delegate, cards.count == 1 {
       // popping last one, let delegate dismiss
       delegate.requestsDismissal(for: self)
@@ -617,7 +638,7 @@ extension TGCardViewController {
     // to previous card's values. Note that, we force a clean up of floating views
     // because the popping card may have added views that are only applicable to it-
     // self.
-    updateFloatingViewsContent(forcedCleanUp: true)
+    updateFloatingViewsContent()
     
     // Notify that constraints need to be updated in the next cycle.
     view.setNeedsUpdateConstraints()
@@ -656,11 +677,23 @@ extension TGCardViewController {
         }
         topView.removeFromSuperview()
         self.cardTransitionShadow?.removeFromSuperview()
+        completionHandler?()
       }
     )
   }
   
   // swiftlint:enable function_body_length
+  
+  public func swap(for newCard: TGCard) {
+    guard cards.count > 1 else {
+      assertionFailure("Trying to swap the root card. Did you mean to `push`?")
+      return
+    }
+    
+    pop(animated: false) { [unowned self] in
+      self.push(newCard, animated: false, copyStyle: true)
+    }
+  }
   
   @objc
   func closeTapped(sender: Any) {
@@ -988,12 +1021,7 @@ extension TGCardViewController {
     }
   }
   
-  private func updateFloatingViewsContent(forcedCleanUp: Bool = false) {
-    if forcedCleanUp {
-      cleanUpFloatingView(topFloatingView)
-      cleanUpFloatingView(bottomFloatingView)
-    }
-    
+  private func updateFloatingViewsContent() {
     var topViews: [UIView] = []
     var bottomViews: [UIView] = []
     
@@ -1005,15 +1033,21 @@ extension TGCardViewController {
     if let newTops = topCard?.topMapToolBarItems {
       topViews.append(contentsOf: newTops)
     }
+    
     if !topViews.isEmpty {
       populateFloatingView(topFloatingView, with: topViews)
+    } else {
+      cleanUpFloatingView(topFloatingView)
     }
 
     if let newBottoms = topCard?.bottomMapToolBarItems {
       bottomViews.append(contentsOf: newBottoms)
     }
+    
     if !bottomViews.isEmpty {
       populateFloatingView(bottomFloatingView, with: bottomViews)
+    } else {
+      cleanUpFloatingView(bottomFloatingView)
     }
   }
   
