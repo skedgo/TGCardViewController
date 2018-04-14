@@ -154,7 +154,22 @@ open class TGCardViewController: UIViewController {
   override open func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    cardWrapperDesiredTopConstraint.constant = collapsedMinY
+    // This is the distance from the top edge of the card to the
+    // bottom of the header view and determines where the card
+    // rests on the screen.
+    let distanceFromHeaderView: CGFloat
+    
+    // We may present another view over it and when that view is
+    // dismissed, this gets called again, so we check where the
+    // card currently sits to ensure UI is consistent before and
+    // after the view presentation.
+    switch cardPosition {
+    case .collapsed:  distanceFromHeaderView = collapsedMinY
+    case .peaking:    distanceFromHeaderView = peakY
+    case .extended:   distanceFromHeaderView = extendedMinY
+    }
+    
+    cardWrapperDesiredTopConstraint.constant = distanceFromHeaderView
     
     topCard?.willAppear(animated: animated)
   }
