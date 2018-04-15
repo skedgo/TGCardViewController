@@ -61,6 +61,28 @@ open class TGTableCard: TGCard {
                mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
   
+  // MARK: - Card Life Cycle
+  
+  open override func didAppear(animated: Bool) {
+    super.didAppear(animated: animated)
+    
+    guard
+      let scrollCardView = cardView as? TGScrollCardView,
+      let embeddedScrollView = scrollCardView.embeddedScrollView
+      else {
+        assertionFailure()
+        return
+    }
+    
+    if #available(iOS 11, *) {
+      embeddedScrollView.contentInset.bottom = scrollCardView.safeAreaInsets.bottom
+      embeddedScrollView.scrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom
+    } else if let controller = controller {
+      embeddedScrollView.contentInset.bottom = controller.bottomLayoutGuide.length
+      embeddedScrollView.scrollIndicatorInsets.bottom = controller.bottomLayoutGuide.length
+    }
+  }
+  
   // MARK: - Constructing views
   
   open override func buildCardView(includeTitleView: Bool) -> TGCardView {
