@@ -40,6 +40,15 @@ open class TGCardViewController: UIViewController {
   /// - Note: Only has an impact on iOS 11+
   public var navigationButtonsAreSpringLoaded: Bool = false
   
+  public var headerBackgroundColor: UIColor? {
+    get {
+      return headerView.backgroundColor
+    }
+    set {
+      headerView.backgroundColor = newValue
+    }
+  }
+  
   @IBOutlet weak var headerView: UIView!
   @IBOutlet weak var mapViewWrapper: UIView!
   weak var mapView: UIView!
