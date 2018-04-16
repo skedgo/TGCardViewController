@@ -450,14 +450,7 @@ extension TGCardViewController {
     }
     cards.append( (top, animateTo.position) )
     
-    // 3. Hand over the map
-    if oldTop?.card.mapManager !== top.mapManager {
-      oldTop?.card.mapManager?.cleanUp(mapView, animated: animated)
-      top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
-    }
-    top.delegate = self
-    
-    // 4. Create and configure the new view
+    // 3. Create and configure the new view
     
     // Copying style from old card to new card MUST be called before
     // new card builds its card view.
@@ -489,7 +482,7 @@ extension TGCardViewController {
       cardView.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
     }
     
-    // 5. Place the new view coming, preparing to animate in from the bottom
+    // 4. Place the new view coming, preparing to animate in from the bottom
     cardView.frame = cardWrapperContent.bounds
     if animated {
       cardView.frame.origin.y = cardWrapperContent.frame.maxY
@@ -501,11 +494,11 @@ extension TGCardViewController {
     cardView.setNeedsUpdateConstraints()
     cardView.layoutIfNeeded()
     
-    // 6. Special handling of when the new top card has no map content
+    // 5. Special handling of when the new top card has no map content
     updatePannerInteractivity()
     updateGrabHandleVisibility()
     
-    // 7. Set new position of the wrapper
+    // 6. Set new position of the wrapper
     cardWrapperDesiredTopConstraint.constant = animateTo.y
     cardWrapperMinOverlapTopConstraint.constant = cardView.headerHeight(for: .collapsed)
     
@@ -524,6 +517,16 @@ extension TGCardViewController {
     // Notify that we have completed building the card view and its header view.
     top.cardView = cardView
     top.didBuild(cardView: cardView, headerView: header)
+    
+    // 7. Hand over the map, we do this after building the card as cards
+    // own the map manager, and they might want to prepare it.
+    if oldTop?.card.mapManager !== top.mapManager {
+      oldTop?.card.mapManager?.cleanUp(mapView, animated: animated)
+      top.mapManager?.takeCharge(of: mapView, edgePadding: mapEdgePadding(for: animateTo.position), animated: animated)
+    }
+    top.delegate = self
+
+    
     
     // Incoming card has its own top and bottom floating views.
     updateFloatingViewsContent()
