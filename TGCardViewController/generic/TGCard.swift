@@ -247,6 +247,14 @@ open class TGCard: NSObject {
 //    print("-- \(title) did disappear")
     viewIsVisible = false
   }
+  
+  /// Called when the card moved, potentially to a new position
+  ///
+  /// - Parameters:
+  ///   - position: The card's new position (could be same as before)
+  ///   - animated: Whether it was animated or not
+  open func didMove(to position: TGCardPosition, animated: Bool) {
+  }
 }
 
 // MARK: -

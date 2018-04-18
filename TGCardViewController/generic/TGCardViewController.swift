@@ -526,8 +526,7 @@ extension TGCardViewController {
     }
     top.delegate = self
 
-    
-    
+
     // Incoming card has its own top and bottom floating views.
     updateFloatingViewsContent()
     
@@ -569,6 +568,7 @@ extension TGCardViewController {
         if notify {
           oldTop?.card.didDisappear(animated: animated)
           top.didAppear(animated: animated)
+          top.didMove(to: animateTo.position, animated: animated)
         }
         self.cardTransitionShadow?.removeFromSuperview()
       }
@@ -686,6 +686,7 @@ extension TGCardViewController {
         if notify {
           currentTopCard.didDisappear(animated: animated)
           newTop?.card.didAppear(animated: animated)
+          newTop?.card.didMove(to: animateTo.position, animated: animated)
         }
         topView.removeFromSuperview()
         self.cardTransitionShadow?.removeFromSuperview()
@@ -802,6 +803,7 @@ extension TGCardViewController {
       self.view.layoutIfNeeded()
     }, completion: { _ in
       self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: snapTo.position)
+      self.topCard?.didMove(to: snapTo.position, animated: true)
       self.topCardView?.allowContentScrolling(snapTo.position == .extended)
       self.previousCardPosition = snapTo.position
       completion?()
@@ -977,6 +979,7 @@ extension TGCardViewController {
     },
       completion: { _ in
         self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: animateTo.position)
+        self.topCard?.didMove(to: animateTo.position, animated: animated)
         self.topCardView?.allowContentScrolling(animateTo.position == .extended)
         self.previousCardPosition = animateTo.position
     })
