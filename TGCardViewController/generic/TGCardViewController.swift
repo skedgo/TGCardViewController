@@ -51,7 +51,7 @@ open class TGCardViewController: UIViewController {
   
   @IBOutlet weak var headerView: UIView!
   @IBOutlet weak var mapViewWrapper: UIView!
-  weak var mapView: UIView!
+  public weak var mapView: UIView!
   @IBOutlet weak var mapShadow: UIView!
   @IBOutlet weak var cardWrapperShadow: UIView!
   @IBOutlet public weak var cardWrapperContent: UIView!
