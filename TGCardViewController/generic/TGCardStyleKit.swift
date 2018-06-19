@@ -13,7 +13,7 @@
 
 import UIKit
 
-public class TGCardStyleKit : NSObject {
+class TGCardStyleKit : NSObject {
   
   //// Cache
   
@@ -26,7 +26,7 @@ public class TGCardStyleKit : NSObject {
   
   //// Drawing Methods
   
-  public class func drawHeaderCloseIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, lineWidth: CGFloat = 3) {
+  class func drawHeaderCloseIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, lineWidth: CGFloat = 3) {
     //// General Declarations
     let context = UIGraphicsGetCurrentContext()!
     
@@ -77,7 +77,7 @@ public class TGCardStyleKit : NSObject {
     
   }
   
-  public class func drawHeaderNextIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, lineWidth: CGFloat = 3) {
+  class func drawHeaderNextIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, lineWidth: CGFloat = 3) {
     //// General Declarations
     let context = UIGraphicsGetCurrentContext()!
     
@@ -114,7 +114,7 @@ public class TGCardStyleKit : NSObject {
     
   }
   
-  public class func drawCardCloseIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit) {
+  class func drawCardCloseIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit) {
     //// General Declarations
     let context = UIGraphicsGetCurrentContext()!
     
@@ -178,7 +178,7 @@ public class TGCardStyleKit : NSObject {
     
   }
   
-  public class func drawFloatingButton(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 60, height: 60), resizing: ResizingBehavior = .aspectFit) {
+  class func drawFloatingButton(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 60, height: 60), resizing: ResizingBehavior = .aspectFit) {
     //// General Declarations
     let context = UIGraphicsGetCurrentContext()!
     
@@ -231,7 +231,7 @@ public class TGCardStyleKit : NSObject {
   
   //// Generated Images
   
-  public class func imageOfHeaderCloseIcon(lineWidth: CGFloat = 3) -> UIImage {
+  class func imageOfHeaderCloseIcon(lineWidth: CGFloat = 3) -> UIImage {
     UIGraphicsBeginImageContextWithOptions(CGSize(width: 20, height: 20), false, 0)
     TGCardStyleKit.drawHeaderCloseIcon(lineWidth: lineWidth)
     
@@ -241,7 +241,7 @@ public class TGCardStyleKit : NSObject {
     return imageOfHeaderCloseIcon
   }
   
-  public class func imageOfHeaderNextIcon(lineWidth: CGFloat = 3) -> UIImage {
+  class func imageOfHeaderNextIcon(lineWidth: CGFloat = 3) -> UIImage {
     UIGraphicsBeginImageContextWithOptions(CGSize(width: 20, height: 20), false, 0)
     TGCardStyleKit.drawHeaderNextIcon(lineWidth: lineWidth)
     
@@ -251,7 +251,7 @@ public class TGCardStyleKit : NSObject {
     return imageOfHeaderNextIcon
   }
   
-  public class var imageOfCardCloseIcon: UIImage {
+  class var imageOfCardCloseIcon: UIImage {
     if Cache.imageOfCardCloseIcon != nil {
       return Cache.imageOfCardCloseIcon!
     }
@@ -265,7 +265,7 @@ public class TGCardStyleKit : NSObject {
     return Cache.imageOfCardCloseIcon!
   }
   
-  public class var imageOfFloatingButton: UIImage {
+  class var imageOfFloatingButton: UIImage {
     if Cache.imageOfFloatingButton != nil {
       return Cache.imageOfFloatingButton!
     }
@@ -305,13 +305,13 @@ public class TGCardStyleKit : NSObject {
   
   
   @objc(TGCardStyleKitResizingBehavior)
-  public enum ResizingBehavior: Int {
+  enum ResizingBehavior: Int {
     case aspectFit /// The content is proportionally resized to fit into the target rectangle.
     case aspectFill /// The content is proportionally resized to completely fill the target rectangle.
     case stretch /// The content is stretched to match the entire target rectangle.
     case center /// The content is centered in the target rectangle, but it is NOT resized.
     
-    public func apply(rect: CGRect, target: CGRect) -> CGRect {
+    func apply(rect: CGRect, target: CGRect) -> CGRect {
       if rect == target || target == CGRect.zero {
         return rect
       }

@@ -26,7 +26,8 @@ import UIKit
 /// various UIKit protocols in subclasses.
 open class TGCard: NSObject {
   
-  public enum TGCardTitle {
+  /// Enumeration of supported "title" configurations, i.e., what goes at the top of the card
+  public enum CardTitle {
     /// Default title consisting of localized title, optional subtitle, optional accessory view, and close button
     case `default`(String, String?, UIView?)
     
@@ -39,6 +40,7 @@ open class TGCard: NSObject {
     case none
   }
   
+  /// Enumeration of supported floating button styles. Use by setting `card.floatingButtonAction`
   public enum FloatingButtonStyle {
     case add
     case custom(UIImage)
@@ -55,7 +57,7 @@ open class TGCard: NSObject {
   public weak var delegate: TGCardDelegate?
   
   /// Title of the card
-  public let title: TGCardTitle
+  public let title: CardTitle
   
   /// The manager that handles the content of the map for this card
   public var mapManager: TGCompatibleMapManager? {
@@ -83,7 +85,7 @@ open class TGCard: NSObject {
   ///   - initialPosition: Position of the card when first pushed. Defaults `.extended` if
   ///       no map manager was provied.
   public init(
-    title: TGCardTitle,
+    title: CardTitle,
     mapManager: TGCompatibleMapManager? = nil,
     initialPosition: TGCardPosition? = nil
     ) {
@@ -174,21 +176,21 @@ open class TGCard: NSObject {
   
   /// Each card can specify a text color for title.
   ///
-  /// @default Black
+  /// @default: Black
   public var titleTextColor: UIColor? = .black {
     didSet { cardView?.applyStyling(for: self) }
   }
   
   /// Each card can specify a text color for subtitle.
   ///
-  /// @default Light grey
+  /// @default: Light grey
   public var subtitleTextColor: UIColor? = .lightGray {
     didSet { cardView?.applyStyling(for: self) }
   }
   
   // Each card can specify a color for the grab handle.
   ///
-  /// @default Grayscale @ 70%.
+  /// @default: Grayscale @ 70%.
   public var grabHandleColor: UIColor? = #colorLiteral(red: 0.7552321553, green: 0.7552321553, blue: 0.7552321553, alpha: 1) {
     didSet { cardView?.applyStyling(for: self) }
   }

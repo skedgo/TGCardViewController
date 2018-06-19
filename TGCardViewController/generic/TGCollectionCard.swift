@@ -30,7 +30,7 @@ open class TGCollectionCard: TGCard {
   
   // MARK: - Initialisers
   
-  public init(title: TGCardTitle,
+  public init(title: CardTitle,
               dataSource: UICollectionViewDataSource? = nil,
               delegate: UICollectionViewDelegate? = nil,
               layout: UICollectionViewLayout,

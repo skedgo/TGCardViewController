@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// A simple `UIView` subclass with rounded corners at the top.
 public class TGCornerView: UIView {
   
   override public func layoutSubviews() {

@@ -30,7 +30,7 @@ open class TGTableCard: TGCard {
   
   // MARK: - Initialisers
   
-  public init(title: TGCardTitle,
+  public init(title: CardTitle,
               dataSource: UITableViewDataSource? = nil,
               delegate: UITableViewDelegate? = nil,
               style: UITableViewStyle = .plain,

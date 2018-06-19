@@ -11,9 +11,13 @@ import UIKit
 @available(*, unavailable, renamed: "TGScrollCardView")
 public typealias TGTableCardView = TGScrollCardView
 
+/// The view for the card used by `TGTableCard` and `TGCollectionCard`.
+///
+/// Cannot be subclassed, but is used to get access to the card view's
+/// `UITableView` or `UICollectionView.
 public class TGScrollCardView: TGCardView {
   
-  public weak var embeddedScrollView: UIScrollView!
+  weak var embeddedScrollView: UIScrollView!
   
   // This is where the scroll view is going to be. We didn't insert
   // scroll view directly because the particular instance and style

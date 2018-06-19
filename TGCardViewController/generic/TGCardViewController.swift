@@ -17,6 +17,42 @@ public protocol TGCardViewControllerDelegate: class {
   func requestsDismissal(for controller: TGCardViewController)
 }
 
+/// The root view controller for using cards in your app.
+///
+///
+/// ## How to use this in your app
+///
+/// First, create a subclass, then use this in your your storyboard.
+///
+/// Second, In your subclass override `init(coder:)` as follows, so that the
+/// instance from the storyboard isn’t used, but instead the pre-configured one
+/// from `TGCardViewController.xib`:
+///
+/// ```
+/// import TGCardViewController
+///
+/// class CardViewController: TGCardViewController {
+///
+///   required init(coder aDecoder: NSCoder) {
+///     // When loading from the storyboard we don't want to use the controller
+///     // as defined in the storyboard but instead use the TGCardViewController.xib
+///     super.init(nibName: "TGCardViewController", bundle: Bundle(for: TGCardViewController.self))
+///   }
+///
+///   ...
+/// }
+/// ```
+///
+/// Third, and last, create a `TGCard` that represents the card at the top
+/// level, and add then push that in your view controller’s `viewDidLoad`:
+///
+/// ```
+/// override func viewDidLoad() {
+///   super.viewDidLoad()
+///
+///   push(MyRootCard())
+/// }
+/// ```
 open class TGCardViewController: UIViewController {
   
   fileprivate enum Constants {
@@ -87,8 +123,17 @@ open class TGCardViewController: UIViewController {
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
   
+  /// Builder that determines what kind of map to use. The builder's
+  /// `buildMapView()` method will be once initially, and the map instance will
+  /// then be passed to the card's `mapManager` via the
+  /// `takeCharge(of:edgePadding:animated:)` and `cleanUp(_:animated:)` calls.
+  ///
+  /// @default: An instance of `TGMapKitBuilder`, i.e., using Apple's MapKit.
   public var builder: TGCompatibleMapBuilder = TGMapKitBuilder()
   
+  /// Position of current location button
+  ///
+  /// @default: `top`
   public var locationButtonPosition: TGButtonPosition = .top
   
   private var defaultButtons: [UIView]!

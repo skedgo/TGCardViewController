@@ -8,12 +8,12 @@
 
 import UIKit
 
-/// A plain card let's you display an arbitrary content view,
-/// accessory view, along with respective map content through
-/// the map manager.
+/// A plain card let's you display an arbitrary content view, accessory view,
+/// along with respective map content through the map manager.
 ///
-/// - warning: It's not recommended to use a `UITableView` as
-///     the content. For that use `TGTableCard` instead.
+/// - warning: It's not recommended to use a `UITableView` or a
+///     `UICollectionView` as the content. For those use the specialised
+///     `TGTableCard` or `TGCollectionCard`.
 ///
 /// This class is generally subclassed.
 open class TGPlainCard: TGCard {
@@ -25,7 +25,7 @@ open class TGPlainCard: TGCard {
   public let contentView: UIView?
   
   public init(
-    title: TGCardTitle,
+    title: CardTitle,
     contentView: UIView? = nil,
     mapManager: TGCompatibleMapManager? = nil,
     initialPosition: TGCardPosition? = nil

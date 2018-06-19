@@ -213,6 +213,7 @@ extension Array where Element == MKAnnotation {
 
 extension MKMapView {
   
+  /// Zoom level in the 1-20 range. Where 1 is zoomed in. 20 is zoomed out.
   public var zoomLevel: Double {
     get {
       return zoomLevel(of: visibleMapRect)

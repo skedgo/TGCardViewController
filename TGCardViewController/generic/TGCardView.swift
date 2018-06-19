@@ -8,6 +8,12 @@
 
 import UIKit
 
+/// The view for the card itself.
+///
+/// Cannot be subclassed, by usually used to programatically update the
+/// title/subtitle of the card or to get access to the card's table view or
+/// collection view - by checking if an instance of this class is a
+/// `TGScrollCardView` instance.
 public class TGCardView: TGCornerView {
   
   /// Each card view needs a grab handle, which the controller
