@@ -120,6 +120,9 @@
 		3A8BEA4B1E859D910007B410 /* TGPageHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TGPageHeaderView.xib; path = generic/TGPageHeaderView.xib; sourceTree = "<group>"; };
 		3A8BEA4D1E85C0070007B410 /* ExamplePageCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExamplePageCard.swift; sourceTree = "<group>"; };
 		3A8BEA4F1E87E9E00007B410 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		3AA58E6320D8FEAB00FE37B0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		3AA58E6420D8FEB400FE37B0 /* TGCardViewController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = TGCardViewController.podspec; sourceTree = SOURCE_ROOT; };
+		3AA58E6520D8FEBA00FE37B0 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 		3AB8944E1E7AB25900267A06 /* ExampleTableDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableDataSource.swift; sourceTree = "<group>"; };
 		3AB894511E7AE49200267A06 /* MockupImageCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockupImageCard.swift; sourceTree = "<group>"; };
 		3AB894531E7AE4A300267A06 /* MockupRootCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockupRootCard.swift; sourceTree = "<group>"; };
@@ -212,6 +215,16 @@
 			path = TGCardViewController;
 			sourceTree = "<group>";
 		};
+		3AA58E6220D8FE9200FE37B0 /* metadata */ = {
+			isa = PBXGroup;
+			children = (
+				3AA58E6320D8FEAB00FE37B0 /* README.md */,
+				3AA58E6520D8FEBA00FE37B0 /* LICENSE */,
+				3AA58E6420D8FEB400FE37B0 /* TGCardViewController.podspec */,
+			);
+			name = metadata;
+			sourceTree = "<group>";
+		};
 		3AB8944D1E7AB1E400267A06 /* cards */ = {
 			isa = PBXGroup;
 			children = (
@@ -278,6 +291,7 @@
 		3ACA74821E716AFC00408678 /* TGCardViewController */ = {
 			isa = PBXGroup;
 			children = (
+				3AA58E6220D8FE9200FE37B0 /* metadata */,
 				3ACA74A31E716C7F00408678 /* generic */,
 				3ACA74BE1E71A0EC00408678 /* example */,
 			);

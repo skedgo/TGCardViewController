@@ -37,10 +37,6 @@ Behaviour:
     - [x] Cards typically have scrolling content: when scrolling down the card's header stays at the top and a  bit of the map still keeps peaking through at the top.
 	- [x] When scrolling down show a thin separator line between the card's scrolling content and the card's header (!18)
 	- [x] When scrolling to the top and keeping to scroll, start dragging card (!12)
-- Sticky bar at the top
-	- [x] Set content rather than just showing (!1)
-	- [x] Cross-fade content if it was showing already and there’s new content (!1)
-	- [x] Fix bug: expand card => toggle sticky => card should move down not keep top fixed
 
 Styles:
 
@@ -56,10 +52,13 @@ Card types:
 	- [x] On top: Title, (x), optional subtitle and optional accessory view
 	- [x] Add accessory view (!11)
 	- [x] Content can be scrollable and size adjusts to content. If it fits, it shouldn’t be scrollable
-	- [x] Add floaty button (!14)
+	- [x] Add optional floaty button (!14)
 - Table card
 	- [x] Same as plain card, but with a table view as its content
 	- [x] Allow specifying plain (e.g., for departures) or grouped style (e.g., for profile) (!13)
+- Collection card
+  - [x] Same as plain card, but with a collection view as its content
+  - [x] Allow specifying collection view layout
 - Paging card (!5)
     - [x] Handles list of child cards on the same hierarchical level which can be paged programatically and through gestures
     - [x] Has header view: Used for titles (child cards shouldn't show them then) and navigation; Header view is separate from sticky bar, i.e., you can have both.
@@ -71,7 +70,7 @@ Card styles:
 - [x] Rounded corners to cards (!2)
 - [x] Grab handle for cards (!2)
 - [x] Nice close buttons (and next button for paging cards) (!5)
-- [ ] Title and subtitle styling
+- [x] Title and subtitle styling
 - [x] Add mini drop shadow to card views (!2)
 - [x] Bottom view (!4)
 
@@ -83,18 +82,12 @@ Map content:
 - [x] When showing the content, the insets should be respected to account for the card overlapping the map
 - [x] If there’s no map content: Show card always extended and don't allow dragging it down (or just snap back up when using tries) (!3)
 
-Map widget:
-
-- [ ] Optional widget such as a search bar or the from/to/at widget that floats on top of the map
-- [ ] Map content properly considers that the widget is there (map content and map controls such as the compass)
-- [ ] When dragging up the card the widget scrolls away to the top
-
 Map buttons:
 
-- [x] Optional list of buttons that float on the right above the card (when collapsed or peaking) (!27)
+- [x] Optional list of buttons that float on the right above the card or in the top right corner (when collapsed or peaking) (!27)
 - [x] When dragging up the card to `extended`, the buttons fade away (!27)
 
-### 4. Large screens (iPad + iPhone Plus in landscape)
+### 4. Large width (iPad + iPhone in landscape)
 
 - [x] Move card to the side with min (iPhone Plus) and max (iPad) width (!9)
 - [x] Make sure transitions work when changing size and traits (!9)
