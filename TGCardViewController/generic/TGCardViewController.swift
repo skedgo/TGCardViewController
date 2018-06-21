@@ -470,7 +470,7 @@ extension TGCardViewController {
   
   // Yes, these are long. We rather keep them together like this (for now).
   // swiftlint:disable function_body_length
-  
+  // swiftlint:disable cyclomatic_complexity
   public func push(_ top: TGCard, animated: Bool = true, copyStyle: Bool = true) {
     // Set the controller on the top card earlier, because we may want
     // to ask the card to do something on willAppear, e.g., show sticky 
@@ -619,6 +619,8 @@ extension TGCardViewController {
       }
     )
   }
+  // swiftlint:enable function_body_length
+  // swiftlint:enable cyclomatic_complexity
   
   fileprivate func cardWithView(atIndex index: Int) -> (card: TGCard, position: TGCardPosition, view: TGCardView)? {
     let cards = self.cards
