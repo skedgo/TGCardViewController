@@ -199,13 +199,23 @@ extension MKMapView {
   
 }
 
-extension Array where Element == MKAnnotation {
+extension Array where Element: MKAnnotation {
   
   public var boundingMapRect: MKMapRect {
     return reduce(MKMapRectNull) { acc, annotation in
       let point = MKMapPointForCoordinate(annotation.coordinate)
       let miniRect = MKMapRect(origin: point, size: MKMapSize(width: 1, height: 1))
       return MKMapRectUnion(acc, miniRect)
+    }
+  }
+  
+}
+
+extension Array where Element: MKOverlay {
+  
+  public var boundingMapRect: MKMapRect {
+    return reduce(MKMapRectNull) { acc, overlay in
+      return MKMapRectUnion(acc, overlay.boundingMapRect)
     }
   }
   
