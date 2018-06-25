@@ -621,7 +621,7 @@ extension TGCardViewController {
   }
   // swiftlint:enable function_body_length
   // swiftlint:enable cyclomatic_complexity
-  
+
   fileprivate func cardWithView(atIndex index: Int) -> (card: TGCard, position: TGCardPosition, view: TGCardView)? {
     let cards = self.cards
     let views = self.cardViews
@@ -630,6 +630,7 @@ extension TGCardViewController {
     return (cards[index].card, cards[index].lastPosition, views[index])
   }
   
+  // swiftlint:disable function_body_length
   public func pop(animated: Bool = true, completionHandler: (() -> Void)? = nil) {
     if let delegate = delegate, cards.count == 1 {
       // popping last one, let delegate dismiss
@@ -741,7 +742,6 @@ extension TGCardViewController {
       }
     )
   }
-  
   // swiftlint:enable function_body_length
   
   public func swap(for newCard: TGCard) {
