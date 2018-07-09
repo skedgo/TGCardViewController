@@ -152,8 +152,8 @@ open class TGPageCard: TGCard {
       let pageControl = UIPageControl()
       pageControl.currentPage = initialPageIndex
       pageControl.numberOfPages = cards.count
-      pageControl.pageIndicatorTintColor = .gray
-      pageControl.currentPageIndicatorTintColor = .blue
+      pageControl.pageIndicatorTintColor = subtitleTextColor ?? .lightGray
+      pageControl.currentPageIndicatorTintColor = grabHandleColor ?? .blue
       pageControl.addTarget(self, action: #selector(headerPageControlChanged(sender:)), for: .valueChanged)
       self.headerPageControl = pageControl
       view.accessoryView = pageControl

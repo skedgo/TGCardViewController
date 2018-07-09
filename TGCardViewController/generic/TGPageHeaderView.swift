@@ -81,6 +81,13 @@ public class TGPageHeaderView: TGHeaderView {
     }
   }
   
+  public override func tintColorDidChange() {
+    super.tintColorDidChange()
+    closeButton?.tintColor = tintColor
+    rightButton?.tintColor = tintColor
+    accessoryView?.tintColor = tintColor
+  }
+  
   // MARK: - Managing Appearance
 
   func applyStyling(for card: TGPageCard) {
@@ -91,9 +98,9 @@ public class TGPageHeaderView: TGHeaderView {
     subtitleLabel.font = card.subtitleFont
     subtitleLabel.textColor = card.subtitleTextColor
 
-    // Rather than introducing a new style we'll reuse the grab handle color
-    closeButton?.tintColor = card.grabHandleColor ?? tintColor
-    rightButton?.tintColor = card.grabHandleColor ?? tintColor
+    closeButton?.tintColor = tintColor
+    rightButton?.tintColor = tintColor
+    accessoryView?.tintColor = tintColor
   }
   
   // MARK: - Button actions
