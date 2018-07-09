@@ -195,16 +195,16 @@ open class TGCard: NSObject {
     didSet { cardView?.applyStyling(for: self) }
   }
   
-  /// Called to copy styling from a given card
+  /// Called to copy styling to a given card
   ///
   /// - Parameter card: card from which styling is taken.
-  open func copyStyling(from card: TGCard) {
-    titleFont = card.titleFont
-    titleTextColor = card.titleTextColor
-    subtitleFont = card.subtitleFont
-    subtitleTextColor = card.subtitleTextColor
-    backgroundColor = card.backgroundColor
-    grabHandleColor = card.grabHandleColor
+  open func copyStyling(to card: TGCard) {
+    card.titleFont = titleFont
+    card.titleTextColor = titleTextColor
+    card.subtitleFont = subtitleFont
+    card.subtitleTextColor = subtitleTextColor
+    card.backgroundColor = backgroundColor
+    card.grabHandleColor = grabHandleColor
   }
   
   // MARK: - Managing Card Life Cycle

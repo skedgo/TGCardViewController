@@ -500,7 +500,7 @@ extension TGCardViewController {
     // Copying style from old card to new card MUST be called before
     // new card builds its card view.
     if let oldCard = oldTop?.card, copyStyle {
-      top.copyStyling(from: oldCard)
+      oldCard.copyStyling(to: top)
     }
     
     let cardView = top.buildCardView(includeTitleView: true)
