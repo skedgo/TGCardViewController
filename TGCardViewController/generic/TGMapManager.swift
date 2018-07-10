@@ -11,8 +11,11 @@ import Foundation
 import MapKit
 
 public protocol TGCompatibleMapManager: class {
+  
   func takeCharge(of mapView: UIView, edgePadding: UIEdgeInsets, animated: Bool)
+  
   func cleanUp(_ mapView: UIView, animated: Bool)
+  
   var edgePadding: UIEdgeInsets { get set }
 }
 
@@ -68,6 +71,11 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
   public override init() {
   }
   
+  public func takeCharge(of mapView: UIView, edgePadding: UIEdgeInsets, animated: Bool) {
+    guard let mapView = mapView as? MKMapView else { preconditionFailure() }
+    takeCharge(of: mapView, edgePadding: edgePadding, animated: animated)
+  }
+  
   /// Takes charge of the map view, adding the map manager's content
   ///
   /// - Parameters:
@@ -75,8 +83,7 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
   ///   - edgePadding: Edge padding of the map view, e.g., if parts of the map view is
   /// obscured by other views.
   ///   - animated: If adding content should be animated
-  open func takeCharge(of mapView: UIView, edgePadding: UIEdgeInsets, animated: Bool) {
-    guard let mapView = mapView as? MKMapView else { preconditionFailure() }
+  open func takeCharge(of mapView: MKMapView, edgePadding: UIEdgeInsets, animated: Bool) {
     previousMapState = MapState(for: mapView)
     
     self.mapView = mapView
@@ -87,6 +94,11 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
     zoom(to: annotations, animated: animated)
   }
   
+  public func cleanUp(_ mapView: UIView, animated: Bool) {
+    guard let mapView = mapView as? MKMapView else { preconditionFailure() }
+    self.cleanUp(mapView, animated: animated)
+  }
+  
   /// Cleanes up the map view, removing the map manager's content
   /// and restoring the map view to a state similar to when 
   /// `takeCharge(of:)` was called.
@@ -94,8 +106,7 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
   /// - Parameters:
   ///   - mapView: Map view to clean-up
   ///   - animated: If removing content should be animated
-  open func cleanUp(_ mapView: UIView, animated: Bool) {
-    guard let mapView = mapView as? MKMapView else { preconditionFailure() }
+  open func cleanUp(_ mapView: MKMapView, animated: Bool) {
     guard mapView == self.mapView else {
       assertionFailure("Not the map view that we manage!")
       return
