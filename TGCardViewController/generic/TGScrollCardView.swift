@@ -23,7 +23,7 @@ public class TGScrollCardView: TGCardView {
   // scroll view directly because the particular instance and style
   // is only known at run time. Using a wrapper helps us fix the
   // constraints at design time.
-  @IBOutlet weak var scrollViewWrapper: UIView!
+  @IBOutlet public internal(set) weak var scrollViewWrapper: UIView!
   
   // MARK: - New instances
   
