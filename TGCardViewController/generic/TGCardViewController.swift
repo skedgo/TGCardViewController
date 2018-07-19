@@ -486,7 +486,6 @@ extension TGCardViewController {
     let notify = isVisible
     if notify {
       oldTop?.card.willDisappear(animated: animated)
-      top.willAppear(animated: animated)
     }
     
     if let oldTop = oldTop {
@@ -562,6 +561,9 @@ extension TGCardViewController {
     // Notify that we have completed building the card view and its header view.
     top.cardView = cardView
     top.didBuild(cardView: cardView, headerView: header)
+    if notify {
+      top.willAppear(animated: animated)
+    }
     
     // 7. Hand over the map, we do this after building the card as cards
     // own the map manager, and they might want to prepare it.
