@@ -16,7 +16,8 @@ import UIKit
 ///
 /// - `TGPlainCard`: For cards with a title and a content view
 /// - `TGTableCard`: For cards with a title and table view as the content
-/// - `TGCollectionCard`: For cards with a title and collection view as the content
+/// - `TGCollectionCard`: For cards with a title and collection view as the
+///      content
 /// - `TGPageCard`: For displaying several cards on the same hierarchy,
 ///      allowing to swipe between them.
 ///
@@ -26,13 +27,17 @@ import UIKit
 /// various UIKit protocols in subclasses.
 open class TGCard: NSObject {
   
-  /// Enumeration of supported "title" configurations, i.e., what goes at the top of the card
+  /// Enumeration of supported "title" configurations, i.e., what goes at the
+  /// top of the card
   public enum CardTitle {
-    /// Default title consisting of localized title, optional subtitle, optional accessory view, and close button
+    /// Default title consisting of localized title, optional subtitle, optional
+    /// accessory view, and close button
     case `default`(String, String?, UIView?)
     
-    /// A customised title of your choosing. In this case, make sure to add a way to dismiss
-    /// this card and call `controller?.pop()` when appropriate.
+    /// A customised title of your choosing. In this case, make sure to add a
+    /// way to dismiss this card and call `controller?.pop()` when appropriate.
+    /// You can use `TGCard.closeButtonImage` if you want to use the default
+    /// style.
     case custom(UIView)
     
     /// No title at all. Make sure to call `controller?.pop()`
@@ -40,11 +45,15 @@ open class TGCard: NSObject {
     case none
   }
   
-  /// Enumeration of supported floating button styles. Use by setting `card.floatingButtonAction`
+  /// Enumeration of supported floating button styles. Use by setting
+  /// `card.floatingButtonAction`.
   public enum FloatingButtonStyle {
     case add
     case custom(UIImage)
   }
+  
+  /// The default image for the close button on a card
+  public static let closeButtonImage = TGCardStyleKit.imageOfCardCloseIcon
   
   /// The card controller currently displaying the card
   ///
@@ -82,8 +91,8 @@ open class TGCard: NSObject {
   /// - Parameters:
   ///   - title: Title to display
   ///   - mapManager:
-  ///   - initialPosition: Position of the card when first pushed. Defaults `.extended` if
-  ///       no map manager was provied.
+  ///   - initialPosition: Position of the card when first pushed. Defaults
+  ///       `.extended` if no map manager was provied.
   public init(
     title: CardTitle,
     mapManager: TGCompatibleMapManager? = nil,
