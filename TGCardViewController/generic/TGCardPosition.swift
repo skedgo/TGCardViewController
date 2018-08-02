@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum TGCardPosition {
+public enum TGCardPosition: String, Codable {
   /// Showing full card, with small bit of map on top
   case extended
   

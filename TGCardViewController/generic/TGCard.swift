@@ -25,7 +25,7 @@ import UIKit
 ///
 /// - note: Implements NSObject to make it easy to implement
 /// various UIKit protocols in subclasses.
-open class TGCard: NSObject {
+open class TGCard: NSObject, NSCoding {
   
   /// Enumeration of supported "title" configurations, i.e., what goes at the
   /// top of the card
@@ -101,6 +101,57 @@ open class TGCard: NSObject {
     self.title = title
     self.mapManager = mapManager
     self.initialPosition = mapManager != nil ? initialPosition : .extended
+  }
+  
+  // MARK: - Restoration
+  
+  public required init?(coder: NSCoder) {
+    switch coder.decodeObject(forKey: "title.type") as? String {
+    case "custom":
+      if let view = coder.decodeObject(forKey: "title.view") as? UIView {
+        title = .custom(view)
+      } else {
+        title = .none
+      }
+      
+    case "default":
+      if let title = coder.decodeObject(forKey: "title.title") as? String {
+        self.title = .default(
+          title,
+          coder.decodeObject(forKey: "title.subtitle") as? String,
+          coder.decodeObject(forKey: "title.view") as? UIView
+        )
+      } else {
+        title = .none
+      }
+    default:
+      title = .none
+    }
+    
+    self.mapManager = coder.decodeObject(forKey: "mapManager") as? TGCompatibleMapManager
+    if let rawPosition = coder.decodeObject(forKey: "initialPosition") as? String {
+      self.initialPosition = TGCardPosition(rawValue: rawPosition)
+    } else {
+      self.initialPosition = .extended
+    }
+  }
+  
+  open func encode(with aCoder: NSCoder) {
+    switch title {
+    case .custom(let view):
+      aCoder.encode("custom", forKey: "title.type")
+      aCoder.encode(view, forKey: "title.view")
+    case .default(let title, let subtitle, let view):
+      aCoder.encode("default", forKey: "title.type")
+      aCoder.encode(title, forKey: "title.title")
+      aCoder.encode(subtitle, forKey: "title.subtitle")
+      aCoder.encode(view, forKey: "title.view")
+    case .none:
+      aCoder.encode("none", forKey: "title.type")
+    }
+    
+    aCoder.encode(mapManager, forKey: "mapManager")
+    aCoder.encode(initialPosition?.rawValue, forKey: "initialPosition")
   }
   
   // MARK: - Creating Card Views.
@@ -267,6 +318,7 @@ open class TGCard: NSObject {
   open func didMove(to position: TGCardPosition, animated: Bool) {
   }
 }
+
 
 // MARK: -
 

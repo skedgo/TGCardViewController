@@ -10,7 +10,7 @@ import Foundation
 
 import MapKit
 
-public protocol TGCompatibleMapManager: class {
+public protocol TGCompatibleMapManager: class, NSCoding {
   
   func takeCharge(of mapView: UIView, edgePadding: UIEdgeInsets, animated: Bool)
   
@@ -19,8 +19,7 @@ public protocol TGCompatibleMapManager: class {
   var edgePadding: UIEdgeInsets { get set }
 }
 
-open class TGMapManager: NSObject, TGCompatibleMapManager {
-  
+open class TGMapManager: NSObject, TGCompatibleMapManager, NSCoding {
   public enum Zoom: Double {
     case road     = 5  // local level => how do I navigate on the road?
     case city     = 10 // can fit a city => where in the city are we?
@@ -69,6 +68,12 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
   }
   
   public override init() {
+  }
+  
+  public required init?(coder aDecoder: NSCoder) {
+  }
+  
+  open func encode(with aCoder: NSCoder) {
   }
   
   public func takeCharge(of mapView: UIView, edgePadding: UIEdgeInsets, animated: Bool) {

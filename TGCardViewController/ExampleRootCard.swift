@@ -51,6 +51,10 @@ class ExampleRootCard : TGTableCard {
     self.bottomMapToolBarItems = [contactAddButton]
   }
   
+  required convenience init?(coder: NSCoder) {
+    self.init()
+  }
+  
   override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
     super.didBuild(cardView: cardView, headerView: headerView)
     

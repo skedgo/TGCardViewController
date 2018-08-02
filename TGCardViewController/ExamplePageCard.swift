@@ -28,6 +28,10 @@ class ExamplePageCard: TGPageCard {
     self.headerAccessoryView = jumpButton
   }
   
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
+  }
+  
   @objc
   func headerJumpPressed(sender: Any) {
     let index = Int(arc4random_uniform(UInt32(self.cards.count)))

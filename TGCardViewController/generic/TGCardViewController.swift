@@ -151,6 +151,12 @@ open class TGCardViewController: UIViewController {
 
   // MARK: - UIViewController
   
+  open override func awakeFromNib() {
+    super.awakeFromNib()
+    
+    self.restorationIdentifier = "CardViewController"
+  }
+  
   override open func viewDidLoad() {
     super.viewDidLoad()
     
@@ -227,8 +233,13 @@ open class TGCardViewController: UIViewController {
     case .peaking:    distanceFromHeaderView = peakY
     case .extended:   distanceFromHeaderView = extendedMinY
     }
-    
     cardWrapperDesiredTopConstraint.constant = distanceFromHeaderView
+    
+    // Now is the time to restore
+    if let position = restoredCardPosition {
+      moveCard(to: position, animated: false)
+      restoredCardPosition = nil
+    }
     
     topCard?.willAppear(animated: animated)
   }
@@ -305,6 +316,41 @@ open class TGCardViewController: UIViewController {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
+  
+  // MARK: - UIStateRestoring
+  
+  var restoredCardPosition: TGCardPosition?
+
+  open override func encodeRestorableState(with coder: NSCoder) {
+    defer { super.encodeRestorableState(with: coder) }
+    
+    coder.encode(cardPosition.rawValue, forKey: "cardPosition")
+
+//    coder.encode(cards.map { $0.0 }, forKey: "cards")
+    if let top = topCard {
+      coder.encode(topCard, forKey: "topCard")
+    }
+  }
+
+  open override func decodeRestorableState(with coder: NSCoder) {
+    defer { super.decodeRestorableState(with: coder) }
+
+    if let rawPosition = coder.decodeObject(of: NSString.self, forKey: "cardPosition") {
+      restoredCardPosition = TGCardPosition(rawValue: rawPosition as String)
+    }
+    
+    if let topCard = coder.decodeObject(forKey: "topCard") as? TGCard {
+      self.push(topCard)
+    }
+    if let cards = coder.decodeObject(of: [TGCard.self], forKey: "cards") as? [TGCard] {
+      self.cards = cards.map { ($0, .peaking) }
+    }
+  }
+  
+  open override func applicationFinishedRestoringState() {
+    super.applicationFinishedRestoringState()
+  }
+  
   
   // MARK: - Card positioning
   

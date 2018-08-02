@@ -96,17 +96,13 @@ open class TGPageCard: TGCard {
   ///   - cards: these are the child cards that will be displayed by the page card as pages.
   ///   - initialPage: the index of the first child card (page) to display when the page card is pushed.
   public init(cards: [TGCard], initialPage: Int = 0) {
-    guard initialPage < cards.count else {
-      preconditionFailure()
-    }
-    
     assert(TGPageCard.allCardsHaveMapManagers(in: cards), "TGCardVC doesn't yet properly handle " +
-      "scroll cards where some cards don't have map managers. It won't crash but will experience " +
+      "page cards where some cards don't have map managers. It won't crash but will experience " +
       "unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck " +
       "in 'extended' mode.")
     
     self.cards = cards
-    self.initialPageIndex = initialPage
+    self.initialPageIndex = min(initialPage, cards.count - 1)
 
     // TGPageCard itself doesn't have a map manager. Instead, it passes through
     // the manager that handles the map view for the current card. This is
@@ -114,6 +110,33 @@ open class TGPageCard: TGCard {
     let mapManager = cards[initialPage].mapManager
     
     super.init(title: .none, mapManager: mapManager, initialPosition: .peaking)
+  }
+  
+  public required init?(coder: NSCoder) {
+    guard let cards = coder.decodeObject(forKey: "cards") as? [TGCard] else {
+      return nil
+    }
+    let initialPage = coder.decodeInteger(forKey: "initialPageIndex")
+    
+    assert(TGPageCard.allCardsHaveMapManagers(in: cards), "TGCardVC doesn't yet properly handle " +
+      "page cards where some cards don't have map managers. It won't crash but will experience " +
+      "unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck " +
+      "in 'extended' mode.")
+    
+    self.cards = cards
+    self.initialPageIndex = min(initialPage, cards.count - 1)
+
+    // TGPageCard itself doesn't have a map manager. Instead, it passes through
+    // the manager that handles the map view for the current card. This is
+    // set on intialising and then updated whenever we scroll.
+    let mapManager = cards[initialPage].mapManager
+    
+    super.init(title: .none, mapManager: mapManager, initialPosition: .peaking)
+  }
+  
+  open override func encode(with aCoder: NSCoder) {
+    aCoder.encode(currentPageIndex, forKey: "initialPageIndex")
+    aCoder.encode(cards, forKey: "cards")
   }
   
   fileprivate static func allCardsHaveMapManagers(in cards: [TGCard]) -> Bool {

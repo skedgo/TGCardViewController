@@ -12,14 +12,16 @@ import TGCardViewController
 
 class ExampleTableCard : TGTableCard {
 
-  fileprivate let source = ExampleTableDataSource()
+  private let source = ExampleTableDataSource()
+  private let pushOnTap: Bool
 
   init(mapManager: TGMapManager? = nil, pushOnTap: Bool = true) {
-    let accessory = ExampleAccessoryView.instantiate()
+    
+    self.pushOnTap = pushOnTap
     
     mapManager?.annotations = source.stops
     
-    super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: accessory, mapManager: mapManager)
+    super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: ExampleAccessoryView.instantiate(), mapManager: mapManager)
     
     if pushOnTap {
       source.onSelect = {
@@ -34,6 +36,17 @@ class ExampleTableCard : TGTableCard {
     }
     
     self.bottomMapToolBarItems = [UIButton.dummySystemButton()]
+  }
+  
+  required convenience init?(coder: NSCoder) {
+    let mapManager = coder.decodeObject(forKey: "mapManager") as? TGMapManager
+    let pushOnTap = coder.decodeBool(forKey: "pushOnTap")
+    self.init(mapManager: mapManager, pushOnTap: pushOnTap)
+  }
+  
+  override func encode(with aCoder: NSCoder) {
+    aCoder.encode(mapManager, forKey: "mapManager")
+    aCoder.encode(pushOnTap, forKey: "pushOnTap")
   }
   
   override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {

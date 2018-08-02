@@ -22,7 +22,11 @@ class MockupRootCard : TGTableCard {
       self.controller?.push(item.card)
     }
   }
-
+  
+  required convenience init?(coder: NSCoder) {
+    self.init()
+  }
+  
 }
 
 
