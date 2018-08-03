@@ -57,13 +57,13 @@ open class TGPlainCard: TGCard {
   }
   
   public required init?(coder: NSCoder) {
-    self.contentView = coder.decodeObject(forKey: "contentView") as? UIView
+    self.contentView = coder.decodeView(forKey: "contentView")
     super.init(coder: coder)
   }
   
   open override func encode(with aCoder: NSCoder) {
     super.encode(with: aCoder)
-    aCoder.encode(contentView, forKey: "contentView")
+    aCoder.encode(view: contentView, forKey: "contentView")
   }
   
   open override func buildCardView(includeTitleView: Bool) -> TGCardView {

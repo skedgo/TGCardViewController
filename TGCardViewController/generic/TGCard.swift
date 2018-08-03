@@ -108,7 +108,7 @@ open class TGCard: NSObject, NSCoding {
   public required init?(coder: NSCoder) {
     switch coder.decodeObject(forKey: "title.type") as? String {
     case "custom":
-      if let view = coder.decodeObject(forKey: "title.view") as? UIView {
+      if let view = coder.decodeView(forKey: "title.view") {
         title = .custom(view)
       } else {
         title = .none
@@ -119,7 +119,7 @@ open class TGCard: NSObject, NSCoding {
         self.title = .default(
           title,
           coder.decodeObject(forKey: "title.subtitle") as? String,
-          coder.decodeObject(forKey: "title.view") as? UIView
+          coder.decodeView(forKey: "title.view")
         )
       } else {
         title = .none
@@ -134,24 +134,28 @@ open class TGCard: NSObject, NSCoding {
     } else {
       self.initialPosition = .extended
     }
+    self.topMapToolBarItems = coder.decodeArchived([UIView].self, forKey: "topMapToolBarItems")
+    self.bottomMapToolBarItems = coder.decodeArchived([UIView].self, forKey: "bottomMapToolBarItems")
   }
   
   open func encode(with aCoder: NSCoder) {
     switch title {
     case .custom(let view):
       aCoder.encode("custom", forKey: "title.type")
-      aCoder.encode(view, forKey: "title.view")
+      aCoder.encode(view: view, forKey: "title.view")
     case .default(let title, let subtitle, let view):
       aCoder.encode("default", forKey: "title.type")
       aCoder.encode(title, forKey: "title.title")
       aCoder.encode(subtitle, forKey: "title.subtitle")
-      aCoder.encode(view, forKey: "title.view")
+      aCoder.encode(view: view, forKey: "title.view")
     case .none:
       aCoder.encode("none", forKey: "title.type")
     }
     
     aCoder.encode(mapManager, forKey: "mapManager")
     aCoder.encode(initialPosition?.rawValue, forKey: "initialPosition")
+    aCoder.encodeArchive(topMapToolBarItems, forKey: "topMapToolBarItems")
+    aCoder.encodeArchive(bottomMapToolBarItems, forKey: "bottomMapToolBarItems")
   }
   
   // MARK: - Creating Card Views.
@@ -343,4 +347,39 @@ public protocol TGCardDelegate: class {
   ///   - old: Previous scroll view, if any
   ///   - card: The card whose scroll view changed
   func contentScrollViewDidChange(old: UIScrollView?, for card: TGCard)
+}
+
+// MARK: - Helper
+
+extension NSCoder {
+  func decodeView(forKey key: String) -> UIView? {
+    return decodeArchived(UIView.self, forKey: key)
+  }
+  
+  func encode(view: UIView?, forKey key: String) {
+    // For some reason, encoding the view directly doesn't work. We end up
+    // with `nil` for that key. Archiving it to data first works.
+    encodeArchive(view, forKey: key)
+  }
+  
+  func decodeArchived<T>(_ type: T.Type, forKey key: String) -> T? {
+    guard let data = decodeObject(forKey: key) as? Data else { return nil }
+    return NSKeyedUnarchiver.unarchiveObject(with: data) as? T
+  }
+  
+  func decodeArchived<T>(_ type: [T].Type, forKey key: String) -> [T]? {
+    guard let data = decodeObject(forKey: key) as? Data else { return nil }
+    return NSKeyedUnarchiver.unarchiveObject(with: data) as? [T]
+  }
+  
+  func encodeArchive<T>(_ object: T?, forKey key: String) {
+    guard let object = object else { return }
+    encode(NSKeyedArchiver.archivedData(withRootObject: object), forKey: key)
+  }
+  
+  func encodeArchive<T>(_ objects: [T]?, forKey key: String) {
+    guard let objects = objects else { return }
+    encode(NSKeyedArchiver.archivedData(withRootObject: objects), forKey: key)
+  }
+
 }

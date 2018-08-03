@@ -28,22 +28,8 @@ class ExampleChildCard : TGPlainCard {
     self.bottomMapToolBarItems = [] // This forces an empty bottom floating view
   }
   
-  required convenience init?(coder: NSCoder) {
-    self.init()
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
   }
-  
-  fileprivate enum StickyMode {
-    case image
-    case credits
-    case none
-  }
-  
-  fileprivate lazy var stickyCredits: UIView = {
-    let label = UILabel()
-    label.numberOfLines = 2
-    label.text = "\nErlkönig - Göthe"
-    label.sizeToFit()
-    return label
-  }()
   
 }
