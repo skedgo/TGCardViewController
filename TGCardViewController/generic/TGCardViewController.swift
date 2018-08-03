@@ -44,7 +44,7 @@ public protocol TGCardViewControllerDelegate: class {
 /// ```
 ///
 /// Third, and last, create a `TGCard` that represents the card at the top
-/// level, and add then push that in your view controller’s `viewDidLoad`:
+/// level, and add then set that in your view controller’s `viewDidLoad`:
 ///
 /// ```
 /// override func viewDidLoad() {
@@ -52,6 +52,27 @@ public protocol TGCardViewControllerDelegate: class {
 ///   super.viewDidLoad()
 /// }
 /// ```
+///
+/// ### State restoration
+///
+/// This class supports state restoration, which re-creates the hierarchy of
+/// cards. Cards are restored using `NSCoding`, so if you want to use state
+/// restoration in your app, make sure to override the `init(coder:)` and
+/// `encode(with:)` methods.
+///
+/// If you don't want to restore a particular card instance, just return `nil`
+/// from `init(coder:)`. Only the card hierarchy up to before that card will
+/// then be restored.
+///
+/// Two basic approaches exist for the state restoration of cards:
+///
+/// 1. Use the basic built-in support and call `super`. This takes care of the
+///    basic card content and views, but check the card documentation for
+///    details. Note that map managers, delegates and data source will *not*
+///    be restored this way.
+/// 2. Do it yourself by not calling `super` and using convenience initialisers
+///    for `init(coder:). The typical approach here is to save and restore the
+///    basic information, to then call your usual `init` methods on the cards.
 open class TGCardViewController: UIViewController {
   
   fileprivate enum Constants {

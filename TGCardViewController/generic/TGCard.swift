@@ -128,7 +128,6 @@ open class TGCard: NSObject, NSCoding {
       title = .none
     }
     
-    self.mapManager = coder.decodeArchived(TGCompatibleMapManager.self, forKey: "mapManager")
     if let rawPosition = coder.decodeObject(forKey: "initialPosition") as? String {
       self.initialPosition = TGCardPosition(rawValue: rawPosition)
     } else {
@@ -152,7 +151,6 @@ open class TGCard: NSObject, NSCoding {
       aCoder.encode("none", forKey: "title.type")
     }
     
-    aCoder.encodeArchive(mapManager, forKey: "mapManager")
     aCoder.encode(initialPosition?.rawValue, forKey: "initialPosition")
     aCoder.encodeArchive(topMapToolBarItems, forKey: "topMapToolBarItems")
     aCoder.encodeArchive(bottomMapToolBarItems, forKey: "bottomMapToolBarItems")
