@@ -48,9 +48,8 @@ public protocol TGCardViewControllerDelegate: class {
 ///
 /// ```
 /// override func viewDidLoad() {
+///   rootCard = MyRootCard()
 ///   super.viewDidLoad()
-///
-///   push(MyRootCard())
 /// }
 /// ```
 open class TGCardViewController: UIViewController {
@@ -130,6 +129,9 @@ open class TGCardViewController: UIViewController {
   ///
   /// @default: An instance of `TGMapKitBuilder`, i.e., using Apple's MapKit.
   public var builder: TGCompatibleMapBuilder = TGMapKitBuilder()
+  
+  /// The card to display at the root.
+  public var rootCard: TGCard?
   
   /// Position of current location button
   ///
@@ -214,6 +216,10 @@ open class TGCardViewController: UIViewController {
     cardWrapperShadow.layer.shadowOffset = CGSize(width: 0, height: -1)
     cardWrapperShadow.layer.shadowRadius = 3
     cardWrapperShadow.layer.shadowOpacity = 0.3
+    
+    if let root = rootCard {
+      push(root, animated: false)
+    }
   }
   
   override open func viewWillAppear(_ animated: Bool) {
@@ -319,17 +325,29 @@ open class TGCardViewController: UIViewController {
   
   // MARK: - UIStateRestoring
   
-  var restoredCardPosition: TGCardPosition?
+  private var restoredCardPosition: TGCardPosition?
+  private var restoredCards: [(card: TGCard, lastPosition: TGCardPosition)]?
+  
+  private struct RestorableCard: Codable {
+    let cardData: Data
+    let lastPosition: TGCardPosition
+  }
 
   open override func encodeRestorableState(with coder: NSCoder) {
     defer { super.encodeRestorableState(with: coder) }
     
     coder.encode(cardPosition.rawValue, forKey: "cardPosition")
 
-//    coder.encode(cards.map { $0.0 }, forKey: "cards")
-    if let top = topCard {
-      coder.encode(topCard, forKey: "topCard")
-    }
+    // We encode all the cards, even if they might not be able to get restored
+    // later. We filter that out when decoding, later.
+    // We do this funky method way here of using codable and having data in
+    // there, so that we can later selectively decode some of them, even if
+    // others fail to get decoded.
+    let cardInfos = cards
+      .map { (NSKeyedArchiver.archivedData(withRootObject: $0), $1) }
+      .map(RestorableCard.init)
+    let cardData = try? PropertyListEncoder().encode(cardInfos)
+    coder.encode(cardData, forKey: "cardData")
   }
 
   open override func decodeRestorableState(with coder: NSCoder) {
@@ -339,16 +357,35 @@ open class TGCardViewController: UIViewController {
       restoredCardPosition = TGCardPosition(rawValue: rawPosition as String)
     }
     
-    if let topCard = coder.decodeObject(forKey: "topCard") as? TGCard {
-      self.push(topCard)
+    // Decode the stack up to the first card failing, e.g., returning `nil`
+    // from its `init(coder:)` method.
+    if let cardData = coder.decodeObject(forKey: "cardData") as? Data,
+       let cardInfos = try? PropertyListDecoder().decode([RestorableCard].self, from: cardData) {
+      var successfullyRestored = [(card: TGCard, lastPosition: TGCardPosition)]()
+      for restorable in cardInfos {
+        guard let card = NSKeyedUnarchiver.unarchiveObject(with: restorable.cardData) as? TGCard else {
+          break // don't go any further in the stack
+        }
+        successfullyRestored.append((card: card, lastPosition: restorable.lastPosition))
+      }
+      self.restoredCards = successfullyRestored
     }
     if let cards = coder.decodeObject(of: [TGCard.self], forKey: "cards") as? [TGCard] {
-      self.cards = cards.map { ($0, .peaking) }
+      self.restoredCards = cards.map { ($0, .peaking) }
     }
   }
   
   open override func applicationFinishedRestoringState() {
     super.applicationFinishedRestoringState()
+    
+    // Now add the content
+    if let toRestore = restoredCards {
+      for (index, element) in toRestore.enumerated() {
+        guard rootCard == nil || index > 0 else { continue }
+        push(element.card, animated: false)
+      }
+      restoredCards = nil
+    }
   }
   
   

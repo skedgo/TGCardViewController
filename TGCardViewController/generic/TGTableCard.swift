@@ -13,10 +13,9 @@ import UIKit
 ///
 /// This class is generally subclassed.
 ///
-/// - warning: `TGTableCard` does *not* support state restoration out of the
-///     box. To support this, override `init(coder:)` in your subclass as a
-///     convenience initialiser and implement it yourself. You can also
-///     override `encode(with:)` - no need to call super for that.
+/// - warning: `TGTaleCard` supports state restoration, but will not
+///     restore data sources and delegates. Override `init(coder:)` and
+///     `encode(with:)` in your, making sure to call `super`.
 open class TGTableCard: TGCard {
   
   public let tableStyle: UITableViewStyle
@@ -67,9 +66,14 @@ open class TGTableCard: TGCard {
   }
   
   public required init?(coder: NSCoder) {
-    return nil
+    self.tableStyle = UITableViewStyle(rawValue: coder.decodeInteger(forKey: "tableStyle")) ?? .plain
+    super.init(coder: coder)
   }
   
+  open override func encode(with aCoder: NSCoder) {
+    super.encode(with: aCoder)
+    aCoder.encode(tableStyle.rawValue, forKey: "tableStyle")
+  }
   // MARK: - Card Life Cycle
   
   open override func didAppear(animated: Bool) {

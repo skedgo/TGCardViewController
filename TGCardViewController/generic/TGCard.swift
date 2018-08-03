@@ -128,7 +128,7 @@ open class TGCard: NSObject, NSCoding {
       title = .none
     }
     
-    self.mapManager = coder.decodeObject(forKey: "mapManager") as? TGCompatibleMapManager
+    self.mapManager = coder.decodeArchived(TGCompatibleMapManager.self, forKey: "mapManager")
     if let rawPosition = coder.decodeObject(forKey: "initialPosition") as? String {
       self.initialPosition = TGCardPosition(rawValue: rawPosition)
     } else {
@@ -152,7 +152,7 @@ open class TGCard: NSObject, NSCoding {
       aCoder.encode("none", forKey: "title.type")
     }
     
-    aCoder.encode(mapManager, forKey: "mapManager")
+    aCoder.encodeArchive(mapManager, forKey: "mapManager")
     aCoder.encode(initialPosition?.rawValue, forKey: "initialPosition")
     aCoder.encodeArchive(topMapToolBarItems, forKey: "topMapToolBarItems")
     aCoder.encodeArchive(bottomMapToolBarItems, forKey: "bottomMapToolBarItems")
@@ -347,39 +347,4 @@ public protocol TGCardDelegate: class {
   ///   - old: Previous scroll view, if any
   ///   - card: The card whose scroll view changed
   func contentScrollViewDidChange(old: UIScrollView?, for card: TGCard)
-}
-
-// MARK: - Helper
-
-extension NSCoder {
-  func decodeView(forKey key: String) -> UIView? {
-    return decodeArchived(UIView.self, forKey: key)
-  }
-  
-  func encode(view: UIView?, forKey key: String) {
-    // For some reason, encoding the view directly doesn't work. We end up
-    // with `nil` for that key. Archiving it to data first works.
-    encodeArchive(view, forKey: key)
-  }
-  
-  func decodeArchived<T>(_ type: T.Type, forKey key: String) -> T? {
-    guard let data = decodeObject(forKey: key) as? Data else { return nil }
-    return NSKeyedUnarchiver.unarchiveObject(with: data) as? T
-  }
-  
-  func decodeArchived<T>(_ type: [T].Type, forKey key: String) -> [T]? {
-    guard let data = decodeObject(forKey: key) as? Data else { return nil }
-    return NSKeyedUnarchiver.unarchiveObject(with: data) as? [T]
-  }
-  
-  func encodeArchive<T>(_ object: T?, forKey key: String) {
-    guard let object = object else { return }
-    encode(NSKeyedArchiver.archivedData(withRootObject: object), forKey: key)
-  }
-  
-  func encodeArchive<T>(_ objects: [T]?, forKey key: String) {
-    guard let objects = objects else { return }
-    encode(NSKeyedArchiver.archivedData(withRootObject: objects), forKey: key)
-  }
-
 }

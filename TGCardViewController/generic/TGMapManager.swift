@@ -60,6 +60,8 @@ open class TGMapManager: NSObject, TGCompatibleMapManager, NSCoding {
   public var edgePadding: UIEdgeInsets = .zero
 
   private var previousMapState: MapState?
+  
+  private var restoredMapRect: MKMapRect?
 
   public fileprivate(set) weak var mapView: MKMapView?
   
@@ -71,9 +73,11 @@ open class TGMapManager: NSObject, TGCompatibleMapManager, NSCoding {
   }
   
   public required init?(coder aDecoder: NSCoder) {
+    restoredMapRect = aDecoder.decode(forKey: "visibleMapRect")
   }
   
   open func encode(with aCoder: NSCoder) {
+    aCoder.encode(mapView?.visibleMapRect, forKey: "visibleMapRect")
   }
   
   public func takeCharge(of mapView: UIView, edgePadding: UIEdgeInsets, animated: Bool) {
@@ -96,7 +100,13 @@ open class TGMapManager: NSObject, TGCompatibleMapManager, NSCoding {
     self.edgePadding = edgePadding
     
     mapView.addAnnotations(annotations)
-    zoom(to: annotations, animated: animated)
+    
+    if let toRestore = restoredMapRect {
+      mapView.setVisibleMapRect(toRestore, animated: false)
+      restoredMapRect = nil
+    } else {
+      zoom(to: annotations, animated: animated)
+    }
   }
   
   public func cleanUp(_ mapView: UIView, animated: Bool) {

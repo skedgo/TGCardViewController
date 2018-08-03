@@ -20,10 +20,10 @@ class ExampleCardViewController: TGCardViewController {
   }
   
   override func viewDidLoad() {
-    super.viewDidLoad()
-    
+    rootCard = ExampleRootCard()
     navigationButtonsAreSpringLoaded = true
-    push(ExampleRootCard(), animated: false)
+
+    super.viewDidLoad()
   }
 
   override func didReceiveMemoryWarning() {
