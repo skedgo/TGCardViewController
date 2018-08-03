@@ -117,6 +117,7 @@ open class TGPageCard: TGCard {
       return nil
     }
     let initialPage = coder.decodeInteger(forKey: "initialPageIndex")
+    self.headerAccessoryView = coder.decodeView(forKey: "headerAccessoryView")
     
     assert(TGPageCard.allCardsHaveMapManagers(in: cards), "TGCardVC doesn't yet properly handle " +
       "page cards where some cards don't have map managers. It won't crash but will experience " +
@@ -137,6 +138,7 @@ open class TGPageCard: TGCard {
   open override func encode(with aCoder: NSCoder) {
     aCoder.encode(currentPageIndex, forKey: "initialPageIndex")
     aCoder.encode(cards, forKey: "cards")
+    aCoder.encode(view: headerAccessoryView, forKey: "headerAccessoryView")
   }
   
   fileprivate static func allCardsHaveMapManagers(in cards: [TGCard]) -> Bool {

@@ -14,10 +14,10 @@ import TGCardViewController
 class ExamplePageCard: TGPageCard {
   
   init() {
-    let card1 = TGPlainCard(title: "Hello Sydney", mapManager: TGMapManager.sydney)
-    let card2 = ExampleTableCard(mapManager: .london, pushOnTap: false)
+    let card1 = ExampleCityCard(city: .sydney)
+    let card2 = ExampleTableCard(pushOnTap: false)
     let card3 = ExampleChildCard()
-    let card4 = TGPlainCard(title: "Hello Nuremberg", mapManager: TGMapManager.nuremberg)
+    let card4 = ExampleCityCard(city: .nuremberg)
     super.init(cards: [card1, card2, card3, card4])
    
     // Custom accessory for testing jumping around
@@ -29,6 +29,7 @@ class ExamplePageCard: TGPageCard {
   }
   
   required init?(coder: NSCoder) {
+    // Note that this restores the child cards and the jump button.
     super.init(coder: coder)
   }
   

@@ -13,39 +13,37 @@ import TGCardViewController
 class ExampleTableCard : TGTableCard {
 
   private let source = ExampleTableDataSource()
-  private let pushOnTap: Bool
+  
+  private var pushOnTap: Bool
 
-  init(mapManager: TGMapManager? = nil, pushOnTap: Bool = true) {
+  init(pushOnTap: Bool = true) {
     
+    let mapManager = ExampleMapManager()
+    mapManager.annotations = source.stops
+
     self.pushOnTap = pushOnTap
-    
-    mapManager?.annotations = source.stops
-    
+
     super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: ExampleAccessoryView.instantiate(), mapManager: mapManager)
-    
-    if pushOnTap {
-      source.onSelect = {
-        let card = ExampleTableChildCard(annotation: $0)
-        self.controller?.push(card, animated: true)
-      }
-    } else {
-      source.onSelect = {
-        let annotation = $0
-        mapManager?.setCenter(annotation.coordinate, animated: true)
-      }
-    }
     
     self.bottomMapToolBarItems = [UIButton.dummySystemButton()]
   }
   
-  required convenience init?(coder: NSCoder) {
-    let mapManager = coder.decodeObject(forKey: "mapManager") as? TGMapManager
-    let pushOnTap = coder.decodeBool(forKey: "pushOnTap")
-    self.init(mapManager: mapManager, pushOnTap: pushOnTap)
+  required init?(coder: NSCoder) {
+    pushOnTap = coder.decodeBool(forKey: "pushOnTap")
+
+    super.init(coder: coder)
+    
+    mapManager = coder.decodeObject(forKey: "mapManager") as? ExampleMapManager
+    tableViewDataSource = source
+    tableViewDelegate = source
   }
   
   override func encode(with aCoder: NSCoder) {
+    super.encode(with: aCoder)
+    
+    assert(mapManager is ExampleMapManager)
     aCoder.encode(mapManager, forKey: "mapManager")
+    
     aCoder.encode(pushOnTap, forKey: "pushOnTap")
   }
   
@@ -56,6 +54,18 @@ class ExampleTableCard : TGTableCard {
     
     if #available(iOS 11.0, *) {
       tableView.dragInteractionEnabled = true
+    }
+    
+    if pushOnTap {
+      source.onSelect = {
+        let card = ExampleTableChildCard(annotation: $0)
+        self.controller?.push(card, animated: true)
+      }
+    } else {
+      source.onSelect = {
+        let annotation = $0
+        (self.mapManager as? ExampleMapManager)?.setCenter(annotation.coordinate, animated: true)
+      }
     }
   }
   
