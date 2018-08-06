@@ -274,6 +274,12 @@ open class TGCardViewController: UIViewController {
   override open func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     
+    if animated == false {
+      // FFS! This seems to be the only time we get the correct frame after
+      // restoring. So we'll have to fix up positions again here.
+      fixPositioning()
+    }
+    
     topCard?.didAppear(animated: animated)
     isVisible = true
   }
@@ -328,14 +334,19 @@ open class TGCardViewController: UIViewController {
   
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-    
+    fixPositioning()
+  }
+  
+  private func fixPositioning() {
     statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
     updateFloatingViewsConstraints()
     
-    let edgePadding = mapEdgePadding(for: cardPosition)
-    if let mapManager = topCard?.mapManager, mapManager.edgePadding != edgePadding {
-      mapManager.edgePadding = edgePadding
+    if !mapView.frame.isEmpty {
+      let edgePadding = mapEdgePadding(for: cardPosition)
+      if let mapManager = topCard?.mapManager, mapManager.edgePadding != edgePadding {
+        mapManager.edgePadding = edgePadding
+      }
     }
   }
   
@@ -463,6 +474,7 @@ open class TGCardViewController: UIViewController {
   ///         for the extended overlap (to avoid only having a tiny
   ///         map area to work with).
   fileprivate func mapEdgePadding(for position: TGCardPosition) -> UIEdgeInsets {
+    assert(mapView.frame.isEmpty == false, "Don't call this before we have a map view frame.")
     
     let bottomOverlap: CGFloat
     let leftOverlap: CGFloat
@@ -482,7 +494,7 @@ open class TGCardViewController: UIViewController {
       }
       
       // We call this method at times where the map view hasn't been resized yet. We
-      // guess the heigh tby just taking the larger side since the card is not next
+      // guess the height by just taking the larger side since the card is not next
       // to the map, meaning we're in portrait.
       let height = max(mapView.frame.width, mapView.frame.height)
       
