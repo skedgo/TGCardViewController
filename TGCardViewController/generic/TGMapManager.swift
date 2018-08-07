@@ -142,7 +142,7 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
     let centerPoint = CGPoint(x: edgePadding.left + visibleWidth / 2, y: edgePadding.top + visibleHeight / 2)
     return mapView.convert(centerPoint, toCoordinateFrom: mapView)
   }
-  
+
   public func setCenter(_ coordinate: CLLocationCoordinate2D, animated: Bool) {
     mapView?.setCenter(coordinate, edgePadding: edgePadding, animated: animated)
   }
@@ -192,19 +192,24 @@ extension MKMapView {
   func setCenter(_ coordinate: CLLocationCoordinate2D,
                  edgePadding: UIEdgeInsets,
                  animated: Bool) {
-
-    // Coordinate at the top left considering the edge padding
-    let visibleTopLeft = convert(CGPoint(x: edgePadding.left, y: edgePadding.top), toCoordinateFrom: self)
     
-    // Coordinate at the top left of the map, ignoring edge padding
-    let unadjustedTopLeft = MKCoordinateForMapPoint(visibleMapRect.origin)
-    
-    // The new center is the desired centre minus half vector defining the difference of the two above
-    let newCenter = CLLocationCoordinate2D(
-      latitude: coordinate.latitude - (visibleTopLeft.latitude - unadjustedTopLeft.latitude) / 2,
-      longitude: coordinate.longitude - (visibleTopLeft.longitude - unadjustedTopLeft.longitude) / 2
+    // Coordinate at the currently visible center, considering edge padding
+    let visibleCenterPoint = CGPoint(
+      x: edgePadding.left + (frame.width - edgePadding.left - edgePadding.right) / 2,
+      y: edgePadding.top + (frame.height - edgePadding.top - edgePadding.bottom) / 2
     )
+    let visibleCenter = convert(visibleCenterPoint, toCoordinateFrom: self)
     
+    // Map view's center
+    let unadjustedCenter = centerCoordinate
+    
+    // New map view center, will be the desired coordinate, plus the offset
+    // Note: Won't work well if this is on a different part of the planet
+    let newCenter = CLLocationCoordinate2D(
+      latitude: coordinate.latitude + (unadjustedCenter.latitude - visibleCenter.latitude) / 2,
+      longitude: coordinate.longitude + (unadjustedCenter.longitude - visibleCenter.longitude) / 2
+    )
+
     setCenter(newCenter, animated: animated)
   }
   
