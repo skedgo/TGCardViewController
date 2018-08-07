@@ -19,6 +19,10 @@ class ExampleCustomTitleCard: TGPlainCard {
     titleView.dismissButton.addTarget(self, action: #selector(dismissButtonTapped(_:)), for: .touchUpInside)
   }
   
+  required convenience init?(coder: NSCoder) {
+    self.init()
+  }
+  
   override func buildHeaderView() -> TGHeaderView? {
     return TurnByTurnHeaderView.newInstance()
   }

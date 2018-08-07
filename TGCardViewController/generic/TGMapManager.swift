@@ -20,7 +20,6 @@ public protocol TGCompatibleMapManager: class {
 }
 
 open class TGMapManager: NSObject, TGCompatibleMapManager {
-  
   public enum Zoom: Double {
     case road     = 5  // local level => how do I navigate on the road?
     case city     = 10 // can fit a city => where in the city are we?
@@ -61,6 +60,8 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
   public var edgePadding: UIEdgeInsets = .zero
 
   private var previousMapState: MapState?
+  
+  private var restoredMapRect: MKMapRect?
 
   public fileprivate(set) weak var mapView: MKMapView?
   
@@ -91,7 +92,13 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
     self.edgePadding = edgePadding
     
     mapView.addAnnotations(annotations)
-    zoom(to: annotations, animated: animated)
+    
+    if let toRestore = restoredMapRect {
+      mapView.setVisibleMapRect(toRestore, animated: false)
+      restoredMapRect = nil
+    } else {
+      zoom(to: annotations, animated: animated)
+    }
   }
   
   public func cleanUp(_ mapView: UIView, animated: Bool) {

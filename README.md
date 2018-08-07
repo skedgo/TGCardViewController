@@ -116,7 +116,7 @@ Via Carthage
 
 1. Add it to your `Cartfile`, e.g.:
 
-    `git "git@gitlab.com:SkedGo/tripgo-cards-ios.git" "17-carthage-support"`
+    `git "git@gitlab.com:SkedGo/tripgo-cards-ios.git" "master"`
 
 2. Run `carthage update` and follow [the usual instructions](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application) to add it to your project.
 
@@ -144,9 +144,8 @@ Via Carthage
 
     ```swift
       override func viewDidLoad() {
+        rootCard = MyRootCard()
         super.viewDidLoad()
-        
-        push(MyRootCard())
       }
     ```
 

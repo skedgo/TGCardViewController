@@ -12,6 +12,10 @@ import UIKit
 /// as the card's content.
 ///
 /// This class is generally subclassed.
+///
+/// - warning: `TGTaleCard` supports state restoration, but will not
+///     restore data sources and delegates. Override `init(coder:)` and
+///     `encode(with:)` in your, making sure to call `super`.
 open class TGTableCard: TGCard {
   
   public let tableStyle: UITableViewStyle
@@ -61,6 +65,15 @@ open class TGTableCard: TGCard {
                mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
   
+  public required init?(coder: NSCoder) {
+    self.tableStyle = UITableViewStyle(rawValue: coder.decodeInteger(forKey: "tableStyle")) ?? .plain
+    super.init(coder: coder)
+  }
+  
+  open override func encode(with aCoder: NSCoder) {
+    super.encode(with: aCoder)
+    aCoder.encode(tableStyle.rawValue, forKey: "tableStyle")
+  }
   // MARK: - Card Life Cycle
   
   open override func didAppear(animated: Bool) {

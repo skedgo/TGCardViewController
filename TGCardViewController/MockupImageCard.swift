@@ -29,11 +29,15 @@ class MockupImageCard : TGPlainCard {
     mapManager?.annotations = locations
     mapManager?.preferredZoomLevel = .road
     
-    super.init(title: title, subtitle: subtitle, contentView: content, mapManager: mapManager)
+    super.init(title: .default(title, subtitle, nil), contentView: content, mapManager: mapManager)
 
     let tapper = UITapGestureRecognizer()
     tapper.addTarget(self, action: #selector(handleTap))
     content.addGestureRecognizer(tapper)
+  }
+  
+  required convenience init?(coder: NSCoder) {
+    return nil
   }
   
   override func buildCardView(includeTitleView: Bool) -> TGCardView {

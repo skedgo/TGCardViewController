@@ -12,6 +12,10 @@ import UIKit
 /// as the card's content.
 ///
 /// This class is generally subclassed.
+///
+/// - warning: `TGCollectionCard` supports state restoration, but will not
+///     restore data sources and delegates. Override `init(coder:)` and
+///     `encode(with:)` in your, making sure to call `super`.
 open class TGCollectionCard: TGCard {
   
   public let collectionViewLayout: UICollectionViewLayout
@@ -42,6 +46,19 @@ open class TGCollectionCard: TGCard {
     self.collectionViewLayout = layout
     
     super.init(title: title, mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
+  }
+  
+  public required init?(coder: NSCoder) {
+    guard let layout = coder.decodeArchived(UICollectionViewLayout.self, forKey: "collectionViewLayout") else {
+      return nil
+    }
+    self.collectionViewLayout = layout
+    super.init(coder: coder)
+  }
+  
+  open override func encode(with aCoder: NSCoder) {
+    super.encode(with: aCoder)
+    aCoder.encodeArchive(collectionViewLayout, forKey: "collectionViewLayout")
   }
   
   // MARK: - Constructing views

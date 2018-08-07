@@ -44,15 +44,35 @@ public protocol TGCardViewControllerDelegate: class {
 /// ```
 ///
 /// Third, and last, create a `TGCard` that represents the card at the top
-/// level, and add then push that in your view controller’s `viewDidLoad`:
+/// level, and add then set that in your view controller’s `viewDidLoad`:
 ///
 /// ```
 /// override func viewDidLoad() {
+///   rootCard = MyRootCard()
 ///   super.viewDidLoad()
-///
-///   push(MyRootCard())
 /// }
 /// ```
+///
+/// ### State restoration
+///
+/// This class supports state restoration, which re-creates the hierarchy of
+/// cards. Cards are restored using `NSCoding`, so if you want to use state
+/// restoration in your app, make sure to override the `init(coder:)` and
+/// `encode(with:)` methods.
+///
+/// If you don't want to restore a particular card instance, just return `nil`
+/// from `init(coder:)`. Only the card hierarchy up to before that card will
+/// then be restored.
+///
+/// Two basic approaches exist for the state restoration of cards:
+///
+/// 1. Use the basic built-in support and call `super`. This takes care of the
+///    basic card content and views, but check the card documentation for
+///    details. Note that map managers, delegates and data source will *not*
+///    be restored this way.
+/// 2. Do it yourself by not calling `super` and using convenience initialisers
+///    for `init(coder:). The typical approach here is to save and restore the
+///    basic information, to then call your usual `init` methods on the cards.
 open class TGCardViewController: UIViewController {
   
   fileprivate enum Constants {
@@ -131,6 +151,9 @@ open class TGCardViewController: UIViewController {
   /// @default: An instance of `TGMapKitBuilder`, i.e., using Apple's MapKit.
   public var builder: TGCompatibleMapBuilder = TGMapKitBuilder()
   
+  /// The card to display at the root.
+  public var rootCard: TGCard?
+  
   /// Position of current location button
   ///
   /// @default: `top`
@@ -150,6 +173,12 @@ open class TGCardViewController: UIViewController {
   fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
 
   // MARK: - UIViewController
+  
+  open override func awakeFromNib() {
+    super.awakeFromNib()
+    
+    self.restorationIdentifier = "CardViewController"
+  }
   
   override open func viewDidLoad() {
     super.viewDidLoad()
@@ -208,6 +237,10 @@ open class TGCardViewController: UIViewController {
     cardWrapperShadow.layer.shadowOffset = CGSize(width: 0, height: -1)
     cardWrapperShadow.layer.shadowRadius = 3
     cardWrapperShadow.layer.shadowOpacity = 0.3
+    
+    if let root = rootCard {
+      push(root, animated: false)
+    }
   }
   
   override open func viewWillAppear(_ animated: Bool) {
@@ -227,14 +260,25 @@ open class TGCardViewController: UIViewController {
     case .peaking:    distanceFromHeaderView = peakY
     case .extended:   distanceFromHeaderView = extendedMinY
     }
-    
     cardWrapperDesiredTopConstraint.constant = distanceFromHeaderView
+    
+    // Now is the time to restore
+    if let position = restoredCardPosition {
+      moveCard(to: position, animated: false)
+      restoredCardPosition = nil
+    }
     
     topCard?.willAppear(animated: animated)
   }
   
   override open func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+    
+    if animated == false {
+      // FFS! This seems to be the only time we get the correct frame after
+      // restoring. So we'll have to fix up positions again here.
+      fixPositioning()
+    }
     
     topCard?.didAppear(animated: animated)
     isVisible = true
@@ -290,14 +334,19 @@ open class TGCardViewController: UIViewController {
   
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-    
+    fixPositioning()
+  }
+  
+  private func fixPositioning() {
     statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
     updateFloatingViewsConstraints()
     
-    let edgePadding = mapEdgePadding(for: cardPosition)
-    if let mapManager = topCard?.mapManager, mapManager.edgePadding != edgePadding {
-      mapManager.edgePadding = edgePadding
+    if !mapView.frame.isEmpty {
+      let edgePadding = mapEdgePadding(for: cardPosition)
+      if let mapManager = topCard?.mapManager, mapManager.edgePadding != edgePadding {
+        mapManager.edgePadding = edgePadding
+      }
     }
   }
   
@@ -305,6 +354,72 @@ open class TGCardViewController: UIViewController {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
+  
+  // MARK: - UIStateRestoring
+  
+  private var restoredCardPosition: TGCardPosition?
+  private var restoredCards: [(card: TGCard, lastPosition: TGCardPosition)]?
+  
+  private struct RestorableCard: Codable {
+    let cardData: Data
+    let lastPosition: TGCardPosition
+  }
+
+  open override func encodeRestorableState(with coder: NSCoder) {
+    defer { super.encodeRestorableState(with: coder) }
+    
+    coder.encode(cardPosition.rawValue, forKey: "cardPosition")
+
+    // We encode all the cards, even if they might not be able to get restored
+    // later. We filter that out when decoding, later.
+    // We do this funky method way here of using codable and having data in
+    // there, so that we can later selectively decode some of them, even if
+    // others fail to get decoded.
+    let cardInfos = cards
+      .map { (NSKeyedArchiver.archivedData(withRootObject: $0), $1) }
+      .map(RestorableCard.init)
+    let cardData = try? PropertyListEncoder().encode(cardInfos)
+    coder.encode(cardData, forKey: "cardData")
+  }
+
+  open override func decodeRestorableState(with coder: NSCoder) {
+    defer { super.decodeRestorableState(with: coder) }
+
+    if let rawPosition = coder.decodeObject(of: NSString.self, forKey: "cardPosition") {
+      restoredCardPosition = TGCardPosition(rawValue: rawPosition as String)
+    }
+    
+    // Decode the stack up to the first card failing, e.g., returning `nil`
+    // from its `init(coder:)` method.
+    if let cardData = coder.decodeObject(forKey: "cardData") as? Data,
+       let cardInfos = try? PropertyListDecoder().decode([RestorableCard].self, from: cardData) {
+      var successfullyRestored = [(card: TGCard, lastPosition: TGCardPosition)]()
+      for restorable in cardInfos {
+        guard let card = NSKeyedUnarchiver.unarchiveObject(with: restorable.cardData) as? TGCard else {
+          break // don't go any further in the stack
+        }
+        successfullyRestored.append((card: card, lastPosition: restorable.lastPosition))
+      }
+      self.restoredCards = successfullyRestored
+    }
+    if let cards = coder.decodeObject(of: [TGCard.self], forKey: "cards") as? [TGCard] {
+      self.restoredCards = cards.map { ($0, .peaking) }
+    }
+  }
+  
+  open override func applicationFinishedRestoringState() {
+    super.applicationFinishedRestoringState()
+    
+    // Now add the content
+    if let toRestore = restoredCards {
+      for (index, element) in toRestore.enumerated() {
+        guard rootCard == nil || index > 0 else { continue }
+        push(element.card, animated: false)
+      }
+      restoredCards = nil
+    }
+  }
+  
   
   // MARK: - Card positioning
   
@@ -359,6 +474,7 @@ open class TGCardViewController: UIViewController {
   ///         for the extended overlap (to avoid only having a tiny
   ///         map area to work with).
   fileprivate func mapEdgePadding(for position: TGCardPosition) -> UIEdgeInsets {
+    assert(mapView.frame.isEmpty == false, "Don't call this before we have a map view frame.")
     
     let bottomOverlap: CGFloat
     let leftOverlap: CGFloat
@@ -378,7 +494,7 @@ open class TGCardViewController: UIViewController {
       }
       
       // We call this method at times where the map view hasn't been resized yet. We
-      // guess the heigh tby just taking the larger side since the card is not next
+      // guess the height by just taking the larger side since the card is not next
       // to the map, meaning we're in portrait.
       let height = max(mapView.frame.width, mapView.frame.height)
       

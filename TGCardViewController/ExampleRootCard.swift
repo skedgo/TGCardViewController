@@ -51,6 +51,11 @@ class ExampleRootCard : TGTableCard {
     self.bottomMapToolBarItems = [contactAddButton]
   }
   
+  required convenience init?(coder: NSCoder) {
+    // A very simple kind of "restoring", but just using the regular init.
+    self.init()
+  }
+  
   override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
     super.didBuild(cardView: cardView, headerView: headerView)
     
@@ -104,7 +109,7 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
   let items: [Item] = [
     (title: "Show Mock-up", card: MockupRootCard()),
     (title: "Show Erlking", card: ExampleChildCard()),
-    (title: "Show Table",   card: ExampleTableCard(mapManager: .london)),
+    (title: "Show Table",   card: ExampleTableCard()),
     (title: "Show Pages",   card: ExamplePageCard()),
     (title: "Custom title", card: ExampleCustomTitleCard())
   ]

@@ -25,6 +25,10 @@ class ExampleTableChildCard : TGPlainCard {
     
     let wrappedTitle = annotation.title ?? nil
     
-    super.init(title: wrappedTitle ?? "No title", subtitle: annotation.subtitle ?? nil, contentView: label, mapManager: mapManager, initialPosition: .collapsed)
+    super.init(title: .default(wrappedTitle ?? "No title", annotation.subtitle ?? nil, nil), contentView: label, mapManager: mapManager, initialPosition: .collapsed)
+  }
+  
+  required init?(coder: NSCoder) {
+    return nil
   }
 }

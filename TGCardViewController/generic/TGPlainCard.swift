@@ -39,7 +39,7 @@ open class TGPlainCard: TGCard {
     super.init(title: title, mapManager: mapManager, initialPosition: initialPosition)
   }
   
-  public init(
+  public convenience init(
     title: String,
     subtitle: String? = nil,
     contentView: UIView? = nil,
@@ -48,15 +48,22 @@ open class TGPlainCard: TGCard {
     initialPosition: TGCardPosition? = nil
     ) {
     
-    assert(!(contentView is UIScrollView),
-           "This card is not meant for content views that are itself" +
-      "scrolling. Use `TGTableCardView` instead.")
-    
-    self.contentView = contentView
-    super.init(
+    self.init(
       title: .default(title, subtitle, accessoryView),
-      mapManager: mapManager, initialPosition: initialPosition
+      contentView: contentView,
+      mapManager: mapManager,
+      initialPosition: initialPosition
     )
+  }
+  
+  public required init?(coder: NSCoder) {
+    self.contentView = coder.decodeView(forKey: "contentView")
+    super.init(coder: coder)
+  }
+  
+  open override func encode(with aCoder: NSCoder) {
+    super.encode(with: aCoder)
+    aCoder.encode(view: contentView, forKey: "contentView")
   }
   
   open override func buildCardView(includeTitleView: Bool) -> TGCardView {
