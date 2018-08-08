@@ -1199,7 +1199,7 @@ extension TGCardViewController {
       // When card is on the side of the map, always show the floating views.
       fadeMapFloatingViews(false)
     } else {
-      fadeMapFloatingViews(cardPosition == .extended)
+      fadeMapFloatingViews(cardPosition == .extended || isShowingHeader)
     }
   }
   
