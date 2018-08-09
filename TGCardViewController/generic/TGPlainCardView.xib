@@ -88,11 +88,11 @@
                 <outlet property="contentScrollView" destination="Dar-6n-Caw" id="cgp-sH-B9w"/>
                 <outlet property="contentSeparator" destination="Its-ul-Cm5" id="20V-OO-GtA"/>
                 <outlet property="contentView" destination="fpj-MI-D7T" id="xMy-mv-ixq"/>
-                <outlet property="contentViewHeightEqualToSuperVieewHeightConstraint" destination="vO2-Tx-eXR" id="QSI-Qq-dXx"/>
+                <outlet property="contentViewHeightEqualToSuperviewHeightConstraint" destination="vO2-Tx-eXR" id="QSI-Qq-dXx"/>
                 <outlet property="floatingButton" destination="4nd-sh-0Ix" id="Dfx-Mg-Sgd"/>
                 <outlet property="grabHandle" destination="JFj-Bl-Nt0" id="RDe-nF-gpP"/>
-                <outlet property="titleViewPlaceHolderHeight" destination="bKP-gV-MiA" id="uTE-vC-HM8"/>
                 <outlet property="titleViewPlaceholder" destination="IKp-9B-y5N" id="k2L-7f-2D6"/>
+                <outlet property="titleViewPlaceholderHeight" destination="bKP-gV-MiA" id="uTE-vC-HM8"/>
             </connections>
             <point key="canvasLocation" x="-136" y="158"/>
         </view>

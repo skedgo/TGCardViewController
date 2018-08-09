@@ -11,8 +11,8 @@ import UIKit
 class TGPlainCardView: TGCardView {
 
   @IBOutlet weak var contentView: UIView!
-  @IBOutlet weak var contentViewHeightEqualToSuperVieewHeightConstraint: NSLayoutConstraint!
-  @IBOutlet weak var titleViewPlaceHolderHeight: NSLayoutConstraint!
+  @IBOutlet weak var contentViewHeightEqualToSuperviewHeightConstraint: NSLayoutConstraint!
+  @IBOutlet weak var titleViewPlaceholderHeight: NSLayoutConstraint!
   
   // MARK: - New instances
   
@@ -34,7 +34,7 @@ class TGPlainCardView: TGCardView {
     super.configure(with: plainCard, includeTitleView: includeTitleView)
     
     if !includeTitleView {
-      titleViewPlaceHolderHeight.constant = 0
+      titleViewPlaceholderHeight.constant = 0
     } else {
       var adjustment: CGFloat = 1.0 // accounted for the separator
       
@@ -47,7 +47,7 @@ class TGPlainCardView: TGCardView {
         adjustment += handle.frame.height
       }
       
-      contentViewHeightEqualToSuperVieewHeightConstraint.constant = -1*adjustment
+      contentViewHeightEqualToSuperviewHeightConstraint.constant = -1*adjustment
     }
     
     if let content = plainCard.contentView {

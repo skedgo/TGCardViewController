@@ -39,19 +39,6 @@ class ExampleCityCard : TGPlainCard {
    
   init(city: City) {
     self.city = city
-//    let content = ExampleChildContentView.instantiate()
-//    let content = UIView()
-//    content.backgroundColor = .orange
-//    let label = UILabel()
-//    label.text = "This is a demo text"
-//    label.textColor = .white
-//    label.translatesAutoresizingMaskIntoConstraints = false
-//    content.addSubview(label)
-//    label.topAnchor.constraint(equalTo: content.topAnchor, constant: 16).isActive = true
-//    label.bottomAnchor.constraint(equalTo: content.bottomAnchor, constant: -16).isActive = true
-//    label.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 16).isActive = true
-//    label.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -16).isActive = true
-//    super.init(title: .default(city.title, nil, nil), contentView: content, mapManager: city.manager)
     super.init(title: .default(city.title, nil, nil), mapManager: city.manager)
   }
   
