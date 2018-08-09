@@ -26,6 +26,10 @@ class ExamplePageCard: TGPageCard {
     jumpButton.addTarget(self, action: #selector(headerJumpPressed(sender:)), for: .touchUpInside)
     
     self.headerAccessoryView = jumpButton
+    
+    // These were added to debug toolbar issue when header was present
+    self.topMapToolBarItems = [UIButton.dummyDetailDisclosureButton()]
+    self.bottomMapToolBarItems = [UIButton.dummyInfoLightButton()]
   }
   
   required init?(coder: NSCoder) {

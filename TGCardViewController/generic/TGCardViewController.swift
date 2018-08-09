@@ -689,7 +689,6 @@ extension TGCardViewController {
     }
     top.delegate = self
 
-
     // Incoming card has its own top and bottom floating views.
     updateFloatingViewsContent()
     
@@ -1212,16 +1211,9 @@ extension TGCardViewController {
     case .bottom: bottomViews = defaultButtons
     }
     
-    if let newTops = topCard?.topMapToolBarItems {
-      topViews.append(contentsOf: newTops)
-    }
-    
-    if !topViews.isEmpty {
-      populateFloatingView(topFloatingView, with: topViews)
-    } else {
-      cleanUpFloatingView(topFloatingView)
-    }
-
+    // Because we want to relocate buttons in the top toolbar
+    // to the bottom toolbar when header is present, so it is
+    // important that we set up bottom toolbar first!
     if let newBottoms = topCard?.bottomMapToolBarItems {
       bottomViews.append(contentsOf: newBottoms)
     }
@@ -1230,6 +1222,28 @@ extension TGCardViewController {
       populateFloatingView(bottomFloatingView, with: bottomViews)
     } else {
       cleanUpFloatingView(bottomFloatingView)
+    }
+    
+    // Now we can proceed with setting up toolbar at the top.
+    if let newTops = topCard?.topMapToolBarItems {
+      topViews.append(contentsOf: newTops)
+    }
+    
+    if !topViews.isEmpty {
+      if isShowingHeader {
+        // If header is present, we move the buttons that should be in
+        // the top toolbar to the bottom.
+        bottomViews.append(contentsOf: topViews)
+        populateFloatingView(bottomFloatingView, with: bottomViews)
+        
+        // Don't forget to clean up top toolbar, or items from other
+        // cards can still be visible
+        cleanUpFloatingView(topFloatingView)
+      } else {
+        populateFloatingView(topFloatingView, with: topViews)
+      }
+    } else {
+      cleanUpFloatingView(topFloatingView)
     }
   }
   
