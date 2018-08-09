@@ -36,7 +36,7 @@ class ExampleCityCard : TGPlainCard {
   }
   
   let city: City
-  
+   
   init(city: City) {
     self.city = city
     super.init(title: .default(city.title, nil, nil), mapManager: city.manager)

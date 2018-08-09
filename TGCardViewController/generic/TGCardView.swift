@@ -102,7 +102,6 @@ public class TGCardView: TGCornerView {
   
   func configure(with card: TGCard, includeTitleView: Bool) {
     if let placeholder = titleViewPlaceholder, includeTitleView {
-
       let titleView: UIView?
       switch card.title {
       case .default(let title, let subtitle, let accessoryView):
