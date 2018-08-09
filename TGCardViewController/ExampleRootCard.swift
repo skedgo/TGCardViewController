@@ -88,7 +88,7 @@ class ExampleRootCard : TGTableCard {
 
 extension UIButton {
   
-  static func dummySystemButton() -> UIButton {
+  static func dummyDetailDisclosureButton() -> UIButton {
     let dummy = UIButton(type: .detailDisclosure)
     dummy.widthAnchor.constraint(equalToConstant: 45).isActive = true
     dummy.heightAnchor.constraint(equalToConstant: 45).isActive = true
@@ -96,6 +96,16 @@ extension UIButton {
     dummy.tintColor = .white
     return dummy
   }
+  
+  static func dummyInfoLightButton() -> UIButton {
+    let dummy = UIButton(type: .infoLight)
+    dummy.widthAnchor.constraint(equalToConstant: 45).isActive = true
+    dummy.heightAnchor.constraint(equalToConstant: 45).isActive = true
+    dummy.backgroundColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+    dummy.tintColor = .white
+    return dummy
+  }
+  
 }
 
 // MARK: -

@@ -25,7 +25,7 @@ class ExampleTableCard : TGTableCard {
 
     super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: ExampleAccessoryView.instantiate(), mapManager: mapManager)
     
-    self.bottomMapToolBarItems = [UIButton.dummySystemButton()]
+    self.bottomMapToolBarItems = [UIButton.dummyDetailDisclosureButton()]
   }
   
   required init?(coder: NSCoder) {

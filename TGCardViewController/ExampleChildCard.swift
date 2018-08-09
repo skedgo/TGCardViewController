@@ -24,7 +24,7 @@ class ExampleChildCard : TGPlainCard {
     
     super.init(title: .default("Child", "With sticky button", accessoryLabel), contentView: content, mapManager: TGMapManager.sydney)
     
-    self.topMapToolBarItems = [UIButton.dummySystemButton(), UIButton.dummySystemButton()]
+    self.topMapToolBarItems = [UIButton.dummyDetailDisclosureButton(), UIButton.dummyDetailDisclosureButton()]
     self.bottomMapToolBarItems = [] // This forces an empty bottom floating view
   }
   

@@ -91,7 +91,7 @@ public class TGPageHeaderView: TGHeaderView {
   // MARK: - Managing Appearance
 
   func applyStyling(for card: TGPageCard) {
-    backgroundColor = card.backgroundColor ?? .white
+    backgroundColor = .clear // card.backgroundColor ?? .white
 
     titleLabel.font = card.titleFont
     titleLabel.textColor = card.titleTextColor
