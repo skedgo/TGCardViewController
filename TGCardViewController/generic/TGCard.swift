@@ -48,12 +48,18 @@ open class TGCard: NSObject, NSCoding {
   /// Enumeration of supported floating button styles. Use by setting
   /// `card.floatingButtonAction`.
   public enum FloatingButtonStyle {
-    case add
+    case add(UIColor)
     case custom(UIImage)
   }
   
-  /// The default image for the close button on a card
-  public static let closeButtonImage = TGCardStyleKit.imageOfCardCloseIcon
+  /// The default image for the close button on a card, with default color
+  public static let closeButtonImage = TGCardStyleKit.imageOfCardCloseIcon()
+
+  /// The default image for the close button on a card, with custom background
+  /// color
+  public static func closeButtonImage(background: UIColor) -> UIImage {
+    return TGCardStyleKit.imageOfCardCloseIcon(closeButtonBackground: background)
+  }
   
   /// The card controller currently displaying the card
   ///

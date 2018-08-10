@@ -154,6 +154,26 @@ open class TGCardViewController: UIViewController {
   /// The card to display at the root.
   public var rootCard: TGCard?
   
+  /// The style that's applied to the cards' top and bottom map tool
+  /// bar itms.
+  ///
+  /// @default: `TGButtonStyle.roundedRect`
+  public var buttonStyle: TGButtonStyle = .roundedRect {
+    didSet {
+      switch buttonStyle {
+      case .roundedRect:
+        topFloatingViewWrapper.layer.cornerRadius = 8
+        bottomFloatingViewWrapper.layer.cornerRadius = 8
+      case .circle:
+        topFloatingViewWrapper.layer.cornerRadius = topFloatingViewWrapper.frame.width / 2
+        bottomFloatingViewWrapper.layer.cornerRadius = bottomFloatingViewWrapper.frame.height / 2
+      case .none:
+        topFloatingViewWrapper.layer.cornerRadius = 0
+        bottomFloatingViewWrapper.layer.cornerRadius = 0
+      }
+    }
+  }
+  
   /// Position of current location button
   ///
   /// @default: `top`

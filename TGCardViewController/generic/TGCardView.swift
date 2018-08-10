@@ -77,7 +77,7 @@ public class TGCardView: TGCornerView {
     
     if let floatie = floatingButton {
       floatie.isHidden = true
-      floatie.setImage(TGCardStyleKit.imageOfFloatingButton, for: .normal)
+      floatie.setImage(nil, for: .normal)
       floatie.setTitle(nil, for: .normal)      
     }
   }
@@ -133,8 +133,8 @@ public class TGCardView: TGCornerView {
       floatingButton?.setTitle(nil, for: .normal)
       
       switch action.style {
-      case .add:
-        floatingButton?.setImage(TGCardStyleKit.imageOfFloatingButton, for: .normal)
+      case .add(let color):
+        floatingButton?.setImage(TGCardStyleKit.imageOfFloatingButton(floatingButtonBackground: color), for: .normal)
       case .custom(let image):
         floatingButton?.setImage(image, for: .normal)
       }

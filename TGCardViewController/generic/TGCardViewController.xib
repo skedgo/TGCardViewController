@@ -107,14 +107,14 @@
                             <rect key="frame" x="0.0" y="60" width="414" height="676"/>
                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
-                        <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="60" placeholderIntrinsicHeight="35" translatesAutoresizingMaskIntoConstraints="NO" id="u6M-z2-2xb">
-                            <rect key="frame" x="668" y="371" width="60" height="35"/>
+                        <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="91" placeholderIntrinsicHeight="45" translatesAutoresizingMaskIntoConstraints="NO" id="u6M-z2-2xb">
+                            <rect key="frame" x="637" y="361" width="91" height="45"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="qM8-dd-KXi">
-                                <rect key="frame" x="0.0" y="0.0" width="60" height="35"/>
+                                <rect key="frame" x="0.0" y="0.0" width="91" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vXo-Av-jHv" userLabel="Bottom floating view">
-                                        <rect key="frame" x="0.0" y="0.0" width="60" height="35"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="91" height="45"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tGF-Ui-va6">
                                                 <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>

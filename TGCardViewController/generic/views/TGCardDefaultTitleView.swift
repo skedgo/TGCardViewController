@@ -73,7 +73,7 @@ class TGCardDefaultTitleView: UIView {
     subtitleLabel.text = subtitle
     dismissButton.isHidden = false
     labelStack.spacing = subtitle != nil ? 3 : 0
-    dismissButton.setImage(TGCardStyleKit.imageOfCardCloseIcon, for: .normal)
+    dismissButton.setImage(TGCardStyleKit.imageOfCardCloseIcon(), for: .normal)
     dismissButton.setTitle(nil, for: .normal)
   }
   

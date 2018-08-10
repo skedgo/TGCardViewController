@@ -17,3 +17,15 @@ public enum TGButtonPosition {
   /// left of the screen)
   case bottom
 }
+
+public enum TGButtonStyle {
+  /// Rectangle with rounded corners
+  case roundedRect
+  
+  /// Circular. Note this also looks half-decent when there's only a
+  /// single button per toolbar.
+  case circle
+  
+  /// No ornamentation
+  case none
+}
