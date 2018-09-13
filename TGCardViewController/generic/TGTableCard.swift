@@ -18,7 +18,7 @@ import UIKit
 ///     `encode(with:)` in your, making sure to call `super`.
 open class TGTableCard: TGCard {
   
-  public let tableStyle: UITableViewStyle
+  public let tableStyle: UITableView.Style
   
   /// The delegate to be used for the card view's table view.
   ///
@@ -37,7 +37,7 @@ open class TGTableCard: TGCard {
   public init(title: CardTitle,
               dataSource: UITableViewDataSource? = nil,
               delegate: UITableViewDelegate? = nil,
-              style: UITableViewStyle = .plain,
+              style: UITableView.Style = .plain,
               mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     
@@ -53,7 +53,7 @@ open class TGTableCard: TGCard {
               subtitle: String? = nil,
               dataSource: UITableViewDataSource? = nil,
               delegate: UITableViewDelegate? = nil,
-              style: UITableViewStyle = .plain,
+              style: UITableView.Style = .plain,
               accessoryView: UIView? = nil,
               mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
@@ -66,7 +66,7 @@ open class TGTableCard: TGCard {
   }
   
   public required init?(coder: NSCoder) {
-    self.tableStyle = UITableViewStyle(rawValue: coder.decodeInteger(forKey: "tableStyle")) ?? .plain
+    self.tableStyle = UITableView.Style(rawValue: coder.decodeInteger(forKey: "tableStyle")) ?? .plain
     super.init(coder: coder)
   }
   

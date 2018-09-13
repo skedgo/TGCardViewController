@@ -39,7 +39,7 @@ class TGPlainCardView: TGCardView {
       var adjustment: CGFloat = 1.0 // accounted for the separator
       
       if let titleViewPlaceHolder = titleViewPlaceholder {
-        let height = titleViewPlaceHolder.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+        let height = titleViewPlaceHolder.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         adjustment += height
       }
       

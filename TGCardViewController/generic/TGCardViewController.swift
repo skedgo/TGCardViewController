@@ -1364,7 +1364,7 @@ extension TGCardViewController {
   }
   
   private func adjustHeaderHeightConstraint(toFit content: UIView) {
-    let size = content.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+    let size = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     headerViewHeightConstraint.constant = size.height
   }
   

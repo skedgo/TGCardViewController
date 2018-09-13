@@ -184,12 +184,12 @@ extension MKMapView {
                    edgePadding: UIEdgeInsets = .zero,
                    animated: Bool) {
     
-    guard !MKMapRectIsNull(mapRect) else { return }
+    guard !mapRect.isNull else { return }
     
     var mapRectToShow = mapRect
     
     if zoomLevel(of: mapRectToShow) < minimumZoomLevel {
-      let center = MKMapPoint(x: MKMapRectGetMidX(mapRect), y: MKMapRectGetMidY(mapRect))
+      let center = MKMapPoint(x: mapRect.midX, y: mapRect.midY)
       mapRectToShow = self.mapRect(forZoomLevel: minimumZoomLevel, centeredOn: center)
     }
     
@@ -225,10 +225,10 @@ extension MKMapView {
 extension Array where Element: MKAnnotation {
   
   public var boundingMapRect: MKMapRect {
-    return reduce(MKMapRectNull) { acc, annotation in
-      let point = MKMapPointForCoordinate(annotation.coordinate)
+    return reduce(.null) { acc, annotation in
+      let point = MKMapPoint(annotation.coordinate)
       let miniRect = MKMapRect(origin: point, size: MKMapSize(width: 1, height: 1))
-      return MKMapRectUnion(acc, miniRect)
+      return acc.union(miniRect)
     }
   }
   
@@ -237,8 +237,8 @@ extension Array where Element: MKAnnotation {
 extension Array where Element: MKOverlay {
   
   public var boundingMapRect: MKMapRect {
-    return reduce(MKMapRectNull) { acc, overlay in
-      return MKMapRectUnion(acc, overlay.boundingMapRect)
+    return reduce(.null) { acc, overlay in
+      return acc.union(overlay.boundingMapRect)
     }
   }
   
@@ -257,7 +257,7 @@ extension MKMapView {
   }
   
   func setZoomLevel(_ zoomLevel: Double, edgePadding: UIEdgeInsets = .zero, animated: Bool) {
-    let center = MKMapPointForCoordinate(centerCoordinate)
+    let center = MKMapPoint(centerCoordinate)
     let mapRect = self.mapRect(forZoomLevel: zoomLevel, centeredOn: center)
     setVisibleMapRect(mapRect, edgePadding: edgePadding, animated: animated)
   }

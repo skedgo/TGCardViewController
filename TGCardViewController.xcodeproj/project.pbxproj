@@ -461,6 +461,7 @@
 					3A7C3482201F2C0B00F66A35 = {
 						CreatedOnToolsVersion = 9.2;
 						DevelopmentTeam = JFT62W5LA3;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
 					3ACA747F1E716AFC00408678 = {
@@ -679,7 +680,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.skedgo.TGCardViewController;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -713,7 +714,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.skedgo.TGCardViewController;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
