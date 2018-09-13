@@ -1001,7 +1001,7 @@ extension TGCardViewController {
     let translation = recogniser.translation(in: cardWrapperContent)
     let velocity = recogniser.velocity(in: cardWrapperContent)
     
-    let swipeHorizontally = fabs(velocity.x) > fabs(velocity.y)
+    let swipeHorizontally = abs(velocity.x) > abs(velocity.y)
     if swipeHorizontally {
       // Cancel our panner, so that we don't keep dragging the card
       // up and down while paging or when swiping to delete.
@@ -1475,7 +1475,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
       // We don't want to interfere with any existing horizontal swipes, e.g., swipe to delete
       // We cancel our gesture recogniser then in `handlePan`.
       let velocity = panner.velocity(in: cardWrapperContent)
-      let swipeHorizontally = fabs(velocity.x) > fabs(velocity.y)
+      let swipeHorizontally = abs(velocity.x) > abs(velocity.y)
       return swipeHorizontally
     }
   }
@@ -1484,7 +1484,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     let direction = Direction(ofVelocity: panner.velocity(in: cardWrapperContent))
     
     let velocity = panner.velocity(in: cardWrapperContent)
-    let swipeHorizontally = fabs(velocity.x) > fabs(velocity.y)
+    let swipeHorizontally = abs(velocity.x) > abs(velocity.y)
     
     let y = cardWrapperDesiredTopConstraint.constant
     
