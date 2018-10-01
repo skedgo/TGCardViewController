@@ -8,6 +8,7 @@
 // 
 // Exception for this file. Already broken into extensions.
 // swiftlint:disable file_length
+// swiftlint:disable type_body_length
 
 import UIKit
 
