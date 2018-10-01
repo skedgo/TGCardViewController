@@ -986,7 +986,7 @@ extension TGCardViewController {
     UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
       self.updateMapShadow(for: snapTo.position)
       self.topCardView?.adjustContentAlpha(to: snapTo.position == .collapsed ? 0 : 1)
-      self.fadeMapFloatingViews(snapTo.position == .extended)
+      self.updateFloatingViewsVisibility(for: snapTo.position)
       self.view.layoutIfNeeded()
     }, completion: { _ in
       self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: snapTo.position)
@@ -1050,7 +1050,7 @@ extension TGCardViewController {
       // Start fading out the floating views when we move away from the peak state position
       // and fading in when we move towards it. The 0.3 is introduced so the fading out
       // happens sooner, i.e., not too far up the peak state position.
-      if newY <= peakY {
+      if !cardIsNextToMap(in: traitCollection), newY <= peakY {
         let floatingViewAlpha = min(1, max(0, (peakY - newY) / ((peakY - extendedMinY)*0.3)))
         topFloatingViewWrapper.alpha = 1 - floatingViewAlpha
         bottomFloatingViewWrapper.alpha = 1 - floatingViewAlpha
@@ -1214,12 +1214,12 @@ extension TGCardViewController {
     }
   }
   
-  private func updateFloatingViewsVisibility() {
+  private func updateFloatingViewsVisibility(for position: TGCardPosition? = nil) {
     if cardIsNextToMap(in: traitCollection) {
       // When card is on the side of the map, always show the floating views.
       fadeMapFloatingViews(false)
     } else {
-      fadeMapFloatingViews(cardPosition == .extended)
+      fadeMapFloatingViews(position ?? cardPosition == .extended)
     }
   }
   
