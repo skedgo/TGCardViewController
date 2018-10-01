@@ -1161,7 +1161,7 @@ extension TGCardViewController {
       animations: {
         self.updateMapShadow(for: animateTo.position)
         self.topCardView?.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
-        self.fadeMapFloatingViews(animateTo.position == .extended)
+        self.updateMapShadow(for: animateTo.position)
         self.view.layoutIfNeeded()
     },
       completion: { _ in
@@ -1207,14 +1207,14 @@ extension TGCardViewController {
     }
   }
   
-  private func fadeMapFloatingViews(_ fade: Bool, animated: Bool = false) {
-    UIView.animate(withDuration: animated ? 0.25: 0) {
-      self.topFloatingViewWrapper.alpha = fade ? 0 : 1
-      self.bottomFloatingViewWrapper.alpha = fade ? 0 : 1
-    }
-  }
-  
   private func updateFloatingViewsVisibility(for position: TGCardPosition? = nil) {
+    func fadeMapFloatingViews(_ fade: Bool, animated: Bool = false) {
+      UIView.animate(withDuration: animated ? 0.25: 0) {
+        self.topFloatingViewWrapper.alpha = fade ? 0 : 1
+        self.bottomFloatingViewWrapper.alpha = fade ? 0 : 1
+      }
+    }
+    
     if cardIsNextToMap(in: traitCollection) {
       // When card is on the side of the map, always show the floating views.
       fadeMapFloatingViews(false)

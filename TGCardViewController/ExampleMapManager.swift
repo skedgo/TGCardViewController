@@ -57,4 +57,23 @@ class ExampleMapManager: TGMapManager, NSCoding {
   func encode(with aCoder: NSCoder) {
     aCoder.encode(annotations.map(CodingAnnotation.init), forKey: "annotations")
   }
+  
+  override func takeCharge(of mapView: MKMapView, edgePadding: UIEdgeInsets, animated: Bool) {
+    mapView.delegate = self
+    
+    super.takeCharge(of: mapView, edgePadding: edgePadding, animated: animated)
+  }
+  
+  func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
+    switch mode {
+    case .follow, .followWithHeading:
+      let controller = UIApplication.shared.keyWindow?.rootViewController as? TGCardViewController
+      if controller?.traitCollection.horizontalSizeClass == .compact {
+        controller?.moveCard(to: .collapsed, animated: animated)
+      }
+      
+    case .none:
+      break // nothing to do
+    }
+  }
 }

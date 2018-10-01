@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A04CBE32162ABE000BE796E /* ExampleLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A04CBE22162ABE000BE796E /* ExampleLocationManager.swift */; };
 		3A462B5C2074C64400AF41EF /* TGButtonPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A462B5B2074C64400AF41EF /* TGButtonPosition.swift */; };
 		3A59798B1E7955FE0065A5FF /* ExampleTableChildCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */; };
 		3A5C8EDB21143F4B00A7EA38 /* NSCoder+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5C8EDA21143F4B00A7EA38 /* NSCoder+Helpers.swift */; };
@@ -102,6 +103,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3A04CBE22162ABE000BE796E /* ExampleLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLocationManager.swift; sourceTree = "<group>"; };
 		3A377BD61E95121600A8C8F0 /* UIView+Snap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+Snap.swift"; path = "generic/UIView+Snap.swift"; sourceTree = "<group>"; };
 		3A3E89C11E8BF49000773897 /* TGCardStyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCardStyleKit.swift; path = generic/TGCardStyleKit.swift; sourceTree = "<group>"; };
 		3A462B5B2074C64400AF41EF /* TGButtonPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TGButtonPosition.swift; path = generic/TGButtonPosition.swift; sourceTree = "<group>"; };
@@ -356,6 +358,7 @@
 				3ACA74BF1E71A12200408678 /* ExampleChildContentView.xib */,
 				3ADC802D2114A3FF00A318B9 /* ExampleCityCard.swift */,
 				D345CC06207C6C9200A6D9F3 /* ExampleCustomTitleCard.swift */,
+				3A04CBE22162ABE000BE796E /* ExampleLocationManager.swift */,
 				3ADC802F2114A58100A318B9 /* ExampleMapManager.swift */,
 				3A8BEA4D1E85C0070007B410 /* ExamplePageCard.swift */,
 				3ACA74B61E719A5900408678 /* ExampleRootCard.swift */,
@@ -605,6 +608,7 @@
 				3AB894521E7AE49200267A06 /* MockupImageCard.swift in Sources */,
 				3ACA74CD1E72FEAB00408678 /* ExampleTableCard.swift in Sources */,
 				3ACA74841E716AFC00408678 /* AppDelegate.swift in Sources */,
+				3A04CBE32162ABE000BE796E /* ExampleLocationManager.swift in Sources */,
 				D33E34981E937CB200C40CD2 /* ExampleAccessoryView.swift in Sources */,
 				3AB8944F1E7AB25900267A06 /* ExampleTableDataSource.swift in Sources */,
 				D345CC08207C6CD500A6D9F3 /* ExampleCustomTitleCard.swift in Sources */,

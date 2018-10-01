@@ -21,7 +21,10 @@ class ExampleCardViewController: TGCardViewController {
   
   override func viewDidLoad() {
     rootCard = ExampleRootCard()
+    
     navigationButtonsAreSpringLoaded = true
+    
+    builder.askForLocationPermissions = ExampleLocationManager.shared.askForPermissions
 
     super.viewDidLoad()
   }
