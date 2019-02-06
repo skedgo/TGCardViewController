@@ -56,13 +56,6 @@ class TGPageCardView: TGCardView {
     return 0
   }
   
-  override var pagingScrollView: UIScrollView? {
-    get {
-      return pager
-    }
-    set {}
-  }
-  
   override var contentScrollView: UIScrollView? {
     get {
       guard currentPage < cardViews.count else {
@@ -71,7 +64,9 @@ class TGPageCardView: TGCardView {
       
       return cardViews[currentPage].contentScrollView
     }
-    set {}
+    set {
+      assertionFailure("Don't set this on paging a PageCard. Was set to \(String(describing: newValue)).")
+    }
   }
   
   override func layoutSubviews() {

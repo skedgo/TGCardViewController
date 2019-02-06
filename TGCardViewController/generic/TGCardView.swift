@@ -49,11 +49,6 @@ public class TGCardView: TGCornerView {
   
   private var contentScrollViewObservation: NSKeyValueObservation?
   
-  /// Optional pager in which `contentScrollView` can be wrapped.
-  ///
-  /// - SeeAlso: `TGPageCardView` which relies on this.
-  var pagingScrollView: UIScrollView?
-  
   /// The height of the header part of the view, i.e., everything
   /// up to where `contentScrollView` starts.
   ///
