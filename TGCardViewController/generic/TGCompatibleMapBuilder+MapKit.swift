@@ -26,8 +26,7 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
     let background = UIView()
     background.isUserInteractionEnabled = true
     background.widthAnchor.constraint(equalToConstant: 44).isActive = true
-    let heightAnchor = background.heightAnchor.constraint(equalToConstant: 0)
-    heightAnchor.isActive = true
+    background.heightAnchor.constraint(equalToConstant: 44).isActive = true
 
     let compass = MKCompassButton(mapView: mapView)
     compass.translatesAutoresizingMaskIntoConstraints = false
@@ -38,13 +37,10 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
     
     // The compass fades in and out. We don't want a blank space for it them, so
     // we observe it's hidden property and then update the height of its wrapper
+    background.isHidden = true
     compassObservation = compass.observe(\MKCompassButton.isHidden) { compass, _ in
-      let isVisible = !compass.isHidden
-      heightAnchor.constant = isVisible ? 44 : 0
-      background.setNeedsUpdateConstraints()
-      
       UIView.animate(withDuration: 0.25) {
-        background.layoutIfNeeded()
+        background.isHidden = compass.isHidden
       }
     }
     
