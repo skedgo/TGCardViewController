@@ -607,7 +607,7 @@ extension TGCardViewController {
   // Yes, these are long. We rather keep them together like this (for now).
   // swiftlint:disable function_body_length
   // swiftlint:disable cyclomatic_complexity
-  public func push(_ top: TGCard, animated: Bool = true, copyStyle: Bool = true) {
+  public func push(_ top: TGCard, animated: Bool = true, copyStyle: Bool = true, completionHandler: (() -> Void)? = nil) {
     // Set the controller on the top card earlier, because we may want
     // to ask the card to do something on willAppear, e.g., show sticky 
     // bar, which requires access to this property.
@@ -753,6 +753,7 @@ extension TGCardViewController {
           top.didMove(to: animateTo.position, animated: animated)
         }
         self.cardTransitionShadow?.removeFromSuperview()
+        completionHandler?()
       }
     )
   }
@@ -881,26 +882,38 @@ extension TGCardViewController {
   }
   // swiftlint:enable function_body_length
   
-  public func swap(for newCard: TGCard) {
+  /// Swaps the current top card with the provided new card
+  ///
+  /// - Warning: This doesn't work on the root card, will throw an assert in
+  ///     in development and do nothing.
+  ///
+  /// - Parameters:
+  ///   - newCard: The new card to present
+  ///   - animated: Whether the swap can be animated. Will only be animated if
+  ///       the new's card position is different from the current card position.
+  public func swap(for newCard: TGCard, animated: Bool = true) {
     guard cards.count > 1 else {
       assertionFailure("Trying to swap the root card. Did you mean to `push`?")
       return
     }
+    
+    let animatePush = animated
+      && newCard.initialPosition != cardPosition
 
     // Keep this so that we restore it as pushing would otherwise overwrite it
     let previous = self.previousCardPosition
     
     // Push as normal, will also tell card below that it'll disappear
-    push(newCard, animated: false)
-    
-    self.previousCardPosition = previous
-    
-    // Kill the card below
-    if cards.count > 1 {
-      let poppeeIndex = cards.count - 2
-      cards.remove(at: poppeeIndex)
-      cardViews[poppeeIndex].removeFromSuperview()
+    push(newCard, animated: animatePush) {
+
+      self.previousCardPosition = previous
+      
+      // Kill the card below
+      let poppeeIndex = self.cards.count - 2
+      self.cards.remove(at: poppeeIndex)
+      self.cardViews[poppeeIndex].removeFromSuperview()
     }
+    
   }
   
   @objc
