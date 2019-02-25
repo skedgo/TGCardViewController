@@ -607,7 +607,21 @@ extension TGCardViewController {
   // Yes, these are long. We rather keep them together like this (for now).
   // swiftlint:disable function_body_length
   // swiftlint:disable cyclomatic_complexity
-  public func push(_ top: TGCard, animated: Bool = true, copyStyle: Bool = true, completionHandler: (() -> Void)? = nil) {
+
+  /// Pushes a new card
+  ///
+  /// - Parameters:
+  ///   - top: The new card to show
+  ///   - animated: Whether it should appear animated. Default: `true`
+  ///   - copyStyle: Whether the style/theme of the previous card should be
+  ///       re-applied to the new card. Default: `true`
+  ///   - completionHandler: Completion handler called once appeared, after any
+  ///       animations
+  public func push(_ top: TGCard,
+                   animated: Bool = true,
+                   copyStyle: Bool = true,
+                   completionHandler: (() -> Void)? = nil
+  ) {
     // Set the controller on the top card earlier, because we may want
     // to ask the card to do something on willAppear, e.g., show sticky 
     // bar, which requires access to this property.
