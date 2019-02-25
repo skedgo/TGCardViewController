@@ -10,13 +10,47 @@ import Foundation
 import MapKit
 
 public class TGMapKitBuilder: TGCompatibleMapBuilder {
-  
   public var askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)?
+  
+  private var compassObservation: NSKeyValueObservation?
   
   public func buildMapView() -> UIView {
     return MKMapView()
   }
-  
+
+  public func buildCompassButton(for mapView: UIView) -> UIView? {
+    guard #available(iOS 11.0, *) else { return nil }
+    guard let mapView = mapView as? MKMapView else { preconditionFailure() }
+    mapView.showsCompass = false
+    
+    let background = UIView()
+    background.isUserInteractionEnabled = true
+    background.widthAnchor.constraint(equalToConstant: 44).isActive = true
+    let heightAnchor = background.heightAnchor.constraint(equalToConstant: 0)
+    heightAnchor.isActive = true
+
+    let compass = MKCompassButton(mapView: mapView)
+    compass.translatesAutoresizingMaskIntoConstraints = false
+    background.addSubview(compass)
+    
+    compass.centerXAnchor.constraint(equalTo: background.centerXAnchor).isActive = true
+    compass.centerYAnchor.constraint(equalTo: background.centerYAnchor).isActive = true
+    
+    // The compass fades in and out. We don't want a blank space for it them, so
+    // we observe it's hidden property and then update the height of its wrapper
+    compassObservation = compass.observe(\MKCompassButton.isHidden) { compass, _ in
+      let isVisible = !compass.isHidden
+      heightAnchor.constant = isVisible ? 44 : 0
+      background.setNeedsUpdateConstraints()
+      
+      UIView.animate(withDuration: 0.25) {
+        background.layoutIfNeeded()
+      }
+    }
+    
+    return background
+  }
+
   public func buildUserTrackingButton(for mapView: UIView) -> UIView? {
     guard #available(iOS 11.0, *), askForLocationPermissions != nil else { return nil }
     guard let mapView = mapView as? MKMapView else { preconditionFailure() }
@@ -46,7 +80,6 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
     }
     
     return background
-    
   }
   
   @objc

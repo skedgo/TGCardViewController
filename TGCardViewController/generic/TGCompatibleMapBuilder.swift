@@ -16,7 +16,9 @@ public protocol TGCompatibleMapBuilder {
   func buildMapView() -> UIView
   
   func buildUserTrackingButton(for mapView: UIView) -> UIView?
-  
+
+  func buildCompassButton(for mapView: UIView) -> UIView?
+
   /// If you want a current location button on the map, provide this method which will be
   /// called if the user didn't yet grant access to the current location and the current
   /// location button is pressed.
@@ -24,4 +26,14 @@ public protocol TGCompatibleMapBuilder {
   /// the user did grant permissions.
   var askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)? { get set }
 
+}
+
+extension TGCompatibleMapBuilder {
+  public func buildUserTrackingButton(for mapView: UIView) -> UIView? {
+    return nil
+  }
+  
+  public func buildCompassButton(for mapView: UIView) -> UIView? {
+    return nil
+  }
 }

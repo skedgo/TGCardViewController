@@ -237,11 +237,7 @@ open class TGCardViewController: UIViewController {
     self.mapShadowTapper = mapTapper
     
     // Create the default buttons
-    if #available(iOS 11.0, *), let tracker = builder.buildUserTrackingButton(for: mapView) {
-      self.defaultButtons = [tracker]
-    } else {
-      self.defaultButtons = []
-    }
+    self.defaultButtons = [builder.buildUserTrackingButton(for: mapView), builder.buildCompassButton(for: mapView)].compactMap { $0 }
     
     // Setting up additional constraints
     cardWrapperHeightConstraint.constant = extendedMinY * -1
