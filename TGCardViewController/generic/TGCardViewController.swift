@@ -886,9 +886,20 @@ extension TGCardViewController {
       assertionFailure("Trying to swap the root card. Did you mean to `push`?")
       return
     }
+
+    // Keep this so that we restore it as pushing would otherwise overwrite it
+    let previous = self.previousCardPosition
     
-    pop(animated: false) { [unowned self] in
-      self.push(newCard, animated: false, copyStyle: true)
+    // Push as normal, will also tell card below that it'll disappear
+    push(newCard, animated: false)
+    
+    self.previousCardPosition = previous
+    
+    // Kill the card below
+    if cards.count > 1 {
+      let poppeeIndex = cards.count - 2
+      cards.remove(at: poppeeIndex)
+      cardViews[poppeeIndex].removeFromSuperview()
     }
   }
   
