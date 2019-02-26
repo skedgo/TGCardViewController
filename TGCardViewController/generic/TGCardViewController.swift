@@ -187,6 +187,8 @@ open class TGCardViewController: UIViewController {
   /// be set to `true`.
   private let panningAllowed = true
   
+  private var isDraggingCard = false
+  
   fileprivate var isVisible = false
   
   fileprivate var previousCardPosition: TGCardPosition?
@@ -1036,11 +1038,19 @@ extension TGCardViewController {
   
   @objc
   fileprivate func handlePan(_ recogniser: UIPanGestureRecognizer) {
+    
+    // Reset dragger state if we aren't currently moving, but ALSO not if it
+    // just ended, we don't want to exit early and still snap then. We reset
+    // the state at the end of the method for this
+    if recogniser.state != .changed, recogniser.state != .ended {
+      isDraggingCard = false
+    }
+    
     let translation = recogniser.translation(in: cardWrapperContent)
     let velocity = recogniser.velocity(in: cardWrapperContent)
     
     let swipeHorizontally = abs(velocity.x) > abs(velocity.y)
-    if swipeHorizontally {
+    if swipeHorizontally, !isDraggingCard {
       // Cancel our panner, so that we don't keep dragging the card
       // up and down while paging or when swiping to delete.
       recogniser.isEnabled = false
@@ -1048,6 +1058,7 @@ extension TGCardViewController {
       return
     }
     
+    isDraggingCard = true
     var currentCardY = cardWrapperDesiredTopConstraint.constant
     
     // Recall that we have a minimum overlap constraint set on the card 
@@ -1101,6 +1112,7 @@ extension TGCardViewController {
     // to the appropriate state (extended, peaking, collapsed)
     guard recogniser.state == .ended else { return }
     
+    isDraggingCard = false
     animateCardSnap(forVelocity: velocity)
   }
   
