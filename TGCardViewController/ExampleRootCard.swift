@@ -72,14 +72,14 @@ class ExampleRootCard : TGTableCard {
   private func infoButtonPressed() {
     let alertCtr = UIAlertController(title: "Alert", message: "I'm an info button", preferredStyle: .alert)
     alertCtr.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-    controller?.present(alertCtr, animated: true, completion: nil)
+    controller?.present(alertCtr, animated: true)
   }
   
   @objc
   private func addContactButtonPressed() {
     let alertCtr = UIAlertController(title: "Alert", message: "I'm an contact add button", preferredStyle: .alert)
     alertCtr.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-    controller?.present(alertCtr, animated: true, completion: nil)
+    controller?.present(alertCtr, animated: true)
   }
   
 }
