@@ -79,18 +79,16 @@ public class TGCardView: TGCornerView {
   
   // MARK: - Content Configuration
   
-  /// Updates the title and subtitle, when the `.default` title
-  /// was used. Does nothing when something other than the
-  /// `.default` title configuration was used.
+  /// Updates the title and subtitle, when the `.default` title was used.
+  ///
+  /// Does nothing when something other than the `.default` title configuration
+  /// was used, or when currently presented in a pager.
   ///
   /// - Parameters:
   ///   - title: New title
   ///   - subtitle: New subtitle (optional)
   public func updateDefaultTitle(title: String, subtitle: String?) {
-    guard let defaultView = titleView as? TGCardDefaultTitleView else {
-      assertionFailure("Can only update titles for `.default` title case.")
-      return
-    }
+    guard let defaultView = titleView as? TGCardDefaultTitleView else { return }
     
     defaultView.configure(title: title, subtitle: subtitle)
   }
