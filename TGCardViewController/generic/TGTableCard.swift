@@ -32,6 +32,10 @@ open class TGTableCard: TGCard {
   /// before the card is pushed.
   public weak var tableViewDataSource: UITableViewDataSource?
   
+  /// Whether the card should deselect the selected row when it appears.
+  /// Defaults to `true`
+  public var deselectOnAppear: Bool = true
+  
   // MARK: - Initialisers
   
   public init(title: CardTitle,
@@ -93,6 +97,10 @@ open class TGTableCard: TGCard {
     } else if let controller = controller {
       embeddedScrollView.contentInset.bottom = controller.bottomLayoutGuide.length
       embeddedScrollView.scrollIndicatorInsets.bottom = controller.bottomLayoutGuide.length
+    }
+    
+    if deselectOnAppear, let tableView = scrollCardView.tableView, let selected = tableView.indexPathForSelectedRow {
+      tableView.deselectRow(at: selected, animated: true)
     }
   }
   
