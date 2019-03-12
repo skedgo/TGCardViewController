@@ -37,8 +37,8 @@ public class TGScrollCardView: TGCardView {
 
   // MARK: - Configuration
   
-  override func configure(with card: TGCard, includeTitleView: Bool) {
-    super.configure(with: card, includeTitleView: includeTitleView)
+  override func configure(with card: TGCard) {
+    super.configure(with: card)
     
     let scrollView: UIScrollView
     

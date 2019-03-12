@@ -17,94 +17,6 @@ class TGCardStyleKit : NSObject {
 
     //// Drawing Methods
 
-    @objc dynamic class func drawHeaderCloseIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, lineWidth: CGFloat = 3) {
-        //// General Declarations
-        let context = UIGraphicsGetCurrentContext()!
-        
-        //// Resize to Target Frame
-        context.saveGState()
-        let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 20, height: 20), target: targetFrame)
-        context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
-        context.scaleBy(x: resizedFrame.width / 20, y: resizedFrame.height / 20)
-
-
-
-        //// Variable Declarations
-        let length: CGFloat = 20
-        let iconScale: CGFloat = length / 20.0
-        let padding: CGFloat = lineWidth / 2.0
-        let iconOrigin = CGPoint(x: padding, y: padding)
-
-        //// Bezier Drawing
-        context.saveGState()
-        context.translateBy(x: iconOrigin.x, y: iconOrigin.y)
-        context.scaleBy(x: iconScale, y: iconScale)
-
-        let bezierPath = UIBezierPath()
-        bezierPath.move(to: CGPoint(x: 0, y: 0))
-        bezierPath.addLine(to: CGPoint(x: 17, y: 17))
-        UIColor.black.setStroke()
-        bezierPath.lineWidth = lineWidth
-        bezierPath.stroke()
-
-        context.restoreGState()
-
-
-        //// Bezier 2 Drawing
-        context.saveGState()
-        context.translateBy(x: iconOrigin.x, y: iconOrigin.y)
-        context.scaleBy(x: iconScale, y: iconScale)
-
-        let bezier2Path = UIBezierPath()
-        bezier2Path.move(to: CGPoint(x: 0, y: 17))
-        bezier2Path.addLine(to: CGPoint(x: 17, y: 0))
-        UIColor.black.setStroke()
-        bezier2Path.lineWidth = lineWidth
-        bezier2Path.stroke()
-
-        context.restoreGState()
-        
-        context.restoreGState()
-
-    }
-
-    @objc dynamic class func drawHeaderNextIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, lineWidth: CGFloat = 3) {
-        //// General Declarations
-        let context = UIGraphicsGetCurrentContext()!
-        
-        //// Resize to Target Frame
-        context.saveGState()
-        let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 20, height: 20), target: targetFrame)
-        context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
-        context.scaleBy(x: resizedFrame.width / 20, y: resizedFrame.height / 20)
-
-
-
-        //// Variable Declarations
-        let length: CGFloat = 20
-        let iconScale: CGFloat = length / 20.0
-        let padding: CGFloat = lineWidth / 2.0
-        let iconOrigin = CGPoint(x: padding, y: padding)
-
-        //// Bezier Drawing
-        context.saveGState()
-        context.translateBy(x: iconOrigin.x, y: iconOrigin.y)
-        context.scaleBy(x: iconScale, y: iconScale)
-
-        let bezierPath = UIBezierPath()
-        bezierPath.move(to: CGPoint(x: 0, y: 0))
-        bezierPath.addLine(to: CGPoint(x: 8.5, y: 8.5))
-        bezierPath.addLine(to: CGPoint(x: 0, y: 17))
-        UIColor.black.setStroke()
-        bezierPath.lineWidth = lineWidth
-        bezierPath.stroke()
-
-        context.restoreGState()
-        
-        context.restoreGState()
-
-    }
-
     @objc dynamic class func drawCardCloseIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 20, height: 20), resizing: ResizingBehavior = .aspectFit, closeButtonBackground: UIColor = UIColor(red: 0.502, green: 0.498, blue: 0.502, alpha: 1.000)) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
@@ -219,26 +131,6 @@ class TGCardStyleKit : NSObject {
     }
 
     //// Generated Images
-
-    @objc dynamic class func imageOfHeaderCloseIcon(lineWidth: CGFloat = 3) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: 20, height: 20), false, 0)
-            TGCardStyleKit.drawHeaderCloseIcon(lineWidth: lineWidth)
-
-        let imageOfHeaderCloseIcon = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-
-        return imageOfHeaderCloseIcon
-    }
-
-    @objc dynamic class func imageOfHeaderNextIcon(lineWidth: CGFloat = 3) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: 20, height: 20), false, 0)
-            TGCardStyleKit.drawHeaderNextIcon(lineWidth: lineWidth)
-
-        let imageOfHeaderNextIcon = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-
-        return imageOfHeaderNextIcon
-    }
 
     @objc dynamic class func imageOfCardCloseIcon(closeButtonBackground: UIColor = UIColor(red: 0.502, green: 0.498, blue: 0.502, alpha: 1.000)) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 20, height: 20), false, 0)

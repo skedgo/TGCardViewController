@@ -26,30 +26,25 @@ class TGPlainCardView: TGCardView {
   
   // MARK: - Configuration
   
-  override func configure(with card: TGCard, includeTitleView: Bool) {
+  override func configure(with card: TGCard) {
     guard let plainCard = card as? TGPlainCard else {
       preconditionFailure()
     }
     
-    super.configure(with: plainCard, includeTitleView: includeTitleView)
+    super.configure(with: plainCard)
     
-    if !includeTitleView {
-      titleViewPlaceholderHeight.constant = 0
-    } else {
-      var adjustment: CGFloat = 1.0 // accounted for the separator
-      
-      if let titleViewPlaceHolder = titleViewPlaceholder {
-        let height = titleViewPlaceHolder.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-        adjustment += height
-      }
-      
-      if let handle = grabHandle {
-        adjustment += handle.frame.height
-      }
-      
-      contentViewHeightEqualToSuperviewHeightConstraint.constant = -1*adjustment
+    // build the header
+    var adjustment: CGFloat = 1.0 // accounted for the separator
+    if let titleViewPlaceHolder = titleViewPlaceholder {
+      let height = titleViewPlaceHolder.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+      adjustment += height
     }
+    if let handle = grabHandle {
+      adjustment += handle.frame.height
+    }
+    contentViewHeightEqualToSuperviewHeightConstraint.constant = -1*adjustment
     
+    // build the main content
     if let content = plainCard.contentView {
       content.translatesAutoresizingMaskIntoConstraints = false
       contentView.addSubview(content)

@@ -654,7 +654,7 @@ extension TGCardViewController {
       oldCard.copyStyling(to: top)
     }
     
-    let cardView = top.buildCardView(includeTitleView: true)
+    let cardView = top.buildCardView()
     if let defaultCardTitle = cardView.titleView as? TGCardDefaultTitleView {
       let showClose = delegate != nil || cards.count > 1
       defaultCardTitle.dismissButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)

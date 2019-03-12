@@ -106,9 +106,9 @@ open class TGTableCard: TGCard {
   
   // MARK: - Constructing views
   
-  open override func buildCardView(includeTitleView: Bool) -> TGCardView {
+  open override func buildCardView() -> TGCardView {
     let view = TGScrollCardView.instantiate()
-    view.configure(with: self, includeTitleView: includeTitleView)
+    view.configure(with: self)
     return view
   }
  

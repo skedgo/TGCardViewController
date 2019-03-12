@@ -66,9 +66,9 @@ open class TGPlainCard: TGCard {
     aCoder.encode(view: contentView, forKey: "contentView")
   }
   
-  open override func buildCardView(includeTitleView: Bool) -> TGCardView {
+  open override func buildCardView() -> TGCardView {
     let view = TGPlainCardView.instantiate()
-    view.configure(with: self, includeTitleView: includeTitleView)
+    view.configure(with: self)
     return view
   }
   

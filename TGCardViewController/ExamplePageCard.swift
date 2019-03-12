@@ -22,6 +22,7 @@ class ExamplePageCard: TGPageCard {
    
     // Custom accessory for testing jumping around
     let jumpButton = UIButton(type: .roundedRect)
+    jumpButton.tintColor = .white
     jumpButton.setTitle("Jump", for: .normal)
     jumpButton.addTarget(self, action: #selector(headerJumpPressed(sender:)), for: .touchUpInside)
     
@@ -39,7 +40,10 @@ class ExamplePageCard: TGPageCard {
   
   @objc
   func headerJumpPressed(sender: Any) {
-    let index = Int(arc4random_uniform(UInt32(self.cards.count)))
+    let index = (0..<cards.count)
+      .filter { $0 != self.currentPageIndex }
+      .randomElement()
+      ?? 0
     move(to: index)
   }
   

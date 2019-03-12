@@ -60,7 +60,7 @@ open class TGPageCard: TGCard {
   
   let initialPageIndex: Int
   
-  fileprivate var currentPageIndex: Int {
+  public var currentPageIndex: Int {
     guard let pageCard = cardView as? TGPageCardView else { return initialPageIndex }
     return pageCard.currentPage
   }
@@ -148,7 +148,7 @@ open class TGPageCard: TGCard {
     return true
   }
   
-  open override func buildCardView(includeTitleView: Bool) -> TGCardView {
+  open override func buildCardView() -> TGCardView {
     let view = TGPageCardView.instantiate()
     view.configure(with: self)
     view.delegate = self
@@ -205,48 +205,7 @@ open class TGPageCard: TGCard {
   }
   
   fileprivate func updateHeader(for card: TGCard, atIndex index: Int, animated: Bool = false) {
-    guard let headerView = headerView else {
-      preconditionFailure()
-    }
-    
     headerPageControl?.currentPage = index
-
-    switch card.title {
-    case .default(let title, let subtitle, _):
-      headerView.titleLabel.text = title
-      headerView.subtitleLabel.text = subtitle
-    case .custom, .none:
-      headerView.titleLabel.text = nil
-      headerView.subtitleLabel.text = nil
-    }
-    
-    if let rightAction = headerRightAction {
-      headerView.rightButton?.setImage(nil, for: .normal)
-      headerView.rightButton?.setTitle(rightAction.title, for: .normal)
-      headerView.accessibilityLabel = rightAction.title
-      headerView.rightAction = { [unowned self] in
-        rightAction.onPress(self.currentPageIndex)
-      }
-      
-    } else {
-      headerView.rightButton?.setImage(TGCardStyleKit.imageOfHeaderNextIcon(), for: .normal)
-      headerView.rightButton?.setTitle(nil, for: .normal)
-      headerView.rightButton?.accessibilityLabel = NSLocalizedString("Next", comment: "Next button accessory title")
-      
-      if index + 1 < cards.count {
-        headerView.rightAction = { [unowned self] in
-          self.moveForward()
-        }
-      } else {
-        headerView.rightAction = nil
-      }
-    }
-    
-    headerView.setNeedsLayout()
-    
-    UIView.animate(withDuration: animated ? 0.25 : 0) {
-      headerView.layoutIfNeeded()
-    }
   }
   
   @objc
@@ -279,6 +238,10 @@ open class TGPageCard: TGCard {
     pageCard.move(to: page)
   }
   
+  @objc
+  func dismissTapped(sender: Any) {
+    controller?.pop()
+  }
   
   // MARK: - Card life cycle
   

@@ -10,9 +10,6 @@ import UIKit
 
 public class TGPageHeaderView: TGHeaderView {
   
-  @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var subtitleLabel: UILabel!
-  
   @IBOutlet weak var accessoryWrapperView: UIView!
   @IBOutlet weak var accessoryWrapperHeightConstraint: NSLayoutConstraint!
   
@@ -27,14 +24,7 @@ public class TGPageHeaderView: TGHeaderView {
   override public func awakeFromNib() {
     super.awakeFromNib()
     
-    titleLabel.text = nil
-    subtitleLabel.text = nil
-    rightButton?.isHidden = true
     accessoryWrapperView.isHidden = true
-    
-    closeButton?.setImage(TGCardStyleKit.imageOfHeaderCloseIcon(), for: .normal)
-    closeButton?.setTitle(nil, for: .normal)
-    closeButton?.accessibilityLabel = NSLocalizedString("Close", comment: "Close button accessory title")
   }
   
   public override var cornerRadius: CGFloat {
@@ -75,16 +65,8 @@ public class TGPageHeaderView: TGHeaderView {
   }
   
   
-  var rightAction: (() -> Void)? {
-    didSet {
-      rightButton?.isHidden = (rightAction == nil)
-    }
-  }
-  
   public override func tintColorDidChange() {
     super.tintColorDidChange()
-    closeButton?.tintColor = tintColor
-    rightButton?.tintColor = tintColor
     accessoryView?.tintColor = tintColor
   }
   
@@ -93,20 +75,7 @@ public class TGPageHeaderView: TGHeaderView {
   func applyStyling(for card: TGPageCard) {
     backgroundColor = card.backgroundColor ?? .white
 
-    titleLabel.font = card.titleFont
-    titleLabel.textColor = card.titleTextColor
-    subtitleLabel.font = card.subtitleFont
-    subtitleLabel.textColor = card.subtitleTextColor
-
-    closeButton?.tintColor = tintColor
-    rightButton?.tintColor = tintColor
     accessoryView?.tintColor = tintColor
-  }
-  
-  // MARK: - Button actions
-  
-  @IBAction func rightButtonTapped(_ sender: UIButton) {
-    rightAction?()
   }
   
 }
