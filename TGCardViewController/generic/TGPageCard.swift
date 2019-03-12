@@ -202,6 +202,8 @@ open class TGPageCard: TGCard {
     
     mapManager = card.mapManager
     updateHeader(for: card, atIndex: index, animated: animated)
+    
+    didMoveToPage(index: index)
   }
   
   fileprivate func updateHeader(for card: TGCard, atIndex index: Int, animated: Bool = false) {
@@ -238,10 +240,18 @@ open class TGPageCard: TGCard {
     pageCard.move(to: page)
   }
   
+  /// Called whenever the current page has changed
+  ///
+  /// - Parameter index: New page index
+  public func didMoveToPage(index: Int) {
+    // nothing to do
+  }
+  
   @objc
   func dismissTapped(sender: Any) {
     controller?.pop()
   }
+  
   
   // MARK: - Card life cycle
   
