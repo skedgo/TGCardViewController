@@ -12,8 +12,27 @@ import MapKit
 
 public protocol TGCompatibleMapManager: class {
   
+  /// Called to add content to the map
+  ///
+  /// - Parameters:
+  ///   - mapView: The map view to which to add content
+  ///   - edgePadding: The current edge padding indicating what proportion of
+  ///       the map is visible and not covered by a card
+  ///   - animated: Whether adding of the content should be animated
   func takeCharge(of mapView: UIView, edgePadding: UIEdgeInsets, animated: Bool)
   
+  /// Called to clean-up the provided map.
+  ///
+  /// - Warning: This can be called in succession even though the map was
+  ///     already cleaned up, e.g., a `TGPageCard` gets popped (called then)
+  ///     and then presented again with a different first card; the previous
+  ///     card's map manager might then get asked to clean-up again.
+  ///     This is a bug, but not trivial to fix. So for the mean-time, please
+  ///     handle this gracefully.
+  ///
+  /// - Parameters:
+  ///   - mapView: The map view from which to remove the map manager's content
+  ///   - animated: Whether the clean-up should be animated
   func cleanUp(_ mapView: UIView, animated: Bool)
   
   var edgePadding: UIEdgeInsets { get set }
@@ -114,6 +133,10 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
   ///   - mapView: Map view to clean-up
   ///   - animated: If removing content should be animated
   open func cleanUp(_ mapView: MKMapView, animated: Bool) {
+    guard self.mapView != nil else {
+      // Called in succession, see comment on `TGCompatibleMapManager.cleanUp`
+      return
+    }
     guard mapView == self.mapView else {
       assertionFailure("Not the map view that we manage!")
       return
