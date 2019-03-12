@@ -655,14 +655,9 @@ extension TGCardViewController {
     }
     
     let cardView = top.buildCardView()
-    if let defaultCardTitle = cardView.titleView as? TGCardDefaultTitleView {
-      let showClose = delegate != nil || cards.count > 1
-      defaultCardTitle.dismissButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
-      defaultCardTitle.dismissButton.isHidden = !showClose
-      if #available(iOS 11.0, *) {
-        defaultCardTitle.dismissButton.isSpringLoaded = navigationButtonsAreSpringLoaded
-      }
-    }
+    cardView.dismissButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+    let showClose = delegate != nil || cards.count > 1
+    cardView.updateDismissButton(show: showClose, isSpringLoaded: navigationButtonsAreSpringLoaded)
     
     // On device with home indicator, we want only the header part of a card view is
     // visible when the card is in collapsed state. If we don't adjust the alpha as

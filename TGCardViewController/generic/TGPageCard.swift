@@ -207,7 +207,39 @@ open class TGPageCard: TGCard {
   }
   
   fileprivate func updateHeader(for card: TGCard, atIndex index: Int, animated: Bool = false) {
+    guard let headerView = headerView else {
+      preconditionFailure()
+    }
+    
     headerPageControl?.currentPage = index
+
+    if let rightAction = headerRightAction {
+      headerView.rightButton?.setImage(nil, for: .normal)
+      headerView.rightButton?.setTitle(rightAction.title, for: .normal)
+      headerView.accessibilityLabel = rightAction.title
+      headerView.rightAction = { [unowned self] in
+        rightAction.onPress(self.currentPageIndex)
+      }
+      
+    } else {
+      headerView.rightButton?.setImage(TGCardStyleKit.imageOfHeaderNextIcon(), for: .normal)
+      headerView.rightButton?.setTitle(nil, for: .normal)
+      headerView.rightButton?.accessibilityLabel = NSLocalizedString("Next", comment: "Next button accessory title")
+      
+      if index + 1 < cards.count {
+        headerView.rightAction = { [unowned self] in
+          self.moveForward()
+        }
+      } else {
+        headerView.rightAction = nil
+      }
+    }
+    
+    headerView.setNeedsLayout()
+    
+    UIView.animate(withDuration: animated ? 0.25 : 0) {
+      headerView.layoutIfNeeded()
+    }
   }
   
   @objc

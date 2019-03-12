@@ -111,11 +111,7 @@ class TGPageCardView: TGCardView {
       card.cardView = view
       card.didBuild(cardView: view, headerView: nil)
       
-      if let dismiss = view.dismissButton {
-        dismiss.addTarget(pageCard, action: #selector(TGPageCard.dismissTapped(sender:)), for: .touchUpInside)
-        // TODO: Hide when we start on a page card
-        // TODO: Make spring loaded if controller says so
-      }
+      view.dismissButton?.addTarget(pageCard, action: #selector(TGPageCard.dismissTapped(sender:)), for: .touchUpInside)
       
       return view
     }
@@ -129,6 +125,12 @@ class TGPageCardView: TGCardView {
     // This will be used in both `moveForward` and `moveBackward`, so
     // it's important to "initailise" this value correctly.
     lastHorizontalOffset = CGFloat(pageCard.initialPageIndex) * (frame.width + Constants.spaceBetweenCards)
+  }
+  
+  override func updateDismissButton(show: Bool, isSpringLoaded: Bool) {
+    super.updateDismissButton(show: show, isSpringLoaded: isSpringLoaded)
+
+    cardViews.forEach { $0.updateDismissButton(show: show, isSpringLoaded: isSpringLoaded) }
   }
   
   private func fill(with contentViews: [UIView]) {

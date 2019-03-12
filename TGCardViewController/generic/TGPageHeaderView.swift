@@ -24,6 +24,7 @@ public class TGPageHeaderView: TGHeaderView {
   override public func awakeFromNib() {
     super.awakeFromNib()
     
+    rightButton?.isHidden = true
     accessoryWrapperView.isHidden = true
   }
   
@@ -65,8 +66,15 @@ public class TGPageHeaderView: TGHeaderView {
   }
   
   
+  var rightAction: (() -> Void)? {
+    didSet {
+      rightButton?.isHidden = (rightAction == nil)
+    }
+  }
+  
   public override func tintColorDidChange() {
     super.tintColorDidChange()
+    rightButton?.tintColor = tintColor
     accessoryView?.tintColor = tintColor
   }
   
@@ -75,7 +83,14 @@ public class TGPageHeaderView: TGHeaderView {
   func applyStyling(for card: TGPageCard) {
     backgroundColor = card.backgroundColor ?? .white
 
+    rightButton?.tintColor = tintColor
     accessoryView?.tintColor = tintColor
+  }
+  
+  // MARK: - Button actions
+  
+  @IBAction func rightButtonTapped(_ sender: UIButton) {
+    rightAction?()
   }
   
 }
