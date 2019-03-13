@@ -1391,12 +1391,14 @@ extension TGCardViewController {
   private func updateHeaderStyle() {
     let cornerRadius: CGFloat = cardIsNextToMap(in: traitCollection) ? 8 : 0
     headerView.layer.cornerRadius = cornerRadius
+    headerView.backgroundColor = topCard?.backgroundColor ?? .white
     headerView.subviews.compactMap { $0 as? TGHeaderView }.forEach { $0.cornerRadius = cornerRadius }
   }
   
   private func updateHeaderConstraints() {
-    guard isShowingHeader else { return }
+    guard isShowingHeader, let headerContent = headerView.subviews.first else { return }
     adjustHeaderPositioningConstraint()
+    adjustHeaderHeightConstraint(toFit: headerContent)
     view.setNeedsUpdateConstraints()
   }
   
@@ -1404,13 +1406,17 @@ extension TGCardViewController {
     if cardIsNextToMap(in: traitCollection) {
       headerViewTopConstraint.constant = topOverlap + Constants.floatingHeaderTopMargin
     } else {
-      headerViewTopConstraint.constant = topOverlap
+      headerViewTopConstraint.constant = 0
     }
   }
   
   private func adjustHeaderHeightConstraint(toFit content: UIView) {
-    let size = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-    headerViewHeightConstraint.constant = size.height
+    let contentSize = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+    if cardIsNextToMap(in: traitCollection) {
+      headerViewHeightConstraint.constant = contentSize.height
+    } else {
+      headerViewHeightConstraint.constant = contentSize.height + topOverlap
+    }
   }
   
   fileprivate func showHeader(content: UIView, animated: Bool) {
@@ -1433,6 +1439,7 @@ extension TGCardViewController {
       initialSpringVelocity: 0,
       options: [.curveEaseOut],
       animations: {
+        self.statusBarBlurView.isHidden = true
         self.view.layoutIfNeeded()
       },
       completion: nil
@@ -1446,6 +1453,7 @@ extension TGCardViewController {
     guard animated else {
       self.view.layoutIfNeeded()
       self.headerView.subviews.forEach { $0.removeFromSuperview() }
+      self.statusBarBlurView.isHidden = false
       return
     }
 
@@ -1461,6 +1469,7 @@ extension TGCardViewController {
       completion: { finished in
         guard finished else { return }
         self.headerView.subviews.forEach { $0.removeFromSuperview() }
+        self.statusBarBlurView.isHidden = false
       }
     )
   }
@@ -1469,9 +1478,10 @@ extension TGCardViewController {
     headerView.subviews.forEach { $0.removeFromSuperview() }
     content.translatesAutoresizingMaskIntoConstraints = false
     headerView.addSubview(content)
+    let contentSize = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+    content.heightAnchor.constraint(equalToConstant: contentSize.height)
     content.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
     content.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
-    content.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
     content.bottomAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
   }
   
