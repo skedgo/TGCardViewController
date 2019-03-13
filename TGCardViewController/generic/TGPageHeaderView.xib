@@ -12,18 +12,18 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TGPageHeaderView" customModule="TGCardViewController" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="80" translatesAutoresizingMaskIntoConstraints="NO" id="OCh-my-Dlb">
-                    <rect key="frame" x="87.5" y="0.0" width="200" height="120"/>
+                <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="44" translatesAutoresizingMaskIntoConstraints="NO" id="OCh-my-Dlb">
+                    <rect key="frame" x="87.5" y="0.0" width="200" height="45"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="999" constant="44" id="0l9-rR-FKT"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pyb-jC-raq">
-                    <rect key="frame" x="321" y="38" width="46" height="44"/>
+                    <rect key="frame" x="321" y="0.5" width="46" height="44"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="6JN-fE-ZuQ"/>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="gHy-ly-PZq"/>
@@ -50,7 +50,7 @@
                 <outlet property="accessoryWrapperView" destination="OCh-my-Dlb" id="3ch-WX-uOk"/>
                 <outlet property="rightButton" destination="Pyb-jC-raq" id="GH0-fI-qaE"/>
             </connections>
-            <point key="canvasLocation" x="92" y="30"/>
+            <point key="canvasLocation" x="92" y="-4.0479760119940034"/>
         </view>
     </objects>
 </document>

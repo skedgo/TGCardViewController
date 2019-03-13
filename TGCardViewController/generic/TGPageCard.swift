@@ -275,7 +275,7 @@ open class TGPageCard: TGCard {
   /// Called whenever the current page has changed
   ///
   /// - Parameter index: New page index
-  public func didMoveToPage(index: Int) {
+  open func didMoveToPage(index: Int) {
     // nothing to do
   }
   
