@@ -60,7 +60,7 @@ open class TGPageCard: TGCard {
   
   let initialPageIndex: Int
   
-  fileprivate var currentPageIndex: Int {
+  public var currentPageIndex: Int {
     guard let pageCard = cardView as? TGPageCardView else { return initialPageIndex }
     return pageCard.currentPage
   }
@@ -148,7 +148,7 @@ open class TGPageCard: TGCard {
     return true
   }
   
-  open override func buildCardView(includeTitleView: Bool) -> TGCardView {
+  open override func buildCardView() -> TGCardView {
     let view = TGPageCardView.instantiate()
     view.configure(with: self)
     view.delegate = self
@@ -202,6 +202,8 @@ open class TGPageCard: TGCard {
     
     mapManager = card.mapManager
     updateHeader(for: card, atIndex: index, animated: animated)
+    
+    didMoveToPage(index: index)
   }
   
   fileprivate func updateHeader(for card: TGCard, atIndex index: Int, animated: Bool = false) {
@@ -211,15 +213,6 @@ open class TGPageCard: TGCard {
     
     headerPageControl?.currentPage = index
 
-    switch card.title {
-    case .default(let title, let subtitle, _):
-      headerView.titleLabel.text = title
-      headerView.subtitleLabel.text = subtitle
-    case .custom, .none:
-      headerView.titleLabel.text = nil
-      headerView.subtitleLabel.text = nil
-    }
-    
     if let rightAction = headerRightAction {
       headerView.rightButton?.setImage(nil, for: .normal)
       headerView.rightButton?.setTitle(rightAction.title, for: .normal)
@@ -277,6 +270,18 @@ open class TGPageCard: TGCard {
   public func move(to page: Int) {
     guard let pageCard = cardView as? TGPageCardView else { return  }
     pageCard.move(to: page)
+  }
+  
+  /// Called whenever the current page has changed
+  ///
+  /// - Parameter index: New page index
+  open func didMoveToPage(index: Int) {
+    // nothing to do
+  }
+  
+  @objc
+  func dismissTapped(sender: Any) {
+    controller?.pop()
   }
   
   

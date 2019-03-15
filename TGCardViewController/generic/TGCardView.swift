@@ -93,8 +93,15 @@ public class TGCardView: TGCornerView {
     defaultView.configure(title: title, subtitle: subtitle)
   }
   
-  func configure(with card: TGCard, includeTitleView: Bool) {
-    if let placeholder = titleViewPlaceholder, includeTitleView {
+  func updateDismissButton(show: Bool, isSpringLoaded: Bool) {
+    dismissButton?.isHidden = !show
+    if #available(iOS 11.0, *) {
+      dismissButton?.isSpringLoaded = isSpringLoaded
+    }
+  }
+  
+  func configure(with card: TGCard) {
+    if let placeholder = titleViewPlaceholder {
       let titleView: UIView?
       switch card.title {
       case .default(let title, let subtitle, let accessoryView):

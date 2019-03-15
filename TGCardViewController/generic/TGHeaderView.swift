@@ -6,7 +6,7 @@
 //  Copyright © 2018 SkedGo Pty Ltd. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 /// A view that can be placed as the header view of a card, i.e., pinned
 /// to the top of the screen above the card.
@@ -18,4 +18,6 @@ open class TGHeaderView: UIView {
   @IBOutlet public weak var rightButton: UIButton?
   
   open var cornerRadius: CGFloat = 0
+  
+  open var preferredStatusBarStyle: UIStatusBarStyle?
 }

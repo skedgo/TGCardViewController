@@ -19,7 +19,7 @@ class ExamplePageCard: TGPageCard {
     let card3 = ExampleChildCard()
     let card4 = ExampleCityCard(city: .nuremberg)
     super.init(cards: [card1, card2, card3, card4])
-   
+
     // Custom accessory for testing jumping around
     let jumpButton = UIButton(type: .roundedRect)
     jumpButton.setTitle("Jump", for: .normal)
@@ -37,9 +37,18 @@ class ExamplePageCard: TGPageCard {
     super.init(coder: coder)
   }
   
+  override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+    super.didBuild(cardView: cardView, headerView: headerView)
+    
+    headerView?.tintColor = .white
+  }
+  
   @objc
   func headerJumpPressed(sender: Any) {
-    let index = Int(arc4random_uniform(UInt32(self.cards.count)))
+    let index = (0..<cards.count)
+      .filter { $0 != self.currentPageIndex }
+      .randomElement()
+      ?? 0
     move(to: index)
   }
   

@@ -40,7 +40,7 @@ class MockupImageCard : TGPlainCard {
     return nil
   }
   
-  override func buildCardView(includeTitleView: Bool) -> TGCardView {
+  override func buildCardView() -> TGCardView {
     guard
       let content = contentView as? MockupImageContentView,
       let image = content.imageView.image,
@@ -53,7 +53,7 @@ class MockupImageCard : TGPlainCard {
     content.imageWidthConstraint.constant  = wrapper.bounds.width
     content.imageHeightConstraint.constant = wrapper.bounds.width * ratio
     
-    return super.buildCardView(includeTitleView: includeTitleView)
+    return super.buildCardView()
   }
   
   @objc

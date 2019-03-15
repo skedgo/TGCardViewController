@@ -97,7 +97,7 @@ class TGPageCardView: TGCardView {
   
   // MARK: - Full card view configuration
   
-  func configure(with card: TGPageCard) {
+  func configure(with pageCard: TGPageCard) {
     // TODO: This does a lot of work by building all the child cards
     //       and then laying them out using auto layout. If this
     //       becomes a performance issue, e.g., when there are a lot
@@ -106,10 +106,13 @@ class TGPageCardView: TGCardView {
     //       layout the child card when it's becoming visible soon.
     // See: https://gitlab.com/SkedGo/tripgo-cards-ios/issues/3
     
-    let contents = card.cards.map { card -> UIView in
-      let view = card.buildCardView(includeTitleView: false)
+    let contents = pageCard.cards.map { card -> UIView in
+      let view = card.buildCardView()
       card.cardView = view
       card.didBuild(cardView: view, headerView: nil)
+      
+      view.dismissButton?.addTarget(pageCard, action: #selector(TGPageCard.dismissTapped(sender:)), for: .touchUpInside)
+      
       return view
     }
     
@@ -117,11 +120,17 @@ class TGPageCardView: TGCardView {
     
     // Page card doesn't always start with page 0. So we keep a reference
     // to the first page index, which can then be used at a later point.
-    visiblePage = card.initialPageIndex
+    visiblePage = pageCard.initialPageIndex
     
     // This will be used in both `moveForward` and `moveBackward`, so
     // it's important to "initailise" this value correctly.
-    lastHorizontalOffset = CGFloat(card.initialPageIndex) * (frame.width + Constants.spaceBetweenCards)
+    lastHorizontalOffset = CGFloat(pageCard.initialPageIndex) * (frame.width + Constants.spaceBetweenCards)
+  }
+  
+  override func updateDismissButton(show: Bool, isSpringLoaded: Bool) {
+    super.updateDismissButton(show: show, isSpringLoaded: isSpringLoaded)
+
+    cardViews.forEach { $0.updateDismissButton(show: show, isSpringLoaded: isSpringLoaded) }
   }
   
   private func fill(with contentViews: [UIView]) {

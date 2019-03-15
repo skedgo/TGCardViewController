@@ -194,13 +194,8 @@ open class TGCard: NSObject, NSCoding {
   /// - Warning: Needs to be overriden by subclasses. Don't call `super`.
   ///     Don't call `didBuild`. No need to set `cardView` when done.
   ///
-  /// - Parameters:
-  ///   - includeTitleView: If the title view should be included or it
-  ///       should be a minimal card without a title view. This is
-  ///       typically `true` but set to `false` when the card is embedded
-  ///       in a `TGPageCard`.
   /// - Returns: Card view configured with the content of this card
-  open func buildCardView(includeTitleView: Bool) -> TGCardView {
+  open func buildCardView() -> TGCardView {
     preconditionFailure("Override this in subclasses, but don't call super to `TGCard`.")
   }
   

@@ -195,12 +195,20 @@ open class TGCardViewController: UIViewController {
   
   fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
 
+  // Before pushing a header that extends to the top
+  private var previousStatusBarStyle: UIStatusBarStyle?
+  private var headerStatusBarStyle: UIStatusBarStyle?
+
   // MARK: - UIViewController
   
   open override func awakeFromNib() {
     super.awakeFromNib()
     
     self.restorationIdentifier = "CardViewController"
+  }
+  
+  open override var preferredStatusBarStyle: UIStatusBarStyle {
+    return headerStatusBarStyle ?? previousStatusBarStyle ?? .default
   }
   
   override open func viewDidLoad() {
@@ -287,6 +295,15 @@ open class TGCardViewController: UIViewController {
     // Now is the time to restore
     if let position = restoredCardPosition {
       moveCard(to: position, animated: false)
+      
+      // During the state restoration process, cards are pushed and
+      // for those with header views, they will be built, position
+      // and height calculated. However, the view controller's `view`
+      // may not have the correct safe area inset at this point.
+      // We, thus, adjust the position and height here so correct
+      // safe area insets are used in the calculations.
+      updateHeaderConstraints()
+      
       restoredCardPosition = nil
     }
     
@@ -654,15 +671,10 @@ extension TGCardViewController {
       oldCard.copyStyling(to: top)
     }
     
-    let cardView = top.buildCardView(includeTitleView: true)
-    if let defaultCardTitle = cardView.titleView as? TGCardDefaultTitleView {
-      let showClose = delegate != nil || cards.count > 1
-      defaultCardTitle.dismissButton.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
-      defaultCardTitle.dismissButton.isHidden = !showClose
-      if #available(iOS 11.0, *) {
-        defaultCardTitle.dismissButton.isSpringLoaded = navigationButtonsAreSpringLoaded
-      }
-    }
+    let cardView = top.buildCardView()
+    cardView.dismissButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
+    let showClose = delegate != nil || cards.count > 1
+    cardView.updateDismissButton(show: showClose, isSpringLoaded: navigationButtonsAreSpringLoaded)
     
     // On device with home indicator, we want only the header part of a card view is
     // visible when the card is in collapsed state. If we don't adjust the alpha as
@@ -700,6 +712,11 @@ extension TGCardViewController {
     
     let header = top.buildHeaderView()
     if let header = header {
+      // Keep this to restore it later when hiding the header
+      if previousStatusBarStyle == nil {
+        previousStatusBarStyle = preferredStatusBarStyle
+      }
+      
       header.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
       if #available(iOS 11.0, *) {
         header.closeButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
@@ -1396,12 +1413,15 @@ extension TGCardViewController {
   private func updateHeaderStyle() {
     let cornerRadius: CGFloat = cardIsNextToMap(in: traitCollection) ? 8 : 0
     headerView.layer.cornerRadius = cornerRadius
+    headerView.backgroundColor = topCard?.backgroundColor ?? .white
     headerView.subviews.compactMap { $0 as? TGHeaderView }.forEach { $0.cornerRadius = cornerRadius }
+    updateStatusBar(headerIsVisible: isShowingHeader)
   }
   
   private func updateHeaderConstraints() {
-    guard isShowingHeader else { return }
+    guard isShowingHeader, let headerContent = headerView.subviews.first else { return }
     adjustHeaderPositioningConstraint()
+    adjustHeaderHeightConstraint(toFit: headerContent)
     view.setNeedsUpdateConstraints()
   }
   
@@ -1409,16 +1429,20 @@ extension TGCardViewController {
     if cardIsNextToMap(in: traitCollection) {
       headerViewTopConstraint.constant = topOverlap + Constants.floatingHeaderTopMargin
     } else {
-      headerViewTopConstraint.constant = topOverlap
+      headerViewTopConstraint.constant = 0
     }
   }
   
   private func adjustHeaderHeightConstraint(toFit content: UIView) {
-    let size = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-    headerViewHeightConstraint.constant = size.height
+    let contentSize = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+    if cardIsNextToMap(in: traitCollection) {
+      headerViewHeightConstraint.constant = contentSize.height
+    } else {
+      headerViewHeightConstraint.constant = contentSize.height + topOverlap
+    }
   }
   
-  fileprivate func showHeader(content: UIView, animated: Bool) {
+  fileprivate func showHeader(content: TGHeaderView, animated: Bool) {
     // update the header content.
     overwriteHeaderContent(with: content)
    
@@ -1431,13 +1455,15 @@ extension TGCardViewController {
     view.setNeedsUpdateConstraints()
 
     // animate in
+    let spring = cardIsNextToMap(in: traitCollection)
     UIView.animate(
       withDuration: animated ? 0.35 : 0,
       delay: 0,
-      usingSpringWithDamping: 0.75,
+      usingSpringWithDamping: spring ? 0.75 : 1,
       initialSpringVelocity: 0,
       options: [.curveEaseOut],
       animations: {
+        self.updateStatusBar(headerIsVisible: true, preferredStyle: content.preferredStatusBarStyle)
         self.view.layoutIfNeeded()
       },
       completion: nil
@@ -1451,6 +1477,7 @@ extension TGCardViewController {
     guard animated else {
       self.view.layoutIfNeeded()
       self.headerView.subviews.forEach { $0.removeFromSuperview() }
+      self.updateStatusBar(headerIsVisible: false)
       return
     }
 
@@ -1462,6 +1489,7 @@ extension TGCardViewController {
       options: [.curveEaseIn],
       animations: {
         self.view.layoutIfNeeded()
+        self.updateStatusBar(headerIsVisible: false)
       },
       completion: { finished in
         guard finished else { return }
@@ -1474,10 +1502,25 @@ extension TGCardViewController {
     headerView.subviews.forEach { $0.removeFromSuperview() }
     content.translatesAutoresizingMaskIntoConstraints = false
     headerView.addSubview(content)
+    let contentSize = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+    content.heightAnchor.constraint(equalToConstant: contentSize.height)
     content.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
     content.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
-    content.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
     content.bottomAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
+  }
+  
+  private func updateStatusBar(headerIsVisible: Bool, preferredStyle: UIStatusBarStyle? = nil) {
+    let headerExtendsToTop = !cardIsNextToMap(in: traitCollection)
+    let headerCoversStatusBar = headerIsVisible && headerExtendsToTop
+    
+    statusBarBlurView.alpha = headerCoversStatusBar ? 0 : 1
+
+    if headerIsVisible, let newStyle = preferredStyle {
+      headerStatusBarStyle = newStyle
+    } else if !headerIsVisible {
+      headerStatusBarStyle = nil
+    }
+    setNeedsStatusBarAppearanceUpdate()
   }
   
 }
