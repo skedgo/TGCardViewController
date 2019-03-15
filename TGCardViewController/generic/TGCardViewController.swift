@@ -1415,6 +1415,7 @@ extension TGCardViewController {
     headerView.layer.cornerRadius = cornerRadius
     headerView.backgroundColor = topCard?.backgroundColor ?? .white
     headerView.subviews.compactMap { $0 as? TGHeaderView }.forEach { $0.cornerRadius = cornerRadius }
+    updateStatusBar(headerIsVisible: isShowingHeader)
   }
   
   private func updateHeaderConstraints() {
@@ -1514,7 +1515,11 @@ extension TGCardViewController {
     
     statusBarBlurView.alpha = headerCoversStatusBar ? 0 : 1
 
-    headerStatusBarStyle = headerIsVisible ? preferredStyle : nil
+    if headerIsVisible, let newStyle = preferredStyle {
+      headerStatusBarStyle = newStyle
+    } else if !headerIsVisible {
+      headerStatusBarStyle = nil
+    }
     setNeedsStatusBarAppearanceUpdate()
   }
   
