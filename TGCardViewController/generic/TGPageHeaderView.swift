@@ -26,6 +26,7 @@ public class TGPageHeaderView: TGHeaderView {
     
     rightButton?.isHidden = true
     accessoryWrapperView.isHidden = true
+    preferredStatusBarStyle = .lightContent
   }
   
   public override var cornerRadius: CGFloat {

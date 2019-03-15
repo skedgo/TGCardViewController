@@ -195,12 +195,20 @@ open class TGCardViewController: UIViewController {
   
   fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition)]()
 
+  // Before pushing a header that extends to the top
+  private var previousStatusBarStyle: UIStatusBarStyle?
+  private var headerStatusBarStyle: UIStatusBarStyle?
+
   // MARK: - UIViewController
   
   open override func awakeFromNib() {
     super.awakeFromNib()
     
     self.restorationIdentifier = "CardViewController"
+  }
+  
+  open override var preferredStatusBarStyle: UIStatusBarStyle {
+    return headerStatusBarStyle ?? previousStatusBarStyle ?? .default
   }
   
   override open func viewDidLoad() {
@@ -704,6 +712,11 @@ extension TGCardViewController {
     
     let header = top.buildHeaderView()
     if let header = header {
+      // Keep this to restore it later when hiding the header
+      if previousStatusBarStyle == nil {
+        previousStatusBarStyle = preferredStatusBarStyle
+      }
+      
       header.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
       if #available(iOS 11.0, *) {
         header.closeButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
@@ -1428,7 +1441,7 @@ extension TGCardViewController {
     }
   }
   
-  fileprivate func showHeader(content: UIView, animated: Bool) {
+  fileprivate func showHeader(content: TGHeaderView, animated: Bool) {
     // update the header content.
     overwriteHeaderContent(with: content)
    
@@ -1441,14 +1454,15 @@ extension TGCardViewController {
     view.setNeedsUpdateConstraints()
 
     // animate in
+    let spring = cardIsNextToMap(in: traitCollection)
     UIView.animate(
       withDuration: animated ? 0.35 : 0,
       delay: 0,
-      usingSpringWithDamping: 0.75,
+      usingSpringWithDamping: spring ? 0.75 : 1,
       initialSpringVelocity: 0,
       options: [.curveEaseOut],
       animations: {
-        self.statusBarBlurView.isHidden = true
+        self.updateStatusBar(headerIsVisible: true, preferredStyle: content.preferredStatusBarStyle)
         self.view.layoutIfNeeded()
       },
       completion: nil
@@ -1462,7 +1476,7 @@ extension TGCardViewController {
     guard animated else {
       self.view.layoutIfNeeded()
       self.headerView.subviews.forEach { $0.removeFromSuperview() }
-      self.statusBarBlurView.isHidden = false
+      self.updateStatusBar(headerIsVisible: false)
       return
     }
 
@@ -1474,11 +1488,11 @@ extension TGCardViewController {
       options: [.curveEaseIn],
       animations: {
         self.view.layoutIfNeeded()
+        self.updateStatusBar(headerIsVisible: false)
       },
       completion: { finished in
         guard finished else { return }
         self.headerView.subviews.forEach { $0.removeFromSuperview() }
-        self.statusBarBlurView.isHidden = false
       }
     )
   }
@@ -1492,6 +1506,16 @@ extension TGCardViewController {
     content.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
     content.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
     content.bottomAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
+  }
+  
+  private func updateStatusBar(headerIsVisible: Bool, preferredStyle: UIStatusBarStyle? = nil) {
+    let headerExtendsToTop = !cardIsNextToMap(in: traitCollection)
+    let headerCoversStatusBar = headerIsVisible && headerExtendsToTop
+    
+    statusBarBlurView.alpha = headerCoversStatusBar ? 0 : 1
+
+    headerStatusBarStyle = headerIsVisible ? preferredStyle : nil
+    setNeedsStatusBarAppearanceUpdate()
   }
   
 }
