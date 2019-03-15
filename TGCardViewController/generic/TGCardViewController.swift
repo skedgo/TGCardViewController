@@ -287,6 +287,15 @@ open class TGCardViewController: UIViewController {
     // Now is the time to restore
     if let position = restoredCardPosition {
       moveCard(to: position, animated: false)
+      
+      // During the state restoration process, cards are pushed and
+      // for those with header views, they will be built, position
+      // and height calculated. However, the view controller's `view`
+      // may not have the correct safe area inset at this point.
+      // We, thus, adjust the position and height here so correct
+      // safe area insets are used in the calculations.
+      updateHeaderConstraints()
+      
       restoredCardPosition = nil
     }
     
