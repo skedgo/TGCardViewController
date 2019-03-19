@@ -72,6 +72,10 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
     }
   }
   
+  open var annotationToZoomToOnTakingCharge: [MKAnnotation] {
+    return annotations
+  }
+  
   /// How zoomed in/out the map should be when displaying the
   /// content the first time. Defaults to `.city`
   public var preferredZoomLevel: Zoom = .city
@@ -116,7 +120,7 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
       mapView.setVisibleMapRect(toRestore, animated: false)
       restoredMapRect = nil
     } else {
-      zoom(to: annotations, animated: animated)
+      zoom(to: annotationToZoomToOnTakingCharge, animated: animated)
     }
   }
   
