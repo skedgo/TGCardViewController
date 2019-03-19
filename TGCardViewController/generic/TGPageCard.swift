@@ -82,6 +82,8 @@ open class TGPageCard: TGCard {
   /// as the single parameter.
   ///
   /// - note: If this is not set the default "next" button will be used.
+  /// - warning: This will not get restored as part of state restoration.
+  ///     Make sure to do so manually.
   public var headerRightAction: (title: String, onPress: (Int) -> Void)?
   
   /// Customisation of the header's accessory view
