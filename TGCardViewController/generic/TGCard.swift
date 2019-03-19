@@ -34,11 +34,12 @@ open class TGCard: NSObject, NSCoding {
     /// accessory view, and close button
     case `default`(String, String?, UIView?)
     
-    /// A customised title of your choosing. In this case, make sure to add a
-    /// way to dismiss this card and call `controller?.pop()` when appropriate.
-    /// You can use `TGCard.closeButtonImage` if you want to use the default
-    /// style.
-    case custom(UIView)
+    /// A customised title of your choosing. In this case, you can optionally
+    /// provide a (reference to a) dismiss button. If you don't provide this,
+    /// make sure to add a way to dismiss this card and call `controller?.pop()`
+    /// when appropriate. You can use `TGCard.closeButtonImage` if you want to
+    /// use the default style.
+    case custom(UIView, dismissButton: UIButton?)
     
     /// No title at all. Make sure to call `controller?.pop()`
     /// when appropriate.
@@ -115,7 +116,8 @@ open class TGCard: NSObject, NSCoding {
     switch coder.decodeObject(forKey: "title.type") as? String {
     case "custom":
       if let view = coder.decodeView(forKey: "title.view") {
-        title = .custom(view)
+        let button = coder.decodeView(forKey: "title.button") as? UIButton
+        title = .custom(view, dismissButton: button)
       } else {
         title = .none
       }
@@ -145,9 +147,10 @@ open class TGCard: NSObject, NSCoding {
   
   open func encode(with aCoder: NSCoder) {
     switch title {
-    case .custom(let view):
+    case .custom(let view, let button):
       aCoder.encode("custom", forKey: "title.type")
       aCoder.encode(view: view, forKey: "title.view")
+      aCoder.encode(view: button, forKey: "title.button")
     case .default(let title, let subtitle, let view):
       aCoder.encode("default", forKey: "title.type")
       aCoder.encode(title, forKey: "title.title")

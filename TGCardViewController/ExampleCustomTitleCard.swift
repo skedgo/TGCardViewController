@@ -14,9 +14,7 @@ class ExampleCustomTitleCard: TGPlainCard {
   init() {
     let content = ExampleChildContentView.instantiate()
     let titleView = TurnByTurnTitleView.newInstance()
-    super.init(title: .custom(titleView), contentView: content, mapManager: TGMapManager.sydney, initialPosition: .collapsed)
-    
-    titleView.dismissButton.addTarget(self, action: #selector(dismissButtonTapped(_:)), for: .touchUpInside)
+    super.init(title: .custom(titleView, dismissButton: titleView.dismissButton), contentView: content, mapManager: TGMapManager.sydney, initialPosition: .collapsed)
   }
   
   required convenience init?(coder: NSCoder) {
@@ -25,9 +23,5 @@ class ExampleCustomTitleCard: TGPlainCard {
   
   override func buildHeaderView() -> TGHeaderView? {
     return TurnByTurnHeaderView.newInstance()
-  }
-
-  @objc private func dismissButtonTapped(_ sender: Any) {
-    controller?.pop()
   }
 }

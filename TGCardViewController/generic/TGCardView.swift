@@ -47,6 +47,8 @@ public class TGCardView: TGCornerView {
   
   weak var titleView: UIView?
   
+  weak var customDismissButton: UIButton?
+  
   private var contentScrollViewObservation: NSKeyValueObservation?
   
   /// The height of the header part of the view, i.e., everything
@@ -110,8 +112,9 @@ public class TGCardView: TGCornerView {
         defaultTitleView.accessoryView = accessoryView
         titleView = defaultTitleView
         
-      case .custom(let view):
+      case .custom(let view, let button):
         titleView = view
+        customDismissButton = button
 
       case .none:
         titleView = nil
@@ -146,10 +149,13 @@ public class TGCardView: TGCornerView {
   // MARK: - Title View Configuration
   
   var dismissButton: UIButton? {
-    guard let defaultTitleView = titleViewPlaceholder?.subviews.first as? TGCardDefaultTitleView else {
+    if let dismissButton = customDismissButton {
+      return dismissButton
+    } else if let defaultTitleView = titleViewPlaceholder?.subviews.first as? TGCardDefaultTitleView {
+      return defaultTitleView.dismissButton
+    } else {
       return nil
     }
-    return defaultTitleView.dismissButton
   }
   
   func headerHeight(for position: TGCardPosition) -> CGFloat {
