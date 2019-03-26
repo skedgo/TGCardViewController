@@ -13,7 +13,7 @@ import UIKit
 ///
 /// This class is generally subclassed.
 ///
-/// - warning: `TGTaleCard` supports state restoration, but will not
+/// - warning: `TGTableCard` supports state restoration, but will not
 ///     restore data sources and delegates. Override `init(coder:)` and
 ///     `encode(with:)` in your, making sure to call `super`.
 open class TGTableCard: TGCard {

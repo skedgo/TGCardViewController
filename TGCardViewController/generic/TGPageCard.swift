@@ -323,7 +323,7 @@ extension TGPageCard: TGPageCardViewDelegate {
     current.didAppear(animated: animated)
     previous?.didDisappear(animated: animated)
 
-    if let previousIndex = cards.index(where: { $0 === previous }),
+    if let previousIndex = cards.firstIndex(where: { $0 === previous }),
       let pageCard = cardView as? TGPageCardView {
       let previousCardView = pageCard.cardViews[previousIndex]
       delegate?.contentScrollViewDidChange(old: previousCardView.contentScrollView, for: self)
