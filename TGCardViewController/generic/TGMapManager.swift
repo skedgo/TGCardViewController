@@ -72,7 +72,7 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
     }
   }
   
-  open var annotationToZoomToOnTakingCharge: [MKAnnotation] {
+  open var annotationsToZoomToOnTakingCharge: [MKAnnotation] {
     return annotations
   }
   
@@ -120,7 +120,7 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
       mapView.setVisibleMapRect(toRestore, animated: false)
       restoredMapRect = nil
     } else {
-      zoom(to: annotationToZoomToOnTakingCharge, animated: animated)
+      zoom(to: annotationsToZoomToOnTakingCharge, animated: animated)
     }
   }
   
