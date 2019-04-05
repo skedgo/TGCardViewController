@@ -468,13 +468,13 @@
 					3ACA747F1E716AFC00408678 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = JFT62W5LA3;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
 					3ACA74931E716AFC00408678 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = JFT62W5LA3;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 3ACA747F1E716AFC00408678;
 					};
@@ -853,7 +853,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.buzzhives.TGCardViewController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -871,7 +871,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.buzzhives.TGCardViewController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -888,7 +888,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.buzzhives.TGCardViewControllerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = TGCardViewController;
 			};
 			name = Debug;
@@ -906,7 +906,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.buzzhives.TGCardViewControllerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = TGCardViewController;
 			};
 			name = Release;
