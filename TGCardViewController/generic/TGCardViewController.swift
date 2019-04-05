@@ -211,6 +211,10 @@ open class TGCardViewController: UIViewController {
     return headerStatusBarStyle ?? previousStatusBarStyle ?? .default
   }
   
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+  
   override open func viewDidLoad() {
     super.viewDidLoad()
     
@@ -268,6 +272,8 @@ open class TGCardViewController: UIViewController {
     cardWrapperShadow.layer.shadowRadius = 3
     cardWrapperShadow.layer.shadowOpacity = 0.3
     
+    monitorVoiceOverStatus()
+
     if let root = rootCard {
       push(root, animated: false)
     }
@@ -368,7 +374,12 @@ open class TGCardViewController: UIViewController {
     // portrait mode, all of its contents are not scrollable. If we now switch
     // to landscape mode, the card will be in the extended state, which requires
     // the card's contents to be scrollable. Hence, we reenable the scolling.
-    topCardView?.allowContentScrolling(true)
+    updateCardScrolling(allow: true, view: topCardView)
+  }
+  
+  private func updateCardScrolling(allow: Bool, view: TGCardView?) {
+    let allowScrolling = allow || UIAccessibility.isVoiceOverRunning
+    view?.allowContentScrolling(allowScrolling)
   }
   
   open override func viewDidLayoutSubviews() {
@@ -777,7 +788,7 @@ extension TGCardViewController {
         self.cardTransitionShadow?.alpha = 0.15
       },
       completion: { _ in
-        cardView.allowContentScrolling(animateTo.position == .extended)
+        self.updateCardScrolling(allow: animateTo.position == .extended, view: cardView)
         self.previousCardPosition = animateTo.position
         oldTop?.view.alpha = 0
         if notify {
@@ -786,6 +797,7 @@ extension TGCardViewController {
           top.didMove(to: animateTo.position, animated: animated)
         }
         self.cardTransitionShadow?.removeFromSuperview()
+        self.updateCardHandleAccessibility(for: animateTo.position)
         completionHandler?()
       }
     )
@@ -900,7 +912,7 @@ extension TGCardViewController {
         newTop?.view.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
       },
       completion: { _ in
-        newTop?.view.allowContentScrolling(animateTo.position == .extended)
+        self.updateCardScrolling(allow: animateTo.position == .extended, view: newTop?.view)
         currentTopCard.controller = nil
         if notify {
           currentTopCard.didDisappear(animated: animated)
@@ -909,6 +921,7 @@ extension TGCardViewController {
         }
         topView.removeFromSuperview()
         self.cardTransitionShadow?.removeFromSuperview()
+        self.updateCardHandleAccessibility(for: animateTo.position)
         completionHandler?()
       }
     )
@@ -1048,8 +1061,9 @@ extension TGCardViewController {
     }, completion: { _ in
       self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: snapTo.position)
       self.topCard?.didMove(to: snapTo.position, animated: true)
-      self.topCardView?.allowContentScrolling(snapTo.position == .extended)
+      self.updateCardScrolling(allow: snapTo.position == .extended, view: self.topCardView)
       self.previousCardPosition = snapTo.position
+      self.updateCardHandleAccessibility(for: snapTo.position)
       completion?()
     })
   }
@@ -1136,15 +1150,7 @@ extension TGCardViewController {
   
   @objc
   fileprivate func handleCardTap(_ recogniser: UITapGestureRecognizer) {
-    
-    let desired: TGCardPosition
-    switch cardPosition {
-    case (.extended):  return // tapping when extended does nothing
-    case (.peaking):   desired = .extended
-    case (.collapsed): desired = .peaking
-    }
-    
-    switchTo(desired, direction: .up, animated: true)
+    expand()
   }
   
   @objc
@@ -1234,8 +1240,9 @@ extension TGCardViewController {
       completion: { _ in
         self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: animateTo.position)
         self.topCard?.didMove(to: animateTo.position, animated: animated)
-        self.topCardView?.allowContentScrolling(animateTo.position == .extended)
+        self.updateCardScrolling(allow: animateTo.position == .extended, view: self.topCardView)
         self.previousCardPosition = animateTo.position
+        self.updateCardHandleAccessibility(for: animateTo.position)
     })
   }
   
@@ -1634,6 +1641,92 @@ extension TGCardViewController: TGCardDelegate {
     
     old?.panGestureRecognizer.removeTarget(self, action: nil)
     view.contentScrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleInnerPan(_:)))
+  }
+  
+}
+
+
+// MARK: - VoiceOver
+
+extension TGCardViewController {
+  
+  override open func accessibilityPerformEscape() -> Bool {
+    guard let top = topCard, top != rootCard else { return false }
+    pop()
+    return true
+  }
+  
+  private func monitorVoiceOverStatus() {
+    if #available(iOS 11.0, *) {
+      NotificationCenter.default.addObserver(self, selector: #selector(updateForVoiceOverStatusChange), name: UIAccessibility.voiceOverStatusDidChangeNotification, object: nil)
+    }
+  }
+  
+  @objc
+  private func updateForVoiceOverStatusChange() {
+    updateCardScrolling(allow: cardPosition == .extended, view: topCardView)
+  }
+  
+  private func buildCardHandleAccessibilityActions() -> [UIAccessibilityCustomAction] {
+    return [
+      UIAccessibilityCustomAction(
+        name: NSLocalizedString("Collapse", comment: "Accessibility action to collapse card"),
+        target: self, selector: #selector(collapse)
+      ),
+      UIAccessibilityCustomAction(
+        name: NSLocalizedString("Expand", comment: "Accessibility action to expand card"),
+        target: self, selector: #selector(expand)
+      )
+    ]
+  }
+  
+  @objc
+  @discardableResult
+  private func expand() -> Bool {
+    let desired: TGCardPosition
+    switch cardPosition {
+    case (.extended):  return false // tapping when extended does nothing
+    case (.peaking):   desired = .extended
+    case (.collapsed): desired = .peaking
+    }
+    
+    switchTo(desired, direction: .up, animated: true)
+    return true
+  }
+  
+  @objc
+  @discardableResult
+  private func collapse() -> Bool {
+    let desired: TGCardPosition
+    switch cardPosition {
+    case (.extended):  desired = .peaking
+    case (.peaking):   desired = .collapsed
+    case (.collapsed): return false // tapping when extended does nothing
+    }
+    
+    switchTo(desired, direction: .down, animated: true)
+    return true
+  }
+
+  
+  private func updateCardHandleAccessibility(for position: TGCardPosition? = nil) {
+    guard let handle = topCardView?.grabHandle else { return }
+    
+    handle.isAccessibilityElement = true
+    handle.accessibilityCustomActions = buildCardHandleAccessibilityActions()
+    
+    switch position ?? cardPosition {
+    case .collapsed:
+      handle.accessibilityLabel = NSLocalizedString("Card controller minimised", comment: "Card handle accessibility description for collapsed state")
+      
+    case .extended:
+      handle.accessibilityLabel = NSLocalizedString("Card controller full screen", comment: "Card handle accessibility description for collapsed state")
+
+    case .peaking:
+      handle.accessibilityLabel = NSLocalizedString("Card controller half screen", comment: "Card handle accessibility description for collapsed state")
+    }
+    
+    handle.accessibilityHint = NSLocalizedString("Adjust the size of the card overlaying the map.", comment: "")
   }
   
 }
