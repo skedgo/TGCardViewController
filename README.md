@@ -94,8 +94,8 @@ Map buttons:
  
 ### 5. UIKit features
 
-- [ ] State restoration
-- [ ] VoiceOver Accessibility
+- [x] State restoration
+- [x] VoiceOver Accessibility (!38)
 - [ ] `NSUserActivity`
 
 
