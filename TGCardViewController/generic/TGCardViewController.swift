@@ -1658,7 +1658,8 @@ extension TGCardViewController {
   
   private func monitorVoiceOverStatus() {
     if #available(iOS 11.0, *) {
-      NotificationCenter.default.addObserver(self, selector: #selector(updateForVoiceOverStatusChange), name: UIAccessibility.voiceOverStatusDidChangeNotification, object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(updateForVoiceOverStatusChange),
+                                             name: UIAccessibility.voiceOverStatusDidChangeNotification, object: nil)
     }
   }
   
@@ -1717,16 +1718,28 @@ extension TGCardViewController {
     
     switch position ?? cardPosition {
     case .collapsed:
-      handle.accessibilityLabel = NSLocalizedString("Card controller minimised", comment: "Card handle accessibility description for collapsed state")
+      handle.accessibilityLabel = NSLocalizedString(
+        "Card controller minimised",
+        comment: "Card handle accessibility description for collapsed state"
+      )
       
     case .extended:
-      handle.accessibilityLabel = NSLocalizedString("Card controller full screen", comment: "Card handle accessibility description for collapsed state")
+      handle.accessibilityLabel = NSLocalizedString(
+        "Card controller full screen",
+        comment: "Card handle accessibility description for collapsed state"
+      )
 
     case .peaking:
-      handle.accessibilityLabel = NSLocalizedString("Card controller half screen", comment: "Card handle accessibility description for collapsed state")
+      handle.accessibilityLabel = NSLocalizedString(
+        "Card controller half screen",
+        comment: "Card handle accessibility description for collapsed state"
+      )
     }
     
-    handle.accessibilityHint = NSLocalizedString("Adjust the size of the card overlaying the map.", comment: "")
+    handle.accessibilityHint = NSLocalizedString(
+      "Adjust the size of the card overlaying the map.",
+      comment: ""
+    )
   }
   
 }
