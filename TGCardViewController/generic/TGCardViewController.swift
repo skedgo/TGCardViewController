@@ -943,6 +943,10 @@ extension TGCardViewController {
       return
     }
     
+    if cards.count == 1 {
+      rootCard = newCard
+    }
+    
     let animatePush = animated
       && newCard.initialPosition != cardPosition
 
