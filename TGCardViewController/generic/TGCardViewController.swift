@@ -938,8 +938,8 @@ extension TGCardViewController {
   ///   - animated: Whether the swap can be animated. Will only be animated if
   ///       the new's card position is different from the current card position.
   public func swap(for newCard: TGCard, animated: Bool = true) {
-    guard cards.count > 1 else {
-      assertionFailure("Trying to swap the root card. Did you mean to `push`?")
+    guard cards.count > 0 else {
+      assertionFailure("Trying to swap, but there's no top card. Did you mean to `push`?")
       return
     }
     
