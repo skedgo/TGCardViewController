@@ -219,58 +219,16 @@ open class TGCard: NSObject, NSCoding {
   
   public private(set) var viewIsVisible: Bool = false
   
-  /// Each card can specify a font for title.
-  ///
-  /// @default Bold system font with size 17pt.
-  public var titleFont: UIFont? = UIFont.boldSystemFont(ofSize: 17) {
-    didSet { cardView?.applyStyling(for: self) }
-  }
-  
-  /// Each card can specify a font for subtitle.
-  ///
-  /// @default Regular system font with size 15pt.
-  public var subtitleFont: UIFont? = UIFont.systemFont(ofSize: 15) {
-    didSet { cardView?.applyStyling(for: self) }
-  }
-  
-  /// Each card can have its own background color.
-  ///
-  /// @default: white
-  public var backgroundColor: UIColor? = .white {
-    didSet { cardView?.applyStyling(for: self) }
-  }
-  
-  /// Each card can specify a text color for title.
-  ///
-  /// @default: Black
-  public var titleTextColor: UIColor? = .black {
-    didSet { cardView?.applyStyling(for: self) }
-  }
-  
-  /// Each card can specify a text color for subtitle.
-  ///
-  /// @default: Light grey
-  public var subtitleTextColor: UIColor? = .lightGray {
-    didSet { cardView?.applyStyling(for: self) }
-  }
-  
-  // Each card can specify a color for the grab handle.
-  ///
-  /// @default: Grayscale @ 70%.
-  public var grabHandleColor: UIColor? = #colorLiteral(red: 0.7552321553, green: 0.7552321553, blue: 0.7552321553, alpha: 1) {
-    didSet { cardView?.applyStyling(for: self) }
+  /// Each card can specify a style for the UI
+  public var style: TGCardStyle = .default {
+    didSet { cardView?.applyStyling(style) }
   }
   
   /// Called to copy styling to a given card
   ///
   /// - Parameter card: card from which styling is taken.
   open func copyStyling(to card: TGCard) {
-    card.titleFont = titleFont
-    card.titleTextColor = titleTextColor
-    card.subtitleFont = subtitleFont
-    card.subtitleTextColor = subtitleTextColor
-    card.backgroundColor = backgroundColor
-    card.grabHandleColor = grabHandleColor
+    card.style = style
   }
   
   // MARK: - Managing Card Life Cycle

@@ -28,32 +28,9 @@ open class TGPageCard: TGCard {
     }
   }
   
-  // Styling
-  
-  public override var backgroundColor: UIColor? {
-    didSet { headerView?.applyStyling(for: self) }
+  public override var style: TGCardStyle {
+    didSet { headerView?.applyStyling(style) }
   }
-
-  public override var grabHandleColor: UIColor? {
-    didSet { headerView?.applyStyling(for: self) }
-  }
-  
-  public override var titleFont: UIFont? {
-    didSet { headerView?.applyStyling(for: self) }
-  }
-  
-  public override var titleTextColor: UIColor? {
-    didSet { headerView?.applyStyling(for: self) }
-  }
-
-  public override var subtitleFont: UIFont? {
-    didSet { headerView?.applyStyling(for: self) }
-  }
-  
-  public override var subtitleTextColor: UIColor? {
-    didSet { headerView?.applyStyling(for: self) }
-  }
-
   
   /// The cards displayed by the page card
   public let cards: [TGCard]
@@ -172,7 +149,7 @@ open class TGPageCard: TGCard {
     }
     
     let view = TGPageHeaderView.instantiate()
-    view.applyStyling(for: self)
+    view.applyStyling(style)
     
     if let accessory = headerAccessoryView {
       view.accessoryView = accessory
@@ -180,8 +157,8 @@ open class TGPageCard: TGCard {
       let pageControl = UIPageControl()
       pageControl.currentPage = initialPageIndex
       pageControl.numberOfPages = cards.count
-      pageControl.pageIndicatorTintColor = subtitleTextColor ?? .lightGray
-      pageControl.currentPageIndicatorTintColor = grabHandleColor ?? .blue
+      pageControl.pageIndicatorTintColor = style.subtitleTextColor
+      pageControl.currentPageIndicatorTintColor = style.grabHandleColor
       pageControl.addTarget(self, action: #selector(headerPageControlChanged(sender:)), for: .valueChanged)
       self.headerPageControl = pageControl
       view.accessoryView = pageControl

@@ -1425,7 +1425,7 @@ extension TGCardViewController {
   private func updateHeaderStyle() {
     let cornerRadius: CGFloat = cardIsNextToMap(in: traitCollection) ? 8 : 0
     headerView.layer.cornerRadius = cornerRadius
-    headerView.backgroundColor = topCard?.backgroundColor ?? .white
+    headerView.backgroundColor = topCard?.style.backgroundColor ?? .white
     headerView.subviews.compactMap { $0 as? TGHeaderView }.forEach { $0.cornerRadius = cornerRadius }
     updateStatusBar(headerIsVisible: isShowingHeader)
   }

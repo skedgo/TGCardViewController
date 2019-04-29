@@ -128,7 +128,7 @@ public class TGCardView: TGCornerView {
     }
     
     // Apply custom styling
-    applyStyling(for: card)
+    applyStyling(card.style)
     
     if let action = card.floatingButtonAction {
       // TODO: We should add an accessibility label here
@@ -196,15 +196,15 @@ public class TGCardView: TGCornerView {
   
   // MARK: - Managing Appearance
   
-  func applyStyling(for card: TGCard) {
-    grabHandle?.handleColor = card.grabHandleColor
-    backgroundColor = card.backgroundColor
+  func applyStyling(_ style: TGCardStyle) {
+    grabHandle?.handleColor = style.grabHandleColor
+    backgroundColor = style.backgroundColor
     
     if let defaultTitleView = titleViewPlaceholder?.subviews.first as? TGCardDefaultTitleView {
-      defaultTitleView.titleLabel.font = card.titleFont
-      defaultTitleView.titleLabel.textColor = card.titleTextColor
-      defaultTitleView.subtitleLabel.font = card.subtitleFont
-      defaultTitleView.subtitleLabel.textColor = card.subtitleTextColor
+      defaultTitleView.titleLabel.font = style.titleFont
+      defaultTitleView.titleLabel.textColor = style.titleTextColor
+      defaultTitleView.subtitleLabel.font = style.subtitleFont
+      defaultTitleView.subtitleLabel.textColor = style.subtitleTextColor
     }
   }
   
