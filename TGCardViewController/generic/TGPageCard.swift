@@ -97,7 +97,8 @@ open class TGPageCard: TGCard {
   /// - Parameters:
   ///   - cards: these are the child cards that will be displayed by the page card as pages.
   ///   - initialPage: the index of the first child card (page) to display when the page card is pushed.
-  public init(cards: [TGCard], initialPage: Int = 0) {
+  ///   - initialPosition: Position of the card when first pushed. Defaults to `.peaking`
+  public init(cards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
     assert(TGPageCard.allCardsHaveMapManagers(in: cards), "TGCardVC doesn't yet properly handle " +
       "page cards where some cards don't have map managers. It won't crash but will experience " +
       "unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck " +
@@ -111,7 +112,7 @@ open class TGPageCard: TGCard {
     // set on intialising and then updated whenever we scroll.
     let mapManager = cards[initialPage].mapManager
     
-    super.init(title: .none, mapManager: mapManager, initialPosition: .peaking)
+    super.init(title: .none, mapManager: mapManager, initialPosition: initialPosition)
   }
   
   public required init?(coder: NSCoder) {
