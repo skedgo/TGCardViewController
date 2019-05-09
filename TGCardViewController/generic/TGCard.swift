@@ -23,9 +23,10 @@ import UIKit
 ///
 /// See those classes for more information and how to use them.
 ///
-/// - note: Implements NSObject to make it easy to implement
-/// various UIKit protocols in subclasses.
-open class TGCard: NSObject, NSCoding {
+/// - note: This is a `UIResponder` which is usefulf or supporting per-card
+///     keyboard shortcuts. Thusly subclasses NSObject to make it easy to
+///     implement various UIKit protocols in subclasses.
+open class TGCard: UIResponder, NSCoding {
   
   /// Enumeration of supported "title" configurations, i.e., what goes at the
   /// top of the card
@@ -108,6 +109,22 @@ open class TGCard: NSObject, NSCoding {
     self.title = title
     self.mapManager = mapManager
     self.initialPosition = mapManager != nil ? initialPosition : .extended
+  }
+  
+  // MARK: - Responder chain
+  
+  weak var parentCard: TGCard?
+  
+  open override var canBecomeFirstResponder: Bool {
+    return true
+  }
+  
+  open override var keyCommands: [UIKeyCommand]? {
+    return []
+  }
+  
+  open override var next: UIResponder? {
+    return parentCard ?? controller
   }
   
   // MARK: - Restoration

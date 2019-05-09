@@ -798,6 +798,7 @@ extension TGCardViewController {
         }
         self.cardTransitionShadow?.removeFromSuperview()
         self.updateCardHandleAccessibility(for: animateTo.position)
+        self.updateResponderChainForNewTopCard()
         completionHandler?()
       }
     )
@@ -814,6 +815,7 @@ extension TGCardViewController {
   }
   
   // swiftlint:disable function_body_length
+  @objc
   public func pop(animated: Bool = true, completionHandler: (() -> Void)? = nil) {
     if let delegate = delegate, cards.count == 1 {
       // popping last one, let delegate dismiss
@@ -922,6 +924,7 @@ extension TGCardViewController {
         topView.removeFromSuperview()
         self.cardTransitionShadow?.removeFromSuperview()
         self.updateCardHandleAccessibility(for: animateTo.position)
+        self.updateResponderChainForNewTopCard()
         completionHandler?()
       }
     )
@@ -1746,4 +1749,44 @@ extension TGCardViewController {
     )
   }
   
+}
+
+// MARK: - Keyboard
+
+extension TGCardViewController {
+  
+  private func updateResponderChainForNewTopCard() {
+    // We make the card itself the first responder, as the responder
+    // chain otherwise starts with our view and then down from there to this
+    // controller
+
+    topCard?.becomeFirstResponder()
+  }
+  
+  open override var canBecomeFirstResponder: Bool {
+    return true
+  }
+  
+  open override var keyCommands: [UIKeyCommand]? {
+    var commands = [
+      UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: .control, action: #selector(expand), discoverabilityTitle: "Expand card"),
+      UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: .control, action: #selector(collapse), discoverabilityTitle: "Collapse card"),
+    ]
+    
+    if topCard != nil, cards.count > 1 || delegate != nil {
+      commands.append(UIKeyCommand(input: "w", modifierFlags: .command, action: #selector(pop), discoverabilityTitle: "Close card"))
+    }
+    
+    return commands
+  }
+  
+}
+
+extension UIResponder {
+  func responderChain() -> String {
+    guard let next = next else {
+      return String(describing: self)
+    }
+    return String(describing: self) + "\n -> " + next.responderChain()
+  }
 }

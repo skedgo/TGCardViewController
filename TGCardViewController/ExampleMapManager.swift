@@ -74,6 +74,9 @@ class ExampleMapManager: TGMapManager, NSCoding {
       
     case .none:
       break // nothing to do
+    
+    @unknown default:
+      fatalError("Unknown case")
     }
   }
 }

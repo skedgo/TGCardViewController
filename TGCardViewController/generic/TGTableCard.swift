@@ -99,9 +99,21 @@ open class TGTableCard: TGCard {
       embeddedScrollView.scrollIndicatorInsets.bottom = controller.bottomLayoutGuide.length
     }
     
-    if deselectOnAppear, let tableView = scrollCardView.tableView, let selected = tableView.indexPathForSelectedRow {
-      tableView.deselectRow(at: selected, animated: true)
+    autoDeselect(scrollCardView)
+  }
+  
+  private func autoDeselect(_ scrollCardView: TGScrollCardView) {
+    guard
+      deselectOnAppear,
+      let tableView = scrollCardView.tableView,
+      let selected = tableView.indexPathForSelectedRow
+      else { return }
+    
+    if let keyboardTable = tableView as? TGKeyboardTableView, keyboardTable.selectedViaKeyboard {
+      return
     }
+
+    tableView.deselectRow(at: selected, animated: true)
   }
   
   // MARK: - Constructing views
@@ -110,6 +122,15 @@ open class TGTableCard: TGCard {
     let view = TGScrollCardView.instantiate()
     view.configure(with: self)
     return view
+  }
+  
+  open override func becomeFirstResponder() -> Bool {
+    if let keyboardView = cardView?.contentScrollView as? TGKeyboardTableView {
+      return keyboardView.becomeFirstResponder()
+    
+    } else {
+      return super.becomeFirstResponder()
+    }
   }
  
 }
