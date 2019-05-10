@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3A04CBE32162ABE000BE796E /* ExampleLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A04CBE22162ABE000BE796E /* ExampleLocationManager.swift */; };
+		3A23BA04228377C4004F959D /* TGKeyboardTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A23BA03228377C4004F959D /* TGKeyboardTableView.swift */; };
 		3A462B5C2074C64400AF41EF /* TGButtonPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A462B5B2074C64400AF41EF /* TGButtonPosition.swift */; };
 		3A474DAD2277341000AE82D2 /* TGCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A474DAC2277341000AE82D2 /* TGCardStyle.swift */; };
 		3A59798B1E7955FE0065A5FF /* ExampleTableChildCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */; };
@@ -105,6 +106,7 @@
 
 /* Begin PBXFileReference section */
 		3A04CBE22162ABE000BE796E /* ExampleLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLocationManager.swift; sourceTree = "<group>"; };
+		3A23BA03228377C4004F959D /* TGKeyboardTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TGKeyboardTableView.swift; sourceTree = "<group>"; };
 		3A377BD61E95121600A8C8F0 /* UIView+Snap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+Snap.swift"; path = "generic/UIView+Snap.swift"; sourceTree = "<group>"; };
 		3A3E89C11E8BF49000773897 /* TGCardStyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCardStyleKit.swift; path = generic/TGCardStyleKit.swift; sourceTree = "<group>"; };
 		3A462B5B2074C64400AF41EF /* TGButtonPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TGButtonPosition.swift; path = generic/TGButtonPosition.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 			children = (
 				3AC17FC92080EECB0006794F /* TGCardDefaultTitleView.xib */,
 				3AC17FCA2080EECB0006794F /* TGCardDefaultTitleView.swift */,
+				3A23BA03228377C4004F959D /* TGKeyboardTableView.swift */,
 			);
 			name = views;
 			path = generic/views;
@@ -470,7 +473,6 @@
 					};
 					3ACA747F1E716AFC00408678 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = JFT62W5LA3;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
@@ -564,6 +566,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A23BA04228377C4004F959D /* TGKeyboardTableView.swift in Sources */,
 				3A7C34B3201F2C9100F66A35 /* TGCard.swift in Sources */,
 				3A7C34A9201F2C8D00F66A35 /* TGCornerView.swift in Sources */,
 				3A474DAD2277341000AE82D2 /* TGCardStyle.swift in Sources */,

@@ -43,7 +43,7 @@ public class TGScrollCardView: TGCardView {
     let scrollView: UIScrollView
     
     if let tableCard = card as? TGTableCard {
-      let tableView = UITableView(frame: .zero, style: tableCard.tableStyle)
+      let tableView = TGKeyboardTableView(frame: .zero, style: tableCard.tableStyle)
       tableView.backgroundColor = .clear
       tableView.dataSource = tableCard.tableViewDataSource
       tableView.delegate = tableCard.tableViewDelegate

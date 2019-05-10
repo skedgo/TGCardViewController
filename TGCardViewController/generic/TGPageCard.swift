@@ -90,6 +90,8 @@ open class TGPageCard: TGCard {
     let mapManager = cards[initialPage].mapManager
     
     super.init(title: .none, mapManager: mapManager, initialPosition: initialPosition)
+
+    cards.forEach { $0.parentCard = self }
   }
   
   public required init?(coder: NSCoder) {
@@ -113,6 +115,8 @@ open class TGPageCard: TGCard {
     let mapManager = cards[initialPage].mapManager
     
     super.init(title: .none, mapManager: mapManager, initialPosition: .peaking)
+
+    cards.forEach { $0.parentCard = self }
   }
   
   open override func encode(with aCoder: NSCoder) {
@@ -183,6 +187,8 @@ open class TGPageCard: TGCard {
     mapManager = card.mapManager
     updateHeader(for: card, atIndex: index, animated: animated)
     
+    currentCard.becomeFirstResponder()
+    
     didMoveToPage(index: index)
   }
   
@@ -233,13 +239,13 @@ open class TGPageCard: TGCard {
   // MARK: - Navigation
   
   /// Navigates to the next card, animated
-  public func moveForward() {
+  @objc public func moveForward() {
     guard let pageCard = cardView as? TGPageCardView else { return  }
     pageCard.moveForward()
   }
   
   /// Navigates to the previous card, animated
-  public func moveBackward() {
+  @objc public func moveBackward() {
     guard let pageCard = cardView as? TGPageCardView else { return  }
     pageCard.moveBackward()
   }
@@ -286,6 +292,35 @@ open class TGPageCard: TGCard {
   }
   
 }
+
+// MARK: - Keyboard
+
+extension TGPageCard {
+  
+  open override var keyCommands: [UIKeyCommand]? {
+    var commands = super.keyCommands ?? []
+
+    if currentPageIndex > 0 {
+      commands.append(
+        UIKeyCommand(
+          input: UIKeyCommand.inputLeftArrow, modifierFlags: .control, action: #selector(moveBackward),
+          discoverabilityTitle: NSLocalizedString("Previous card", comment: "Discovery hint for keyboard shortcuts")
+      ))
+    }
+    if currentPageIndex < cards.count - 1 {
+      commands.append(
+        UIKeyCommand(
+          input: UIKeyCommand.inputRightArrow, modifierFlags: .control, action: #selector(moveForward),
+          discoverabilityTitle: NSLocalizedString("Next card", comment: "Discovery hint for keyboard shortcuts")
+      ))
+    }
+    
+    return commands
+  }
+  
+}
+
+// MARK: - TGPageCardViewDelegate
 
 extension TGPageCard: TGPageCardViewDelegate {
   

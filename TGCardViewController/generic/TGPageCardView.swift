@@ -222,7 +222,7 @@ class TGPageCardView: TGCardView {
     // See `moveForward()` for comments.
     let nextFullWidthHorizontalOffset = pager.contentOffset.x - frame.width - Constants.spaceBetweenCards
     let nextFullPageHorizontalOffset = lastHorizontalOffset - frame.width - Constants.spaceBetweenCards
-    let horizontalOffset = fmin(nextFullPageHorizontalOffset, nextFullWidthHorizontalOffset)
+    let horizontalOffset = fmax(nextFullPageHorizontalOffset, nextFullWidthHorizontalOffset)
     
     // We don't wanna go off screen.
     guard horizontalOffset >= 0 else { return }

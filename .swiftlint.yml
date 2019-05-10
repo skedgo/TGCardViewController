@@ -6,6 +6,7 @@ disabled_rules:
   - identifier_name
   - todo
   - trailing_whitespace
+  - trailing_comma
 opt_in:
   - closure_spacing
   - empty_count

@@ -102,7 +102,15 @@ public class TGCardView: TGCornerView {
     }
   }
   
+  weak var owningCard: TGCard?
+  
+  public override var next: UIResponder? {
+    return owningCard
+  }
+  
   func configure(with card: TGCard) {
+    self.owningCard = card
+    
     if let placeholder = titleViewPlaceholder {
       let titleView: UIView?
       switch card.title {
