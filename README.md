@@ -97,6 +97,7 @@ Map buttons:
 - [x] State restoration
 - [x] VoiceOver Accessibility (!38)
 - [ ] `NSUserActivity`
+- [x] Keyboard shortcuts (#30)
 
 
 ## Installation and usage
