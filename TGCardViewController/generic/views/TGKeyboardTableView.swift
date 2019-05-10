@@ -29,15 +29,37 @@ class TGKeyboardTableView: UITableView {
   override var keyCommands: [UIKeyCommand]? {
     var commands = super.keyCommands ?? []
     
-    commands.append(UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectAbove), maybeDiscoverabilityTitle: selectAboveDiscoverabilityTitle))
-    commands.append(UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectBelow), maybeDiscoverabilityTitle: selectBelowDiscoverabilityTitle))
-    commands.append(UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: .command, action: #selector(selectTop), maybeDiscoverabilityTitle: selectTopDiscoverabilityTitle))
-    commands.append(UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: .command, action: #selector(selectBottom), maybeDiscoverabilityTitle: selectBottomDiscoverabilityTitle))
+    // Arrow navigation
+    commands.append(UIKeyCommand(
+      input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectAbove),
+      maybeDiscoverabilityTitle: selectAboveDiscoverabilityTitle
+    ))
+    commands.append(UIKeyCommand(
+      input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectBelow),
+      maybeDiscoverabilityTitle: selectBelowDiscoverabilityTitle
+    ))
+    commands.append(UIKeyCommand(
+      input: UIKeyCommand.inputUpArrow, modifierFlags: .command, action: #selector(selectTop),
+      maybeDiscoverabilityTitle: selectTopDiscoverabilityTitle
+    ))
+    commands.append(UIKeyCommand(
+      input: UIKeyCommand.inputDownArrow, modifierFlags: .command, action: #selector(selectBottom),
+      maybeDiscoverabilityTitle: selectBottomDiscoverabilityTitle
+    ))
     
-    commands.append(UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(clearSelection), maybeDiscoverabilityTitle: clearSelectionDiscoverabilityTitle))
+    // Deselect
+    commands.append(UIKeyCommand(
+      input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(clearSelection),
+      maybeDiscoverabilityTitle: clearSelectionDiscoverabilityTitle
+    ))
     
-    commands.append(UIKeyCommand(input: " ", modifierFlags: [], action: #selector(activateSelection)))
-    commands.append(UIKeyCommand(input: "\r", modifierFlags: [], action: #selector(activateSelection), maybeDiscoverabilityTitle: activateSelectionDiscoverabilityTitle))
+    // Select
+    commands.append(UIKeyCommand(
+      input: " ", modifierFlags: [], action: #selector(activateSelection)))
+    commands.append(UIKeyCommand(
+      input: "\r", modifierFlags: [], action: #selector(activateSelection),
+      maybeDiscoverabilityTitle: activateSelectionDiscoverabilityTitle
+    ))
     
     return commands
   }
@@ -122,7 +144,8 @@ class TGKeyboardTableView: UITableView {
 }
 
 private extension UIKeyCommand {
-  convenience init(input: String, modifierFlags: UIKeyModifierFlags, action: Selector, maybeDiscoverabilityTitle: String?) {
+  convenience init(input: String, modifierFlags: UIKeyModifierFlags, action: Selector,
+                   maybeDiscoverabilityTitle: String?) {
     if let discoverabilityTitle = maybeDiscoverabilityTitle {
       self.init(input: input, modifierFlags: modifierFlags, action: action, discoverabilityTitle: discoverabilityTitle)
     } else {

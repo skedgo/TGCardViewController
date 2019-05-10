@@ -301,10 +301,18 @@ extension TGPageCard {
     var commands = super.keyCommands ?? []
 
     if currentPageIndex > 0 {
-      commands.append(UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: .control, action: #selector(moveBackward), discoverabilityTitle: "Previous card"))
+      commands.append(
+        UIKeyCommand(
+          input: UIKeyCommand.inputLeftArrow, modifierFlags: .control, action: #selector(moveBackward),
+          discoverabilityTitle: NSLocalizedString("Previous card", comment: "Discovery hint for keyboard shortcuts")
+      ))
     }
     if currentPageIndex < cards.count - 1 {
-      commands.append(UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: .control, action: #selector(moveForward), discoverabilityTitle: "Next card"))
+      commands.append(
+        UIKeyCommand(
+          input: UIKeyCommand.inputRightArrow, modifierFlags: .control, action: #selector(moveForward),
+          discoverabilityTitle: NSLocalizedString("Next card", comment: "Discovery hint for keyboard shortcuts")
+      ))
     }
     
     return commands

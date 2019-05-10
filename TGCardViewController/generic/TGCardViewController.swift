@@ -1769,12 +1769,22 @@ extension TGCardViewController {
   
   open override var keyCommands: [UIKeyCommand]? {
     var commands = [
-      UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: .control, action: #selector(expand), discoverabilityTitle: "Expand card"),
-      UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: .control, action: #selector(collapse), discoverabilityTitle: "Collapse card"),
+      UIKeyCommand(
+        input: UIKeyCommand.inputUpArrow, modifierFlags: .control, action: #selector(expand),
+        discoverabilityTitle: NSLocalizedString("Expand card", comment: "Discovery hint for keyboard shortcuts")
+      ),
+      UIKeyCommand(
+        input: UIKeyCommand.inputDownArrow, modifierFlags: .control, action: #selector(collapse),
+        discoverabilityTitle: NSLocalizedString("Collapse card", comment: "Discovery hint for keyboard shortcuts")
+      ),
     ]
     
     if topCard != nil, cards.count > 1 || delegate != nil {
-      commands.append(UIKeyCommand(input: "w", modifierFlags: .command, action: #selector(pop), discoverabilityTitle: "Close card"))
+      commands.append(
+        UIKeyCommand(
+          input: "w", modifierFlags: .command, action: #selector(pop),
+          discoverabilityTitle: NSLocalizedString("Close card", comment: "Discovery hint for keyboard shortcuts")
+      ))
     }
     
     return commands
