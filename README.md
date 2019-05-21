@@ -150,3 +150,21 @@ Via Carthage
       }
     ```
 
+## End-user documentation
+
+### Keyboard shortcuts
+
+- Card controller
+  - ⌃+↑: Expand card
+  - ⌃+↓: Expand/collapse card
+  - ⌘+w: Pop card or dismiss modal
+- Table view cards
+  - ↑: Highlight previous item
+  - ↓: Highlight next item
+  - ⌘+↑: Highlight item at start of list
+  - ⌘+↓: Highlight item at end of list
+  - Space or enter: select item
+  - Esc: deselect
+- Paging cards
+  - ⌃+←: Previous card 
+  - ⌃+→: Next card

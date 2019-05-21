@@ -1779,7 +1779,14 @@ extension TGCardViewController {
       ),
     ]
     
-    if topCard != nil, cards.count > 1 || delegate != nil {
+    if presentedViewController != nil {
+      commands.append(
+        UIKeyCommand(
+          input: "w", modifierFlags: .command, action: #selector(dismissPresentee),
+          discoverabilityTitle: NSLocalizedString("Dismiss", comment: "Discovery hint for keyboard shortcuts")
+      ))
+
+    } else if topCard != nil, cards.count > 1 || delegate != nil {
       commands.append(
         UIKeyCommand(
           input: "w", modifierFlags: .command, action: #selector(pop),
@@ -1788,6 +1795,10 @@ extension TGCardViewController {
     }
     
     return commands
+  }
+  
+  @objc func dismissPresentee() {
+    dismiss(animated: true)
   }
   
 }
