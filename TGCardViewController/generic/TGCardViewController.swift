@@ -1541,7 +1541,7 @@ extension TGCardViewController {
     content.translatesAutoresizingMaskIntoConstraints = false
     headerView.addSubview(content)
     let contentSize = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-    content.heightAnchor.constraint(equalToConstant: contentSize.height)
+    content.heightAnchor.constraint(equalToConstant: contentSize.height).isActive = true
     content.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
     content.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
     content.bottomAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
