@@ -81,8 +81,15 @@ open class TGCardViewController: UIViewController {
     /// top of the card to keep a bit of the map always showing through.
     fileprivate static let minMapSpace: CGFloat = 50
     
-    fileprivate static let pushAnimationDuration = 0.4
-    
+    fileprivate static let pushAnimationDuration = 0.25
+
+    /// The minimum seconds for snapping after the user panned the top card.
+    /// Good to be a little higher than others as it'll spring.
+    fileprivate static let snapAnimationMinimumDuration = 0.4
+
+    /// The seconds for switching the top card to its new location after tapping it.
+    fileprivate static let tapAnimationDuration = 0.25
+
     fileprivate static let mapShadowVisibleAlpha: CGFloat = 0.25
     
     fileprivate static let floatingHeaderTopMargin: CGFloat = 20
@@ -1003,7 +1010,14 @@ extension TGCardViewController {
   fileprivate func determineSnap(for velocity: CGPoint) -> (position: TGCardPosition, y: CGFloat) {
     
     let currentCardY = cardWrapperDesiredTopConstraint.constant
-    let nextCardY = currentCardY + velocity.y / 5 // in a fraction of a second
+    
+    /// Distance travelled after decelerating to zero velocity at constant rate
+    func project(initialVelocity: CGFloat, deceleration: UIScrollView.DecelerationRate) -> CGFloat {
+      let decelerationRate = deceleration.rawValue
+      return (initialVelocity / 1000.0) * decelerationRate / (1.0 - decelerationRate)
+    }
+    
+    let nextCardY = currentCardY + project(initialVelocity: velocity.y, deceleration: .normal)
     
     // First we see if the card is close to a target snap position, then we use that
     let delta: CGFloat = 22
@@ -1055,24 +1069,30 @@ extension TGCardViewController {
     // barely any velocity.
     // We add a min to it to make sure the alpha transition
     // animates nicely and not too suddenly.
-    duration = min(max(duration, 0.25), 1.3)
+    duration = min(max(duration, Constants.snapAnimationMinimumDuration), 1.3)
     
     cardWrapperDesiredTopConstraint.constant = snapTo.y
     view.setNeedsUpdateConstraints()
     
-    UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
-      self.updateMapShadow(for: snapTo.position)
-      self.topCardView?.adjustContentAlpha(to: snapTo.position == .collapsed ? 0 : 1)
-      self.updateFloatingViewsVisibility(for: snapTo.position)
-      self.view.layoutIfNeeded()
-    }, completion: { _ in
-      self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: snapTo.position)
-      self.topCard?.didMove(to: snapTo.position, animated: true)
-      self.updateCardScrolling(allow: snapTo.position == .extended, view: self.topCardView)
-      self.previousCardPosition = snapTo.position
-      self.updateCardHandleAccessibility(for: snapTo.position)
-      completion?()
-    })
+    UIView.animate(
+      withDuration: duration,
+      delay: 0.0,
+      usingSpringWithDamping: 0.8,
+      initialSpringVelocity: 0,
+      options: [.allowUserInteraction],
+      animations: {
+        self.updateMapShadow(for: snapTo.position)
+        self.topCardView?.adjustContentAlpha(to: snapTo.position == .collapsed ? 0 : 1)
+        self.updateFloatingViewsVisibility(for: snapTo.position)
+        self.view.layoutIfNeeded()
+      }, completion: { _ in
+        self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: snapTo.position)
+        self.topCard?.didMove(to: snapTo.position, animated: true)
+        self.updateCardScrolling(allow: snapTo.position == .extended, view: self.topCardView)
+        self.previousCardPosition = snapTo.position
+        self.updateCardHandleAccessibility(for: snapTo.position)
+        completion?()
+      })
   }
   
   @objc
@@ -1157,7 +1177,12 @@ extension TGCardViewController {
   
   @objc
   fileprivate func handleCardTap(_ recogniser: UITapGestureRecognizer) {
-    expand()
+    switch cardPosition {
+    case .peaking, .collapsed:
+      expand()
+    case .extended:
+      collapse()
+    }
   }
   
   @objc
@@ -1233,10 +1258,8 @@ extension TGCardViewController {
     view.setNeedsUpdateConstraints()
     
     UIView.animate(
-      withDuration: animated ? 0.35 : 0,
+      withDuration: animated ? Constants.tapAnimationDuration : 0,
       delay: 0,
-      usingSpringWithDamping: 0.75,
-      initialSpringVelocity: 0,
       options: [.curveEaseOut],
       animations: {
         self.updateMapShadow(for: animateTo.position)
@@ -1472,9 +1495,9 @@ extension TGCardViewController {
     // animate in
     let spring = cardIsNextToMap(in: traitCollection)
     UIView.animate(
-      withDuration: animated ? 0.35 : 0,
+      withDuration: animated ? Constants.tapAnimationDuration : 0,
       delay: 0,
-      usingSpringWithDamping: spring ? 0.75 : 1,
+      usingSpringWithDamping: spring ? 0.8 : 1,
       initialSpringVelocity: 0,
       options: [.curveEaseOut],
       animations: {
@@ -1497,9 +1520,9 @@ extension TGCardViewController {
     }
 
     UIView.animate(
-      withDuration: 0.35,
+      withDuration: Constants.tapAnimationDuration,
       delay: 0,
-      usingSpringWithDamping: 0.75,
+      usingSpringWithDamping: 0.8,
       initialSpringVelocity: 0,
       options: [.curveEaseIn],
       animations: {
