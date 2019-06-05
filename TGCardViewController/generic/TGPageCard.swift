@@ -210,7 +210,7 @@ open class TGPageCard: TGCard {
     } else {
       headerView.rightButton?.setImage(TGCardStyleKit.imageOfHeaderNextIcon(), for: .normal)
       headerView.rightButton?.setTitle(nil, for: .normal)
-      headerView.rightButton?.accessibilityLabel = NSLocalizedString("Next", comment: "Next button accessory title")
+      headerView.rightButton?.accessibilityLabel = NSLocalizedString("Next", bundle: .cardVC, comment: "Next button accessory title")
       
       if index + 1 < cards.count {
         headerView.rightAction = { [unowned self] in
@@ -304,14 +304,14 @@ extension TGPageCard {
       commands.append(
         UIKeyCommand(
           input: UIKeyCommand.inputLeftArrow, modifierFlags: .control, action: #selector(moveBackward),
-          discoverabilityTitle: NSLocalizedString("Previous card", comment: "Discovery hint for keyboard shortcuts")
+          discoverabilityTitle: NSLocalizedString("Previous card", bundle: .cardVC, comment: "Discovery hint for keyboard shortcuts")
       ))
     }
     if currentPageIndex < cards.count - 1 {
       commands.append(
         UIKeyCommand(
           input: UIKeyCommand.inputRightArrow, modifierFlags: .control, action: #selector(moveForward),
-          discoverabilityTitle: NSLocalizedString("Next card", comment: "Discovery hint for keyboard shortcuts")
+          discoverabilityTitle: NSLocalizedString("Next card", bundle: .cardVC, comment: "Discovery hint for keyboard shortcuts")
       ))
     }
     

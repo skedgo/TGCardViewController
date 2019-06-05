@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A02D8CE22A869270077A416 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A02D8CC22A869270077A416 /* Localizable.strings */; };
 		3A04CBE32162ABE000BE796E /* ExampleLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A04CBE22162ABE000BE796E /* ExampleLocationManager.swift */; };
 		3A23BA04228377C4004F959D /* TGKeyboardTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A23BA03228377C4004F959D /* TGKeyboardTableView.swift */; };
 		3A462B5C2074C64400AF41EF /* TGButtonPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A462B5B2074C64400AF41EF /* TGButtonPosition.swift */; };
@@ -44,6 +45,7 @@
 		3A82CE17207DE774008F747A /* TurnByTurnHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A82CE15207DE774008F747A /* TurnByTurnHeaderView.swift */; };
 		3A8BEA4E1E85C0070007B410 /* ExamplePageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8BEA4D1E85C0070007B410 /* ExamplePageCard.swift */; };
 		3A8BEA501E87E9E00007B410 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8BEA4F1E87E9E00007B410 /* Helpers.swift */; };
+		3A9913D022A7BF1F00B74FCC /* NSBundle+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9913CF22A7BF1F00B74FCC /* NSBundle+Helpers.swift */; };
 		3AB8944F1E7AB25900267A06 /* ExampleTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB8944E1E7AB25900267A06 /* ExampleTableDataSource.swift */; };
 		3AB894521E7AE49200267A06 /* MockupImageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB894511E7AE49200267A06 /* MockupImageCard.swift */; };
 		3AB894541E7AE4A300267A06 /* MockupRootCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB894531E7AE4A300267A06 /* MockupRootCard.swift */; };
@@ -105,6 +107,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3A02D8CD22A869270077A416 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = generic/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3A04CBE22162ABE000BE796E /* ExampleLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLocationManager.swift; sourceTree = "<group>"; };
 		3A23BA03228377C4004F959D /* TGKeyboardTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TGKeyboardTableView.swift; sourceTree = "<group>"; };
 		3A377BD61E95121600A8C8F0 /* UIView+Snap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+Snap.swift"; path = "generic/UIView+Snap.swift"; sourceTree = "<group>"; };
@@ -128,6 +131,7 @@
 		3A8BEA4B1E859D910007B410 /* TGPageHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TGPageHeaderView.xib; path = generic/TGPageHeaderView.xib; sourceTree = "<group>"; };
 		3A8BEA4D1E85C0070007B410 /* ExamplePageCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExamplePageCard.swift; sourceTree = "<group>"; };
 		3A8BEA4F1E87E9E00007B410 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		3A9913CF22A7BF1F00B74FCC /* NSBundle+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "NSBundle+Helpers.swift"; path = "generic/NSBundle+Helpers.swift"; sourceTree = "<group>"; };
 		3AA58E6320D8FEAB00FE37B0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		3AA58E6420D8FEB400FE37B0 /* TGCardViewController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = TGCardViewController.podspec; sourceTree = SOURCE_ROOT; };
 		3AA58E6520D8FEBA00FE37B0 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
@@ -331,6 +335,8 @@
 				3A73E6BD207940B100DA6A15 /* TGCompatibleMapBuilder+MapKit.swift */,
 				3ACA74C41E71D10E00408678 /* TGMapManager.swift */,
 				3A377BD61E95121600A8C8F0 /* UIView+Snap.swift */,
+				3A02D8CC22A869270077A416 /* Localizable.strings */,
+				3A9913CF22A7BF1F00B74FCC /* NSBundle+Helpers.swift */,
 				3A5C8EDA21143F4B00A7EA38 /* NSCoder+Helpers.swift */,
 			);
 			name = generic;
@@ -513,6 +519,7 @@
 				3AC17FCB2080EECB0006794F /* TGCardDefaultTitleView.xib in Resources */,
 				3A7C34B9201F2C9100F66A35 /* TGPageCardView.xib in Resources */,
 				3A7C34BC201F2C9100F66A35 /* TGPlainCardView.xib in Resources */,
+				3A02D8CE22A869270077A416 /* Localizable.strings in Resources */,
 				3A7C34BF201F2C9100F66A35 /* TGScrollCardView.xib in Resources */,
 				3A7C34AD201F2C8D00F66A35 /* TGCardViewController.xib in Resources */,
 				3AFA2B50207E574F0005BB03 /* TGPageHeaderView.xib in Resources */,
@@ -570,6 +577,7 @@
 				3A7C34B3201F2C9100F66A35 /* TGCard.swift in Sources */,
 				3A7C34A9201F2C8D00F66A35 /* TGCornerView.swift in Sources */,
 				3A474DAD2277341000AE82D2 /* TGCardStyle.swift in Sources */,
+				3A9913D022A7BF1F00B74FCC /* NSBundle+Helpers.swift in Sources */,
 				3A5C8EDB21143F4B00A7EA38 /* NSCoder+Helpers.swift in Sources */,
 				3A7C34B8201F2C9100F66A35 /* TGPageCardView.swift in Sources */,
 				3A7C34AE201F2C8D00F66A35 /* TGMapManager.swift in Sources */,
@@ -645,6 +653,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		3A02D8CC22A869270077A416 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3A02D8CD22A869270077A416 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		3ACA74871E716AFC00408678 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

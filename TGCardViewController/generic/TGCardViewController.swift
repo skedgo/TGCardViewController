@@ -1678,11 +1678,11 @@ extension TGCardViewController {
   private func buildCardHandleAccessibilityActions() -> [UIAccessibilityCustomAction] {
     return [
       UIAccessibilityCustomAction(
-        name: NSLocalizedString("Collapse", comment: "Accessibility action to collapse card"),
+        name: NSLocalizedString("Collapse", bundle: .cardVC, comment: "Accessibility action to collapse card"),
         target: self, selector: #selector(collapse)
       ),
       UIAccessibilityCustomAction(
-        name: NSLocalizedString("Expand", comment: "Accessibility action to expand card"),
+        name: NSLocalizedString("Expand", bundle: .cardVC, comment: "Accessibility action to expand card"),
         target: self, selector: #selector(expand)
       )
     ]
@@ -1726,25 +1726,25 @@ extension TGCardViewController {
     switch position ?? cardPosition {
     case .collapsed:
       handle.accessibilityLabel = NSLocalizedString(
-        "Card controller minimised",
+        "Card controller minimised", bundle: .cardVC,
         comment: "Card handle accessibility description for collapsed state"
       )
       
     case .extended:
       handle.accessibilityLabel = NSLocalizedString(
-        "Card controller full screen",
+        "Card controller full screen", bundle: .cardVC,
         comment: "Card handle accessibility description for collapsed state"
       )
 
     case .peaking:
       handle.accessibilityLabel = NSLocalizedString(
-        "Card controller half screen",
+        "Card controller half screen", bundle: .cardVC,
         comment: "Card handle accessibility description for collapsed state"
       )
     }
     
     handle.accessibilityHint = NSLocalizedString(
-      "Adjust the size of the card overlaying the map.",
+      "Adjust the size of the card overlaying the map.", bundle: .cardVC,
       comment: ""
     )
   }
@@ -1771,11 +1771,17 @@ extension TGCardViewController {
     var commands = [
       UIKeyCommand(
         input: UIKeyCommand.inputUpArrow, modifierFlags: .control, action: #selector(expand),
-        discoverabilityTitle: NSLocalizedString("Expand card", comment: "Discovery hint for keyboard shortcuts")
+        discoverabilityTitle: NSLocalizedString(
+          "Expand card", bundle: .cardVC,
+          comment: "Discovery hint for keyboard shortcuts"
+        )
       ),
       UIKeyCommand(
         input: UIKeyCommand.inputDownArrow, modifierFlags: .control, action: #selector(collapse),
-        discoverabilityTitle: NSLocalizedString("Collapse card", comment: "Discovery hint for keyboard shortcuts")
+        discoverabilityTitle: NSLocalizedString(
+          "Collapse card", bundle: .cardVC,
+          comment: "Discovery hint for keyboard shortcuts"
+        )
       ),
     ]
     
@@ -1783,14 +1789,20 @@ extension TGCardViewController {
       commands.append(
         UIKeyCommand(
           input: "w", modifierFlags: .command, action: #selector(dismissPresentee),
-          discoverabilityTitle: NSLocalizedString("Dismiss", comment: "Discovery hint for keyboard shortcuts")
+          discoverabilityTitle: NSLocalizedString(
+            "Dismiss", bundle: .cardVC,
+            comment: "Discovery hint for keyboard shortcuts"
+          )
       ))
 
     } else if topCard != nil, cards.count > 1 || delegate != nil {
       commands.append(
         UIKeyCommand(
           input: "w", modifierFlags: .command, action: #selector(pop),
-          discoverabilityTitle: NSLocalizedString("Close card", comment: "Discovery hint for keyboard shortcuts")
+          discoverabilityTitle: NSLocalizedString(
+            "Close card", bundle: .cardVC,
+            comment: "Discovery hint for keyboard shortcuts"
+          )
       ))
     }
     
