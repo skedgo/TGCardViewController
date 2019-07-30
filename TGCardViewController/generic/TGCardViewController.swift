@@ -275,9 +275,9 @@ open class TGCardViewController: UIViewController {
     
     // Add a bit of a shadow behind card.
     cardWrapperShadow.layer.shadowColor = UIColor.black.cgColor
-    cardWrapperShadow.layer.shadowOffset = CGSize(width: 0, height: -1)
-    cardWrapperShadow.layer.shadowRadius = 3
-    cardWrapperShadow.layer.shadowOpacity = 0.3
+    cardWrapperShadow.layer.shadowOffset = CGSize(width: 0, height: 0)
+    cardWrapperShadow.layer.shadowRadius = 12
+    cardWrapperShadow.layer.shadowOpacity = 0.5
     
     monitorVoiceOverStatus()
 
