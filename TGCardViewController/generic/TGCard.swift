@@ -67,9 +67,13 @@ open class TGCard: UIResponder, NSCoding {
   public static func arrowButtonImage(direction: TGArrowDirection, background: UIColor, arrow: UIColor) -> UIImage {
     switch direction {
     case .up:
-      return TGCardStyleKit.imageOfCardArrowIcon(closeButtonBackground: background, closeButtonCross: arrow, arrowRotation: 0)
+      return TGCardStyleKit.imageOfCardArrowIcon(
+        closeButtonBackground: background, closeButtonCross: arrow, arrowRotation: 0
+      )
     case .down:
-      return TGCardStyleKit.imageOfCardArrowIcon(closeButtonBackground: background, closeButtonCross: arrow, arrowRotation: 90)
+      return TGCardStyleKit.imageOfCardArrowIcon(
+        closeButtonBackground: background, closeButtonCross: arrow, arrowRotation: 90
+      )
     }
   }
   

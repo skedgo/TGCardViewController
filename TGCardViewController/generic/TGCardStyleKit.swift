@@ -189,12 +189,12 @@ class TGCardStyleKit : NSObject {
 
         //// Bezier Drawing
         context.saveGState()
-        context.translateBy(x: 14, y: 11)
+        context.translateBy(x: 13.5, y: 12.5)
         context.rotate(by: -arrowRotation * CGFloat.pi/180)
 
         let bezierPath = UIBezierPath()
-        bezierPath.move(to: CGPoint(x: -2, y: -2))
-        bezierPath.addLine(to: CGPoint(x: 2, y: 2))
+        bezierPath.move(to: CGPoint(x: -1.5, y: -1.5))
+        bezierPath.addLine(to: CGPoint(x: 2.5, y: 2.5))
         closeButtonCross.setStroke()
         bezierPath.lineWidth = 2
         bezierPath.lineCapStyle = .round
@@ -205,12 +205,12 @@ class TGCardStyleKit : NSObject {
 
         //// Bezier 2 Drawing
         context.saveGState()
-        context.translateBy(x: 10, y: 11)
+        context.translateBy(x: 10.5, y: 12.5)
         context.rotate(by: -invertedArrowRotation * CGFloat.pi/180)
 
         let bezier2Path = UIBezierPath()
-        bezier2Path.move(to: CGPoint(x: -2, y: 2))
-        bezier2Path.addLine(to: CGPoint(x: 2, y: -2))
+        bezier2Path.move(to: CGPoint(x: -2.5, y: 2.5))
+        bezier2Path.addLine(to: CGPoint(x: 1.5, y: -1.5))
         closeButtonCross.setStroke()
         bezier2Path.lineWidth = 2
         bezier2Path.lineCapStyle = .round
@@ -247,18 +247,8 @@ class TGCardStyleKit : NSObject {
 
         return imageOfCardCloseIcon
     }
-  
-    @objc dynamic class func imageOfCardArrowIcon(closeButtonBackground: UIColor = UIColor(red: 0.130, green: 0.160, blue: 0.200, alpha: 0.080), closeButtonCross: UIColor = UIColor(red: 0.440, green: 0.460, blue: 0.480, alpha: 1.000), arrowRotation: CGFloat = 0) -> UIImage {
-      UIGraphicsBeginImageContextWithOptions(CGSize(width: 24, height: 24), false, 0)
-      TGCardStyleKit.drawCardArrowIcon(closeButtonBackground: closeButtonBackground, closeButtonCross: closeButtonCross, arrowRotation: arrowRotation)
-      
-      let imageOfCardCloseIcon = UIGraphicsGetImageFromCurrentImageContext()!.withRenderingMode(.alwaysOriginal)
-      UIGraphicsEndImageContext()
-      
-      return imageOfCardCloseIcon
-    }
 
-  @objc dynamic class func imageOfFloatingButton(floatingButtonBackground: UIColor = UIColor(red: 0.000, green: 0.800, blue: 0.400, alpha: 1.000)) -> UIImage {
+    @objc dynamic class func imageOfFloatingButton(floatingButtonBackground: UIColor = UIColor(red: 0.000, green: 0.800, blue: 0.400, alpha: 1.000)) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 60, height: 60), false, 0)
             TGCardStyleKit.drawFloatingButton(floatingButtonBackground: floatingButtonBackground)
 
@@ -266,6 +256,16 @@ class TGCardStyleKit : NSObject {
         UIGraphicsEndImageContext()
 
         return imageOfFloatingButton
+    }
+
+    @objc dynamic class func imageOfCardArrowIcon(closeButtonBackground: UIColor = UIColor(red: 0.130, green: 0.160, blue: 0.200, alpha: 0.080), closeButtonCross: UIColor = UIColor(red: 0.440, green: 0.460, blue: 0.480, alpha: 1.000), arrowRotation: CGFloat = 0) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 24, height: 24), false, 0)
+            TGCardStyleKit.drawCardArrowIcon(closeButtonBackground: closeButtonBackground, closeButtonCross: closeButtonCross, arrowRotation: arrowRotation)
+
+        let imageOfCardArrowIcon = UIGraphicsGetImageFromCurrentImageContext()!.withRenderingMode(.alwaysOriginal)
+        UIGraphicsEndImageContext()
+
+        return imageOfCardArrowIcon
     }
 
 
