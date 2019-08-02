@@ -63,6 +63,16 @@ open class TGCard: UIResponder, NSCoding {
     return TGCardStyleKit.imageOfCardCloseIcon(closeButtonBackground: background)
   }
   
+  /// A default image for an arrow pointing up or down, similar to the close button image
+  public static func arrowButtonImage(direction: TGArrowDirection, background: UIColor, arrow: UIColor) -> UIImage {
+    switch direction {
+    case .up:
+      return TGCardStyleKit.imageOfCardArrowIcon(closeButtonBackground: background, closeButtonCross: arrow, arrowRotation: 0)
+    case .down:
+      return TGCardStyleKit.imageOfCardArrowIcon(closeButtonBackground: background, closeButtonCross: arrow, arrowRotation: 90)
+    }
+  }
+  
   /// The card controller currently displaying the card
   ///
   /// Set by the card controller itself
