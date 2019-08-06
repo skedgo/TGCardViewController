@@ -275,7 +275,7 @@ open class TGCardViewController: UIViewController {
     
     // Add a bit of a shadow behind card.
     cardWrapperShadow.layer.shadowColor = UIColor.black.cgColor
-    cardWrapperShadow.layer.shadowOffset = CGSize(width: 0, height: 0)
+    cardWrapperShadow.layer.shadowOffset = .zero
     cardWrapperShadow.layer.shadowRadius = 12
     cardWrapperShadow.layer.shadowOpacity = 0.5
     
@@ -1449,11 +1449,34 @@ extension TGCardViewController {
   }
   
   private func updateHeaderStyle() {
-    let cornerRadius: CGFloat = cardIsNextToMap(in: traitCollection) ? 8 : 0
-    headerView.layer.cornerRadius = cornerRadius
+    func applyCornerStyle(to view: UIView) {
+      let radius: CGFloat = 16
+      let roundAllCorners = cardIsNextToMap(in: traitCollection)
+      
+      if #available(iOS 11.0, *) {
+        view.layer.maskedCorners = roundAllCorners
+          ? [.layerMinXMaxYCorner, .layerMinXMinYCorner,
+             .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+          : [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        view.layer.cornerRadius = radius
+      
+      } else {
+        let cornerRadius: CGFloat = roundAllCorners ? radius : 0
+        view.layer.cornerRadius = cornerRadius
+      }
+    }
+    
     headerView.backgroundColor = topCard?.style.backgroundColor ?? .white
-    headerView.subviews.compactMap { $0 as? TGHeaderView }.forEach { $0.cornerRadius = cornerRadius }
+    applyCornerStyle(to: headerView)
+    headerView.subviews.compactMap { $0 as? TGHeaderView }.forEach(applyCornerStyle(to:))
     updateStatusBar(headerIsVisible: isShowingHeader)
+
+    // same shadow as for card wrapper
+    headerView.layer.shadowColor = UIColor.black.cgColor
+    headerView.layer.shadowOffset = .zero
+    headerView.layer.shadowRadius = 12
+    headerView.layer.shadowOpacity = 0.5
+
   }
   
   private func updateHeaderConstraints() {
