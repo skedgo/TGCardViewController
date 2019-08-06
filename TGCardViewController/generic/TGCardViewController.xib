@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -199,6 +199,7 @@
                             <variation key="heightClass=compact-widthClass=compact" constant="8"/>
                         </constraint>
                         <constraint firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="DGx-yq-huX"/>
+                        <constraint firstItem="Bui-Tf-j0O" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="XA2-1g-kYz" secondAttribute="bottom" id="Jre-w3-XPE"/>
                         <constraint firstItem="p4A-z3-3Ce" firstAttribute="trailing" secondItem="u6M-z2-2xb" secondAttribute="trailing" constant="8" id="L6r-OI-DlW"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="centerY" secondItem="zI8-lz-Md7" secondAttribute="centerY" id="Q0s-vO-Y4E"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="height" secondItem="zI8-lz-Md7" secondAttribute="height" id="QhJ-7r-spa"/>
@@ -220,8 +221,8 @@
                         <mask key="constraints">
                             <exclude reference="iRG-l2-Ubl"/>
                             <exclude reference="0es-h4-clN"/>
-                            <exclude reference="52A-gC-vvw"/>
                             <exclude reference="Xw1-VR-Evc"/>
+                            <exclude reference="52A-gC-vvw"/>
                             <exclude reference="4dC-NG-76m"/>
                         </mask>
                     </variation>
@@ -248,9 +249,9 @@
                             <exclude reference="1uG-yl-0le"/>
                         </mask>
                         <mask key="constraints">
+                            <include reference="Vi9-1z-ei1"/>
                             <include reference="0es-h4-clN"/>
                             <exclude reference="1Mc-Uh-pXD"/>
-                            <include reference="Vi9-1z-ei1"/>
                             <include reference="52A-gC-vvw"/>
                             <exclude reference="DGx-yq-huX"/>
                         </mask>
