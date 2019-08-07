@@ -29,5 +29,10 @@ public struct TGCardStyle {
 
   /// @default: Grayscale @ 70%.
   public var grabHandleColor: UIColor = #colorLiteral(red: 0.7552321553, green: 0.7552321553, blue: 0.7552321553, alpha: 1)
+  
+  /// @default: TripKitUI Black 5
+  public var closeButtonBackgroundColor: UIColor = #colorLiteral(red: 0.13, green: 0.16, blue: 0.2, alpha: 0.08)
+  
+  public var closeButtonCrossColor: UIColor = #colorLiteral(red: 0.44, green: 0.46, blue: 0.48, alpha: 1.0)
 
 }

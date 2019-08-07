@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="aGT-dg-RIi">
-                    <rect key="frame" x="16" y="0.0" width="343" height="110"/>
+                    <rect key="frame" x="16" y="0.0" width="343" height="102"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xTT-RA-UY5">
                             <rect key="frame" x="0.0" y="0.0" width="343" height="60"/>
@@ -63,10 +63,10 @@
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="359" placeholderIntrinsicHeight="20" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="zcm-av-v6F">
-                            <rect key="frame" x="0.0" y="60" width="343" height="50"/>
+                            <rect key="frame" x="0.0" y="60" width="343" height="42"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1hw-DW-zLu">
-                                    <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="343" height="42"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </subviews>
@@ -79,7 +79,7 @@
                 <constraint firstItem="aGT-dg-RIi" firstAttribute="top" secondItem="RHo-Ic-zZ1" secondAttribute="top" id="9w7-TT-cIe"/>
                 <constraint firstAttribute="trailing" secondItem="aGT-dg-RIi" secondAttribute="trailing" constant="16" id="IXz-Ho-Slt"/>
                 <constraint firstItem="aGT-dg-RIi" firstAttribute="leading" secondItem="RHo-Ic-zZ1" secondAttribute="leading" constant="16" id="qlR-Fn-aUg"/>
-                <constraint firstAttribute="bottom" secondItem="aGT-dg-RIi" secondAttribute="bottom" constant="8" id="ywe-xA-MpW"/>
+                <constraint firstAttribute="bottom" secondItem="aGT-dg-RIi" secondAttribute="bottom" constant="16" id="ywe-xA-MpW"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

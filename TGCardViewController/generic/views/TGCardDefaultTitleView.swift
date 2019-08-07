@@ -62,18 +62,25 @@ class TGCardDefaultTitleView: UIView {
       accessoryViewContainer.addSubview(newView)
       newView.snap(to: accessoryViewContainer)
       accessoryViewContainer.isHidden = false
-      topLevelStack.spacing = 4
+      topLevelStack.spacing = 8
       
       setNeedsLayout()
     }
   }
   
-  func configure(title: String, subtitle: String?) {
+  func configure(title: String, subtitle: String?, style: TGCardStyle) {
     titleLabel.text = title
+    titleLabel.font = style.titleFont
+    titleLabel.textColor = style.titleTextColor
+    
     subtitleLabel.text = subtitle
+    subtitleLabel.font = style.subtitleFont
+    subtitleLabel.textColor = style.subtitleTextColor
+    
     dismissButton.isHidden = false
     labelStack.spacing = subtitle != nil ? 3 : 0
-    dismissButton.setImage(TGCardStyleKit.imageOfCardCloseIcon(), for: .normal)
+    let closeButtonImage = TGCardStyleKit.imageOfCardCloseIcon(closeButtonBackground: style.closeButtonBackgroundColor, closeButtonCross: style.closeButtonCrossColor)
+    dismissButton.setImage(closeButtonImage, for: .normal)
     dismissButton.setTitle(nil, for: .normal)
   }
   

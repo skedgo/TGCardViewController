@@ -90,9 +90,8 @@ public class TGCardView: TGCornerView {
   ///   - title: New title
   ///   - subtitle: New subtitle (optional)
   public func updateDefaultTitle(title: String, subtitle: String?) {
-    guard let defaultView = titleView as? TGCardDefaultTitleView else { return }
-    
-    defaultView.configure(title: title, subtitle: subtitle)
+    guard let defaultView = titleView as? TGCardDefaultTitleView else { return }    
+    defaultView.configure(title: title, subtitle: subtitle, style: owningCard?.style ?? .default)
   }
   
   func updateDismissButton(show: Bool, isSpringLoaded: Bool) {
@@ -116,7 +115,7 @@ public class TGCardView: TGCornerView {
       switch card.title {
       case .default(let title, let subtitle, let accessoryView):
         let defaultTitleView = TGCardDefaultTitleView.newInstance()
-        defaultTitleView.configure(title: title, subtitle: subtitle)
+        defaultTitleView.configure(title: title, subtitle: subtitle, style: card.style)
         defaultTitleView.accessoryView = accessoryView
         titleView = defaultTitleView
         
@@ -207,13 +206,6 @@ public class TGCardView: TGCornerView {
   func applyStyling(_ style: TGCardStyle) {
     grabHandle?.handleColor = style.grabHandleColor
     backgroundColor = style.backgroundColor
-    
-    if let defaultTitleView = titleViewPlaceholder?.subviews.first as? TGCardDefaultTitleView {
-      defaultTitleView.titleLabel.font = style.titleFont
-      defaultTitleView.titleLabel.textColor = style.titleTextColor
-      defaultTitleView.subtitleLabel.font = style.subtitleFont
-      defaultTitleView.subtitleLabel.textColor = style.subtitleTextColor
-    }
   }
   
   // MARK: - Content view configuration
