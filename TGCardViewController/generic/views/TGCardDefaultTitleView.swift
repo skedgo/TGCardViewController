@@ -17,6 +17,12 @@ class TGCardDefaultTitleView: UIView {
   @IBOutlet weak var dismissButton: UIButton!
   @IBOutlet weak var accessoryViewContainer: UIView!
   
+  // By default, the top level stack snaps to all edges
+  // of the default title view. The space to the bottom
+  // edge is exposed, so that we can allow the accessory
+  // view to set its desired spacing.
+  @IBOutlet private weak var topLevelStackBottomSpace: NSLayoutConstraint!
+  
   override func awakeFromNib() {
     super.awakeFromNib()
     
@@ -56,13 +62,21 @@ class TGCardDefaultTitleView: UIView {
       guard let newView = newValue else {
         accessoryViewContainer.isHidden = true
         topLevelStack.spacing = 0
+        
+        // If an accessory view is not provided, use a default
+        // spacing to the bottom edge of the title view.
+        topLevelStackBottomSpace.constant = 16
         return
       }
       
       accessoryViewContainer.addSubview(newView)
       newView.snap(to: accessoryViewContainer)
       accessoryViewContainer.isHidden = false
-      topLevelStack.spacing = 8
+      topLevelStack.spacing = 16
+      
+      // If accessory view is present, let is specify the needed
+      // spacing to the bottom edge of the title view.
+      topLevelStackBottomSpace.constant = 0
       
       setNeedsLayout()
     }
