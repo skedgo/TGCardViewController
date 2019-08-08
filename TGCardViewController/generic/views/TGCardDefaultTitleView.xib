@@ -48,7 +48,6 @@
                                     <state key="normal" title="Close"/>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" red="0.97254901959999995" green="0.85882352939999995" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstItem="ema-4g-Bh0" firstAttribute="top" secondItem="xTT-RA-UY5" secondAttribute="top" id="6nQ-HU-yhs"/>
                                 <constraint firstItem="l8u-vY-rKE" firstAttribute="leading" secondItem="ema-4g-Bh0" secondAttribute="trailing" constant="6" id="HMV-y4-WwC"/>
@@ -63,14 +62,14 @@
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1hw-DW-zLu">
                                     <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
-                                    <color key="backgroundColor" red="0.87843137250000003" green="0.28235294119999998" blue="0.28235294119999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </subviews>
                         </stackView>
                     </subviews>
                 </stackView>
             </subviews>
-            <color key="backgroundColor" red="0.38431372549999998" green="0.3803921569" blue="0.6705882353" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="aGT-dg-RIi" firstAttribute="top" secondItem="RHo-Ic-zZ1" secondAttribute="top" id="9w7-TT-cIe"/>
                 <constraint firstAttribute="trailing" secondItem="aGT-dg-RIi" secondAttribute="trailing" constant="16" id="IXz-Ho-Slt"/>
