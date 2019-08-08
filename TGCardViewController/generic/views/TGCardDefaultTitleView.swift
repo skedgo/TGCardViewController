@@ -77,8 +77,7 @@ class TGCardDefaultTitleView: UIView {
     subtitleLabel.font = style.subtitleFont
     subtitleLabel.textColor = style.subtitleTextColor
     
-    dismissButton.isHidden = false
-    labelStack.spacing = subtitle != nil ? 3 : 0
+    dismissButton.isHidden = false    
     let closeButtonImage = TGCardStyleKit.imageOfCardCloseIcon(closeButtonBackground: style.closeButtonBackgroundColor, closeButtonCross: style.closeButtonCrossColor)
     dismissButton.setImage(closeButtonImage, for: .normal)
     dismissButton.setTitle(nil, for: .normal)
