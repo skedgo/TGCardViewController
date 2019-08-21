@@ -71,6 +71,9 @@ public class TGCardView: TGCornerView {
     super.awakeFromNib()
     
     contentSeparator?.isHidden = true
+    if #available(iOSApplicationExtension 13.0, *) {
+      contentSeparator?.backgroundColor = .separator
+    }
     
     if let floatie = floatingButton {
       floatie.isHidden = true

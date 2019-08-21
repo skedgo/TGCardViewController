@@ -1382,32 +1382,32 @@ extension TGCardViewController {
         NSLayoutConstraint.deactivate([
           topFloatingViewTrailingToSafeAreaConstraint,
           bottomFloatingViewTrailingToSafeAreaConstraint
-          ])
+        ])
         NSLayoutConstraint.activate([
           topFloatingViewTrailingToSuperConstraint,
           bottomFloatingViewTrailingToSuperConstraint
-          ])
+        ])
       } else {
         topFloatingViewTopConstraint.constant = 8
         NSLayoutConstraint.deactivate([
           topFloatingViewTrailingToSuperConstraint,
           bottomFloatingViewTrailingToSuperConstraint
-          ])
+        ])
         NSLayoutConstraint.activate([
           topFloatingViewTrailingToSafeAreaConstraint,
           bottomFloatingViewTrailingToSafeAreaConstraint
-          ])
+        ])
       }
     } else {
       topFloatingViewTopConstraint.constant = 8
       NSLayoutConstraint.deactivate([
         topFloatingViewTrailingToSuperConstraint,
         bottomFloatingViewTrailingToSuperConstraint
-        ])
+      ])
       NSLayoutConstraint.activate([
         topFloatingViewTrailingToSafeAreaConstraint,
         bottomFloatingViewTrailingToSafeAreaConstraint
-        ])
+      ])
     }
   }
   
