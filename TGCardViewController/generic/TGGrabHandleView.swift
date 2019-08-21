@@ -26,27 +26,27 @@ class TGGrabHandleView: UIView {
     backgroundColor = .clear
     
     let handle = UIView()
-    handle.layer.cornerRadius = 3
-    handle.backgroundColor = UIColor(white: 0.7, alpha: 1.0)
+    handle.layer.cornerRadius = 2
+    handle.backgroundColor = #colorLiteral(red: 0.13, green: 0.16, blue: 0.2, alpha: 0.18)
     handle.translatesAutoresizingMaskIntoConstraints = false
     addSubview(handle)
     self.handle = handle
     
     // Position the handle
     NSLayoutConstraint.activate([
-      handle.widthAnchor.constraint(equalToConstant: 50),
+      handle.widthAnchor.constraint(equalToConstant: 48),
       handle.centerXAnchor.constraint(equalTo: centerXAnchor)
       ])
     
     // We keep references to the following constraints because they need
     // to be adjusted when the handle is hideen. See `isHidden`.
-    let handleHeightConstraint = handle.heightAnchor.constraint(equalToConstant: 5)
+    let handleHeightConstraint = handle.heightAnchor.constraint(equalToConstant: 4)
     self.handleHeightConstraint = handleHeightConstraint
     
-    let handleTopSpaceConstraint = handle.topAnchor.constraint(equalTo: topAnchor, constant: 8)
+    let handleTopSpaceConstraint = handle.topAnchor.constraint(equalTo: topAnchor, constant: 6)
     self.handleTopSpaceConstraint = handleTopSpaceConstraint
     
-    let handleBottomSpaceConstraint = bottomAnchor.constraint(equalTo: handle.bottomAnchor, constant: 8)
+    let handleBottomSpaceConstraint = bottomAnchor.constraint(equalTo: handle.bottomAnchor, constant: 6)
     self.handleBottomSpaceConstraint = handleBottomSpaceConstraint
     
     NSLayoutConstraint.activate([handleHeightConstraint, handleTopSpaceConstraint, handleBottomSpaceConstraint])

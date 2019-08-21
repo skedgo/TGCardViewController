@@ -54,4 +54,8 @@ public struct TGCardStyle {
     }
   }()
 
+  /// @default: TripKitUI Black 5
+  public var closeButtonBackgroundColor: UIColor = #colorLiteral(red: 0.13, green: 0.16, blue: 0.2, alpha: 0.08)
+  
+  public var closeButtonCrossColor: UIColor = #colorLiteral(red: 0.44, green: 0.46, blue: 0.48, alpha: 1.0)
 }
