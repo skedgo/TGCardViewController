@@ -58,7 +58,6 @@ open class TGPageCard: TGCard {
   /// triggered when the button is pressed with the current page provided
   /// as the single parameter.
   ///
-  /// - note: If this is not set the default "next" button will be used.
   /// - warning: This will not get restored as part of state restoration.
   ///     Make sure to do so manually.
   public var headerRightAction: (title: String, onPress: (Int) -> Void)?
@@ -205,20 +204,6 @@ open class TGPageCard: TGCard {
       headerView.accessibilityLabel = rightAction.title
       headerView.rightAction = { [unowned self] in
         rightAction.onPress(self.currentPageIndex)
-      }
-      
-    } else {
-      headerView.rightButton?.setImage(TGCardStyleKit.imageOfHeaderNextIcon(), for: .normal)
-      headerView.rightButton?.setTitle(nil, for: .normal)
-      headerView.rightButton?.accessibilityLabel = NSLocalizedString(
-        "Next", bundle: .cardVC, comment: "Next button accessory title")
-      
-      if index + 1 < cards.count {
-        headerView.rightAction = { [unowned self] in
-          self.moveForward()
-        }
-      } else {
-        headerView.rightAction = nil
       }
     }
     
