@@ -108,6 +108,8 @@ class TGPageCardView: TGCardView {
     
     let contents = pageCard.cards.map { card -> UIView in
       let view = card.buildCardView()
+      view.applyStyling(pageCard.style)
+
       card.cardView = view
       card.didBuild(cardView: view, headerView: nil)
       
