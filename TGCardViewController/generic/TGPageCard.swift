@@ -35,6 +35,10 @@ open class TGPageCard: TGCard {
   /// The cards displayed by the page card
   public let cards: [TGCard]
   
+  /// Whether the card should display a header on top of the screen, typically used for switching
+  /// between cards.
+  public let includeHeader: Bool
+  
   let initialPageIndex: Int
   
   public var currentPageIndex: Int {
@@ -73,8 +77,9 @@ open class TGPageCard: TGCard {
   /// - Parameters:
   ///   - cards: these are the child cards that will be displayed by the page card as pages.
   ///   - initialPage: the index of the first child card (page) to display when the page card is pushed.
+  ///   - includeHeader: Whether the card should display a header on top of the screen; typically used for switching between cards.
   ///   - initialPosition: Position of the card when first pushed. Defaults to `.peaking`
-  public init(cards: [TGCard], initialPage: Int = 0, initialPosition: TGCardPosition = .peaking) {
+  public init(cards: [TGCard], initialPage: Int = 0, includeHeader: Bool = true, initialPosition: TGCardPosition = .peaking) {
     assert(TGPageCard.allCardsHaveMapManagers(in: cards), "TGCardVC doesn't yet properly handle " +
       "page cards where some cards don't have map managers. It won't crash but will experience " +
       "unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck " +
@@ -82,6 +87,7 @@ open class TGPageCard: TGCard {
     
     self.cards = cards
     self.initialPageIndex = min(initialPage, cards.count - 1)
+    self.includeHeader = includeHeader
 
     // TGPageCard itself doesn't have a map manager. Instead, it passes through
     // the manager that handles the map view for the current card. This is
@@ -99,6 +105,7 @@ open class TGPageCard: TGCard {
     }
     let initialPage = coder.decodeInteger(forKey: "initialPageIndex")
     self.headerAccessoryView = coder.decodeView(forKey: "headerAccessoryView")
+    self.includeHeader = coder.decodeBool(forKey: "includeHeader")
     
     assert(TGPageCard.allCardsHaveMapManagers(in: cards), "TGCardVC doesn't yet properly handle " +
       "page cards where some cards don't have map managers. It won't crash but will experience " +
@@ -121,6 +128,7 @@ open class TGPageCard: TGCard {
   open override func encode(with aCoder: NSCoder) {
     aCoder.encode(currentPageIndex, forKey: "initialPageIndex")
     aCoder.encode(cards, forKey: "cards")
+    aCoder.encode(includeHeader, forKey: "includeHeader")
     aCoder.encode(view: headerAccessoryView, forKey: "headerAccessoryView")
   }
   
@@ -147,6 +155,8 @@ open class TGPageCard: TGCard {
   }
   
   open override func buildHeaderView() -> TGHeaderView? {
+    guard includeHeader else { return nil }
+    
     if let header = headerView {
       return header
     }
@@ -192,9 +202,8 @@ open class TGPageCard: TGCard {
   }
   
   fileprivate func updateHeader(for card: TGCard, atIndex index: Int, animated: Bool = false) {
-    guard let headerView = headerView else {
-      preconditionFailure()
-    }
+    guard includeHeader else { return }
+    guard let headerView = headerView else { preconditionFailure() }
     
     headerPageControl?.currentPage = index
 
