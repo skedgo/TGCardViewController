@@ -1424,7 +1424,7 @@ extension TGCardViewController {
         } else {
           separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
         }
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
           separator.backgroundColor = .separator
         } else {
           separator.backgroundColor = UIColor(white: 1.0, alpha: 0.85)
