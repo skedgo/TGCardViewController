@@ -1856,30 +1856,12 @@ extension TGCardViewController {
       ))
     }
     
-    if #available(iOS 13.0, *) {
-      commands.append(UIKeyCommand(input: "d", modifierFlags: [.command, .shift], action: #selector(toggleDarkMode)))
-    }
-    
     return commands
   }
   
   @objc func dismissPresentee() {
     dismiss(animated: true)
   }
-  
-  @available(iOS 13.0, *)
-  @objc
-  func toggleDarkMode() {
-    switch view.overrideUserInterfaceStyle {
-    case .dark:
-      view.overrideUserInterfaceStyle = .light
-    case .light, .unspecified:
-      view.overrideUserInterfaceStyle = .dark
-    @unknown default:
-      break // ignore
-    }
-  }
-  
 }
 
 extension UIResponder {
