@@ -1382,32 +1382,32 @@ extension TGCardViewController {
         NSLayoutConstraint.deactivate([
           topFloatingViewTrailingToSafeAreaConstraint,
           bottomFloatingViewTrailingToSafeAreaConstraint
-          ])
+        ])
         NSLayoutConstraint.activate([
           topFloatingViewTrailingToSuperConstraint,
           bottomFloatingViewTrailingToSuperConstraint
-          ])
+        ])
       } else {
         topFloatingViewTopConstraint.constant = 8
         NSLayoutConstraint.deactivate([
           topFloatingViewTrailingToSuperConstraint,
           bottomFloatingViewTrailingToSuperConstraint
-          ])
+        ])
         NSLayoutConstraint.activate([
           topFloatingViewTrailingToSafeAreaConstraint,
           bottomFloatingViewTrailingToSafeAreaConstraint
-          ])
+        ])
       }
     } else {
       topFloatingViewTopConstraint.constant = 8
       NSLayoutConstraint.deactivate([
         topFloatingViewTrailingToSuperConstraint,
         bottomFloatingViewTrailingToSuperConstraint
-        ])
+      ])
       NSLayoutConstraint.activate([
         topFloatingViewTrailingToSafeAreaConstraint,
         bottomFloatingViewTrailingToSafeAreaConstraint
-        ])
+      ])
     }
   }
   
@@ -1424,7 +1424,11 @@ extension TGCardViewController {
         } else {
           separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
         }
-        separator.backgroundColor = UIColor(white: 1.0, alpha: 0.85)
+        if #available(iOS 13.0, *) {
+          separator.backgroundColor = .separator
+        } else {
+          separator.backgroundColor = UIColor(white: 1.0, alpha: 0.85)
+        }
         floatingView.addArrangedSubview(separator)
       }
       floatingView.addArrangedSubview(view)
@@ -1858,7 +1862,6 @@ extension TGCardViewController {
   @objc func dismissPresentee() {
     dismiss(animated: true)
   }
-  
 }
 
 extension UIResponder {

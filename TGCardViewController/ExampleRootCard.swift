@@ -23,7 +23,11 @@ class ExampleRootCard : TGTableCard {
     }
     
     // Custom styling
-    style.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)
+    if #available(iOS 11.0, *) {
+      style.backgroundColor = UIColor(named: "cardBackground") ?? #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)
+    } else {
+      style.backgroundColor = #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)
+    }
     style.titleTextColor = .white
     style.subtitleTextColor = .white
     style.subtitleFont = UIFont.italicSystemFont(ofSize: 15)

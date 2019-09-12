@@ -79,6 +79,12 @@ public class TGScrollCardView: TGCardView {
     contentScrollView = scrollView
   }
   
+  override func applyStyling(_ style: TGCardStyle) {
+    super.applyStyling(style)
+    
+    scrollViewWrapper.backgroundColor = style.backgroundColor
+  }
+  
 }
 
 extension TGScrollCardView {
