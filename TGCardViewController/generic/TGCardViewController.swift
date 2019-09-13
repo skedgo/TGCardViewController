@@ -770,9 +770,11 @@ extension TGCardViewController {
     view.setNeedsUpdateConstraints()
     
     // 8. Do the transition, optionally animated
-    // We insert a temporary shadow underneath the new top view and above the old
+    // We insert a temporary shadow underneath the new top view and above the
+    // old. Only do that if the previous transition completed, i.e., we didn't
+    // already have such a shadow.
     
-    if oldTop != nil && animated {
+    if oldTop != nil && animated && cardTransitionShadow == nil {
       let shadow = TGCornerView(frame: cardWrapperContent.bounds)
       shadow.frame.size.height += 50 // for bounciness
       shadow.backgroundColor = .black
@@ -898,7 +900,7 @@ extension TGCardViewController {
     // 5. Do the transition, optionally animated.
     // We animate the view moving back down to the bottom
     // we also temporarily insert a shadow view again, if there's a card below    
-    if animated && newTop != nil {
+    if animated && newTop != nil && cardTransitionShadow == nil {
       let shadow = TGCornerView(frame: cardWrapperContent.bounds)
       shadow.backgroundColor = .black
       shadow.alpha = 0.15
