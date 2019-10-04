@@ -18,7 +18,7 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TwM-rE-f4a">
-                    <rect key="frame" x="0.0" y="154" width="375" height="509"/>
+                    <rect key="frame" x="0.0" y="153" width="375" height="510"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="132" translatesAutoresizingMaskIntoConstraints="NO" id="z8r-SX-8cz" userLabel="Title view (placeholder)">
@@ -26,7 +26,7 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BVa-Zk-vPf" userLabel="Content Separator">
-                    <rect key="frame" x="0.0" y="153" width="375" height="1"/>
+                    <rect key="frame" x="0.0" y="152" width="375" height="1"/>
                     <color key="backgroundColor" red="0.81960784313725488" green="0.81960784313725488" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="V4j-cP-Twe"/>
@@ -50,7 +50,7 @@
                 <constraint firstAttribute="trailing" secondItem="8CX-8x-KQh" secondAttribute="trailing" constant="16" id="526-vy-eNr"/>
                 <constraint firstAttribute="trailing" secondItem="BVa-Zk-vPf" secondAttribute="trailing" id="CO8-ZL-OS1"/>
                 <constraint firstItem="z8r-SX-8cz" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="ErA-B2-YqQ"/>
-                <constraint firstItem="BVa-Zk-vPf" firstAttribute="top" secondItem="z8r-SX-8cz" secondAttribute="bottom" id="FqL-uv-qrm"/>
+                <constraint firstItem="BVa-Zk-vPf" firstAttribute="top" secondItem="z8r-SX-8cz" secondAttribute="bottom" constant="-1" id="FqL-uv-qrm"/>
                 <constraint firstAttribute="bottom" secondItem="8CX-8x-KQh" secondAttribute="bottom" constant="20" id="GdD-xC-t2f"/>
                 <constraint firstItem="BVa-Zk-vPf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="IEb-Pd-vkL"/>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="JhJ-X6-bzM"/>

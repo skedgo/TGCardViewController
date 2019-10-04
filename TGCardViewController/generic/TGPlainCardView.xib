@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -32,14 +30,14 @@
                     </variation>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Its-ul-Cm5" userLabel="Content Separator">
-                    <rect key="frame" x="0.0" y="121" width="375" height="1"/>
+                    <rect key="frame" x="0.0" y="120" width="375" height="1"/>
                     <color key="backgroundColor" red="0.81960784310000001" green="0.81960784310000001" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="Zg8-LF-Hmk"/>
                     </constraints>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
-                    <rect key="frame" x="0.0" y="122" width="375" height="545"/>
+                    <rect key="frame" x="0.0" y="121" width="375" height="546"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fpj-MI-D7T">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="545"/>
@@ -75,7 +73,7 @@
                 <constraint firstItem="IKp-9B-y5N" firstAttribute="top" secondItem="JFj-Bl-Nt0" secondAttribute="bottom" id="LFt-PC-oUG"/>
                 <constraint firstItem="JFj-Bl-Nt0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="OuN-YF-8oH"/>
                 <constraint firstAttribute="bottom" secondItem="4nd-sh-0Ix" secondAttribute="bottom" constant="20" id="PZz-Gq-neg"/>
-                <constraint firstItem="Its-ul-Cm5" firstAttribute="top" secondItem="IKp-9B-y5N" secondAttribute="bottom" id="afn-gy-HPN"/>
+                <constraint firstItem="Its-ul-Cm5" firstAttribute="top" secondItem="IKp-9B-y5N" secondAttribute="bottom" constant="-1" id="afn-gy-HPN"/>
                 <constraint firstItem="Its-ul-Cm5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="eqc-mq-Atd"/>
                 <constraint firstAttribute="bottom" secondItem="Dar-6n-Caw" secondAttribute="bottom" id="gnL-8s-eXj"/>
                 <constraint firstItem="IKp-9B-y5N" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="hrP-Gb-G0l"/>
