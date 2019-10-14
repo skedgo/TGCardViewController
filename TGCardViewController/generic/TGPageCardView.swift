@@ -35,7 +35,11 @@ class TGPageCardView: TGCardView {
   weak var delegate: TGPageCardViewDelegate?
   
   var cardViews: [TGCardView] {
-    return (contentView.subviews as? [TGCardView]) ?? []
+    (contentView.subviews as? [TGCardView]) ?? []
+  }
+  
+  override var grabHandles: [TGGrabHandleView] {
+    cardViews.compactMap { $0.grabHandle }
   }
   
   override var headerHeight: CGFloat {

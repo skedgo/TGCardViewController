@@ -930,6 +930,7 @@ extension TGCardViewController {
           newTop?.card.didAppear(animated: animated)
           newTop?.card.didMove(to: animateTo.position, animated: animated)
         }
+        // This line did crash in Adrian's simulator but only happens rarely; when?!?
         topView.removeFromSuperview()
         self.cardTransitionShadow?.removeFromSuperview()
         self.updateCardHandleAccessibility(for: animateTo.position)
@@ -1297,7 +1298,7 @@ extension TGCardViewController {
     let card = cardElement?.card ?? topCard
     let view = cardElement?.view ?? topCardView
     let isForceExtended = card?.mapManager == nil
-    view?.grabHandle?.isHidden = isForceExtended
+    view?.grabHandles.forEach { $0.isHidden = isForceExtended }
   }
 }
 
@@ -1768,10 +1769,11 @@ extension TGCardViewController {
     return true
   }
 
-  
   private func updateCardHandleAccessibility(for position: TGCardPosition? = nil) {
-    guard let handle = topCardView?.grabHandle else { return }
+    topCardView?.grabHandles.forEach { updateCardHandleAccessibility(handle: $0, position: position) }
+  }
     
+  private func updateCardHandleAccessibility(handle: TGGrabHandleView, position: TGCardPosition?) {
     handle.isAccessibilityElement = true
     handle.accessibilityCustomActions = buildCardHandleAccessibilityActions()
     

@@ -18,6 +18,7 @@ public class TGCardView: TGCornerView {
   
   /// Each card view needs a grab handle, which the controller
   /// might hide and show.
+  /// - Note: If you apply any logic to this, don't use this but `grabHandles`
   @IBOutlet weak var grabHandle: TGGrabHandleView?
   
   @IBOutlet weak var titleViewPlaceholder: UIView?
@@ -50,6 +51,10 @@ public class TGCardView: TGCornerView {
   weak var customDismissButton: UIButton?
   
   private var contentScrollViewObservation: NSKeyValueObservation?
+  
+  var grabHandles: [TGGrabHandleView] {
+    [grabHandle].compactMap { $0 }
+  }
   
   /// The height of the header part of the view, i.e., everything
   /// up to where `contentScrollView` starts.
@@ -207,7 +212,7 @@ public class TGCardView: TGCornerView {
   // MARK: - Managing Appearance
   
   func applyStyling(_ style: TGCardStyle) {
-    grabHandle?.handleColor = style.grabHandleColor
+    grabHandles.forEach { $0.handleColor = style.grabHandleColor }
     backgroundColor = style.backgroundColor
   }
   
