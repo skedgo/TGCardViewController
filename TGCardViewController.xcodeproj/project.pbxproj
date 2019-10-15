@@ -48,10 +48,6 @@
 		3A8BEA501E87E9E00007B410 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8BEA4F1E87E9E00007B410 /* Helpers.swift */; };
 		3A9913D022A7BF1F00B74FCC /* NSBundle+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9913CF22A7BF1F00B74FCC /* NSBundle+Helpers.swift */; };
 		3AB8944F1E7AB25900267A06 /* ExampleTableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB8944E1E7AB25900267A06 /* ExampleTableDataSource.swift */; };
-		3AB894521E7AE49200267A06 /* MockupImageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB894511E7AE49200267A06 /* MockupImageCard.swift */; };
-		3AB894541E7AE4A300267A06 /* MockupRootCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB894531E7AE4A300267A06 /* MockupRootCard.swift */; };
-		3AB894561E7AEBB700267A06 /* MockupImageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB894551E7AEBB700267A06 /* MockupImageContentView.swift */; };
-		3AB894581E7AEBC400267A06 /* MockupImageContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AB894571E7AEBC400267A06 /* MockupImageContentView.xib */; };
 		3AC17FCB2080EECB0006794F /* TGCardDefaultTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3AC17FC92080EECB0006794F /* TGCardDefaultTitleView.xib */; };
 		3AC17FCC2080EECB0006794F /* TGCardDefaultTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC17FCA2080EECB0006794F /* TGCardDefaultTitleView.swift */; };
 		3ACA74841E716AFC00408678 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74831E716AFC00408678 /* AppDelegate.swift */; };
@@ -138,10 +134,6 @@
 		3AA58E6420D8FEB400FE37B0 /* TGCardViewController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = TGCardViewController.podspec; sourceTree = SOURCE_ROOT; };
 		3AA58E6520D8FEBA00FE37B0 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 		3AB8944E1E7AB25900267A06 /* ExampleTableDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableDataSource.swift; sourceTree = "<group>"; };
-		3AB894511E7AE49200267A06 /* MockupImageCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockupImageCard.swift; sourceTree = "<group>"; };
-		3AB894531E7AE4A300267A06 /* MockupRootCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockupRootCard.swift; sourceTree = "<group>"; };
-		3AB894551E7AEBB700267A06 /* MockupImageContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockupImageContentView.swift; sourceTree = "<group>"; };
-		3AB894571E7AEBC400267A06 /* MockupImageContentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MockupImageContentView.xib; sourceTree = "<group>"; };
 		3AC17FC92080EECB0006794F /* TGCardDefaultTitleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TGCardDefaultTitleView.xib; sourceTree = "<group>"; };
 		3AC17FCA2080EECB0006794F /* TGCardDefaultTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGCardDefaultTitleView.swift; sourceTree = "<group>"; };
 		3ACA74801E716AFC00408678 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -262,17 +254,6 @@
 			name = cards;
 			sourceTree = "<group>";
 		};
-		3AB894501E7AE3F300267A06 /* mock-up cards */ = {
-			isa = PBXGroup;
-			children = (
-				3AB894511E7AE49200267A06 /* MockupImageCard.swift */,
-				3AB894551E7AEBB700267A06 /* MockupImageContentView.swift */,
-				3AB894571E7AEBC400267A06 /* MockupImageContentView.xib */,
-				3AB894531E7AE4A300267A06 /* MockupRootCard.swift */,
-			);
-			name = "mock-up cards";
-			sourceTree = "<group>";
-		};
 		3AC17FC82080EECB0006794F /* views */ = {
 			isa = PBXGroup;
 			children = (
@@ -350,7 +331,6 @@
 			children = (
 				D345CC03207C69E000A6D9F3 /* example views */,
 				3ACA74C11E71A12E00408678 /* example cards */,
-				3AB894501E7AE3F300267A06 /* mock-up cards */,
 				3ACA74831E716AFC00408678 /* AppDelegate.swift */,
 				3ACA74851E716AFC00408678 /* ExampleCardViewController.swift */,
 				3A8BEA4F1E87E9E00007B410 /* Helpers.swift */,
@@ -537,7 +517,6 @@
 				D33E34961E937BEE00C40CD2 /* ExampleAccessoryView.xib in Resources */,
 				3ACA748E1E716AFC00408678 /* LaunchScreen.storyboard in Resources */,
 				3ACA748B1E716AFC00408678 /* Assets.xcassets in Resources */,
-				3AB894581E7AEBC400267A06 /* MockupImageContentView.xib in Resources */,
 				3AEBC26620346D560017CFA4 /* Default-568h@2x.png in Resources */,
 				3ACA74891E716AFC00408678 /* Main.storyboard in Resources */,
 				3A82CE16207DE774008F747A /* TurnByTurnHeaderView.xib in Resources */,
@@ -610,9 +589,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AB894561E7AEBB700267A06 /* MockupImageContentView.swift in Sources */,
 				3ACA74C31E71A14600408678 /* ExampleChildContentView.swift in Sources */,
-				3AB894541E7AE4A300267A06 /* MockupRootCard.swift in Sources */,
 				3ACA74B71E719A5900408678 /* ExampleRootCard.swift in Sources */,
 				3A8BEA501E87E9E00007B410 /* Helpers.swift in Sources */,
 				D345CC0A207C6DC500A6D9F3 /* TurnByTurnTitleView.swift in Sources */,
@@ -622,7 +599,6 @@
 				3ACA74BD1E71A0DD00408678 /* ExampleChildCard.swift in Sources */,
 				3ACA74861E716AFC00408678 /* ExampleCardViewController.swift in Sources */,
 				3A8BEA4E1E85C0070007B410 /* ExamplePageCard.swift in Sources */,
-				3AB894521E7AE49200267A06 /* MockupImageCard.swift in Sources */,
 				3ACA74CD1E72FEAB00408678 /* ExampleTableCard.swift in Sources */,
 				3ACA74841E716AFC00408678 /* AppDelegate.swift in Sources */,
 				3A04CBE32162ABE000BE796E /* ExampleLocationManager.swift in Sources */,

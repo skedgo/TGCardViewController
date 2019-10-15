@@ -121,7 +121,6 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
   var onSelect: ((Item) -> Void)?
   
   let items: [Item] = [
-    (title: "Show Mock-up", card: MockupRootCard()),
     (title: "Show Erlking", card: ExampleChildCard()),
     (title: "Show Table",   card: ExampleTableCard()),
     (title: "Show Pages",   card: ExamplePageCard()),
