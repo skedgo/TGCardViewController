@@ -220,7 +220,14 @@ extension MKMapView {
       mapRectToShow = self.mapRect(forZoomLevel: minimumZoomLevel, centeredOn: center)
     }
     
-    setVisibleMapRect(mapRectToShow, edgePadding: edgePadding, animated: animated)
+    // If we're in extended mode, the edge padding is very large and zooming
+    // will zoom out a lot; so we cap it at half the height.
+    var edgePaddingToUse = edgePadding
+    if edgePaddingToUse.bottom > bounds.height / 2 {
+      edgePaddingToUse.bottom = bounds.height / 2
+    }
+    
+    setVisibleMapRect(mapRectToShow, edgePadding: edgePaddingToUse, animated: animated)
   }
   
   func setCenter(_ coordinate: CLLocationCoordinate2D,
