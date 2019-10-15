@@ -9,8 +9,8 @@
 Pod::Spec.new do |s|
 
   s.name         = "TGCardViewController"
-  s.version      = "0.1"
-  s.summary      = "Card-based view controller for TripGo V5"
+  s.version      = "1.0"
+  s.summary      = "Card-based view controller for mapping apps"
 
   s.description  = <<-DESC
     A view controller with a map and a stack of cards. Cards can work both
@@ -28,8 +28,7 @@ Pod::Spec.new do |s|
   #  CocoaPods will detect a license file if there is a named LICENSE*
   #  Popular ones are 'MIT', 'BSD' and 'Apache License, Version 2.0'.
   #
-
-  s.license      = { type: "Closed", file: "LICENSE" }
+  s.license      = 'Apache License, Version 2.0'
 
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -44,9 +43,6 @@ Pod::Spec.new do |s|
 
   s.authors             = { "Adrian Schoenig": "adrian@skedgo.com",
                             "Brian Huang": "brian@skedgo.com" }
-  # Or just: s.author    = "Adrian Schoenig"
-  # s.authors            = { "Adrian Schoenig" => "adrian.schoenig@gmail.com" }
-  # s.social_media_url   = "http://twitter.com/Adrian Schoenig"
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
@@ -54,8 +50,8 @@ Pod::Spec.new do |s|
   #  the deployment target. You can optionally include the target after the platform.
   #
 
-  s.platform     = :ios, "10.0"
-  s.swift_version = '5.0'
+  s.platform     = :ios, "10.3"
+  s.swift_version = '5.1'
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
@@ -63,8 +59,8 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source        = { path: "." }
-  # s.source       = { :git => "https://gitlab.com/SkedGo/tripgo-cards-ios.git", :tag => "#{s.version}" }
+  # s.source       = { git: "." }
+  s.source       = { :git => "https://gitlab.com/SkedGo/iOS/tripgo-cards-ios.git", :tag => "v#{s.version}" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
