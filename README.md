@@ -1,9 +1,7 @@
 # Cards for TripGo iOS
 
-This is a repo for experimenting with the card-based design for TripGo V5.
-Ultimately this might turn into a (private) CocoaPod with the current project
-being broken up into a generic part that goes in the pod itself and an example
-project for showing how to use it and easily testing all the different cases.
+This is a repo for providing the card-based design for TripGo as well as the
+(upcoming) TripKitUI SDK by SkedGo.
 
 
 ## Specs
