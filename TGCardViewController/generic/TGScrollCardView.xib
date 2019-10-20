@@ -15,11 +15,11 @@
             <subviews>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="21" translatesAutoresizingMaskIntoConstraints="NO" id="lf5-YV-zqk" userLabel="Grab handle" customClass="TGGrabHandleView" customModule="TGCardViewController" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TwM-rE-f4a">
                     <rect key="frame" x="0.0" y="153" width="375" height="510"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="132" translatesAutoresizingMaskIntoConstraints="NO" id="z8r-SX-8cz" userLabel="Title view (placeholder)">
                     <rect key="frame" x="0.0" y="21" width="375" height="132"/>
@@ -44,7 +44,7 @@
                     </connections>
                 </button>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4TM-kT-hhY"/>
                 <constraint firstAttribute="trailing" secondItem="8CX-8x-KQh" secondAttribute="trailing" constant="16" id="526-vy-eNr"/>

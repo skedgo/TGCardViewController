@@ -16,13 +16,26 @@ class ExampleRootCard : TGTableCard {
   fileprivate let source = DataSource()
   
   init() {
-    super.init(title: "Card Demo", dataSource: source, delegate: source, mapManager: TGMapManager.nuremberg)
+    let title: CardTitle
+    #if targetEnvironment(macCatalyst)
+    title = .none
+    #else
+    title = .default("Card Demo")
+    #endif
+    super.init(title: title, dataSource: source, delegate: source, mapManager: TGMapManager.nuremberg)
     
     source.onSelect = { item in
       self.controller?.push(item.card)
     }
     
     // Custom styling
+    style.subtitleFont = UIFont.italicSystemFont(ofSize: 15)
+    #if targetEnvironment(macCatalyst)
+    style.backgroundColor = .clear
+    style.titleTextColor = .label
+    style.subtitleTextColor = .label
+    style.grabHandleColor = .label
+    #else
     if #available(iOS 11.0, *) {
       style.backgroundColor = UIColor(named: "cardBackground") ?? #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)
     } else {
@@ -30,8 +43,8 @@ class ExampleRootCard : TGTableCard {
     }
     style.titleTextColor = .white
     style.subtitleTextColor = .white
-    style.subtitleFont = UIFont.italicSystemFont(ofSize: 15)
     style.grabHandleColor = .white
+    #endif
     
     // Floating views
     let infoButton = UIButton(type: .infoLight)
@@ -64,6 +77,8 @@ class ExampleRootCard : TGTableCard {
     super.didBuild(cardView: cardView, headerView: headerView)
     
     guard let tableView = (cardView as? TGScrollCardView)?.tableView else { return }
+    
+    tableView.backgroundColor = .clear
     
     if #available(iOS 11.0, *) {
       tableView.isSpringLoaded = true
@@ -143,6 +158,7 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
     let tableCell = UITableViewCell(style: .default, reuseIdentifier: nil)
     let row = indexPath.row
     tableCell.textLabel?.text = items[row].title
+    tableCell.backgroundColor = .clear
     return tableCell
   }
   

@@ -260,7 +260,7 @@ extension ExampleTableDataSource : UITableViewDataSource {
     let tableCell = UITableViewCell(style: .default, reuseIdentifier: nil)
     let row = indexPath.row
     tableCell.textLabel?.text = "#\(row): \(stops[row].title!!)"
-    tableCell.contentView.backgroundColor = .clear
+    tableCell.backgroundColor = .clear
     return tableCell
   }
   

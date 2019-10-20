@@ -24,6 +24,10 @@ class ExampleCardViewController: TGCardViewController {
     
     navigationButtonsAreSpringLoaded = true
     
+    #if targetEnvironment(macCatalyst)
+    mode = .sidebar
+    #endif
+    
     builder.askForLocationPermissions = ExampleLocationManager.shared.askForPermissions
 
     super.viewDidLoad()

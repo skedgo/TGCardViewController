@@ -11,15 +11,21 @@ import UIKit
 /// A simple `UIView` subclass with rounded corners at the top.
 public class TGCornerView: UIView {
   
+  static var roundedCorners: Bool = true
+  
   override public func layoutSubviews() {
     super.layoutSubviews()
     
-    let path = UIBezierPath(roundedRect: self.bounds,
-                            byRoundingCorners: [.topLeft, .topRight],
-                            cornerRadii: CGSize(width: 16, height: 16))
-    let mask = CAShapeLayer()
-    mask.path = path.cgPath
-    layer.mask = mask
+    if Self.roundedCorners {
+      let path = UIBezierPath(roundedRect: self.bounds,
+                              byRoundingCorners: [.topLeft, .topRight],
+                              cornerRadii: CGSize(width: 16, height: 16))
+      let mask = CAShapeLayer()
+      mask.path = path.cgPath
+      layer.mask = mask
+    } else {
+      layer.mask = nil
+    }
   }
 
 }

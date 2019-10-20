@@ -163,6 +163,7 @@
 		3ACA74CC1E72FEAB00408678 /* ExampleTableCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableCard.swift; sourceTree = "<group>"; };
 		3ADC802D2114A3FF00A318B9 /* ExampleCityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCityCard.swift; sourceTree = "<group>"; };
 		3ADC802F2114A58100A318B9 /* ExampleMapManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleMapManager.swift; sourceTree = "<group>"; };
+		3ADD3BBA235C5CB700CD4713 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		3AEBC26520346D560017CFA4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		D33E34951E937BEE00C40CD2 /* ExampleAccessoryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleAccessoryView.xib; sourceTree = "<group>"; };
 		D33E34971E937CB200C40CD2 /* ExampleAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleAccessoryView.swift; sourceTree = "<group>"; };
@@ -269,6 +270,7 @@
 		3ACA74771E716AFC00408678 = {
 			isa = PBXGroup;
 			children = (
+				3ADD3BBA235C5CB700CD4713 /* Example.entitlements */,
 				3ACA74821E716AFC00408678 /* TGCardViewController */,
 				3ACA74971E716AFC00408678 /* TGCardViewControllerUITests */,
 				3A7C3484201F2C0B00F66A35 /* TGCardViewController */,
@@ -847,7 +849,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Example.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = JFT62W5LA3;
 				INFOPLIST_FILE = TGCardViewController/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -856,6 +860,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.buzzhives.TGCardViewController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -865,7 +870,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Example.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = JFT62W5LA3;
 				INFOPLIST_FILE = TGCardViewController/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -874,6 +881,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.buzzhives.TGCardViewController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

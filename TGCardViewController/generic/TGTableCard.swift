@@ -91,9 +91,9 @@ open class TGTableCard: TGCard {
         return
     }
     
-    if #available(iOS 11, *) {
+    if #available(iOS 11.1, *) {
       embeddedScrollView.contentInset.bottom = scrollCardView.safeAreaInsets.bottom
-      embeddedScrollView.scrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom
+      embeddedScrollView.verticalScrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom
     } else if let controller = controller {
       embeddedScrollView.contentInset.bottom = controller.bottomLayoutGuide.length
       embeddedScrollView.scrollIndicatorInsets.bottom = controller.bottomLayoutGuide.length

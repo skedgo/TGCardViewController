@@ -82,7 +82,11 @@ public class TGScrollCardView: TGCardView {
   override func applyStyling(_ style: TGCardStyle) {
     super.applyStyling(style)
     
+    #if targetEnvironment(macCatalyst)
+    backgroundColor = .clear
+    #else
     scrollViewWrapper.backgroundColor = style.backgroundColor
+    #endif
   }
   
 }
