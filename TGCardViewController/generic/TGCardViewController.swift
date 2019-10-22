@@ -111,7 +111,13 @@ open class TGCardViewController: UIViewController {
   /// The mode to use for the cards, either floating or as a sidebar. Can only be set on start.
   ///
   /// - Warning: Set before `viewDidLoad` is called. Changes afterwards are ignored.
-  public var mode: Mode = .floating
+  public var mode: Mode = {
+    #if targetEnvironment(macCatalyst)
+    return .sidebar
+    #else
+    return .floating
+    #endif
+  }()
   
   /// A Boolean value that specifies whether the close buttons
   /// on cards and headers are participating in spring-loaded
