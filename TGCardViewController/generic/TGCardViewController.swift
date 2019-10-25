@@ -148,6 +148,7 @@ open class TGCardViewController: UIViewController {
   @IBOutlet weak var topFloatingViewWrapper: UIVisualEffectView!
   @IBOutlet weak var bottomFloatingViewWrapper: UIVisualEffectView!
   @IBOutlet weak var sidebarBackground: UIView!
+  @IBOutlet weak var sidebarVisualEffectView: UIVisualEffectView!
   @IBOutlet weak var sidebarSeparator: UIView!
   
   // Positioning the cards
@@ -258,6 +259,7 @@ open class TGCardViewController: UIViewController {
     
     if #available(iOS 13.0, *) {
       sidebarSeparator.backgroundColor = .separator
+      sidebarVisualEffectView.effect = UIBlurEffect(style: .systemThickMaterial)
     } else {
       sidebarSeparator.backgroundColor = UIColor(white: 1.0, alpha: 0.85)
     }

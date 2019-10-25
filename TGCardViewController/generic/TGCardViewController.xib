@@ -29,6 +29,7 @@
                 <outlet property="mapViewWrapper" destination="zI8-lz-Md7" id="Cra-uq-Dhl"/>
                 <outlet property="sidebarBackground" destination="zlR-ey-yL8" id="PzF-kH-9yg"/>
                 <outlet property="sidebarSeparator" destination="2dL-e1-o2y" id="lqo-xo-UFC"/>
+                <outlet property="sidebarVisualEffectView" destination="IEW-xx-P4c" id="IPR-O2-3nh"/>
                 <outlet property="statusBarBlurHeightConstraint" destination="e6J-1w-2rr" id="nz7-n1-G6e"/>
                 <outlet property="statusBarBlurView" destination="hZy-nx-c0N" id="v21-d4-wie"/>
                 <outlet property="topFloatingView" destination="KR7-zo-rfe" id="fvn-SY-GHF"/>
