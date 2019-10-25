@@ -10,6 +10,8 @@ import UIKit
 
 /// A table view that allows navigation and selection using a hardware keyboard.
 /// Only supports a single section.
+///
+/// Kudos to [@douglashill]( https://gist.github.com/douglashill/50728432881ef37e8b49f2a5917f462d).
 class TGKeyboardTableView: UITableView {
 
   // These properties may be set or overridden to provide discoverability titles for key commands.
@@ -139,17 +141,35 @@ class TGKeyboardTableView: UITableView {
     guard let indexPathForSelectedRow = indexPathForSelectedRow else {
       return
     }
+    #if targetEnvironment(macCatalyst)
+    // Arguably this is the wrong way around, but Catalyst
+    // itself implements up/down arrow interaction and
+    // overrides ours and it selects in this case already
+    // calling the `didSelectRowAt:` delegate... so to
+    // differentiate we only have highlighting left.
+    delegate?.tableView?(self, didHighlightRowAt: indexPathForSelectedRow)
+    #else
     delegate?.tableView?(self, didSelectRowAt: indexPathForSelectedRow)
+    #endif
   }
 }
 
 private extension UIKeyCommand {
   convenience init(input: String, modifierFlags: UIKeyModifierFlags, action: Selector,
                    maybeDiscoverabilityTitle: String?) {
-    if let discoverabilityTitle = maybeDiscoverabilityTitle {
-      self.init(input: input, modifierFlags: modifierFlags, action: action, discoverabilityTitle: discoverabilityTitle)
+    if #available(iOS 13.0, *) {
+      self.init(
+        title: "", image: nil,
+        action: action,
+        input: input, modifierFlags: modifierFlags,
+        discoverabilityTitle: maybeDiscoverabilityTitle
+      )
     } else {
-      self.init(input: input, modifierFlags: modifierFlags, action: action)
+      if let discoverabilityTitle = maybeDiscoverabilityTitle {
+        self.init(input: input, modifierFlags: modifierFlags, action: action, discoverabilityTitle: discoverabilityTitle)
+      } else {
+        self.init(input: input, modifierFlags: modifierFlags, action: action)
+      }
     }
   }
 }
