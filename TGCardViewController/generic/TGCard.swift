@@ -103,6 +103,12 @@ open class TGCard: UIResponder, NSCoding {
   /// The position to display the card in, when pushing
   public let initialPosition: TGCardPosition?
   
+  /// Whether the close button should be visible on the card title
+  ///
+  /// - Warning: Only has an impact if set right after initialisations and before
+  ///   the card is pushed.
+  public var showCloseButton = true
+  
   /// The action to execute when floating button is pressed.
   public var floatingButtonAction: (style: FloatingButtonStyle, onPressed: () -> Void)?
   

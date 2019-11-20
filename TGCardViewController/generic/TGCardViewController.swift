@@ -747,7 +747,7 @@ extension TGCardViewController {
     
     let cardView = top.buildCardView()
     cardView.dismissButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
-    let showClose = delegate != nil || cards.count > 1
+    let showClose = (delegate != nil || cards.count > 1) && top.showCloseButton
     cardView.updateDismissButton(show: showClose, isSpringLoaded: navigationButtonsAreSpringLoaded)
     
     // On device with home indicator, we want only the header part of a card view is
