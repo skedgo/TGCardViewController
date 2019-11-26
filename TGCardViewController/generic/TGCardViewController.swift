@@ -1955,26 +1955,14 @@ extension TGCardViewController {
 
 
     } else if topCard != nil, cards.count > 1 || delegate != nil {
-      #if targetEnvironment(macCatalyst)
       commands.append(
         UIKeyCommand(
           input: "[", modifierFlags: .command, action: #selector(pop),
           discoverabilityTitle: NSLocalizedString(
-            "Close card", bundle: .cardVC,
+            "Back to previous card", bundle: .cardVC,
             comment: "Discovery hint for keyboard shortcuts"
           )
       ))
-      #else
-      commands.append(
-        UIKeyCommand(
-          input: "w", modifierFlags: .command, action: #selector(pop),
-          discoverabilityTitle: NSLocalizedString(
-            "Close card", bundle: .cardVC,
-            comment: "Discovery hint for keyboard shortcuts"
-          )
-      ))
-      #endif
-
     }
     
     return commands
