@@ -22,6 +22,15 @@ class TGKeyboardTableView: UITableView {
   
   private(set) var selectedViaKeyboard: Bool = false
   
+  enum Selection {
+    case top
+    case bottom
+    case nextItem
+    case previousItem
+//    case nextSection
+//    case previousSection
+  }
+  
   override var canBecomeFirstResponder: Bool {
     return true
   }
@@ -66,7 +75,7 @@ class TGKeyboardTableView: UITableView {
   
   @objc func selectAbove() {
     if let oldSelectedIndexPath = indexPathForSelectedRow {
-      selectRowAtIndex(oldSelectedIndexPath.row - 1)
+      selectRow(.previousItem)
     } else {
       selectBottom()
     }
@@ -74,30 +83,55 @@ class TGKeyboardTableView: UITableView {
   
   @objc func selectBelow() {
     if let oldSelectedIndexPath = indexPathForSelectedRow {
-      selectRowAtIndex(oldSelectedIndexPath.row + 1)
+      selectRow(.nextItem)
     } else {
       selectTop()
     }
   }
   
   @objc func selectTop() {
-    selectRowAtIndex(0)
+    selectRow(.top)
   }
   
   @objc func selectBottom() {
-    selectRowAtIndex(numberOfRows(inSection: 0) - 1)
+    selectRow(.bottom)
   }
   
   /// Tries to select and scroll to the row at the given index in section 0.
   /// Does not require the index to be in bounds. Does nothing if out of bounds.
-  private func selectRowAtIndex(_ rowIndex: Int) {
-    guard rowIndex >= 0 && rowIndex < numberOfRows(inSection: 0) else {
-      return
+  private func selectRow(_ selection: Selection) {
+    guard numberOfSections > 0, numberOfRows(inSection: 0) > 0 else { return }
+
+    var indexPath: IndexPath
+    switch selection {
+    case .top:
+      indexPath = IndexPath(item: 0, section: 0)
+    case .bottom:
+      indexPath = IndexPath(item: -1, section: 0)
+    case .nextItem:
+      guard let selection = indexPathForSelectedRow else { return }
+      indexPath = IndexPath(item: selection.row + 1, section: selection.section)
+    case .previousItem:
+      guard let selection = indexPathForSelectedRow else { return }
+      indexPath = IndexPath(item: selection.row - 1, section: selection.section)
+    }
+    
+    if indexPath.item < 0 {
+      indexPath.section -= 1
+      if indexPath.section < 0 {
+        indexPath.section = numberOfSections - 1
+      }
+      indexPath.item = numberOfRows(inSection: indexPath.section) - 1
+    }
+    if indexPath.item >= numberOfRows(inSection: indexPath.section) {
+      indexPath.section += 1
+      if indexPath.section >= numberOfSections {
+        indexPath.section = 0
+      }
+      indexPath.item = 0
     }
     
     selectedViaKeyboard = true
-
-    let indexPath = IndexPath(row: rowIndex, section: 0)
     
     switch cellVisibility(atIndexPath: indexPath) {
     case .fullyVisible:
