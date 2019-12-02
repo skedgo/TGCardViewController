@@ -69,7 +69,7 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
     // The way we handle the DisposeBag might(?) introduce a retain cycle, but
     // this only exists until you provide access to the current location.
     if CLLocationManager.authorizationStatus() == .notDetermined {
-      tracker.isUserInteractionEnabled = false
+      Self.updateTracker(tracker, enabled: false)
       let tapper = UITapGestureRecognizer()
       tapper.addTarget(self, action: #selector(trackerButtonPressed))
       background.addGestureRecognizer(tapper)
@@ -85,13 +85,29 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
       preconditionFailure()
     }
     
+    // authorisation might have since been granted
+    guard CLLocationManager.authorizationStatus() == .notDetermined else {
+      Self.updateTracker(tracker, enabled: true)
+      tracker.mapView?.userTrackingMode = .follow
+      return
+    }
+
     CLLocationManager().requestWhenInUseAuthorization()
+    
     askForLocationPermissions? { success in
       guard success else { return }
-      tracker.isUserInteractionEnabled = true
+      Self.updateTracker(tracker, enabled: true)
       tracker.mapView?.userTrackingMode = .follow
     }
     
+  }
+  
+  @available(iOS 11.0, *)
+  private static func updateTracker(_ tracker: MKUserTrackingButton, enabled: Bool) {
+    tracker.isUserInteractionEnabled = enabled
+    
+    // required on iOS 13 as the button has a little button within it
+    tracker.subviews.compactMap { $0 as? UIButton }.forEach { $0.isUserInteractionEnabled = enabled }
   }
 
 }

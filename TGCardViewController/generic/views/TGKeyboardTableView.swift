@@ -76,7 +76,7 @@ class TGKeyboardTableView: UITableView {
   }
   
   @objc func selectAbove() {
-    if let oldSelectedIndexPath = indexPathForSelectedRow {
+    if indexPathForSelectedRow != nil {
       selectRow(.previousItem)
     } else {
       selectBottom()
@@ -84,7 +84,7 @@ class TGKeyboardTableView: UITableView {
   }
   
   @objc func selectBelow() {
-    if let oldSelectedIndexPath = indexPathForSelectedRow {
+    if indexPathForSelectedRow != nil {
       selectRow(.nextItem)
     } else {
       selectTop()
