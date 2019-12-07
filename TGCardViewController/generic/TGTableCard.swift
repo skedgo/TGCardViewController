@@ -104,10 +104,10 @@ open class TGTableCard: TGCard {
     guard
       let tableView = (cardView as? TGScrollCardView)?.tableView
       else { preconditionFailure() }
-    
-    (tableView as? TGKeyboardTableView)?.handleMacSelection = handleMacSelection
-    
+
     didBuild(tableView: tableView, headerView: headerView)
+
+    (tableView as? TGKeyboardTableView)?.handleMacSelection = handleMacSelection
   }
 
   open override func didAppear(animated: Bool) {
