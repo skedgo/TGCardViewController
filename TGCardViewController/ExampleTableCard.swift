@@ -25,7 +25,8 @@ class ExampleTableCard : TGTableCard {
 
     super.init(title: "London stops", dataSource: source, delegate: source, accessoryView: ExampleAccessoryView.instantiate(), mapManager: mapManager)
     
-    self.bottomMapToolBarItems = [UIButton.dummyDetailDisclosureButton()]
+    handleMacSelection = source.handleSelection
+    bottomMapToolBarItems = [UIButton.dummyDetailDisclosureButton()]
   }
   
   required init?(coder: NSCoder) {
@@ -33,6 +34,7 @@ class ExampleTableCard : TGTableCard {
 
     super.init(coder: coder)
     
+    handleMacSelection = source.handleSelection
     mapManager = coder.decodeObject(forKey: "mapManager") as? ExampleMapManager
     tableViewDataSource = source
     tableViewDelegate = source
@@ -47,11 +49,9 @@ class ExampleTableCard : TGTableCard {
     aCoder.encode(pushOnTap, forKey: "pushOnTap")
   }
   
-  override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
-    super.didBuild(cardView: cardView, headerView: headerView)
+  override func didBuild(tableView: UITableView, headerView: TGHeaderView?) {
+    super.didBuild(tableView: tableView, headerView: headerView)
 
-    guard let tableView = (cardView as? TGScrollCardView)?.tableView else { return }
-    
     if #available(iOS 11.0, *) {
       tableView.dragInteractionEnabled = true
     }

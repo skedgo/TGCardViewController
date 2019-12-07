@@ -9,9 +9,8 @@
 import UIKit
 
 /// A table view that allows navigation and selection using a hardware keyboard.
-/// Only supports a single section.
 ///
-/// Kudos to [@douglashill]( https://gist.github.com/douglashill/50728432881ef37e8b49f2a5917f462d).
+/// Adopted from [@douglashill]( https://gist.github.com/douglashill/50728432881ef37e8b49f2a5917f462d).
 class TGKeyboardTableView: UITableView {
 
   // These properties may be set or overridden to provide discoverability titles for key commands.
@@ -24,6 +23,11 @@ class TGKeyboardTableView: UITableView {
   
   private(set) var selectedViaKeyboard: Bool = false
   
+  // Used on Catalyst to intercept taps
+  private let cellTapper = UITapGestureRecognizer()
+  
+  var handleMacSelection: (IndexPath) -> Void = { _ in }
+  
   enum Selection {
     case top
     case bottom
@@ -31,6 +35,23 @@ class TGKeyboardTableView: UITableView {
     case previousItem
 //    case nextSection
 //    case previousSection
+  }
+  
+  override init(frame: CGRect, style: UITableView.Style) {
+    super.init(frame: frame, style: style)
+    didInit()
+  }
+  
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
+    didInit()
+  }
+  
+  private func didInit() {
+    #if targetEnvironment(macCatalyst)
+    cellTapper.addTarget(self, action: #selector(handleTap(_:)))
+    addGestureRecognizer(cellTapper)
+    #endif
   }
   
   override var canBecomeFirstResponder: Bool {
@@ -73,6 +94,11 @@ class TGKeyboardTableView: UITableView {
     ))
     
     return commands
+  }
+  
+  @objc func handleTap(_ recogniser: UITapGestureRecognizer) {
+    guard let indexPath = indexPathForRow(at: recogniser.location(in: self)) else { return }
+    handleMacSelection(indexPath)
   }
   
   @objc func selectAbove() {
@@ -172,23 +198,22 @@ class TGKeyboardTableView: UITableView {
   }
   
   @objc func activateSelection() {
-    guard let indexPathForSelectedRow = indexPathForSelectedRow else {
-      return
-    }
+    guard let indexPathForSelectedRow = indexPathForSelectedRow else { return }
+    
     #if targetEnvironment(macCatalyst)
-    // Arguably this is the wrong way around, but Catalyst
-    // itself implements up/down arrow interaction and
-    // overrides ours and it selects in this case already
-    // calling the `didSelectRowAt:` delegate... so to
-    // differentiate we only have highlighting left.
-    delegate?.tableView?(self, didHighlightRowAt: indexPathForSelectedRow)
+    // We don't call the delegate, as Catalyst itself implements up/down arrow
+    // interaction, overriding ours and it selects in this case already
+    // while navigating through the list by calling the `didSelectRowAt:`
+    // delegate... so we instead call our own method, and leave it to the
+    // caller to implement
+    handleMacSelection(indexPathForSelectedRow)
     #else
     delegate?.tableView?(self, didSelectRowAt: indexPathForSelectedRow)
     #endif
   }
 }
 
-private extension UIKeyCommand {
+extension UIKeyCommand {
   convenience init(input: String, modifierFlags: UIKeyModifierFlags, action: Selector,
                    maybeDiscoverabilityTitle: String?) {
     if #available(iOS 13.0, *) {
@@ -200,7 +225,8 @@ private extension UIKeyCommand {
       )
     } else {
       if let discoverabilityTitle = maybeDiscoverabilityTitle {
-        self.init(input: input, modifierFlags: modifierFlags, action: action, discoverabilityTitle: discoverabilityTitle)
+        self.init(input: input, modifierFlags: modifierFlags, action: action,
+                  discoverabilityTitle: discoverabilityTitle)
       } else {
         self.init(input: input, modifierFlags: modifierFlags, action: action)
       }

@@ -27,7 +27,8 @@ class ExampleRootCard : TGTableCard {
     source.onSelect = { item in
       self.controller?.push(item.card)
     }
-    
+    handleMacSelection = source.handleSelection
+
     // Custom styling
     style.subtitleFont = UIFont.italicSystemFont(ofSize: 15)
     #if targetEnvironment(macCatalyst)
@@ -73,10 +74,8 @@ class ExampleRootCard : TGTableCard {
     self.init()
   }
   
-  override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
-    super.didBuild(cardView: cardView, headerView: headerView)
-    
-    guard let tableView = (cardView as? TGScrollCardView)?.tableView else { return }
+  override func didBuild(tableView: UITableView, headerView: TGHeaderView?) {
+    super.didBuild(tableView: tableView, headerView: headerView)
     
     tableView.backgroundColor = .clear
     
@@ -142,8 +141,14 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
     (title: "Custom title", card: ExampleCustomTitleCard())
   ]
   
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+  func handleSelection(_ indexPath: IndexPath) {
     onSelect?(items[indexPath.row])
+  }
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    #if !targetEnvironment(macCatalyst)
+    handleSelection(indexPath)
+    #endif
   }
   
   func numberOfSections(in tableView: UITableView) -> Int {

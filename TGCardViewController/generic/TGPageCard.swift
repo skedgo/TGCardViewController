@@ -301,7 +301,7 @@ extension TGPageCard {
       commands.append(
         UIKeyCommand(
           input: UIKeyCommand.inputLeftArrow, modifierFlags: .control, action: #selector(moveBackward),
-          discoverabilityTitle: NSLocalizedString(
+          maybeDiscoverabilityTitle: NSLocalizedString(
             "Previous card", bundle: .cardVC, comment: "Discovery hint for keyboard shortcuts")
       ))
     }
@@ -309,7 +309,7 @@ extension TGPageCard {
       commands.append(
         UIKeyCommand(
           input: UIKeyCommand.inputRightArrow, modifierFlags: .control, action: #selector(moveForward),
-          discoverabilityTitle: NSLocalizedString(
+          maybeDiscoverabilityTitle: NSLocalizedString(
             "Next card", bundle: .cardVC, comment: "Discovery hint for keyboard shortcuts")
       ))
     }

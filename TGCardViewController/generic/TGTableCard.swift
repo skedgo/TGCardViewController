@@ -33,8 +33,21 @@ open class TGTableCard: TGCard {
   public weak var tableViewDataSource: UITableViewDataSource?
   
   /// Whether the card should deselect the selected row when it appears.
-  /// Defaults to `true`
-  public var deselectOnAppear: Bool = true
+  /// Defaults to `true` on iOS and `false` on macOS (Catalyst)
+  public var deselectOnAppear: Bool = {
+    #if targetEnvironment(macCatalyst)
+    return false
+    #else
+    return true
+    #endif
+  }()
+  
+  /// Callback that is called when using this on Mac Catalyst, when the user select a cell via pressing enter
+  /// on the keyboard during navigation, or when clicking an item in the list.
+  ///
+  /// - warning: Use this rather than the `UITableViewDelegate` selection method as that's called
+  ///    while the user is still navigating via keyboard.
+  public var handleMacSelection: (IndexPath) -> Void = { _ in }
   
   // MARK: - Initialisers
   
@@ -78,8 +91,25 @@ open class TGTableCard: TGCard {
     super.encode(with: aCoder)
     aCoder.encode(tableStyle.rawValue, forKey: "tableStyle")
   }
+
   // MARK: - Card Life Cycle
   
+  open func didBuild(tableView: UITableView, headerView: TGHeaderView?) {
+  }
+  
+  override public final func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+    
+    defer { super.didBuild(cardView: cardView, headerView: headerView) }
+    
+    guard
+      let tableView = (cardView as? TGScrollCardView)?.tableView
+      else { preconditionFailure() }
+    
+    (tableView as? TGKeyboardTableView)?.handleMacSelection = handleMacSelection
+    
+    didBuild(tableView: tableView, headerView: headerView)
+  }
+
   open override func didAppear(animated: Bool) {
     super.didAppear(animated: animated)
     

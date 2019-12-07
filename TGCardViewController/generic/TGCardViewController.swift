@@ -1917,14 +1917,14 @@ extension TGCardViewController {
     var commands = [
       UIKeyCommand(
         input: UIKeyCommand.inputUpArrow, modifierFlags: .control, action: #selector(expand),
-        discoverabilityTitle: NSLocalizedString(
+        maybeDiscoverabilityTitle: NSLocalizedString(
           "Expand card", bundle: .cardVC,
           comment: "Discovery hint for keyboard shortcuts"
         )
       ),
       UIKeyCommand(
         input: UIKeyCommand.inputDownArrow, modifierFlags: .control, action: #selector(collapse),
-        discoverabilityTitle: NSLocalizedString(
+        maybeDiscoverabilityTitle: NSLocalizedString(
           "Collapse card", bundle: .cardVC,
           comment: "Discovery hint for keyboard shortcuts"
         )
@@ -1935,7 +1935,7 @@ extension TGCardViewController {
       commands.append(
         UIKeyCommand(
           input: "w", modifierFlags: .command, action: #selector(dismissPresentee),
-          discoverabilityTitle: NSLocalizedString(
+          maybeDiscoverabilityTitle: NSLocalizedString(
             "Dismiss", bundle: .cardVC,
             comment: "Discovery hint for keyboard shortcuts"
           )
@@ -1958,7 +1958,7 @@ extension TGCardViewController {
       commands.append(
         UIKeyCommand(
           input: "[", modifierFlags: .command, action: #selector(pop),
-          discoverabilityTitle: NSLocalizedString(
+          maybeDiscoverabilityTitle: NSLocalizedString(
             "Back to previous card", bundle: .cardVC,
             comment: "Discovery hint for keyboard shortcuts"
           )

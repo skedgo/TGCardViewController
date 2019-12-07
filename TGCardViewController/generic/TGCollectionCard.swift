@@ -61,6 +61,22 @@ open class TGCollectionCard: TGCard {
     aCoder.encodeArchive(collectionViewLayout, forKey: "collectionViewLayout")
   }
   
+  // MARK: - Card Life Cycle
+  
+  open func didBuild(collectionView: UICollectionView, headerView: TGHeaderView?) {
+  }
+  
+  override public final func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+    
+    defer { super.didBuild(cardView: cardView, headerView: headerView) }
+    
+    guard
+      let collectionView = (cardView as? TGScrollCardView)?.collectionView
+      else { preconditionFailure() }
+    
+    didBuild(collectionView: collectionView, headerView: headerView)
+  }
+
   // MARK: - Constructing views
   
   open override func buildCardView() -> TGCardView {

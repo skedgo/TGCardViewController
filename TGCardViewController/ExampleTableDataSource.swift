@@ -218,12 +218,17 @@ class ExampleTableDataSource: NSObject {
       return point
   }
   
+  func handleSelection(_ indexPath: IndexPath) {
+    onSelect?(stops[indexPath.row])
+  }
 }
 
 extension ExampleTableDataSource : UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    onSelect?(stops[indexPath.row])
+    #if !targetEnvironment(macCatalyst)
+    handleSelection(indexPath)
+    #endif
   }
   
   func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
