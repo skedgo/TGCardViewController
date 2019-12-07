@@ -244,6 +244,18 @@ extension ExampleTableDataSource : UITableViewDelegate {
     ]
   }
   
+  func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+    let provider: ([UIMenuElement]) -> UIMenu? = { existing in
+      let action = UIAction(title: "Delete") { _ in
+        self.stops.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+      }
+      return UIMenu(__title: "", image: nil, identifier: nil, children: [action])
+    }
+    
+    return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: provider)
+  }
+  
   func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
     let item = stops.remove(at: sourceIndexPath.row)
     stops.insert(item, at: destinationIndexPath.row)

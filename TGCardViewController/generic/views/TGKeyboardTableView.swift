@@ -98,7 +98,13 @@ class TGKeyboardTableView: UITableView {
   
   @objc func handleTap(_ recogniser: UITapGestureRecognizer) {
     guard let indexPath = indexPathForRow(at: recogniser.location(in: self)) else { return }
+    
+    // this allows triggering the actual action
     handleMacSelection(indexPath)
+    
+    // this makes sure it's selected, without jumping back
+    // to the selection from the keyboard
+    selectRow(at: indexPath, animated: false, scrollPosition: .none)
   }
   
   @objc func selectAbove() {
