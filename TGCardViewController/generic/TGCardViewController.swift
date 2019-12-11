@@ -81,6 +81,8 @@ open class TGCardViewController: UIViewController {
     /// top of the card to keep a bit of the map always showing through.
     fileprivate static let minMapSpace: CGFloat = 50
     
+    fileprivate static let minMapSpaceWithHomeIndicator: CGFloat = 25
+    
     fileprivate static let pushAnimationDuration = 0.25
 
     /// The minimum seconds for snapping after the user panned the top card.
@@ -497,7 +499,15 @@ open class TGCardViewController: UIViewController {
       value += navigationBar.frame.height
     }
     
-    value += Constants.minMapSpace
+    if #available(iOS 11.0, *) {
+      if view.safeAreaInsets.bottom > 0 {
+        value += Constants.minMapSpaceWithHomeIndicator
+      } else {
+        value += Constants.minMapSpace
+      }
+    } else {
+      value += Constants.minMapSpace
+    }
     
     return value
   }
