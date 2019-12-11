@@ -1181,10 +1181,8 @@ extension TGCardViewController {
   @objc
   fileprivate func handleCardTap(_ recogniser: UITapGestureRecognizer) {
     switch cardPosition {
-    case .peaking, .collapsed:
-      expand()
-    case .extended:
-      collapse()
+    case .peaking, .collapsed: expand()
+    case .extended: break
     }
   }
   
