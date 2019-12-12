@@ -94,9 +94,32 @@ open class TGTableCard: TGCard {
 
   // MARK: - Card Life Cycle
   
+  /// Called when the views have been built the first time
+  ///
+  /// Think of this as an equivalent of `UIViewController.viewDidLoad`
+  ///
+  /// - note: You probably only want to override one of the `didBuild`, but both will be called. Whichever you implement, remember to call `super`.
+  ///
+  /// - Parameters:
+  ///   - tableView: The card's table view
+  ///   - headerView: The header view, typically used by `TGPageCard`.
   open func didBuild(tableView: UITableView, headerView: TGHeaderView?) {
   }
-  
+
+  /// Called when the views have been built the first time
+  ///
+  /// Think of this as an equivalent of `UIViewController.viewDidLoad`
+  ///
+  /// - note: You probably only want to override one of the `didBuild`, but both will be called. Whichever you implement, remember to call `super`.
+  ///
+  ///
+  /// - Parameters:
+  ///   - tableView: The card's table view
+  ///   - cardView: The card view that got built
+  ///   - headerView: The header view, typically used by `TGPageCard`.
+  open func didBuild(tableView: UITableView, cardView: TGCardView, headerView: TGHeaderView?) {
+  }
+
   override public final func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
     
     defer { super.didBuild(cardView: cardView, headerView: headerView) }
@@ -105,6 +128,7 @@ open class TGTableCard: TGCard {
       let tableView = (cardView as? TGScrollCardView)?.tableView
       else { preconditionFailure() }
 
+    didBuild(tableView: tableView, cardView: cardView, headerView: headerView)
     didBuild(tableView: tableView, headerView: headerView)
 
     (tableView as? TGKeyboardTableView)?.handleMacSelection = handleMacSelection
