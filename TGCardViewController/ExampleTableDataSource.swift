@@ -218,12 +218,17 @@ class ExampleTableDataSource: NSObject {
       return point
   }
   
+  func handleSelection(_ indexPath: IndexPath) {
+    onSelect?(stops[indexPath.row])
+  }
 }
 
 extension ExampleTableDataSource : UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    onSelect?(stops[indexPath.row])
+    #if !targetEnvironment(macCatalyst)
+    handleSelection(indexPath)
+    #endif
   }
   
   func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -237,6 +242,18 @@ extension ExampleTableDataSource : UITableViewDelegate {
         tableView.deleteRows(at: [indexPath], with: .automatic)
       }
     ]
+  }
+  
+  func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+    let provider: ([UIMenuElement]) -> UIMenu? = { existing in
+      let action = UIAction(title: "Delete") { _ in
+        self.stops.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+      }
+      return UIMenu(__title: "", image: nil, identifier: nil, children: [action])
+    }
+    
+    return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: provider)
   }
   
   func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
@@ -260,7 +277,7 @@ extension ExampleTableDataSource : UITableViewDataSource {
     let tableCell = UITableViewCell(style: .default, reuseIdentifier: nil)
     let row = indexPath.row
     tableCell.textLabel?.text = "#\(row): \(stops[row].title!!)"
-    tableCell.contentView.backgroundColor = .clear
+    tableCell.backgroundColor = .clear
     return tableCell
   }
   

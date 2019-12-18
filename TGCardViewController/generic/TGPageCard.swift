@@ -157,7 +157,9 @@ open class TGPageCard: TGCard {
   }
   
   open override func buildHeaderView() -> TGHeaderView? {
-    guard includeHeader else { return nil }
+    guard includeHeader else {
+      return nil
+    }
     
     if let header = headerView {
       return header
@@ -186,6 +188,10 @@ open class TGPageCard: TGCard {
   }
 
   // MARK: - Header actions
+  
+  open override func becomeFirstResponder() -> Bool {
+    return currentCard.becomeFirstResponder()
+  }
   
   fileprivate func update(forCardAtIndex index: Int, animated: Bool = false) {
     guard index < cards.count else {
@@ -301,7 +307,7 @@ extension TGPageCard {
       commands.append(
         UIKeyCommand(
           input: UIKeyCommand.inputLeftArrow, modifierFlags: .control, action: #selector(moveBackward),
-          discoverabilityTitle: NSLocalizedString(
+          maybeDiscoverabilityTitle: NSLocalizedString(
             "Previous card", bundle: .cardVC, comment: "Discovery hint for keyboard shortcuts")
       ))
     }
@@ -309,7 +315,7 @@ extension TGPageCard {
       commands.append(
         UIKeyCommand(
           input: UIKeyCommand.inputRightArrow, modifierFlags: .control, action: #selector(moveForward),
-          discoverabilityTitle: NSLocalizedString(
+          maybeDiscoverabilityTitle: NSLocalizedString(
             "Next card", bundle: .cardVC, comment: "Discovery hint for keyboard shortcuts")
       ))
     }

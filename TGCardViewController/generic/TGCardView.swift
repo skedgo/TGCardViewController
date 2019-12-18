@@ -213,7 +213,12 @@ public class TGCardView: TGCornerView {
   
   func applyStyling(_ style: TGCardStyle) {
     grabHandles.forEach { $0.handleColor = style.grabHandleColor }
+    
+    #if targetEnvironment(macCatalyst)
+    backgroundColor = .clear
+    #else
     backgroundColor = style.backgroundColor
+    #endif
   }
   
   // MARK: - Content view configuration

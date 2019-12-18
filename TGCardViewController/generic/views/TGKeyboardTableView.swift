@@ -9,7 +9,8 @@
 import UIKit
 
 /// A table view that allows navigation and selection using a hardware keyboard.
-/// Only supports a single section.
+///
+/// Adopted from [@douglashill]( https://gist.github.com/douglashill/50728432881ef37e8b49f2a5917f462d).
 class TGKeyboardTableView: UITableView {
 
   // These properties may be set or overridden to provide discoverability titles for key commands.
@@ -22,6 +23,19 @@ class TGKeyboardTableView: UITableView {
   
   private(set) var selectedViaKeyboard: Bool = false
   
+  // Used on Catalyst to intercept taps
+  private let cellSelector = UITapGestureRecognizer()
+  private let cellTapper = UITapGestureRecognizer()
+  
+  var handleMacSelection: (IndexPath) -> Void = { _ in }
+  
+  var clickToHighlightDoubleClickToSelect: Bool = false {
+    didSet {
+      cellSelector.isEnabled = clickToHighlightDoubleClickToSelect
+      cellTapper.numberOfTapsRequired = clickToHighlightDoubleClickToSelect ? 2 : 1
+    }
+  }
+  
   enum Selection {
     case top
     case bottom
@@ -29,6 +43,26 @@ class TGKeyboardTableView: UITableView {
     case previousItem
 //    case nextSection
 //    case previousSection
+  }
+  
+  override init(frame: CGRect, style: UITableView.Style) {
+    super.init(frame: frame, style: style)
+    didInit()
+  }
+  
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
+    didInit()
+  }
+  
+  private func didInit() {
+    #if targetEnvironment(macCatalyst)
+    cellSelector.addTarget(self, action: #selector(handleTapQuickly(_:)))
+    addGestureRecognizer(cellSelector)
+
+    cellTapper.addTarget(self, action: #selector(handleTap(_:)))
+    addGestureRecognizer(cellTapper)
+    #endif
   }
   
   override var canBecomeFirstResponder: Bool {
@@ -72,9 +106,34 @@ class TGKeyboardTableView: UITableView {
     
     return commands
   }
+
+  @objc func handleTapQuickly(_ recogniser: UITapGestureRecognizer) {
+    guard let indexPath = indexPathForRow(at: recogniser.location(in: self)) else { return }
+    
+    switch recogniser.state {
+    case .began, .recognized:
+      cellForRow(at: indexPath)?.setHighlighted(true, animated: false)
+      selectRow(at: indexPath, animated: false, scrollPosition: .none)
+
+    default:
+      break
+    }
+    
+  }
+
+  @objc func handleTap(_ recogniser: UITapGestureRecognizer) {
+    guard let indexPath = indexPathForRow(at: recogniser.location(in: self)) else { return }
+
+    // this allows triggering the actual action
+    handleMacSelection(indexPath)
+
+    // this makes sure it's selected, without jumping back
+    // to the selection from the keyboard
+    selectRow(at: indexPath, animated: false, scrollPosition: .none)
+  }
   
   @objc func selectAbove() {
-    if let oldSelectedIndexPath = indexPathForSelectedRow {
+    if indexPathForSelectedRow != nil {
       selectRow(.previousItem)
     } else {
       selectBottom()
@@ -82,7 +141,7 @@ class TGKeyboardTableView: UITableView {
   }
   
   @objc func selectBelow() {
-    if let oldSelectedIndexPath = indexPathForSelectedRow {
+    if indexPathForSelectedRow != nil {
       selectRow(.nextItem)
     } else {
       selectTop()
@@ -100,7 +159,23 @@ class TGKeyboardTableView: UITableView {
   /// Tries to select and scroll to the row at the given index in section 0.
   /// Does not require the index to be in bounds. Does nothing if out of bounds.
   private func selectRow(_ selection: Selection) {
-    guard numberOfSections > 0, numberOfRows(inSection: 0) > 0 else { return }
+    guard let indexPath = indexPathToSelect(for: selection) else { return }
+    
+    selectedViaKeyboard = true
+    
+    switch cellVisibility(atIndexPath: indexPath) {
+    case .fullyVisible:
+      selectRow(at: indexPath, animated: false, scrollPosition: .none)
+    case .notFullyVisible(let scrollPosition):
+      // Looks better and feel more responsive if the selection updates without animation.
+      selectRow(at: indexPath, animated: false, scrollPosition: .none)
+      scrollToRow(at: indexPath, at: scrollPosition, animated: true)
+      flashScrollIndicators()
+    }
+  }
+  
+  private func indexPathToSelect(for selection: Selection) -> IndexPath? {
+    guard numberOfSections > 0, numberOfRows(inSection: 0) > 0 else { return nil }
 
     var indexPath: IndexPath
     switch selection {
@@ -109,10 +184,10 @@ class TGKeyboardTableView: UITableView {
     case .bottom:
       indexPath = IndexPath(item: -1, section: 0)
     case .nextItem:
-      guard let selection = indexPathForSelectedRow else { return }
+      guard let selection = indexPathForSelectedRow else { return nil }
       indexPath = IndexPath(item: selection.row + 1, section: selection.section)
     case .previousItem:
-      guard let selection = indexPathForSelectedRow else { return }
+      guard let selection = indexPathForSelectedRow else { return nil }
       indexPath = IndexPath(item: selection.row - 1, section: selection.section)
     }
     
@@ -130,18 +205,7 @@ class TGKeyboardTableView: UITableView {
       }
       indexPath.item = 0
     }
-    
-    selectedViaKeyboard = true
-    
-    switch cellVisibility(atIndexPath: indexPath) {
-    case .fullyVisible:
-      selectRow(at: indexPath, animated: false, scrollPosition: .none)
-    case .notFullyVisible(let scrollPosition):
-      // Looks better and feel more responsive if the selection updates without animation.
-      selectRow(at: indexPath, animated: false, scrollPosition: .none)
-      scrollToRow(at: indexPath, at: scrollPosition, animated: true)
-      flashScrollIndicators()
-    }
+    return indexPath
   }
   
   /// Whether a row is fully visible, or if not if it’s above or below the viewport.
@@ -170,20 +234,38 @@ class TGKeyboardTableView: UITableView {
   }
   
   @objc func activateSelection() {
-    guard let indexPathForSelectedRow = indexPathForSelectedRow else {
-      return
-    }
+    guard let indexPathForSelectedRow = indexPathForSelectedRow else { return }
+    
+    #if targetEnvironment(macCatalyst)
+    // We don't call the delegate, as Catalyst itself implements up/down arrow
+    // interaction, overriding ours and it selects in this case already
+    // while navigating through the list by calling the `didSelectRowAt:`
+    // delegate... so we instead call our own method, and leave it to the
+    // caller to implement
+    handleMacSelection(indexPathForSelectedRow)
+    #else
     delegate?.tableView?(self, didSelectRowAt: indexPathForSelectedRow)
+    #endif
   }
 }
 
-private extension UIKeyCommand {
+extension UIKeyCommand {
   convenience init(input: String, modifierFlags: UIKeyModifierFlags, action: Selector,
                    maybeDiscoverabilityTitle: String?) {
-    if let discoverabilityTitle = maybeDiscoverabilityTitle {
-      self.init(input: input, modifierFlags: modifierFlags, action: action, discoverabilityTitle: discoverabilityTitle)
+    if #available(iOS 13.0, *) {
+      self.init(
+        title: "", image: nil,
+        action: action,
+        input: input, modifierFlags: modifierFlags,
+        discoverabilityTitle: maybeDiscoverabilityTitle
+      )
     } else {
-      self.init(input: input, modifierFlags: modifierFlags, action: action)
+      if let discoverabilityTitle = maybeDiscoverabilityTitle {
+        self.init(input: input, modifierFlags: modifierFlags, action: action,
+                  discoverabilityTitle: discoverabilityTitle)
+      } else {
+        self.init(input: input, modifierFlags: modifierFlags, action: action)
+      }
     }
   }
 }

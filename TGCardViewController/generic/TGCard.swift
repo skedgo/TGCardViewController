@@ -32,15 +32,15 @@ open class TGCard: UIResponder, NSCoding {
   /// top of the card
   public enum CardTitle {
     /// Default title consisting of localized title, optional subtitle, optional
-    /// accessory view, and close button
-    case `default`(String, String?, UIView?)
+    /// accessory view
+    case `default`(String, String? = nil, UIView? = nil)
     
     /// A customised title of your choosing. In this case, you can optionally
     /// provide a (reference to a) dismiss button. If you don't provide this,
     /// make sure to add a way to dismiss this card and call `controller?.pop()`
     /// when appropriate. You can use `TGCard.closeButtonImage` if you want to
     /// use the default style.
-    case custom(UIView, dismissButton: UIButton?)
+    case custom(UIView, dismissButton: UIButton? = nil)
     
     /// No title at all. Make sure to call `controller?.pop()`
     /// when appropriate.
@@ -102,6 +102,12 @@ open class TGCard: UIResponder, NSCoding {
   
   /// The position to display the card in, when pushing
   public let initialPosition: TGCardPosition?
+  
+  /// Whether the close button should be visible on the card title
+  ///
+  /// - Warning: Only has an impact if set right after initialisations and before
+  ///   the card is pushed.
+  public var showCloseButton = true
   
   /// The action to execute when floating button is pressed.
   public var floatingButtonAction: (style: FloatingButtonStyle, onPressed: () -> Void)?
