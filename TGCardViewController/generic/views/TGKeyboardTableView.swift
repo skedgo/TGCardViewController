@@ -159,7 +159,23 @@ class TGKeyboardTableView: UITableView {
   /// Tries to select and scroll to the row at the given index in section 0.
   /// Does not require the index to be in bounds. Does nothing if out of bounds.
   private func selectRow(_ selection: Selection) {
-    guard numberOfSections > 0, numberOfRows(inSection: 0) > 0 else { return }
+    guard let indexPath = indexPathToSelect(for: selection) else { return }
+    
+    selectedViaKeyboard = true
+    
+    switch cellVisibility(atIndexPath: indexPath) {
+    case .fullyVisible:
+      selectRow(at: indexPath, animated: false, scrollPosition: .none)
+    case .notFullyVisible(let scrollPosition):
+      // Looks better and feel more responsive if the selection updates without animation.
+      selectRow(at: indexPath, animated: false, scrollPosition: .none)
+      scrollToRow(at: indexPath, at: scrollPosition, animated: true)
+      flashScrollIndicators()
+    }
+  }
+  
+  private func indexPathToSelect(for selection: Selection) -> IndexPath? {
+    guard numberOfSections > 0, numberOfRows(inSection: 0) > 0 else { return nil }
 
     var indexPath: IndexPath
     switch selection {
@@ -168,10 +184,10 @@ class TGKeyboardTableView: UITableView {
     case .bottom:
       indexPath = IndexPath(item: -1, section: 0)
     case .nextItem:
-      guard let selection = indexPathForSelectedRow else { return }
+      guard let selection = indexPathForSelectedRow else { return nil }
       indexPath = IndexPath(item: selection.row + 1, section: selection.section)
     case .previousItem:
-      guard let selection = indexPathForSelectedRow else { return }
+      guard let selection = indexPathForSelectedRow else { return nil }
       indexPath = IndexPath(item: selection.row - 1, section: selection.section)
     }
     
@@ -189,18 +205,7 @@ class TGKeyboardTableView: UITableView {
       }
       indexPath.item = 0
     }
-    
-    selectedViaKeyboard = true
-    
-    switch cellVisibility(atIndexPath: indexPath) {
-    case .fullyVisible:
-      selectRow(at: indexPath, animated: false, scrollPosition: .none)
-    case .notFullyVisible(let scrollPosition):
-      // Looks better and feel more responsive if the selection updates without animation.
-      selectRow(at: indexPath, animated: false, scrollPosition: .none)
-      scrollToRow(at: indexPath, at: scrollPosition, animated: true)
-      flashScrollIndicators()
-    }
+    return indexPath
   }
   
   /// Whether a row is fully visible, or if not if it’s above or below the viewport.
