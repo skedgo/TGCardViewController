@@ -24,9 +24,17 @@ class TGKeyboardTableView: UITableView {
   private(set) var selectedViaKeyboard: Bool = false
   
   // Used on Catalyst to intercept taps
+  private let cellSelector = UITapGestureRecognizer()
   private let cellTapper = UITapGestureRecognizer()
   
   var handleMacSelection: (IndexPath) -> Void = { _ in }
+  
+  var clickToHighlightDoubleClickToSelect: Bool = false {
+    didSet {
+      cellSelector.isEnabled = clickToHighlightDoubleClickToSelect
+      cellTapper.numberOfTapsRequired = clickToHighlightDoubleClickToSelect ? 2 : 1
+    }
+  }
   
   enum Selection {
     case top
@@ -49,6 +57,9 @@ class TGKeyboardTableView: UITableView {
   
   private func didInit() {
     #if targetEnvironment(macCatalyst)
+    cellSelector.addTarget(self, action: #selector(handleTapQuickly(_:)))
+    addGestureRecognizer(cellSelector)
+
     cellTapper.addTarget(self, action: #selector(handleTap(_:)))
     addGestureRecognizer(cellTapper)
     #endif
@@ -95,13 +106,27 @@ class TGKeyboardTableView: UITableView {
     
     return commands
   }
-  
-  @objc func handleTap(_ recogniser: UITapGestureRecognizer) {
+
+  @objc func handleTapQuickly(_ recogniser: UITapGestureRecognizer) {
     guard let indexPath = indexPathForRow(at: recogniser.location(in: self)) else { return }
     
+    switch recogniser.state {
+    case .began, .recognized:
+      cellForRow(at: indexPath)?.setHighlighted(true, animated: false)
+      selectRow(at: indexPath, animated: false, scrollPosition: .none)
+
+    default:
+      break
+    }
+    
+  }
+
+  @objc func handleTap(_ recogniser: UITapGestureRecognizer) {
+    guard let indexPath = indexPathForRow(at: recogniser.location(in: self)) else { return }
+
     // this allows triggering the actual action
     handleMacSelection(indexPath)
-    
+
     // this makes sure it's selected, without jumping back
     // to the selection from the keyboard
     selectRow(at: indexPath, animated: false, scrollPosition: .none)

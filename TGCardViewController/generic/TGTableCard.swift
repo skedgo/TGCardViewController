@@ -47,7 +47,14 @@ open class TGTableCard: TGCard {
   ///
   /// - warning: Use this rather than the `UITableViewDelegate` selection method as that's called
   ///    while the user is still navigating via keyboard.
+  ///
+  /// - warning: Set this before returning from your `didBuild` override.
   public var handleMacSelection: (IndexPath) -> Void = { _ in }
+  
+  /// Special setting for Mac
+  ///
+  /// - warning: Set this before returning from your `didBuild` override.
+  public var clickToHighlightDoubleClickToSelect: Bool = false
   
   // MARK: - Initialisers
   
@@ -98,7 +105,8 @@ open class TGTableCard: TGCard {
   ///
   /// Think of this as an equivalent of `UIViewController.viewDidLoad`
   ///
-  /// - note: You probably only want to override one of the `didBuild`, but both will be called. Whichever you implement, remember to call `super`.
+  /// - note: You probably only want to override one of the `didBuild`, but both will be called.
+  ///         Whichever you implement, remember to call `super`.
   ///
   /// - Parameters:
   ///   - tableView: The card's table view
@@ -110,8 +118,8 @@ open class TGTableCard: TGCard {
   ///
   /// Think of this as an equivalent of `UIViewController.viewDidLoad`
   ///
-  /// - note: You probably only want to override one of the `didBuild`, but both will be called. Whichever you implement, remember to call `super`.
-  ///
+  /// - note: You probably only want to override one of the `didBuild`, but both will be called.
+  ///         Whichever you implement, remember to call `super`.
   ///
   /// - Parameters:
   ///   - tableView: The card's table view
@@ -131,7 +139,10 @@ open class TGTableCard: TGCard {
     didBuild(tableView: tableView, cardView: cardView, headerView: headerView)
     didBuild(tableView: tableView, headerView: headerView)
 
-    (tableView as? TGKeyboardTableView)?.handleMacSelection = handleMacSelection
+    if let keyboardTable = tableView as? TGKeyboardTableView {
+      keyboardTable.handleMacSelection = handleMacSelection
+      keyboardTable.clickToHighlightDoubleClickToSelect = clickToHighlightDoubleClickToSelect
+    }
   }
 
   open override func didAppear(animated: Bool) {
