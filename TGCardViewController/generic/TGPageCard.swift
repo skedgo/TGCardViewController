@@ -157,7 +157,9 @@ open class TGPageCard: TGCard {
   }
   
   open override func buildHeaderView() -> TGHeaderView? {
-    guard includeHeader else { return nil }
+    guard includeHeader else {
+      return nil
+    }
     
     if let header = headerView {
       return header
@@ -186,6 +188,10 @@ open class TGPageCard: TGCard {
   }
 
   // MARK: - Header actions
+  
+  open override func becomeFirstResponder() -> Bool {
+    return currentCard.becomeFirstResponder()
+  }
   
   fileprivate func update(forCardAtIndex index: Int, animated: Bool = false) {
     guard index < cards.count else {
