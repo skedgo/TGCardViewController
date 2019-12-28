@@ -532,7 +532,10 @@ open class TGCardViewController: UIViewController {
   
   // MARK: - Card positioning
   
-  fileprivate var cardPosition: TGCardPosition {
+  /// The current card position, inferred from the current drag position of the card
+  public var cardPosition: TGCardPosition {
+    guard mode == .floating else { return .extended }
+    
     let cardY = cardWrapperDesiredTopConstraint.constant
     
     switch (cardY, traitCollection.verticalSizeClass) {
@@ -937,8 +940,17 @@ extension TGCardViewController {
     
     // 4. Determine and set new position of the card wrapper
     newTop?.view.alpha = 1
-    let animateTo = cardLocation(forDesired: newTop?.position, direction: .down)
-    cardWrapperDesiredTopConstraint.constant = animateTo.y
+
+    // We only animate to the previous position if the card obscures the map
+    let animateTo: TGCardPosition
+    let forceExtended = newTop?.card.mapManager == nil
+    if forceExtended || !cardIsNextToMap(in: traitCollection) {
+      let target = cardLocation(forDesired: forceExtended ? .extended : newTop?.position, direction: .down)
+      cardWrapperDesiredTopConstraint.constant = target.y
+      animateTo = target.position
+    } else {
+      animateTo = cardPosition
+    }
     if let new = newTop {
       cardWrapperMinOverlapTopConstraint.constant = new.view.headerHeight(for: new.position)
     } else {
@@ -979,10 +991,10 @@ extension TGCardViewController {
     }
     
     let cardAnimations = {
-      self.updateMapShadow(for: animateTo.position)
+      self.updateMapShadow(for: animateTo)
       topView.frame.origin.y = self.cardWrapperContent.frame.maxY
       self.cardTransitionShadow?.alpha = 0
-      newTop?.view.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
+      newTop?.view.adjustContentAlpha(to: animateTo == .collapsed ? 0 : 1)
     }
     
     if mode != .floating {
@@ -1004,18 +1016,18 @@ extension TGCardViewController {
         }
       },
       completion: { _ in
-        self.updateCardScrolling(allow: animateTo.position == .extended, view: newTop?.view)
+        self.updateCardScrolling(allow: animateTo == .extended, view: newTop?.view)
         currentTopCard.controller = nil
         if notify {
           currentTopCard.didDisappear(animated: animated)
           newTop?.card.didAppear(animated: animated)
-          newTop?.card.didMove(to: animateTo.position, animated: animated)
+          newTop?.card.didMove(to: animateTo, animated: animated)
         }
         // This line did crash in Adrian's simulator but only happens rarely; when?!?
         topView.removeFromSuperview()
         topView.alpha = 1
         self.cardTransitionShadow?.removeFromSuperview()
-        self.updateCardHandleAccessibility(for: animateTo.position)
+        self.updateCardHandleAccessibility(for: animateTo)
         self.updateResponderChainForNewTopCard()
         completionHandler?()
       }

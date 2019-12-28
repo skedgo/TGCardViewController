@@ -245,13 +245,18 @@ extension MKMapView {
     let unadjustedCenter = centerCoordinate
     
     // New map view center, will be the desired coordinate, plus the offset
-    // Note: Won't work well if this is on a different part of the planet
+    // Note: Won't work well if this is on a different part of the planet,
+    //       which is why we double check for validate coordinates below.
     let newCenter = CLLocationCoordinate2D(
       latitude: coordinate.latitude + (unadjustedCenter.latitude - visibleCenter.latitude) / 2,
       longitude: coordinate.longitude + (unadjustedCenter.longitude - visibleCenter.longitude) / 2
     )
-
-    setCenter(newCenter, animated: animated)
+    
+    if CLLocationCoordinate2DIsValid(newCenter) {
+      setCenter(newCenter, animated: animated)
+    } else {
+      setCenter(coordinate, animated: animated)
+    }
   }
   
 }

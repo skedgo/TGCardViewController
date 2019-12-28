@@ -244,6 +244,7 @@ extension ExampleTableDataSource : UITableViewDelegate {
     ]
   }
   
+  @available(iOS 13.0, *)
   func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
     let provider: ([UIMenuElement]) -> UIMenu? = { existing in
       let action = UIAction(title: "Delete") { _ in
