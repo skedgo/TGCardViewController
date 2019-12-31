@@ -87,14 +87,15 @@ open class TGPageCard: TGCard {
       "unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck " +
       "in 'extended' mode.")
     
+    let actualInitialPage = min(initialPage, cards.count - 1)
     self.cards = cards
-    self.initialPageIndex = min(initialPage, cards.count - 1)
+    self.initialPageIndex = actualInitialPage
     self.includeHeader = includeHeader
 
     // TGPageCard itself doesn't have a map manager. Instead, it passes through
     // the manager that handles the map view for the current card. This is
     // set on intialising and then updated whenever we scroll.
-    let mapManager = cards[initialPage].mapManager
+    let mapManager = cards[actualInitialPage].mapManager
     
     super.init(title: .none, mapManager: mapManager, initialPosition: initialPosition)
 
