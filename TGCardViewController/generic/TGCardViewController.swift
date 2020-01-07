@@ -1371,8 +1371,9 @@ extension TGCardViewController {
       delay: 0,
       options: [.curveEaseOut],
       animations: {
-        self.topCardView?.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
         self.updateMapShadow(for: animateTo.position)
+        self.topCardView?.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
+        self.updateFloatingViewsVisibility(for: animateTo.position)
         self.view.layoutIfNeeded()
     },
       completion: { _ in
