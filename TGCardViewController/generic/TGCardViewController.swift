@@ -345,11 +345,18 @@ open class TGCardViewController: UIViewController {
     // rests on the screen.
     let distanceFromHeaderView: CGFloat
     
+    // See here: https://redmine.buzzhives.com/issues/12299
+    // for why this is done.
+    var position: TGCardPosition? = nil
+    if let top = cards.last {
+      position = top.lastPosition
+    }
+    
     // We may present another view over it and when that view is
     // dismissed, this gets called again, so we check where the
     // card currently sits to ensure UI is consistent before and
     // after the view presentation.
-    switch (mode, cardPosition) {
+    switch (mode, position ?? cardPosition) {
     case (.sidebar, _):    distanceFromHeaderView = 0
     case (_, .collapsed):  distanceFromHeaderView = collapsedMinY
     case (_, .peaking):    distanceFromHeaderView = peakY
