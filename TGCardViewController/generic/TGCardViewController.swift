@@ -302,10 +302,6 @@ open class TGCardViewController: UIViewController {
     }
     
     monitorVoiceOverStatus()
-
-    if let root = rootCard {
-      push(root, animated: false)
-    }
   }
   
   private func setupGestures() {
@@ -340,22 +336,24 @@ open class TGCardViewController: UIViewController {
   override open func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    // This is the distance from the top edge of the card to the
-    // bottom of the header view and determines where the card
-    // rests on the screen.
-    let distanceFromHeaderView: CGFloat
-    
-    // We may present another view over it and when that view is
-    // dismissed, this gets called again, so we check where the
-    // card currently sits to ensure UI is consistent before and
-    // after the view presentation.
-    switch (mode, cardPosition) {
-    case (.sidebar, _):    distanceFromHeaderView = 0
-    case (_, .collapsed):  distanceFromHeaderView = collapsedMinY
-    case (_, .peaking):    distanceFromHeaderView = peakY
-    case (_, .extended):   distanceFromHeaderView = extendedMinY
+    if view.superview != nil {
+      // This is the distance from the top edge of the card to the
+      // bottom of the header view and determines where the card
+      // rests on the screen.
+      let distanceFromHeaderView: CGFloat
+      
+      // We may present another view over it and when that view is
+      // dismissed, this gets called again, so we check where the
+      // card currently sits to ensure UI is consistent before and
+      // after the view presentation.
+      switch (mode, cardPosition) {
+      case (.sidebar, _):    distanceFromHeaderView = 0
+      case (_, .collapsed):  distanceFromHeaderView = collapsedMinY
+      case (_, .peaking):    distanceFromHeaderView = peakY
+      case (_, .extended):   distanceFromHeaderView = extendedMinY
+      }
+      cardWrapperDesiredTopConstraint.constant = distanceFromHeaderView
     }
-    cardWrapperDesiredTopConstraint.constant = distanceFromHeaderView
     
     // Now is the time to restore
     if let position = restoredCardPosition {
@@ -443,7 +441,13 @@ open class TGCardViewController: UIViewController {
   
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-    fixPositioning()
+    if view.superview != nil {
+      if cards.isEmpty, let root = rootCard {
+        push(root, animated: false)
+      }
+      
+      fixPositioning()
+    }
   }
   
   private func fixPositioning() {
