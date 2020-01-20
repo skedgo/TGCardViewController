@@ -1354,11 +1354,11 @@ extension TGCardViewController {
   /// - Parameters:
   ///   - position: Desired position
   ///   - animated: If transition should be animated
-  public func moveCard(to position: TGCardPosition, animated: Bool) {
-    switchTo(position, direction: .up, animated: animated)
+  public func moveCard(to position: TGCardPosition, animated: Bool, onCompletion handler: (() -> Void)? = nil) {
+    switchTo(position, direction: .up, animated: animated, onCompletion: handler)
   }
   
-  fileprivate func switchTo(_ position: TGCardPosition, direction: Direction, animated: Bool) {
+  fileprivate func switchTo(_ position: TGCardPosition, direction: Direction, animated: Bool, onCompletion handler: (() -> Void)? = nil) {
     guard mode == .floating else {
       cardWrapperDesiredTopConstraint.constant = 0
       view.setNeedsUpdateConstraints()
@@ -1386,6 +1386,7 @@ extension TGCardViewController {
         self.updateCardScrolling(allow: animateTo.position == .extended, view: self.topCardView)
         self.previousCardPosition = animateTo.position
         self.updateCardHandleAccessibility(for: animateTo.position)
+        handler?()
     })
   }
   
