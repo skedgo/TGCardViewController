@@ -91,8 +91,6 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
       tracker.mapView?.userTrackingMode = .follow
       return
     }
-
-    CLLocationManager().requestWhenInUseAuthorization()
     
     askForLocationPermissions? { success in
       guard success else { return }
