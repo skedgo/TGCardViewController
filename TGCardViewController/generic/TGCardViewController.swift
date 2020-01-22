@@ -1354,6 +1354,7 @@ extension TGCardViewController {
   /// - Parameters:
   ///   - position: Desired position
   ///   - animated: If transition should be animated
+  ///   - handler: Closure to execute when the move is completed
   public func moveCard(to position: TGCardPosition, animated: Bool, onCompletion handler: (() -> Void)? = nil) {
     switchTo(position, direction: .up, animated: animated, onCompletion: handler)
   }
