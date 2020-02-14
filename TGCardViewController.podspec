@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
     controller - or a combination thereof.
                    DESC
 
-  s.homepage     = "https://gitlab.com/SkedGo/tripgo-cards-ios"
+  s.homepage     = "https://gitlab.com/SkedGo/iOS/tripgo-cards-ios"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
