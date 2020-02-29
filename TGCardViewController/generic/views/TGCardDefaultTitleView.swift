@@ -81,8 +81,17 @@ class TGCardDefaultTitleView: UIView {
       setNeedsLayout()
     }
   }
-  
-  func configure(title: String, subtitle: String?, style: TGCardStyle) {
+
+  func prepare(title: String, subtitle: String?, style: TGCardStyle) {
+    configure(title: title, subtitle: subtitle, style: style, isInitial: true)
+  }
+
+
+  func update(title: String, subtitle: String?, style: TGCardStyle) {
+    configure(title: title, subtitle: subtitle, style: style, isInitial: false)
+  }
+
+  private func configure(title: String, subtitle: String?, style: TGCardStyle, isInitial: Bool) {
     titleLabel.text = title
     titleLabel.font = style.titleFont
     titleLabel.textColor = style.titleTextColor
@@ -91,13 +100,15 @@ class TGCardDefaultTitleView: UIView {
     subtitleLabel.font = style.subtitleFont
     subtitleLabel.textColor = style.subtitleTextColor
     
-    dismissButton.isHidden = false    
-    let closeButtonImage = TGCardStyleKit.imageOfCardCloseIcon(
-      closeButtonBackground: style.closeButtonBackgroundColor,
-      closeButtonCross: style.closeButtonCrossColor
-    )
-    dismissButton.setImage(closeButtonImage, for: .normal)
-    dismissButton.setTitle(nil, for: .normal)
+    if isInitial {
+      dismissButton.isHidden = false
+      let closeButtonImage = TGCardStyleKit.imageOfCardCloseIcon(
+        closeButtonBackground: style.closeButtonBackgroundColor,
+        closeButtonCross: style.closeButtonCrossColor
+      )
+      dismissButton.setImage(closeButtonImage, for: .normal)
+      dismissButton.setTitle(nil, for: .normal)
+    }
   }
   
 }

@@ -99,7 +99,7 @@ public class TGCardView: TGCornerView {
   ///   - subtitle: New subtitle (optional)
   public func updateDefaultTitle(title: String, subtitle: String?) {
     guard let defaultView = titleView as? TGCardDefaultTitleView else { return }    
-    defaultView.configure(title: title, subtitle: subtitle, style: owningCard?.style ?? .default)
+    defaultView.update(title: title, subtitle: subtitle, style: owningCard?.style ?? .default)
   }
   
   func updateDismissButton(show: Bool, isSpringLoaded: Bool) {
@@ -123,7 +123,7 @@ public class TGCardView: TGCornerView {
       switch card.title {
       case .default(let title, let subtitle, let accessoryView):
         let defaultTitleView = TGCardDefaultTitleView.newInstance()
-        defaultTitleView.configure(title: title, subtitle: subtitle, style: card.style)
+        defaultTitleView.prepare(title: title, subtitle: subtitle, style: card.style)
         defaultTitleView.accessoryView = accessoryView
         titleView = defaultTitleView
         
