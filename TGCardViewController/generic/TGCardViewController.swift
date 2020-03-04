@@ -178,6 +178,7 @@ open class TGCardViewController: UIViewController {
   var panner: UIPanGestureRecognizer!
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
+  var edgePanner: UIScreenEdgePanGestureRecognizer!
   
   /// Builder that determines what kind of map to use. The builder's
   /// `buildMapView()` method will be once initially, and the map instance will
@@ -225,6 +226,9 @@ open class TGCardViewController: UIViewController {
   private var isDraggingCard = false
   
   fileprivate var isVisible = false
+  
+  /// To stop popping too quickly which messes things up
+  private var isPopping = false
   
   fileprivate var previousCardPosition: TGCardPosition?
   
@@ -331,6 +335,14 @@ open class TGCardViewController: UIViewController {
     mapTapper.isEnabled = mode == .floating
     mapShadow.addGestureRecognizer(mapTapper)
     self.mapShadowTapper = mapTapper
+    
+    // Edge panning to go back
+    let edgePanner = UIScreenEdgePanGestureRecognizer()
+    edgePanner.addTarget(self, action: #selector(popMaybe))
+    edgePanner.isEnabled = mode == .floating
+    edgePanner.edges = .left
+    view.addGestureRecognizer(edgePanner)
+    self.edgePanner = edgePanner
   }
   
   override open func viewWillAppear(_ animated: Bool) {
@@ -900,6 +912,13 @@ extension TGCardViewController {
     return (cards[index].card, cards[index].lastPosition, views[index])
   }
   
+  @objc @discardableResult
+  func popMaybe() -> Bool {
+    guard let top = topCard, top != rootCard else { return false }
+    pop()
+    return true
+  }
+  
   // swiftlint:disable function_body_length
   @objc
   public func pop(animated: Bool = true, completionHandler: (() -> Void)? = nil) {
@@ -909,11 +928,11 @@ extension TGCardViewController {
       return
     }
     
-    guard let currentTopCard = topCard, let topView = topCardView else {
-      print("Nothing to pop")
+    guard let currentTopCard = topCard, let topView = topCardView, !isPopping else {
       return
     }
 
+    isPopping = true
     let newTop = cardWithView(atIndex: cards.count - 2)
     
     // 1. Updating card logic and informing of transitions
@@ -1033,6 +1052,7 @@ extension TGCardViewController {
         self.cardTransitionShadow?.removeFromSuperview()
         self.updateCardHandleAccessibility(for: animateTo)
         self.updateResponderChainForNewTopCard()
+        self.isPopping = false
         completionHandler?()
       }
     )
@@ -1824,9 +1844,7 @@ extension TGCardViewController: TGCardDelegate {
 extension TGCardViewController {
   
   override open func accessibilityPerformEscape() -> Bool {
-    guard let top = topCard, top != rootCard else { return false }
-    pop()
-    return true
+    return popMaybe()
   }
   
   private func monitorVoiceOverStatus() {
