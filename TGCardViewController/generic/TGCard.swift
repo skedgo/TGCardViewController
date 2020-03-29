@@ -235,8 +235,9 @@ open class TGCard: UIResponder, NSCoding {
   ///     Don't call `didBuild`. No need to set `cardView` when done.
   ///
   /// - Returns: Card view configured with the content of this card
-  open func buildCardView() -> TGCardView {
-    preconditionFailure("Override this in subclasses, but don't call super to `TGCard`.")
+  open func buildCardView() -> TGCardView? {
+    assertionFailure("Override this in subclasses, but don't call super to `TGCard`.")
+    return nil
   }
   
   /// Called when the views have been built the first time
@@ -246,7 +247,7 @@ open class TGCard: UIResponder, NSCoding {
   /// - Parameters:
   ///   - cardView: The card view that got built
   ///   - headerView: The header view, typically used by `TGPageCard`.
-  open func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+  open func didBuild(cardView: TGCardView?, headerView: TGHeaderView?) {
   }
   
   /// The card view. Gets set before `didBuild` is called
