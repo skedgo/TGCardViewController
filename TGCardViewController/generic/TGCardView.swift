@@ -8,6 +8,12 @@
 
 import UIKit
 
+public protocol TGCardInteractiveCardTitle: UIView {
+  
+  func interactiveFrame(relativeTo view: UIView) -> CGRect?
+  
+}
+
 /// The view for the card itself.
 ///
 /// Cannot be subclassed, by usually used to programatically update the
@@ -171,6 +177,15 @@ public class TGCardView: TGCornerView {
     } else {
       return nil
     }
+  }
+  
+  func interactiveTitleContains(_ point: CGPoint) -> Bool {
+    guard
+      let titlePlaceholder = titleViewPlaceholder,
+      let interactiveTitle = titlePlaceholder.subviews.first as? TGCardInteractiveCardTitle,
+      let interactiveFrame = interactiveTitle.interactiveFrame(relativeTo: self)
+      else { return false }
+    return interactiveFrame.contains(point)
   }
   
   func headerHeight(for position: TGCardPosition) -> CGFloat {
