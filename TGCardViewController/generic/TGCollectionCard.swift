@@ -66,7 +66,7 @@ open class TGCollectionCard: TGCard {
   open func didBuild(collectionView: UICollectionView, headerView: TGHeaderView?) {
   }
   
-  override public final func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+  override public final func didBuild(cardView: TGCardView?, headerView: TGHeaderView?) {
     
     defer { super.didBuild(cardView: cardView, headerView: headerView) }
     
@@ -79,7 +79,7 @@ open class TGCollectionCard: TGCard {
 
   // MARK: - Constructing views
   
-  open override func buildCardView() -> TGCardView {
+  open override func buildCardView() -> TGCardView? {
     let view = TGScrollCardView.instantiate()
     view.configure(with: self)
     return view

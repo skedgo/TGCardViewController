@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -48,10 +48,10 @@
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XA2-1g-kYz" userLabel="Content View">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <subviews>
-                        <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7">
+                        <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7" userLabel="Map View Wrapper">
                             <rect key="frame" x="0.0" y="44" width="320" height="524"/>
                         </view>
-                        <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="45" placeholderIntrinsicHeight="91" translatesAutoresizingMaskIntoConstraints="NO" id="DJJ-p5-rXz">
+                        <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="45" placeholderIntrinsicHeight="91" translatesAutoresizingMaskIntoConstraints="NO" id="DJJ-p5-rXz" userLabel="Top Floating View Wrapper">
                             <rect key="frame" x="267" y="28" width="45" height="91"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="3Nr-Q0-9p1">
                                 <rect key="frame" x="0.0" y="0.0" width="45" height="91"/>
@@ -99,7 +99,7 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </visualEffectView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zlR-ey-yL8">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zlR-ey-yL8" userLabel="Sidebar Background">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             <subviews>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IEW-xx-P4c">
@@ -111,7 +111,7 @@
                                             <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EWh-dP-38F">
                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="440"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="PaT-N6-scp">
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="PaT-N6-scp">
                                                     <rect key="frame" x="0.0" y="0.0" width="80" height="440"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </view>
@@ -143,7 +143,7 @@
                                 <constraint firstAttribute="trailing" secondItem="IEW-xx-P4c" secondAttribute="trailing" id="oR5-0D-YIT"/>
                             </constraints>
                         </view>
-                        <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1uG-yl-0le">
+                        <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1uG-yl-0le" userLabel="Map Shadow">
                             <rect key="frame" x="0.0" y="44" width="320" height="524"/>
                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
@@ -153,7 +153,7 @@
                                 <constraint firstAttribute="height" constant="60" id="dMP-Sd-KN9"/>
                             </constraints>
                         </view>
-                        <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="91" placeholderIntrinsicHeight="45" translatesAutoresizingMaskIntoConstraints="NO" id="u6M-z2-2xb">
+                        <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="91" placeholderIntrinsicHeight="45" translatesAutoresizingMaskIntoConstraints="NO" id="u6M-z2-2xb" userLabel="Bottom Floating View Wrapper">
                             <rect key="frame" x="221" y="415" width="91" height="45"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="qM8-dd-KXi">
                                 <rect key="frame" x="0.0" y="0.0" width="91" height="45"/>
@@ -273,8 +273,8 @@
                         <mask key="constraints">
                             <exclude reference="iRG-l2-Ubl"/>
                             <exclude reference="0es-h4-clN"/>
-                            <exclude reference="52A-gC-vvw"/>
                             <exclude reference="Xw1-VR-Evc"/>
+                            <exclude reference="52A-gC-vvw"/>
                             <exclude reference="4dC-NG-76m"/>
                         </mask>
                     </variation>
@@ -318,7 +318,7 @@
                             <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RYd-EA-KGp">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" id="hBs-pu-lyI">
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="hBs-pu-lyI">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>

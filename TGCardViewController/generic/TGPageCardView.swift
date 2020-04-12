@@ -111,7 +111,9 @@ class TGPageCardView: TGCardView {
     // See: https://gitlab.com/SkedGo/tripgo-cards-ios/issues/3
     
     let contents = pageCard.cards.map { card -> UIView in
-      let view = card.buildCardView()
+      guard let view = card.buildCardView() else {
+        preconditionFailure("Can only include cards in a page view that have a card!")
+      }
       view.applyStyling(pageCard.style)
 
       card.cardView = view

@@ -13,6 +13,7 @@
 		3A462B5C2074C64400AF41EF /* TGButtonPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A462B5B2074C64400AF41EF /* TGButtonPosition.swift */; };
 		3A59798B1E7955FE0065A5FF /* ExampleTableChildCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */; };
 		3A5C8EDB21143F4B00A7EA38 /* NSCoder+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5C8EDA21143F4B00A7EA38 /* NSCoder+Helpers.swift */; };
+		3A640A49243033DE00ECEFF7 /* TGNoCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A640A48243033DE00ECEFF7 /* TGNoCard.swift */; };
 		3A65B90E22F43876001ACDEB /* TGCardArrowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A65B90D22F43876001ACDEB /* TGCardArrowButton.swift */; };
 		3A6BBD86232A386100D87E99 /* TGCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6BBD85232A386100D87E99 /* TGCardStyle.swift */; };
 		3A73E6BB20793E3A00DA6A15 /* TGCompatibleMapBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A73E6BA20793E3A00DA6A15 /* TGCompatibleMapBuilder.swift */; };
@@ -113,6 +114,7 @@
 		3A59798A1E7955FE0065A5FF /* ExampleTableChildCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleTableChildCard.swift; sourceTree = "<group>"; };
 		3A59798C1E79DA530065A5FF /* TGCardPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCardPosition.swift; path = generic/TGCardPosition.swift; sourceTree = "<group>"; };
 		3A5C8EDA21143F4B00A7EA38 /* NSCoder+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "NSCoder+Helpers.swift"; path = "generic/NSCoder+Helpers.swift"; sourceTree = "<group>"; };
+		3A640A48243033DE00ECEFF7 /* TGNoCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TGNoCard.swift; path = generic/TGNoCard.swift; sourceTree = "<group>"; };
 		3A65B90D22F43876001ACDEB /* TGCardArrowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TGCardArrowButton.swift; sourceTree = "<group>"; };
 		3A6BBD85232A386100D87E99 /* TGCardStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCardStyle.swift; path = generic/TGCardStyle.swift; sourceTree = "<group>"; };
 		3A73E6BA20793E3A00DA6A15 /* TGCompatibleMapBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TGCompatibleMapBuilder.swift; path = generic/TGCompatibleMapBuilder.swift; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 				3ACA74B41E717C2F00408678 /* TGCardView.swift */,
 				3A73E6D4207B8A1C00DA6A15 /* TGCollectionCard.swift */,
 				3A73E6D2207B787900DA6A15 /* TGHeaderView.swift */,
+				3A640A48243033DE00ECEFF7 /* TGNoCard.swift */,
 				D363B0131E7CECDA0031EAD1 /* TGPageCard.swift */,
 				D363B0111E7CEC300031EAD1 /* TGPageCardView.swift */,
 				D363B00F1E7CEAC30031EAD1 /* TGPageCardView.xib */,
@@ -560,6 +563,7 @@
 				3A23BA04228377C4004F959D /* TGKeyboardTableView.swift in Sources */,
 				3A7C34B3201F2C9100F66A35 /* TGCard.swift in Sources */,
 				3A7C34A9201F2C8D00F66A35 /* TGCornerView.swift in Sources */,
+				3A640A49243033DE00ECEFF7 /* TGNoCard.swift in Sources */,
 				3A9913D022A7BF1F00B74FCC /* NSBundle+Helpers.swift in Sources */,
 				3A5C8EDB21143F4B00A7EA38 /* NSCoder+Helpers.swift in Sources */,
 				3A7C34B8201F2C9100F66A35 /* TGPageCardView.swift in Sources */,
