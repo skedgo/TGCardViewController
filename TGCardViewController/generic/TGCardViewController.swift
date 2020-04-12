@@ -191,6 +191,8 @@ open class TGCardViewController: UIViewController {
   /// The card to display at the root.
   public var rootCard: TGCard?
   
+  private var didAddRoot = false
+  
   /// The style that's applied to the cards' top and bottom map tool
   /// bar itms.
   ///
@@ -453,9 +455,11 @@ open class TGCardViewController: UIViewController {
   
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
+    
     if view.superview != nil {
-      if cards.isEmpty, let root = rootCard {
+      if !didAddRoot, let root = rootCard {
         push(root, animated: false)
+        didAddRoot = true
       }
       
       fixPositioning()
@@ -928,8 +932,7 @@ extension TGCardViewController {
   // swiftlint:enable cyclomatic_complexity
 
   fileprivate func cardWithView(atIndex index: Int)
-    -> (card: TGCard, lastPosition: TGCardPosition, view: TGCardView?)?
-  {
+    -> (card: TGCard, lastPosition: TGCardPosition, view: TGCardView?)? {
     let cards = self.cards
     guard index >= 0, index < cards.count else { return nil }
     return cards[index]
@@ -1118,6 +1121,7 @@ extension TGCardViewController {
       
       // Kill the card below
       let poppeeIndex = self.cards.count - 2
+      assert(poppeeIndex >= 0)
       self.cards[poppeeIndex].view?.removeFromSuperview()
       self.cards.remove(at: poppeeIndex)
     }
