@@ -44,6 +44,10 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
       }
     }
     
+    if #available(iOS 13.4, *) {
+      background.addInteraction(UIPointerInteraction())
+    }
+    
     return background
   }
 
@@ -75,6 +79,10 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
       background.addGestureRecognizer(tapper)
     }
     
+    if #available(iOS 13.4, *) {
+      background.addInteraction(UIPointerInteraction())
+    }
+    
     return background
   }
   
@@ -97,7 +105,6 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
       Self.updateTracker(tracker, enabled: true)
       tracker.mapView?.userTrackingMode = .follow
     }
-    
   }
   
   @available(iOS 11.0, *)
