@@ -1098,7 +1098,7 @@ extension TGCardViewController {
   ///   - newCard: The new card to present
   ///   - animated: Whether the swap can be animated. Will only be animated if
   ///       the new's card position is different from the current card position.
-  public func swap(for newCard: TGCard, animated: Bool = true) {
+  public func swap(for newCard: TGCard, animated: Bool = true, onCompletion handler: (() -> Void)? = nil) {
     guard cards.count > 0 else {
       assertionFailure("Trying to swap, but there's no top card. Did you mean to `push`?")
       return
@@ -1116,7 +1116,6 @@ extension TGCardViewController {
     
     // Push as normal, will also tell card below that it'll disappear
     push(newCard, animated: animatePush) {
-
       self.previousCardPosition = previous
       
       // Kill the card below
@@ -1124,8 +1123,9 @@ extension TGCardViewController {
       assert(poppeeIndex >= 0)
       self.cards[poppeeIndex].view?.removeFromSuperview()
       self.cards.remove(at: poppeeIndex)
-    }
-    
+      
+      handler?()
+    }    
   }
   
   @objc
