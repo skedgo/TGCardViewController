@@ -188,10 +188,16 @@ open class TGCardViewController: UIViewController {
   /// @default: An instance of `TGMapKitBuilder`, i.e., using Apple's MapKit.
   public var builder: TGCompatibleMapBuilder = TGMapKitBuilder()
   
-  /// The card to display at the root.
-  public var rootCard: TGCard?
+  /// The card to display at the root. If you have more than one, use `initialCards`
+  public var rootCard: TGCard? {
+    get { initialCards.first }
+    set { initialCards = [newValue].compactMap { $0 } }
+  }
+
+  /// The initial card stack to display
+  public var initialCards: [TGCard] = []
   
-  private var didAddRoot = false
+  private var didAddInitialCards = false
   
   /// The style that's applied to the cards' top and bottom map tool
   /// bar itms.
@@ -457,9 +463,9 @@ open class TGCardViewController: UIViewController {
     super.viewDidLayoutSubviews()
     
     if view.superview != nil {
-      if !didAddRoot, let root = rootCard {
-        push(root, animated: false)
-        didAddRoot = true
+      if !didAddInitialCards {
+        initialCards.forEach { push($0, animated: false) }
+        didAddInitialCards = true
       }
       
       fixPositioning()
