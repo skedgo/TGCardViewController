@@ -8,9 +8,14 @@
 
 import UIKit
 
-public protocol TGCardInteractiveCardTitle: UIView {
+public protocol TGInteractiveCardTitle: UIView {
   
-  func interactiveFrame(relativeTo view: UIView) -> CGRect?
+  /// This method returns a frame that covers the interactive area of a card title in a
+  /// `TGCardView`. If the card title does not contain interactive components, this
+  /// method should return `nil`.
+  /// - Parameter cardView: The parent view that contains the card title. This
+  /// is typically a subclass of `TGCardView`
+  func interactiveFrame(relativeTo cardView: TGCardView) -> CGRect?
   
 }
 
@@ -182,7 +187,7 @@ public class TGCardView: TGCornerView {
   func interactiveTitleContains(_ point: CGPoint) -> Bool {
     guard
       let titlePlaceholder = titleViewPlaceholder,
-      let interactiveTitle = titlePlaceholder.subviews.first as? TGCardInteractiveCardTitle,
+      let interactiveTitle = titlePlaceholder.subviews.first as? TGInteractiveCardTitle,
       let interactiveFrame = interactiveTitle.interactiveFrame(relativeTo: self)
       else { return false }
     return interactiveFrame.contains(point)

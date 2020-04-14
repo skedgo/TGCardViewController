@@ -113,11 +113,11 @@ class TGCardDefaultTitleView: UIView {
   
 }
 
-extension TGCardDefaultTitleView: TGCardInteractiveCardTitle {
+extension TGCardDefaultTitleView: TGInteractiveCardTitle {
   
-  func interactiveFrame(relativeTo view: UIView) -> CGRect? {
+  func interactiveFrame(relativeTo cardView: TGCardView) -> CGRect? {
     guard let accessory = accessoryViewContainer.subviews.first else { return nil }
-    return accessoryViewContainer.convert(accessory.frame, to: view)
+    return accessoryViewContainer.convert(accessory.frame, to: cardView)
   }
   
 }
