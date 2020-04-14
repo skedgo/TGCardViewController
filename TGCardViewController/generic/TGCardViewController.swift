@@ -1777,8 +1777,8 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
       // Only intercept any taps on the title.
       // This is so that the tapper doesn't interfere with, say, taps on a table view.
       guard let view = topCardView else { return false }
-      let location = touch.location(in: view)
-      return location.y < view.headerHeight(for: cardPosition)
+      let touchPoint = touch.location(in: view)
+      return touchPoint.y < view.headerHeight(for: cardPosition) && view.interactiveTitleContains(touchPoint) == false
       
     } else if mapShadowTapper == gestureRecognizer {
       // Only intercept any taps when in the expanded state.
