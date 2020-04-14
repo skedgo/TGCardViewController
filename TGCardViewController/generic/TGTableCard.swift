@@ -110,8 +110,7 @@ open class TGTableCard: TGCard {
   ///
   /// - Parameters:
   ///   - tableView: The card's table view
-  ///   - headerView: The header view, typically used by `TGPageCard`.
-  open func didBuild(tableView: UITableView, headerView: TGHeaderView?) {
+  open func didBuild(tableView: UITableView) {
   }
 
   /// Called when the views have been built the first time
@@ -124,20 +123,20 @@ open class TGTableCard: TGCard {
   /// - Parameters:
   ///   - tableView: The card's table view
   ///   - cardView: The card view that got built
-  ///   - headerView: The header view, typically used by `TGPageCard`.
-  open func didBuild(tableView: UITableView, cardView: TGCardView, headerView: TGHeaderView?) {
+  open func didBuild(tableView: UITableView, cardView: TGCardView) {
   }
 
-  override public final func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+  override public final func didBuild(cardView: TGCardView?, headerView: TGHeaderView?) {
     
     defer { super.didBuild(cardView: cardView, headerView: headerView) }
     
     guard
+      let cardView = cardView,
       let tableView = (cardView as? TGScrollCardView)?.tableView
       else { preconditionFailure() }
 
-    didBuild(tableView: tableView, cardView: cardView, headerView: headerView)
-    didBuild(tableView: tableView, headerView: headerView)
+    didBuild(tableView: tableView, cardView: cardView)
+    didBuild(tableView: tableView)
 
     if let keyboardTable = tableView as? TGKeyboardTableView {
       keyboardTable.handleMacSelection = handleMacSelection
@@ -183,7 +182,7 @@ open class TGTableCard: TGCard {
   
   // MARK: - Constructing views
   
-  open override func buildCardView() -> TGCardView {
+  open override func buildCardView() -> TGCardView? {
     let view = TGScrollCardView.instantiate()
     view.configure(with: self)
     return view

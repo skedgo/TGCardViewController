@@ -142,7 +142,7 @@ open class TGPageCard: TGCard {
     return true
   }
   
-  open override func buildCardView() -> TGCardView {
+  open override func buildCardView() -> TGCardView? {
     let view = TGPageCardView.instantiate()
     view.configure(with: self)
     view.delegate = self
