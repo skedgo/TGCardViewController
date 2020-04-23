@@ -782,9 +782,6 @@ extension TGCardViewController {
       cards.removeLast()
       cards.append( (oldTop.card, cardPosition, oldTop.view) )
     }
-
-    let cardView = top.buildCardView()
-    cards.append( (top, animateTo.position, cardView) )
     
     // 3. Create and configure the new view
     
@@ -793,6 +790,9 @@ extension TGCardViewController {
     if let oldCard = oldTop?.card, copyStyle {
       oldCard.copyStyling(to: top)
     }
+    
+    let cardView = top.buildCardView()
+    cards.append( (top, animateTo.position, cardView) )
         
     if let cardView = cardView {
       cardView.dismissButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
