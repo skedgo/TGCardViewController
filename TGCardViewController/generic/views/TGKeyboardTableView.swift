@@ -174,6 +174,8 @@ class TGKeyboardTableView: UITableView {
     }
   }
   
+  
+  // swiftlint:disable cyclomatic_complexity
   private func indexPathToSelect(for selection: Selection) -> IndexPath? {
     guard numberOfSections > 0, numberOfRows(inSection: 0) > 0 else { return nil }
 
@@ -207,6 +209,7 @@ class TGKeyboardTableView: UITableView {
     }
     return indexPath
   }
+  // swiftlint:enable cyclomatic_complexity
   
   /// Whether a row is fully visible, or if not if it’s above or below the viewport.
   enum CellVisibility { case fullyVisible; case notFullyVisible(ScrollPosition); }

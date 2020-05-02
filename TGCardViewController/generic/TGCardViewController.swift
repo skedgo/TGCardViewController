@@ -951,7 +951,9 @@ extension TGCardViewController {
     return true
   }
   
+  // Yes, these are long. We rather keep them together like this (for now).
   // swiftlint:disable function_body_length
+  // swiftlint:disable cyclomatic_complexity
   @objc
   public func pop(animated: Bool = true, completionHandler: (() -> Void)? = nil) {
     if let delegate = delegate, cards.count == 1 {
@@ -1094,7 +1096,8 @@ extension TGCardViewController {
     )
   }
   // swiftlint:enable function_body_length
-  
+  // swiftlint:enable cyclomatic_complexity
+
   /// Swaps the current top card with the provided new card
   ///
   /// - Warning: This doesn't work on the root card, will throw an assert in
@@ -1420,8 +1423,8 @@ extension TGCardViewController {
     _ position: TGCardPosition,
     direction: Direction,
     animated: Bool,
-    onCompletion handler: (() -> Void)? = nil)
-  {
+    onCompletion handler: (() -> Void)? = nil
+  ) {
     guard mode == .floating else {
       cardWrapperDesiredTopConstraint.constant = 0
       view.setNeedsUpdateConstraints()
