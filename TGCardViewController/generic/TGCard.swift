@@ -60,7 +60,7 @@ open class TGCard: UIResponder, NSCoding {
   /// The default image for the close button on a card, with custom background
   /// color
   public static func closeButtonImage(background: UIColor) -> UIImage {
-    return TGCardStyleKit.imageOfCardCloseIcon(closeButtonBackground: background)
+    TGCardStyleKit.imageOfCardCloseIcon(closeButtonBackground: background)
   }
   
   /// This styles the default image for the close button on a card.
@@ -70,7 +70,10 @@ open class TGCard: UIResponder, NSCoding {
   /// - Parameter style: The style to use
   /// - Returns: A styled icon for use in a close button on a card
   public static func closeButtonImage(style: TGCardStyle) -> UIImage {
-    return TGCardStyleKit.imageOfCardCloseIcon(closeButtonBackground: style.closeButtonBackgroundColor, closeButtonCross: style.closeButtonCrossColor)
+    TGCardStyleKit.imageOfCardCloseIcon(
+      closeButtonBackground: style.closeButtonBackgroundColor,
+      closeButtonCross: style.closeButtonCrossColor
+    )
   }
   
   /// A default image for an arrow pointing up or down, similar to the close button image
