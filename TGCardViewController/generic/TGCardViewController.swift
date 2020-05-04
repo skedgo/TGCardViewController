@@ -402,6 +402,11 @@ open class TGCardViewController: UIViewController {
       fixPositioning()
     }
     
+    if !isVisible {
+      // wouldn't yet have told topCard that it'll appear
+      topCard?.willAppear(animated: false)
+    }
+
     topCard?.didAppear(animated: animated)
     isVisible = true
   }
