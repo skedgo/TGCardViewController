@@ -14,8 +14,14 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
   
   private var compassObservation: NSKeyValueObservation?
   
+  public var startOnMapRect: MKMapRect = .null
+  
   public func buildMapView() -> UIView {
-    return MKMapView()
+    let mapView = MKMapView()
+    if !startOnMapRect.isNull {
+      mapView.setVisibleMapRect(startOnMapRect, animated: false)
+    }
+    return mapView
   }
 
   public func buildCompassButton(for mapView: UIView) -> UIView? {
