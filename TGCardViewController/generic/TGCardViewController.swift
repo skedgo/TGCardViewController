@@ -1134,9 +1134,12 @@ extension TGCardViewController {
       
       // Kill the card below
       let poppeeIndex = self.cards.count - 2
-      assert(poppeeIndex >= 0)
-      self.cards[poppeeIndex].view?.removeFromSuperview()
-      self.cards.remove(at: poppeeIndex)
+      if poppeeIndex >= 0 {
+        self.cards[poppeeIndex].view?.removeFromSuperview()
+        self.cards.remove(at: poppeeIndex)
+      } else {
+        assertionFailure()
+      }
       
       handler?()
     }    
