@@ -1491,6 +1491,20 @@ extension TGCardViewController {
 
 extension TGCardViewController {
   
+  public func toggleMapOverlays(show: Bool, animated: Bool = true) {
+    // Map buttons
+    if show {
+      updateFloatingViewsVisibility(for: cardPosition, animated: animated)
+    } else {
+      fadeMapFloatingViews(true, animated: animated)
+    }
+    
+    // Card
+    UIView.animate(withDuration: animated ? 0.25 : 0) {
+      self.topCardView?.alpha = show ? 1 : 0
+    }
+  }
+  
   private func deviceIsiPhoneX() -> Bool {
     if #available(iOS 11, *) {
       return view.safeAreaInsets.bottom > 0
@@ -1499,19 +1513,19 @@ extension TGCardViewController {
     }
   }
   
-  private func updateFloatingViewsVisibility(for position: TGCardPosition? = nil) {
-    func fadeMapFloatingViews(_ fade: Bool, animated: Bool = false) {
-      UIView.animate(withDuration: animated ? 0.25: 0) {
-        self.topFloatingViewWrapper.alpha = fade ? 0 : 1
-        self.bottomFloatingViewWrapper.alpha = fade ? 0 : 1
-      }
+  private func fadeMapFloatingViews(_ fade: Bool, animated: Bool) {
+    UIView.animate(withDuration: animated ? 0.25: 0) {
+      self.topFloatingViewWrapper.alpha = fade ? 0 : 1
+      self.bottomFloatingViewWrapper.alpha = fade ? 0 : 1
     }
-    
+  }
+  
+  private func updateFloatingViewsVisibility(for position: TGCardPosition? = nil, animated: Bool = false) {
     if cardIsNextToMap(in: traitCollection) {
       // When card is on the side of the map, always show the floating views.
-      fadeMapFloatingViews(false)
+      fadeMapFloatingViews(false, animated: animated)
     } else {
-      fadeMapFloatingViews(position ?? cardPosition == .extended)
+      fadeMapFloatingViews(position ?? cardPosition == .extended, animated: animated)
     }
   }
   
