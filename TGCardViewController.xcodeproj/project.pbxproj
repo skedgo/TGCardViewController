@@ -56,7 +56,6 @@
 		3ACA74891E716AFC00408678 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA74871E716AFC00408678 /* Main.storyboard */; };
 		3ACA748B1E716AFC00408678 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA748A1E716AFC00408678 /* Assets.xcassets */; };
 		3ACA748E1E716AFC00408678 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA748C1E716AFC00408678 /* LaunchScreen.storyboard */; };
-		3ACA74991E716AFC00408678 /* TGCardViewControllerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74981E716AFC00408678 /* TGCardViewControllerUITests.swift */; };
 		3ACA74B71E719A5900408678 /* ExampleRootCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74B61E719A5900408678 /* ExampleRootCard.swift */; };
 		3ACA74BD1E71A0DD00408678 /* ExampleChildCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA74BC1E71A0DD00408678 /* ExampleChildCard.swift */; };
 		3ACA74C01E71A12200408678 /* ExampleChildContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ACA74BF1E71A12200408678 /* ExampleChildContentView.xib */; };
@@ -79,13 +78,6 @@
 			containerPortal = 3ACA74781E716AFC00408678 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 3A7C3482201F2C0B00F66A35;
-			remoteInfo = TGCardViewController;
-		};
-		3ACA74951E716AFC00408678 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3ACA74781E716AFC00408678 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3ACA747F1E716AFC00408678;
 			remoteInfo = TGCardViewController;
 		};
 /* End PBXContainerItemProxy section */
@@ -145,9 +137,6 @@
 		3ACA748A1E716AFC00408678 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3ACA748D1E716AFC00408678 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3ACA748F1E716AFC00408678 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3ACA74941E716AFC00408678 /* TGCardViewControllerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TGCardViewControllerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3ACA74981E716AFC00408678 /* TGCardViewControllerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TGCardViewControllerUITests.swift; sourceTree = "<group>"; };
-		3ACA749A1E716AFC00408678 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3ACA74A41E716CB900408678 /* TGCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCardViewController.swift; path = generic/TGCardViewController.swift; sourceTree = "<group>"; };
 		3ACA74A81E716ED600408678 /* TGCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGCard.swift; path = generic/TGCard.swift; sourceTree = "<group>"; };
 		3ACA74AA1E716EFE00408678 /* TGPlainCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TGPlainCard.swift; path = generic/TGPlainCard.swift; sourceTree = "<group>"; };
@@ -192,13 +181,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A7C348A201F2C0B00F66A35 /* TGCardViewController.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3ACA74911E716AFC00408678 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,7 +257,6 @@
 			children = (
 				3ADD3BBA235C5CB700CD4713 /* Example.entitlements */,
 				3ACA74821E716AFC00408678 /* TGCardViewController */,
-				3ACA74971E716AFC00408678 /* TGCardViewControllerUITests */,
 				3A7C3484201F2C0B00F66A35 /* TGCardViewController */,
 				3ACA74811E716AFC00408678 /* Products */,
 			);
@@ -285,7 +266,6 @@
 			isa = PBXGroup;
 			children = (
 				3ACA74801E716AFC00408678 /* Example.app */,
-				3ACA74941E716AFC00408678 /* TGCardViewControllerUITests.xctest */,
 				3A7C3483201F2C0B00F66A35 /* TGCardViewController.framework */,
 			);
 			name = Products;
@@ -299,15 +279,6 @@
 				3ACA74BE1E71A0EC00408678 /* example */,
 			);
 			path = TGCardViewController;
-			sourceTree = "<group>";
-		};
-		3ACA74971E716AFC00408678 /* TGCardViewControllerUITests */ = {
-			isa = PBXGroup;
-			children = (
-				3ACA74981E716AFC00408678 /* TGCardViewControllerUITests.swift */,
-				3ACA749A1E716AFC00408678 /* Info.plist */,
-			);
-			path = TGCardViewControllerUITests;
 			sourceTree = "<group>";
 		};
 		3ACA74A31E716C7F00408678 /* generic */ = {
@@ -432,24 +403,6 @@
 			productReference = 3ACA74801E716AFC00408678 /* Example.app */;
 			productType = "com.apple.product-type.application";
 		};
-		3ACA74931E716AFC00408678 /* TGCardViewControllerUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3ACA74A01E716AFC00408678 /* Build configuration list for PBXNativeTarget "TGCardViewControllerUITests" */;
-			buildPhases = (
-				3ACA74901E716AFC00408678 /* Sources */,
-				3ACA74911E716AFC00408678 /* Frameworks */,
-				3ACA74921E716AFC00408678 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3ACA74961E716AFC00408678 /* PBXTargetDependency */,
-			);
-			name = TGCardViewControllerUITests;
-			productName = TGCardViewControllerUITests;
-			productReference = 3ACA74941E716AFC00408678 /* TGCardViewControllerUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -470,13 +423,6 @@
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
-					3ACA74931E716AFC00408678 = {
-						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = JFT62W5LA3;
-						LastSwiftMigration = 1020;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 3ACA747F1E716AFC00408678;
-					};
 				};
 			};
 			buildConfigurationList = 3ACA747B1E716AFC00408678 /* Build configuration list for PBXProject "TGCardViewController" */;
@@ -494,7 +440,6 @@
 			targets = (
 				3A7C3482201F2C0B00F66A35 /* TGCardViewController */,
 				3ACA747F1E716AFC00408678 /* Example */,
-				3ACA74931E716AFC00408678 /* TGCardViewControllerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -526,13 +471,6 @@
 				3ACA74891E716AFC00408678 /* Main.storyboard in Resources */,
 				3A82CE16207DE774008F747A /* TurnByTurnHeaderView.xib in Resources */,
 				3ACA74C01E71A12200408678 /* ExampleChildContentView.xib in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3ACA74921E716AFC00408678 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -615,14 +553,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3ACA74901E716AFC00408678 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3ACA74991E716AFC00408678 /* TGCardViewControllerUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -630,11 +560,6 @@
 			isa = PBXTargetDependency;
 			target = 3A7C3482201F2C0B00F66A35 /* TGCardViewController */;
 			targetProxy = 3A7C3488201F2C0B00F66A35 /* PBXContainerItemProxy */;
-		};
-		3ACA74961E716AFC00408678 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3ACA747F1E716AFC00408678 /* Example */;
-			targetProxy = 3ACA74951E716AFC00408678 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -892,42 +817,6 @@
 			};
 			name = Release;
 		};
-		3ACA74A11E716AFC00408678 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				DEVELOPMENT_TEAM = JFT62W5LA3;
-				INFOPLIST_FILE = TGCardViewControllerUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.buzzhives.TGCardViewControllerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = TGCardViewController;
-			};
-			name = Debug;
-		};
-		3ACA74A21E716AFC00408678 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				DEVELOPMENT_TEAM = JFT62W5LA3;
-				INFOPLIST_FILE = TGCardViewControllerUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.buzzhives.TGCardViewControllerUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = TGCardViewController;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -954,15 +843,6 @@
 			buildConfigurations = (
 				3ACA749E1E716AFC00408678 /* Debug */,
 				3ACA749F1E716AFC00408678 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3ACA74A01E716AFC00408678 /* Build configuration list for PBXNativeTarget "TGCardViewControllerUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3ACA74A11E716AFC00408678 /* Debug */,
-				3ACA74A21E716AFC00408678 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
