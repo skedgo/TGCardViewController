@@ -37,7 +37,7 @@ class ExamplePageCard: TGPageCard {
     super.init(coder: coder)
   }
   
-  override func didBuild(cardView: TGCardView, headerView: TGHeaderView?) {
+  override func didBuild(cardView: TGCardView?, headerView: TGHeaderView?) {
     super.didBuild(cardView: cardView, headerView: headerView)
     
     headerView?.tintColor = .white

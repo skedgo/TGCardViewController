@@ -49,8 +49,8 @@ class ExampleTableCard : TGTableCard {
     aCoder.encode(pushOnTap, forKey: "pushOnTap")
   }
   
-  override func didBuild(tableView: UITableView, headerView: TGHeaderView?) {
-    super.didBuild(tableView: tableView, headerView: headerView)
+  override func didBuild(tableView: UITableView) {
+    super.didBuild(tableView: tableView)
 
     if #available(iOS 11.0, *) {
       tableView.dragInteractionEnabled = true

@@ -74,8 +74,8 @@ class ExampleRootCard : TGTableCard {
     self.init()
   }
   
-  override func didBuild(tableView: UITableView, headerView: TGHeaderView?) {
-    super.didBuild(tableView: tableView, headerView: headerView)
+  override func didBuild(tableView: UITableView) {
+    super.didBuild(tableView: tableView)
     
     tableView.backgroundColor = .clear
     
