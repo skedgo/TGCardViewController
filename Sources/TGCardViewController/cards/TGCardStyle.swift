@@ -6,7 +6,7 @@
 //  Copyright © 2019 SkedGo Pty Ltd. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public struct TGCardStyle {
   

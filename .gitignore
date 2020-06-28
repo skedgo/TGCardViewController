@@ -1,5 +1,13 @@
-/TGCardViewController.xcodeproj/xcuserdata
-TGCardViewController.xcodeproj/project.xcworkspace/xcuserdata
-TGCardViewController.xcodeproj/project.xcworkspace/xcshareddata
+# macOS
+.DS_Store
+
+# SPM
+.build
+
+# Xcode
+**/xcuserdata
+**/xcshareddata
+
+# Carthage
 /Carthage
 /TGCardViewController.framework.zip
