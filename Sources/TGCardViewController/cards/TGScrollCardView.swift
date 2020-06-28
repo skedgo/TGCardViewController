@@ -28,9 +28,8 @@ public class TGScrollCardView: TGCardView {
   // MARK: - New instances
   
   static func instantiate() -> TGScrollCardView {
-    let bundle = Bundle(for: self)
     guard
-      let view = bundle.loadNibNamed("TGScrollCardView", owner: nil, options: nil)!.first as? TGScrollCardView
+      let view = Bundle.cardVC.loadNibNamed("TGScrollCardView", owner: nil, options: nil)!.first as? TGScrollCardView
       else { preconditionFailure() }
     return view
   }

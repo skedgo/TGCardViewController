@@ -14,9 +14,8 @@ public class TGPageHeaderView: TGHeaderView {
   @IBOutlet weak var accessoryWrapperHeightConstraint: NSLayoutConstraint!
   
   static func instantiate() -> TGPageHeaderView {
-    let bundle = Bundle(for: self)
     guard
-      let view = bundle.loadNibNamed("TGPageHeaderView", owner: nil, options: nil)!.first as? TGPageHeaderView
+      let view = Bundle.cardVC.loadNibNamed("TGPageHeaderView", owner: nil, options: nil)!.first as? TGPageHeaderView
       else { preconditionFailure() }
     return view
   }

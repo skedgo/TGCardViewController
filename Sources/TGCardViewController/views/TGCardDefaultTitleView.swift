@@ -42,9 +42,8 @@ class TGCardDefaultTitleView: UIView {
   // MARK: - Creating New Views
   
   static func newInstance() -> TGCardDefaultTitleView {
-    let bundle = Bundle(for: self)
     // swiftlint:disable force_cast
-    return bundle.loadNibNamed("TGCardDefaultTitleView", owner: self, options: nil)?.first as! TGCardDefaultTitleView
+    return Bundle.cardVC.loadNibNamed("TGCardDefaultTitleView", owner: self, options: nil)?.first as! TGCardDefaultTitleView
     // swiftlint:enable force_cast
 
   }

@@ -17,9 +17,8 @@ class TGPlainCardView: TGCardView {
   // MARK: - New instances
   
   static func instantiate() -> TGPlainCardView {
-    let bundle = Bundle(for: self)
     guard
-      let view = bundle.loadNibNamed("TGPlainCardView", owner: nil, options: nil)!.first as? TGPlainCardView
+      let view = Bundle.cardVC.loadNibNamed("TGPlainCardView", owner: nil, options: nil)!.first as? TGPlainCardView
       else { preconditionFailure() }
     return view
   }

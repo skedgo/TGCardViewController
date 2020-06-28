@@ -10,6 +10,6 @@ import Foundation
 
 extension Bundle {
   
-  static let cardVC: Bundle = Bundle(for: TGCardViewController.self)
+  static let cardVC: Bundle = TGCardViewController.bundle // Bundle(for: TGCardViewController.self)
   
 }
