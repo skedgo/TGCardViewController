@@ -83,6 +83,8 @@ open class TGCardViewController: UIViewController {
     
     fileprivate static let minMapSpaceWithHomeIndicator: CGFloat = 25
     
+    fileprivate static let minCardHeightWhenCollapsed: CGFloat = 44 * 0.66
+    
     fileprivate static let pushAnimationDuration = 0.25
 
     /// The minimum seconds for snapping after the user panned the top card.
@@ -838,7 +840,10 @@ extension TGCardViewController {
     // 6. Set new position of the wrapper
     cardWrapperDesiredTopConstraint.constant = animateTo.y
     if let cardView = cardView {
-      cardWrapperMinOverlapTopConstraint.constant = cardView.headerHeight(for: .collapsed)
+      cardWrapperMinOverlapTopConstraint.constant = max(
+        Constants.minCardHeightWhenCollapsed,
+        cardView.headerHeight(for: .collapsed)
+      )
     }
     
     let header = top.buildHeaderView()
@@ -1015,7 +1020,10 @@ extension TGCardViewController {
       animateTo = cardPosition
     }
     if let new = newTop, let newView = new.view {
-      cardWrapperMinOverlapTopConstraint.constant = newView.headerHeight(for: new.lastPosition)
+      cardWrapperMinOverlapTopConstraint.constant = max(
+        Constants.minCardHeightWhenCollapsed,
+        newView.headerHeight(for: new.lastPosition)
+      )
     } else {
       cardWrapperMinOverlapTopConstraint.constant = 0
     }
