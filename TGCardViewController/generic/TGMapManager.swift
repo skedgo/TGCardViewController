@@ -76,11 +76,15 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
     return annotations
   }
   
+  open func reactToNewEdgePadding(_ edgePadding: UIEdgeInsets) {}
+  
   /// How zoomed in/out the map should be when displaying the
   /// content the first time. Defaults to `.city`
   public var preferredZoomLevel: Zoom = .city
   
-  public var edgePadding: UIEdgeInsets = .zero
+  public var edgePadding: UIEdgeInsets = .zero {
+    didSet { reactToNewEdgePadding(edgePadding)}
+  }
 
   private var previousMapState: MapState?
   
