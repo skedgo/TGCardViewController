@@ -624,32 +624,36 @@ open class TGCardViewController: UIViewController {
   fileprivate func mapEdgePadding(for position: TGCardPosition) -> UIEdgeInsets {
     assert(mapView.frame.isEmpty == false, "Don't call this before we have a map view frame.")
     
-    let bottomOverlap: CGFloat
-    let leftOverlap: CGFloat
+    let top: CGFloat
+    let bottom: CGFloat
+    let left: CGFloat
     
     if cardIsNextToMap(in: traitCollection) {
       // The map is to the right of the card, which we account for when not collapsed
       let ignoreCard = position == .collapsed && traitCollection.verticalSizeClass == .regular
-      leftOverlap = ignoreCard ? 0 : cardWrapperShadow.frame.maxX
-      bottomOverlap = 0
+      left = ignoreCard ? 0 : cardWrapperShadow.frame.maxX
+      bottom = 0
+      top = topOverlap
     } else {
-      // Map is always between the top and the cad
-      leftOverlap = 0
+      // Map is always between the top and the card
+      left = 0
       let cardY: CGFloat
       switch position {
       case .extended, .peaking: cardY = peakY
       case .collapsed:          cardY = collapsedMinY - 75 // not entirely true, but close enough
       }
       
+      top = isShowingHeader ? 0 : topOverlap
+      
       // We call this method at times where the map view hasn't been resized yet. We
       // guess the height by just taking the larger side since the card is not next
       // to the map, meaning we're in portrait.
       let height = max(mapView.frame.width, mapView.frame.height)
-      
-      bottomOverlap = height - cardY
+      bottom = height - cardY
     }
     
-    return UIEdgeInsets(top: topOverlap, left: leftOverlap, bottom: bottomOverlap, right: 0)
+    
+    return UIEdgeInsets(top: top, left: left, bottom: bottom, right: 0)
   }
   
   /// Call this whenever the card position changes to properly configure the map shadow
