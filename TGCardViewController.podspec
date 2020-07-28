@@ -6,7 +6,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "TGCardViewController"
-  s.version      = "1.3"
+  s.version      = "1.4"
   s.summary      = "Card-based view controller for mapping apps"
 
   s.description  = <<-DESC
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
     controller - or a combination thereof.
                    DESC
 
-  s.homepage     = "https://gitlab.com/SkedGo/iOS/tripgo-cards-ios"
+  s.homepage     = "https://gitlab.com/SkedGo/iOS/TGCardViewController"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -40,7 +40,7 @@ Pod::Spec.new do |s|
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
 
-  s.platform     = :ios, "10.3"
+  s.platform     = :ios, "12.4"
   s.swift_version = '5.2'
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

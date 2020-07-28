@@ -25,7 +25,6 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
   }
 
   public func buildCompassButton(for mapView: UIView) -> UIView? {
-    guard #available(iOS 11.0, *) else { return nil }
     guard let mapView = mapView as? MKMapView else { preconditionFailure() }
     mapView.showsCompass = false
     
@@ -58,7 +57,7 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
   }
 
   public func buildUserTrackingButton(for mapView: UIView) -> UIView? {
-    guard #available(iOS 11.0, *), askForLocationPermissions != nil else { return nil }
+    guard askForLocationPermissions != nil else { return nil }
     guard let mapView = mapView as? MKMapView else { preconditionFailure() }
     
     let background = UIView()
@@ -94,7 +93,6 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
   
   @objc
   private func trackerButtonPressed(_ recogniser: UITapGestureRecognizer) {
-    guard #available(iOS 11.0, *) else { return }
     guard let tracker = recogniser.view?.subviews.first as? MKUserTrackingButton else {
       preconditionFailure()
     }
@@ -113,7 +111,6 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
     }
   }
   
-  @available(iOS 11.0, *)
   private static func updateTracker(_ tracker: MKUserTrackingButton, enabled: Bool) {
     tracker.isUserInteractionEnabled = enabled
     

@@ -115,9 +115,7 @@ public class TGCardView: TGCornerView {
   
   func updateDismissButton(show: Bool, isSpringLoaded: Bool) {
     dismissButton?.isHidden = !show
-    if #available(iOS 11.0, *) {
-      dismissButton?.isSpringLoaded = isSpringLoaded
-    }
+    dismissButton?.isSpringLoaded = isSpringLoaded
   }
   
   weak var owningCard: TGCard?

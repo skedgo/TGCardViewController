@@ -519,11 +519,17 @@ open class TGCardViewController: UIViewController {
     // We do this funky method way here of using codable and having data in
     // there, so that we can later selectively decode some of them, even if
     // others fail to get decoded.
-    let cardInfos = cards
-      .map { card, position, _ in (NSKeyedArchiver.archivedData(withRootObject: card), position) }
-      .map(RestorableCard.init)
-    let cardData = try? PropertyListEncoder().encode(cardInfos)
-    coder.encode(cardData, forKey: "cardData")
+    do {
+      let cardInfos = try cards
+        .map { card, position, _ in
+          (try NSKeyedArchiver.archivedData(withRootObject: card, requiringSecureCoding: false), position)
+        }
+        .map(RestorableCard.init)
+      let cardData = try PropertyListEncoder().encode(cardInfos)
+      coder.encode(cardData, forKey: "cardData")
+    } catch {
+      assertionFailure("Encoding cards failed due to: \(error)")
+    }
   }
 
   open override func decodeRestorableState(with coder: NSCoder) {
@@ -539,7 +545,7 @@ open class TGCardViewController: UIViewController {
        let cardInfos = try? PropertyListDecoder().decode([RestorableCard].self, from: cardData) {
       var successfullyRestored = [(card: TGCard, lastPosition: TGCardPosition)]()
       for restorable in cardInfos {
-        guard let card = NSKeyedUnarchiver.unarchiveObject(with: restorable.cardData) as? TGCard else {
+        guard let card = try? NSKeyedUnarchiver.unarchivedObject(ofClass: TGCard.self, from: restorable.cardData) else {
           break // don't go any further in the stack
         }
         successfullyRestored.append((card: card, lastPosition: restorable.lastPosition))
@@ -586,7 +592,7 @@ open class TGCardViewController: UIViewController {
     if let navigationBar = navigationController?.navigationBar {
       value += navigationBar.frame.height
     }
-    if #available(iOS 11.0, *), mode == .floating, view.safeAreaInsets.bottom > 0 {
+    if mode == .floating, view.safeAreaInsets.bottom > 0 {
       value += Constants.minMapSpaceWithHomeIndicator
     } else if mode == .floating {
       value += Constants.minMapSpace
@@ -608,13 +614,7 @@ open class TGCardViewController: UIViewController {
   
   /// The current amount of points of content at the top of the view
   /// that's overlapping with the map. Includes status bar, if visible.
-  fileprivate var topOverlap: CGFloat {
-    if #available(iOS 11, *) {
-      return view.safeAreaInsets.top
-    } else {
-      return topLayoutGuide.length
-    }
-  }
+  fileprivate var topOverlap: CGFloat { view.safeAreaInsets.top }
   
   /// The edge padding for the map that map managers should use
   /// to determine the zoom and scroll position of the map.
@@ -626,32 +626,36 @@ open class TGCardViewController: UIViewController {
   fileprivate func mapEdgePadding(for position: TGCardPosition) -> UIEdgeInsets {
     assert(mapView.frame.isEmpty == false, "Don't call this before we have a map view frame.")
     
-    let bottomOverlap: CGFloat
-    let leftOverlap: CGFloat
+    let top: CGFloat
+    let bottom: CGFloat
+    let left: CGFloat
     
     if cardIsNextToMap(in: traitCollection) {
       // The map is to the right of the card, which we account for when not collapsed
       let ignoreCard = position == .collapsed && traitCollection.verticalSizeClass == .regular
-      leftOverlap = ignoreCard ? 0 : cardWrapperShadow.frame.maxX
-      bottomOverlap = 0
+      left = ignoreCard ? 0 : cardWrapperShadow.frame.maxX
+      bottom = 0
+      top = topOverlap
     } else {
-      // Map is always between the top and the cad
-      leftOverlap = 0
+      // Map is always between the top and the card
+      left = 0
       let cardY: CGFloat
       switch position {
       case .extended, .peaking: cardY = peakY
       case .collapsed:          cardY = collapsedMinY - 75 // not entirely true, but close enough
       }
       
+      top = isShowingHeader ? 0 : topOverlap
+      
       // We call this method at times where the map view hasn't been resized yet. We
       // guess the height by just taking the larger side since the card is not next
       // to the map, meaning we're in portrait.
       let height = max(mapView.frame.width, mapView.frame.height)
-      
-      bottomOverlap = height - cardY
+      bottom = height - cardY
     }
     
-    return UIEdgeInsets(top: topOverlap, left: leftOverlap, bottom: bottomOverlap, right: 0)
+    
+    return UIEdgeInsets(top: top, left: left, bottom: bottom, right: 0)
   }
   
   /// Call this whenever the card position changes to properly configure the map shadow
@@ -856,10 +860,8 @@ extension TGCardViewController {
       }
       
       header.closeButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
-      if #available(iOS 11.0, *) {
-        header.closeButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
-        header.rightButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
-      }
+      header.closeButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
+      header.rightButton?.isSpringLoaded = navigationButtonsAreSpringLoaded
       showHeader(content: header, animated: animated)
     } else if isShowingHeader {
       hideHeader(animated: animated)
@@ -1315,11 +1317,7 @@ extension TGCardViewController {
     // start of recognising gesture.
     if let topCardView = topCardView, cardPosition == .collapsed, recogniser.state == .began {
       let offset = topCardView.headerHeight(for: .collapsed)
-      if #available(iOS 11, *) {
-        currentCardY -= (offset + view.safeAreaInsets.bottom)
-      } else {
-        currentCardY -= (offset + bottomLayoutGuide.length)
-      }
+      currentCardY -= (offset + view.safeAreaInsets.bottom)
     }
     
     // Reposition the card according to the pan as long as the user
@@ -1412,11 +1410,7 @@ extension TGCardViewController {
       // set the content offset to zero here!)
       cardWrapperDesiredTopConstraint.constant = extendedMinY - negativity
       scrollView.transform = CGAffineTransform(translationX: 0, y: negativity)
-      if #available(iOS 11.1, *) {
-        scrollView.verticalScrollIndicatorInsets.top = negativity * -1
-      } else {
-        scrollView.scrollIndicatorInsets.top = negativity * -1
-      }
+      scrollView.verticalScrollIndicatorInsets.top = negativity * -1
       
     default:
       // Ignore other states such as began, failed, etc.
@@ -1515,13 +1509,7 @@ extension TGCardViewController {
     }
   }
   
-  private func deviceIsiPhoneX() -> Bool {
-    if #available(iOS 11, *) {
-      return view.safeAreaInsets.bottom > 0
-    } else {
-      return false
-    }
-  }
+  private func deviceIsiPhoneX() -> Bool { view.safeAreaInsets.bottom > 0 }
   
   private func fadeMapFloatingViews(_ fade: Bool, animated: Bool) {
     UIView.animate(withDuration: animated ? 0.25: 0) {
@@ -1588,9 +1576,7 @@ extension TGCardViewController {
     if cardIsNextToMap(in: traitCollection) {
       bottomFloatingViewBottomConstraint.constant = deviceIsiPhoneX() ? 0 : 8
       if deviceIsiPhoneX() {
-        if #available(iOS 11, *) {
-          topFloatingViewTopConstraint.constant = view.safeAreaInsets.bottom
-        }
+        topFloatingViewTopConstraint.constant = view.safeAreaInsets.bottom
         NSLayoutConstraint.deactivate([
           topFloatingViewTrailingToSafeAreaConstraint,
           bottomFloatingViewTrailingToSafeAreaConstraint
@@ -1670,17 +1656,11 @@ extension TGCardViewController {
       let radius: CGFloat = 16
       let roundAllCorners = cardIsNextToMap(in: traitCollection)
       
-      if #available(iOS 11.0, *) {
-        view.layer.maskedCorners = roundAllCorners
-          ? [.layerMinXMaxYCorner, .layerMinXMinYCorner,
-             .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
-          : [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        view.layer.cornerRadius = radius
-      
-      } else {
-        let cornerRadius: CGFloat = roundAllCorners ? radius : 0
-        view.layer.cornerRadius = cornerRadius
-      }
+      view.layer.maskedCorners = roundAllCorners
+        ? [.layerMinXMaxYCorner, .layerMinXMinYCorner,
+           .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        : [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+      view.layer.cornerRadius = radius
     }
     
     headerView.backgroundColor = topCard?.style.backgroundColor ?? .white
@@ -1925,10 +1905,8 @@ extension TGCardViewController {
   }
   
   private func monitorVoiceOverStatus() {
-    if #available(iOS 11.0, *) {
-      NotificationCenter.default.addObserver(self, selector: #selector(updateForVoiceOverStatusChange),
-                                             name: UIAccessibility.voiceOverStatusDidChangeNotification, object: nil)
-    }
+    NotificationCenter.default.addObserver(self, selector: #selector(updateForVoiceOverStatusChange),
+                                           name: UIAccessibility.voiceOverStatusDidChangeNotification, object: nil)
   }
   
   @objc

@@ -46,12 +46,12 @@ public class TGScrollCardView: TGCardView {
       tableView.backgroundColor = .clear
       tableView.dataSource = tableCard.tableViewDataSource
       tableView.delegate = tableCard.tableViewDelegate
-      if #available(iOS 11.0, *) {
-        // For convenience, we also assign the delegate for dragging
-        // and dropping directly if possible.
-        tableView.dragDelegate = tableCard.tableViewDelegate as? UITableViewDragDelegate
-        tableView.dropDelegate = tableCard.tableViewDelegate as? UITableViewDropDelegate
-      }
+
+      // For convenience, we also assign the delegate for dragging
+      // and dropping directly if possible.
+      tableView.dragDelegate = tableCard.tableViewDelegate as? UITableViewDragDelegate
+      tableView.dropDelegate = tableCard.tableViewDelegate as? UITableViewDropDelegate
+
       scrollView = tableView
 
     } else if let collectionCard = card as? TGCollectionCard {
@@ -59,12 +59,12 @@ public class TGScrollCardView: TGCardView {
       collectionView.backgroundColor = .clear
       collectionView.dataSource = collectionCard.collectionViewDataSource
       collectionView.delegate = collectionCard.collectionViewDelegate
-      if #available(iOS 11.0, *) {
-        // For convenience, we also assign the delegate for dragging
-        // and dropping directly if possible.
-        collectionView.dragDelegate = collectionCard.collectionViewDelegate as? UICollectionViewDragDelegate
-        collectionView.dropDelegate = collectionCard.collectionViewDelegate as? UICollectionViewDropDelegate
-      }
+
+      // For convenience, we also assign the delegate for dragging
+      // and dropping directly if possible.
+      collectionView.dragDelegate = collectionCard.collectionViewDelegate as? UICollectionViewDragDelegate
+      collectionView.dropDelegate = collectionCard.collectionViewDelegate as? UICollectionViewDropDelegate
+
       scrollView = collectionView
 
     } else {

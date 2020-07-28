@@ -217,14 +217,8 @@ class TGKeyboardTableView: UITableView {
   /// Whether the given row is fully visible, or if not if it’s above or below the viewport.
   private func cellVisibility(atIndexPath indexPath: IndexPath) -> CellVisibility {
     let rowRect = rectForRow(at: indexPath)
-    if #available(iOS 11.0, *) {
-      if bounds.inset(by: adjustedContentInset).contains(rowRect) {
-        return .fullyVisible
-      }
-    } else {
-      if bounds.inset(by: contentInset).contains(rowRect) {
-        return .fullyVisible
-      }
+    if bounds.inset(by: adjustedContentInset).contains(rowRect) {
+      return .fullyVisible
     }
     
     let position: ScrollPosition = rowRect.midY < bounds.midY ? .top : .bottom
