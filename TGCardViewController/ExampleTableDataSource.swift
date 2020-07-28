@@ -284,9 +284,7 @@ extension ExampleTableDataSource : UITableViewDataSource {
   
 }
 
-@available(iOS 11.0, *)
 extension ExampleTableDataSource : UITableViewDragDelegate {
-
   func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
     let string = (stops[indexPath.row].title ?? nil) ?? "Hello"
     let item = UIDragItem(itemProvider: NSItemProvider(item: string as NSString, typeIdentifier: "public.text"))
@@ -295,9 +293,7 @@ extension ExampleTableDataSource : UITableViewDragDelegate {
   
 }
 
-@available(iOS 11.0, *)
 extension ExampleTableDataSource : UITableViewDropDelegate {
-  
   func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
   }
   

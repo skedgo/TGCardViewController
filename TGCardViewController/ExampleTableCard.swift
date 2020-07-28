@@ -52,9 +52,7 @@ class ExampleTableCard : TGTableCard {
   override func didBuild(tableView: UITableView) {
     super.didBuild(tableView: tableView)
 
-    if #available(iOS 11.0, *) {
-      tableView.dragInteractionEnabled = true
-    }
+    tableView.dragInteractionEnabled = true
     
     if pushOnTap {
       source.onSelect = {
