@@ -37,24 +37,43 @@ extension NSCoder {
   
   // MARK: Generic
   
-  func decodeArchived<T: NSCoding>(_ type: T.Type, forKey key: String) -> T? {
+  func decodeArchived<T: NSCoding>(_ type: T.Type, forKey key: String) -> T? where T: NSObject {
     guard let data = decodeObject(forKey: key) as? Data else { return nil }
-    return NSKeyedUnarchiver.unarchiveObject(with: data) as? T
+    do {
+      return try NSKeyedUnarchiver.unarchivedObject(ofClass: type, from: data)
+    } catch {
+      assertionFailure("Decoding failed due to: \(error)")
+      return nil
+    }
   }
   
   func decodeArchived<T: NSCoding>(_ type: [T].Type, forKey key: String) -> [T]? {
     guard let data = decodeObject(forKey: key) as? Data else { return nil }
-    return NSKeyedUnarchiver.unarchiveObject(with: data) as? [T]
+    do {
+      return try NSKeyedUnarchiver.unarchivedObject(ofClasses: [T.self, NSArray.self], from: data) as? [T]
+    } catch {
+      assertionFailure("Decoding failed due to: \(error)")
+      return nil
+    }
+
   }
   
   func encodeArchive<T: NSCoding>(_ object: T?, forKey key: String) {
     guard let object = object else { return }
-    encode(NSKeyedArchiver.archivedData(withRootObject: object), forKey: key)
+    do {
+      try encode(NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false), forKey: key)
+    } catch {
+      assertionFailure("Encoding failed due to: \(error)")
+    }
   }
   
   func encodeArchive<T: NSCoding>(_ objects: [T]?, forKey key: String) {
     guard let objects = objects else { return }
-    encode(NSKeyedArchiver.archivedData(withRootObject: objects), forKey: key)
+    do {
+      try encode(NSKeyedArchiver.archivedData(withRootObject: objects, requiringSecureCoding: false), forKey: key)
+    } catch {
+      assertionFailure("Encoding failed due to: \(error)")
+    }
   }
   
 }
