@@ -6,7 +6,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "TGCardViewController"
-  s.version      = "1.3.1"
+  s.version      = "1.4"
   s.summary      = "Card-based view controller for mapping apps"
 
   s.description  = <<-DESC
@@ -40,7 +40,7 @@ Pod::Spec.new do |s|
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
 
-  s.platform     = :ios, "10.3"
+  s.platform     = :ios, "12.4"
   s.swift_version = '5.2'
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
