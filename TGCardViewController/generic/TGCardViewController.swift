@@ -1438,6 +1438,7 @@ extension TGCardViewController {
     guard mode == .floating else {
       cardWrapperDesiredTopConstraint.constant = 0
       view.setNeedsUpdateConstraints()
+      handler?()
       return
     }
     
