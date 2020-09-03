@@ -260,10 +260,6 @@ open class TGCardViewController: UIViewController {
     return headerStatusBarStyle ?? previousStatusBarStyle ?? .default
   }
   
-  deinit {
-    NotificationCenter.default.removeObserver(self)
-  }
-  
   override open func viewDidLoad() {
     super.viewDidLoad()
     
