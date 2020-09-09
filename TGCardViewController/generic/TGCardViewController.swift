@@ -154,6 +154,7 @@ open class TGCardViewController: UIViewController {
   @IBOutlet weak var sidebarBackground: UIView!
   @IBOutlet weak var sidebarVisualEffectView: UIVisualEffectView!
   @IBOutlet weak var sidebarSeparator: UIView!
+  @IBOutlet weak var topInfoViewWrapper: UIView!
   
   // Positioning the cards
   @IBOutlet weak var cardWrapperDesiredTopConstraint: NSLayoutConstraint!
@@ -176,7 +177,8 @@ open class TGCardViewController: UIViewController {
   
   // Dynamic constraints
   @IBOutlet weak var statusBarBlurHeightConstraint: NSLayoutConstraint!
-
+  @IBOutlet weak var topInfoViewWrapperCenterXConstraint: NSLayoutConstraint!
+  
   var panner: UIPanGestureRecognizer!
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
@@ -299,6 +301,9 @@ open class TGCardViewController: UIViewController {
     
     // Hide the bars at first
     hideHeader(animated: false)
+    
+    // Hide the top info view first
+    hideInfoView(animated: false)
 
     // Collapse card at first
     cardWrapperDesiredTopConstraint.constant = collapsedMinY
@@ -479,6 +484,8 @@ open class TGCardViewController: UIViewController {
     statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
     updateFloatingViewsConstraints()
+    updateTopInfoViewConstraints()
+    view.setNeedsUpdateConstraints()
     
     if !mapView.frame.isEmpty {
       let edgePadding = mapEdgePadding(for: cardPosition)
@@ -1484,6 +1491,47 @@ extension TGCardViewController {
     let isForceExtended = card?.mapManager == nil || mode == .sidebar
     view?.grabHandles.forEach { $0.isHidden = isForceExtended }
   }
+}
+
+// MARK: - Info view
+
+extension TGCardViewController {
+  
+  public var topInfoView: UIView? { topInfoViewWrapper.subviews.first }
+  
+  public func showInfoView(_ view: UIView, animated: Bool) {
+    topInfoViewWrapper.subviews.forEach { $0.removeFromSuperview() }
+    topInfoViewWrapper.addSubview(view)
+    view.snap(to: topInfoViewWrapper)
+    
+    topInfoViewWrapper.alpha = 0
+    UIView.animate(withDuration: animated ? 0.25 : 0) {
+      self.topInfoViewWrapper.alpha = 1
+    }
+  }
+  
+  public func hideInfoView(animated: Bool) {
+    UIView.animate(withDuration: animated ? 0.25 : 0, animations: {
+      self.topInfoViewWrapper.alpha = 0
+    }) { (_) in
+      self.topInfoViewWrapper.subviews.forEach { $0.removeFromSuperview() }
+    }
+  }
+  
+  private func updateTopInfoViewConstraints() {
+    let min = topFloatingViewWrapper.frame.minX
+    let max = cardWrapperShadow.frame.maxX
+    let width = view.frame.width
+    
+    let offset: CGFloat
+    if cardIsNextToMap(in: traitCollection) {
+      offset = min - (0.5 * (min - max)) - (0.5 * width)
+    } else {
+      offset = -0.5*(width - min)
+    }
+    self.topInfoViewWrapperCenterXConstraint.constant = offset
+  }
+  
 }
 
 // MARK: - Floating views
