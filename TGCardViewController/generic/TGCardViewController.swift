@@ -208,19 +208,7 @@ open class TGCardViewController: UIViewController {
   ///
   /// @default: `TGButtonStyle.roundedRect`
   public var buttonStyle: TGButtonStyle = .roundedRect {
-    didSet {
-      switch buttonStyle {
-      case .roundedRect:
-        topFloatingViewWrapper.layer.cornerRadius = 8
-        bottomFloatingViewWrapper.layer.cornerRadius = 8
-      case .circle:
-        topFloatingViewWrapper.layer.cornerRadius = topFloatingViewWrapper.frame.width / 2
-        bottomFloatingViewWrapper.layer.cornerRadius = bottomFloatingViewWrapper.frame.height / 2
-      case .none:
-        topFloatingViewWrapper.layer.cornerRadius = 0
-        bottomFloatingViewWrapper.layer.cornerRadius = 0
-      }
-    }
+    didSet { applyToolbarItemStyle() }
   }
   
   /// Position of current location button
@@ -1570,6 +1558,20 @@ extension TGCardViewController {
     }
   }
   
+  private func applyToolbarItemStyle() {
+    switch self.buttonStyle {
+    case .roundedRect:
+      topFloatingViewWrapper.layer.cornerRadius = 8
+      bottomFloatingViewWrapper.layer.cornerRadius = 8
+    case .circle:
+      topFloatingViewWrapper.layer.cornerRadius = topFloatingViewWrapper.frame.width / 2
+      bottomFloatingViewWrapper.layer.cornerRadius = bottomFloatingViewWrapper.frame.height / 2
+    case .none:
+      topFloatingViewWrapper.layer.cornerRadius = 0
+      bottomFloatingViewWrapper.layer.cornerRadius = 0
+    }
+  }
+  
   private func updateFloatingViewsContent() {
     var topViews: [UIView] = []
     var bottomViews: [UIView] = []
@@ -1613,6 +1615,18 @@ extension TGCardViewController {
     } else {
       cleanUpFloatingView(topFloatingView)
     }
+    
+    // After contents are updated, we do a round of layout
+    // pass, so the wrappers obtain their correct sizes.
+    topFloatingViewWrapper.setNeedsLayout()
+    topFloatingViewWrapper.layoutIfNeeded()
+    bottomFloatingViewWrapper.setNeedsLayout()
+    bottomFloatingViewWrapper.layoutIfNeeded()
+    
+    // Once wrappers have their correct sizes, we can apply
+    // the button style. Note, some styles depend on the
+    // wrappers' widths, e.g., the circle style.
+    applyToolbarItemStyle()
   }
   
   private func updateFloatingViewsConstraints() {
@@ -1640,7 +1654,6 @@ extension TGCardViewController {
         ])
       }
     } else {
-      
       topFloatingViewTopConstraint.constant = 8
       NSLayoutConstraint.deactivate([
         topFloatingViewTrailingToSuperConstraint,
