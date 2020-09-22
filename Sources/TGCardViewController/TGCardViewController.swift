@@ -156,6 +156,7 @@ open class TGCardViewController: UIViewController {
   @IBOutlet weak var sidebarBackground: UIView!
   @IBOutlet weak var sidebarVisualEffectView: UIVisualEffectView!
   @IBOutlet weak var sidebarSeparator: UIView!
+  @IBOutlet weak var topInfoViewWrapper: UIView!
   
   // Positioning the cards
   @IBOutlet weak var cardWrapperDesiredTopConstraint: NSLayoutConstraint!
@@ -178,7 +179,8 @@ open class TGCardViewController: UIViewController {
   
   // Dynamic constraints
   @IBOutlet weak var statusBarBlurHeightConstraint: NSLayoutConstraint!
-
+  @IBOutlet weak var topInfoViewWrapperCenterXConstraint: NSLayoutConstraint!
+  
   var panner: UIPanGestureRecognizer!
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
@@ -208,19 +210,7 @@ open class TGCardViewController: UIViewController {
   ///
   /// @default: `TGButtonStyle.roundedRect`
   public var buttonStyle: TGButtonStyle = .roundedRect {
-    didSet {
-      switch buttonStyle {
-      case .roundedRect:
-        topFloatingViewWrapper.layer.cornerRadius = 8
-        bottomFloatingViewWrapper.layer.cornerRadius = 8
-      case .circle:
-        topFloatingViewWrapper.layer.cornerRadius = topFloatingViewWrapper.frame.width / 2
-        bottomFloatingViewWrapper.layer.cornerRadius = bottomFloatingViewWrapper.frame.height / 2
-      case .none:
-        topFloatingViewWrapper.layer.cornerRadius = 0
-        bottomFloatingViewWrapper.layer.cornerRadius = 0
-      }
-    }
+    didSet { applyToolbarItemStyle() }
   }
   
   /// Position of current location button
@@ -262,10 +252,6 @@ open class TGCardViewController: UIViewController {
     return headerStatusBarStyle ?? previousStatusBarStyle ?? .default
   }
   
-  deinit {
-    NotificationCenter.default.removeObserver(self)
-  }
-  
   override open func viewDidLoad() {
     super.viewDidLoad()
     
@@ -305,6 +291,9 @@ open class TGCardViewController: UIViewController {
     
     // Hide the bars at first
     hideHeader(animated: false)
+    
+    // Hide the top info view first
+    hideInfoView(animated: false)
 
     // Collapse card at first
     cardWrapperDesiredTopConstraint.constant = collapsedMinY
@@ -485,6 +474,8 @@ open class TGCardViewController: UIViewController {
     statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
     updateFloatingViewsConstraints()
+    updateTopInfoViewConstraints()
+    view.setNeedsUpdateConstraints()
     
     if !mapView.frame.isEmpty {
       let edgePadding = mapEdgePadding(for: cardPosition)
@@ -1440,6 +1431,7 @@ extension TGCardViewController {
     guard mode == .floating else {
       cardWrapperDesiredTopConstraint.constant = 0
       view.setNeedsUpdateConstraints()
+      handler?()
       return
     }
     
@@ -1491,6 +1483,47 @@ extension TGCardViewController {
   }
 }
 
+// MARK: - Info view
+
+extension TGCardViewController {
+  
+  public var topInfoView: UIView? { topInfoViewWrapper.subviews.first }
+  
+  public func showInfoView(_ view: UIView, animated: Bool) {
+    topInfoViewWrapper.subviews.forEach { $0.removeFromSuperview() }
+    topInfoViewWrapper.addSubview(view)
+    view.snap(to: topInfoViewWrapper)
+    
+    topInfoViewWrapper.alpha = 0
+    UIView.animate(withDuration: animated ? 0.25 : 0) {
+      self.topInfoViewWrapper.alpha = 1
+    }
+  }
+  
+  public func hideInfoView(animated: Bool) {
+    UIView.animate(withDuration: animated ? 0.25 : 0, animations: {
+      self.topInfoViewWrapper.alpha = 0
+    }, completion: { (_) in
+      self.topInfoViewWrapper.subviews.forEach { $0.removeFromSuperview() }
+    })
+  }
+  
+  private func updateTopInfoViewConstraints() {
+    let min = topFloatingViewWrapper.frame.minX
+    let max = cardWrapperShadow.frame.maxX
+    let width = view.frame.width
+    
+    let offset: CGFloat
+    if cardIsNextToMap(in: traitCollection) {
+      offset = min - (0.5 * (min - max)) - (0.5 * width)
+    } else {
+      offset = -0.5*(width - min)
+    }
+    self.topInfoViewWrapperCenterXConstraint.constant = offset
+  }
+  
+}
+
 // MARK: - Floating views
 
 extension TGCardViewController {
@@ -1527,13 +1560,27 @@ extension TGCardViewController {
     }
   }
   
+  private func applyToolbarItemStyle() {
+    switch self.buttonStyle {
+    case .roundedRect:
+      topFloatingViewWrapper.layer.cornerRadius = 8
+      bottomFloatingViewWrapper.layer.cornerRadius = 8
+    case .circle:
+      topFloatingViewWrapper.layer.cornerRadius = topFloatingViewWrapper.frame.width / 2
+      bottomFloatingViewWrapper.layer.cornerRadius = bottomFloatingViewWrapper.frame.height / 2
+    case .none:
+      topFloatingViewWrapper.layer.cornerRadius = 0
+      bottomFloatingViewWrapper.layer.cornerRadius = 0
+    }
+  }
+  
   private func updateFloatingViewsContent() {
     var topViews: [UIView] = []
     var bottomViews: [UIView] = []
     
     switch locationButtonPosition {
-    case .top: topViews = defaultButtons
-    case .bottom: bottomViews = defaultButtons
+    case .top: topViews = defaultButtons.filter { !($0.isHidden) }
+    case .bottom: bottomViews = defaultButtons.filter { !($0.isHidden) }
     }
     
     // Because we want to relocate buttons in the top toolbar
@@ -1570,6 +1617,18 @@ extension TGCardViewController {
     } else {
       cleanUpFloatingView(topFloatingView)
     }
+    
+    // After contents are updated, we do a round of layout
+    // pass, so the wrappers obtain their correct sizes.
+    topFloatingViewWrapper.setNeedsLayout()
+    topFloatingViewWrapper.layoutIfNeeded()
+    bottomFloatingViewWrapper.setNeedsLayout()
+    bottomFloatingViewWrapper.layoutIfNeeded()
+    
+    // Once wrappers have their correct sizes, we can apply
+    // the button style. Note, some styles depend on the
+    // wrappers' widths, e.g., the circle style.
+    applyToolbarItemStyle()
   }
   
   private func updateFloatingViewsConstraints() {
@@ -1597,7 +1656,6 @@ extension TGCardViewController {
         ])
       }
     } else {
-      
       topFloatingViewTopConstraint.constant = 8
       NSLayoutConstraint.deactivate([
         topFloatingViewTrailingToSuperConstraint,
