@@ -1501,9 +1501,9 @@ extension TGCardViewController {
   public func hideInfoView(animated: Bool) {
     UIView.animate(withDuration: animated ? 0.25 : 0, animations: {
       self.topInfoViewWrapper.alpha = 0
-    }) { (_) in
+    }, completion: { (_) in
       self.topInfoViewWrapper.subviews.forEach { $0.removeFromSuperview() }
-    }
+    })
   }
   
   private func updateTopInfoViewConstraints() {
