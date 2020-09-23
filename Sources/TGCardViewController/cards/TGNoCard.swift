@@ -11,7 +11,7 @@ import UIKit
 /// This "card" let's you display map content without a card, through the map manager.
 open class TGNoCard: TGCard {
   
-  open init(title: String, mapManager: TGCompatibleMapManager) {
+  public init(title: String, mapManager: TGCompatibleMapManager) {
     super.init(
       title: .default(title, nil, nil),
       mapManager: mapManager,
@@ -19,7 +19,7 @@ open class TGNoCard: TGCard {
     )
   }
   
-  open required init?(coder: NSCoder) {
+  public required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
   
