@@ -7,7 +7,7 @@ let package = Package(
   name: "TGCardViewController",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v10)
+    .iOS(.v12)
   ],
   products: [
     .library(
