@@ -9,9 +9,9 @@
 import UIKit
 
 /// This "card" let's you display map content without a card, through the map manager.
-public final class TGNoCard: TGCard {
+open class TGNoCard: TGCard {
   
-  public init(title: String, mapManager: TGCompatibleMapManager) {
+  open init(title: String, mapManager: TGCompatibleMapManager) {
     super.init(
       title: .default(title, nil, nil),
       mapManager: mapManager,
@@ -19,11 +19,11 @@ public final class TGNoCard: TGCard {
     )
   }
   
-  public required init?(coder: NSCoder) {
+  open required init?(coder: NSCoder) {
     super.init(coder: coder)
   }
   
-  public override func encode(with aCoder: NSCoder) {
+  open override func encode(with aCoder: NSCoder) {
     super.encode(with: aCoder)
   }
   
