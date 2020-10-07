@@ -675,6 +675,16 @@ open class TGCardViewController: UIViewController {
     }
   }
   
+  
+  /// Call this if you changed the status of the toolbar at the bottom, it might not be reflected automatically,
+  /// so it's best to call this to make sure it is.
+  public func didUpdateToolbarVisibility(animated: Bool = true) {
+    view.setNeedsUpdateConstraints()
+    UIView.animate(withDuration: animated ? 0.25 : 0) {
+      self.view.updateConstraints()
+    }
+  }
+  
   /// This method updates the constraint controlling the height of the card's content
   /// wrapper.
   private func updateContentWrapperHeightConstraint() {
