@@ -219,6 +219,15 @@ open class TGCardViewController: UIViewController {
   public var locationButtonPosition: TGButtonPosition = .top
   
   private var defaultButtons: [UIView]!
+  
+  public var draggingCardEnabled: Bool {
+    get {
+      panner.isEnabled
+    }
+    set {
+      panner.isEnabled = newValue
+    }
+  }
 
   /// This is just for debugging issues where it helps to disable
   /// everything related to panning. Otherwise it should always
@@ -1376,7 +1385,8 @@ extension TGCardViewController {
     guard
       mode == .floating,
       let scrollView = recogniser.view as? UIScrollView,
-      scrollView == topCardView?.contentScrollView
+      scrollView == topCardView?.contentScrollView,
+      panner.isEnabled
       else { return }
     
     let negativity = scrollView.contentOffset.y

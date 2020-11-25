@@ -85,6 +85,9 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
   public var edgePadding: UIEdgeInsets = .zero {
     didSet { reactToNewEdgePadding(edgePadding)}
   }
+  
+  /// Set to `false` to disable restoring the previous map rect when popping back to this
+  public var restoreMapRect: Bool = true
 
   private var previousMapState: MapState?
   
@@ -120,7 +123,9 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
     
     mapView.addAnnotations(annotations)
     
-    if let toRestore = restoredMapRect {
+    if restoreMapRect == false {
+      // do nothing
+    } else if let toRestore = restoredMapRect {
       mapView.setVisibleMapRect(toRestore, animated: false)
       restoredMapRect = nil
     } else {
