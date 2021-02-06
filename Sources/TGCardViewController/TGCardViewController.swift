@@ -1556,9 +1556,14 @@ extension TGCardViewController {
       fadeMapFloatingViews(true, animated: animated)
     }
     
-    // Card
     UIView.animate(withDuration: animated ? 0.25 : 0) {
-      self.topCardView?.alpha = show ? 1 : 0
+      // hide the card and disable all card-based interaction
+      self.panner.isEnabled = show
+      self.cardWrapperShadow?.isUserInteractionEnabled = show
+      self.cardWrapperShadow?.alpha = show ? 1 : 0
+      
+      // update the map shadow; have to hide it in `extended`
+      self.updateMapShadow(for: show ? self.cardPosition : .collapsed)
     }
   }
   
@@ -1567,7 +1572,9 @@ extension TGCardViewController {
   private func fadeMapFloatingViews(_ fade: Bool, animated: Bool) {
     UIView.animate(withDuration: animated ? 0.25: 0) {
       self.topFloatingViewWrapper.alpha = fade ? 0 : 1
+      self.topFloatingViewWrapper.isUserInteractionEnabled = !fade
       self.bottomFloatingViewWrapper.alpha = fade ? 0 : 1
+      self.bottomFloatingViewWrapper.isUserInteractionEnabled = !fade
     }
   }
   
