@@ -579,10 +579,15 @@ open class TGCardViewController: UIViewController {
     
     let cardY = cardWrapperDesiredTopConstraint.constant
     
+    // Add it a bit of extra space around the switch-over to still detect
+    // same position after hiding/showing bars
+    let peakMargin = peakY - 44
+    let collapsedMargin = collapsedMinY - 44
+    
     switch (cardY, traitCollection.verticalSizeClass) {
-    case (0..<peakY, _):                      return .extended
-    case (peakY..<collapsedMinY, .regular):   return .peaking
-    default:                                  return .collapsed
+    case (0..<peakMargin, _):                       return .extended
+    case (peakMargin..<collapsedMargin, .regular):  return .peaking
+    default:                                        return .collapsed
     }
   }
   
