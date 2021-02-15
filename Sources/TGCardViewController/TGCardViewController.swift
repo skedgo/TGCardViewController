@@ -1611,8 +1611,8 @@ extension TGCardViewController {
     var bottomViews: [UIView] = []
     
     switch locationButtonPosition {
-    case .top: topViews = defaultButtons.filter { !($0.isHidden) }
-    case .bottom: bottomViews = defaultButtons.filter { !($0.isHidden) }
+    case .top: topViews = defaultButtons
+    case .bottom: bottomViews = defaultButtons
     }
     
     // Because we want to relocate buttons in the top toolbar
