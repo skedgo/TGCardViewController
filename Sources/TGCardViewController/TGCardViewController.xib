@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -50,23 +50,23 @@
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XA2-1g-kYz" userLabel="Content View">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
-                        <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7" userLabel="Map View Wrapper">
+                        <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7" userLabel="Map View Wrapper">
                             <rect key="frame" x="0.0" y="44" width="414" height="852"/>
                         </view>
-                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="329" placeholderIntrinsicHeight="44" translatesAutoresizingMaskIntoConstraints="NO" id="Bxf-J1-ygI" userLabel="Top Info Wrapper">
-                            <rect key="frame" x="42.666666666666657" y="28" width="329" height="44"/>
+                        <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="Bxf-J1-ygI" userLabel="Top Info Wrapper">
+                            <rect key="frame" x="16" y="28" width="382" height="44"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="44" placeholder="YES" id="SYM-Qy-rtL"/>
+                                <constraint firstAttribute="height" priority="750" constant="44" placeholder="YES" id="SYM-Qy-rtL"/>
                             </constraints>
                         </view>
-                        <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="45" placeholderIntrinsicHeight="91" translatesAutoresizingMaskIntoConstraints="NO" id="DJJ-p5-rXz" userLabel="Top Floating View Wrapper">
-                            <rect key="frame" x="387.66666666666669" y="28" width="18.333333333333314" height="91"/>
+                        <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" placeholderIntrinsicWidth="45" placeholderIntrinsicHeight="91" translatesAutoresizingMaskIntoConstraints="NO" id="DJJ-p5-rXz" userLabel="Top Floating View Wrapper">
+                            <rect key="frame" x="406" y="28" width="0.0" height="91"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="3Nr-Q0-9p1">
-                                <rect key="frame" x="0.0" y="0.0" width="18.333333333333314" height="91"/>
+                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="91"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="KR7-zo-rfe" userLabel="Top floating view">
-                                        <rect key="frame" x="0.0" y="0.0" width="18" height="91"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="91"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUA-9F-ExZ">
                                                 <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
@@ -240,9 +240,11 @@
                             </variation>
                         </view>
                     </subviews>
+                    <viewLayoutGuide key="safeArea" id="p4A-z3-3Ce"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="XA2-1g-kYz" secondAttribute="top" id="0es-h4-clN"/>
+                        <constraint firstItem="p4A-z3-3Ce" firstAttribute="top" secondItem="DJJ-p5-rXz" secondAttribute="top" constant="16" id="0oW-ac-gCq"/>
                         <constraint firstItem="ewk-8T-6Fw" firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="0wl-hr-BEj"/>
                         <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="ewk-8T-6Fw" secondAttribute="bottom" constant="-16" id="1Mc-Uh-pXD"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="centerX" secondItem="zI8-lz-Md7" secondAttribute="centerX" id="4HE-3s-wMK"/>
@@ -256,9 +258,10 @@
                             <variation key="heightClass=compact-widthClass=compact" constant="8"/>
                         </constraint>
                         <constraint firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="DGx-yq-huX"/>
-                        <constraint firstItem="DJJ-p5-rXz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Bxf-J1-ygI" secondAttribute="trailing" constant="16" id="EbM-gV-S5b"/>
+                        <constraint firstItem="DJJ-p5-rXz" firstAttribute="leading" secondItem="Bxf-J1-ygI" secondAttribute="trailing" priority="750" constant="16" id="EbM-gV-S5b"/>
                         <constraint firstItem="zlR-ey-yL8" firstAttribute="top" secondItem="p4A-z3-3Ce" secondAttribute="top" id="Fry-S6-Jdj"/>
                         <constraint firstItem="Bui-Tf-j0O" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="XA2-1g-kYz" secondAttribute="bottom" id="Jre-w3-XPE"/>
+                        <constraint firstItem="p4A-z3-3Ce" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Bxf-J1-ygI" secondAttribute="trailing" constant="16" id="Ky1-pY-zsd"/>
                         <constraint firstItem="p4A-z3-3Ce" firstAttribute="trailing" secondItem="u6M-z2-2xb" secondAttribute="trailing" constant="8" id="L6r-OI-DlW"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="centerY" secondItem="zI8-lz-Md7" secondAttribute="centerY" id="Q0s-vO-Y4E"/>
                         <constraint firstItem="Bxf-J1-ygI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Bui-Tf-j0O" secondAttribute="trailing" constant="16" id="QcC-bz-xjm"/>
@@ -266,7 +269,7 @@
                         <constraint firstItem="ewk-8T-6Fw" firstAttribute="top" secondItem="XA2-1g-kYz" secondAttribute="top" id="Vi9-1z-ei1"/>
                         <constraint firstAttribute="trailing" secondItem="DJJ-p5-rXz" secondAttribute="trailing" constant="22" id="Xw1-VR-Evc"/>
                         <constraint firstAttribute="trailing" secondItem="zI8-lz-Md7" secondAttribute="trailing" id="a3k-8B-nAB"/>
-                        <constraint firstItem="Bxf-J1-ygI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="p4A-z3-3Ce" secondAttribute="leading" constant="16" id="aLo-hb-3fH"/>
+                        <constraint firstItem="Bxf-J1-ygI" firstAttribute="leading" secondItem="p4A-z3-3Ce" secondAttribute="leading" constant="16" id="aLo-hb-3fH"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="width" secondItem="zI8-lz-Md7" secondAttribute="width" id="ehb-Zi-cMv"/>
                         <constraint firstItem="Bui-Tf-j0O" firstAttribute="height" secondItem="zI8-lz-Md7" secondAttribute="height" constant="-50" id="hEc-8X-109"/>
                         <constraint firstItem="zlR-ey-yL8" firstAttribute="leading" secondItem="p4A-z3-3Ce" secondAttribute="leading" id="hZI-xg-8Wz"/>
@@ -281,14 +284,13 @@
                         <constraint firstItem="ewk-8T-6Fw" firstAttribute="leading" secondItem="Bui-Tf-j0O" secondAttribute="leading" id="xxs-tH-iF9"/>
                         <constraint firstItem="p4A-z3-3Ce" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Bui-Tf-j0O" secondAttribute="top" constant="100" id="zKc-st-3DD"/>
                     </constraints>
-                    <viewLayoutGuide key="safeArea" id="p4A-z3-3Ce"/>
                     <variation key="default">
                         <mask key="constraints">
                             <exclude reference="iRG-l2-Ubl"/>
                             <exclude reference="0es-h4-clN"/>
-                            <exclude reference="52A-gC-vvw"/>
                             <exclude reference="QcC-bz-xjm"/>
                             <exclude reference="Xw1-VR-Evc"/>
+                            <exclude reference="52A-gC-vvw"/>
                             <exclude reference="4dC-NG-76m"/>
                         </mask>
                     </variation>
@@ -306,10 +308,10 @@
                             <include reference="iRG-l2-Ubl"/>
                             <include reference="0es-h4-clN"/>
                             <exclude reference="1Mc-Uh-pXD"/>
-                            <exclude reference="7ls-iv-MHj"/>
-                            <exclude reference="DGx-yq-huX"/>
                             <include reference="QcC-bz-xjm"/>
                             <exclude reference="aLo-hb-3fH"/>
+                            <exclude reference="7ls-iv-MHj"/>
+                            <exclude reference="DGx-yq-huX"/>
                         </mask>
                     </variation>
                     <variation key="heightClass=compact-widthClass=compact">
@@ -317,9 +319,9 @@
                             <exclude reference="1uG-yl-0le"/>
                         </mask>
                         <mask key="constraints">
+                            <include reference="Vi9-1z-ei1"/>
                             <include reference="0es-h4-clN"/>
                             <exclude reference="1Mc-Uh-pXD"/>
-                            <include reference="Vi9-1z-ei1"/>
                             <include reference="52A-gC-vvw"/>
                             <exclude reference="DGx-yq-huX"/>
                         </mask>
@@ -337,6 +339,7 @@
                     <blurEffect style="regular"/>
                 </visualEffectView>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="8Rl-lt-4c1"/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="XA2-1g-kYz" secondAttribute="bottom" id="5G9-6V-snY"/>
@@ -349,7 +352,6 @@
                 <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" relation="greaterThanOrEqual" secondItem="hZy-nx-c0N" secondAttribute="bottom" id="fiw-Qy-BEt"/>
                 <constraint firstItem="XA2-1g-kYz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="k63-Jw-xS7"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="8Rl-lt-4c1"/>
             <point key="canvasLocation" x="33.5" y="53.5"/>
         </view>
     </objects>

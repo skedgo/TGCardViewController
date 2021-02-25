@@ -313,9 +313,15 @@ open class TGCardViewController: UIViewController {
       cardWrapperShadow.layer.shadowOffset = .zero
       cardWrapperShadow.layer.shadowRadius = 12
       cardWrapperShadow.layer.shadowOpacity = 0.5
+      updateShadowPaths()
     }
     
     monitorVoiceOverStatus()
+  }
+  
+  private func updateShadowPaths() {
+    cardWrapperShadow.layer.shadowPath = UIBezierPath(rect: cardWrapperShadow.bounds).cgPath
+    headerView.layer.shadowPath = UIBezierPath(rect: headerView.bounds).cgPath
   }
   
   private func setupGestures() {
@@ -454,6 +460,9 @@ open class TGCardViewController: UIViewController {
     // The visibility of floating views depends on size classes too.
     updateFloatingViewsVisibility()
     
+    // Re-render the shadow paths to the new sizing
+    updateShadowPaths()
+    
     // When we started a paging card in the peak state while the device is in
     // portrait mode, all of its contents are not scrollable. If we now switch
     // to landscape mode, the card will be in the extended state, which requires
@@ -485,6 +494,7 @@ open class TGCardViewController: UIViewController {
     updateFloatingViewsConstraints()
     updateTopInfoViewConstraints()
     view.setNeedsUpdateConstraints()
+    updateShadowPaths()
     
     if !mapView.frame.isEmpty {
       let edgePadding = mapEdgePadding(for: cardPosition)
@@ -1520,6 +1530,7 @@ extension TGCardViewController {
     view.snap(to: topInfoViewWrapper)
     
     topInfoViewWrapper.alpha = 0
+    topInfoViewWrapper.isHidden = false
     UIView.animate(withDuration: animated ? 0.25 : 0) {
       self.topInfoViewWrapper.alpha = 1
     }
@@ -1530,6 +1541,16 @@ extension TGCardViewController {
       self.topInfoViewWrapper.alpha = 0
     }, completion: { (_) in
       self.topInfoViewWrapper.subviews.forEach { $0.removeFromSuperview() }
+      
+      // This is to satisfy autolayout
+      let dummy = UIView()
+      dummy.translatesAutoresizingMaskIntoConstraints = false
+      dummy.heightAnchor.constraint(equalToConstant: 0).isActive = true
+      dummy.alpha = 0
+      self.topInfoViewWrapper.addSubview(dummy)
+      dummy.snap(to: self.topInfoViewWrapper)
+      
+      self.topInfoViewWrapper.isHidden = true
     })
   }
   
@@ -1763,7 +1784,7 @@ extension TGCardViewController {
     headerView.layer.shadowOffset = .zero
     headerView.layer.shadowRadius = 12
     headerView.layer.shadowOpacity = 0.5
-
+    updateShadowPaths()
   }
   
   private func updateHeaderConstraints() {
