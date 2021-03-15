@@ -57,7 +57,7 @@ public struct TGCardStyle {
   /// @default: TripKitUI Black 5
   public var closeButtonBackgroundColor: UIColor = {
      if #available(iOS 13.0, *) {
-        return .quaternaryLabel
+        return .tertiarySystemGroupedBackground
      } else {
        return #colorLiteral(red: 0.13, green: 0.16, blue: 0.2, alpha: 0.08)
      }
