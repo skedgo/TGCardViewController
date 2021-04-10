@@ -478,7 +478,7 @@ open class TGCardViewController: UIViewController {
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     
-    if view.superview != nil {
+    if view.superview != nil, !mapView.frame.isEmpty {
       if !didAddInitialCards {
         initialCards.forEach { push($0, animated: false) }
         didAddInitialCards = true
@@ -629,8 +629,11 @@ open class TGCardViewController: UIViewController {
   
   /// The current amount of points of content at the top of the view
   /// that's overlapping with the map. Includes status bar, if visible.
-  fileprivate var topOverlap: CGFloat { view.safeAreaInsets.top }
-  
+  fileprivate var topOverlap: CGFloat {
+    guard isViewLoaded else { return 0 }
+    return view.safeAreaInsets.top
+  }
+
   /// The edge padding for the map that map managers should use
   /// to determine the zoom and scroll position of the map.
   ///
@@ -800,6 +803,10 @@ extension TGCardViewController {
                    copyStyle: Bool = true,
                    completionHandler: (() -> Void)? = nil
   ) {
+    guard isViewLoaded else {
+      return assertionFailure("Tried to push before view was loaded")
+    }
+    
     // Set the controller on the top card earlier, because we may want
     // to ask the card to do something on willAppear, e.g., show sticky 
     // bar, which requires access to this property.
