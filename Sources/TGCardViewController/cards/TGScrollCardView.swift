@@ -37,10 +37,7 @@ public class TGScrollCardView: TGCardView {
   // MARK: - Configuration
   
   override func configure(with card: TGCard) {
-    super.configure(with: card)
-    
     let scrollView: UIScrollView
-    
     if let tableCard = card as? TGTableCard {
       let tableView = TGKeyboardTableView(frame: .zero, style: tableCard.tableStyle)
       tableView.backgroundColor = .clear
@@ -70,6 +67,12 @@ public class TGScrollCardView: TGCardView {
     } else {
       preconditionFailure()
     }
+    
+    self.configure(scrollView, with: card)
+  }
+  
+  open func configure(_ scrollView: UIScrollView, with card: TGCard) {
+    super.configure(with: card)
     
     scrollViewWrapper.addSubview(scrollView)
     scrollView.snap(to: scrollViewWrapper)
