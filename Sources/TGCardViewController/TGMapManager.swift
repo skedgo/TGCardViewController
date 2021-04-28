@@ -10,7 +10,7 @@ import Foundation
 
 import MapKit
 
-public protocol TGCompatibleMapManager: class {
+public protocol TGCompatibleMapManager: AnyObject {
   
   /// Called to add content to the map
   ///

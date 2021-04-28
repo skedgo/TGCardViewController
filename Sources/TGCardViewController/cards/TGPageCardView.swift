@@ -9,7 +9,7 @@
 import UIKit
 
 
-protocol TGPageCardViewDelegate: class {
+protocol TGPageCardViewDelegate: AnyObject {
   
   func didChangeCurrentPage(to index: Int, animated: Bool)
   

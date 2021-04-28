@@ -14,7 +14,7 @@ import UIKit
 
 import MapKit
 
-public protocol TGCardViewControllerDelegate: class {
+public protocol TGCardViewControllerDelegate: AnyObject {
   func requestsDismissal(for controller: TGCardViewController)
 }
 
