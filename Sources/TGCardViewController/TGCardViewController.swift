@@ -213,7 +213,16 @@ open class TGCardViewController: UIViewController {
     didSet { applyToolbarItemStyle() }
   }
   
-  /// Position of current location button
+  /// Toggle for the default current location and compass buttons.
+  ///
+  /// - warning: Needs to be set **before** first loading the view controller's view.
+  ///
+  /// @default: `true`
+  public var showDefaultButtons: Bool = true
+  
+  /// Position of current location and compass buttons
+  ///
+  /// Only used if `showDefaultButtons` is set to `true`.
   ///
   /// @default: `top`
   public var locationButtonPosition: TGButtonPosition = .top
@@ -289,10 +298,14 @@ open class TGCardViewController: UIViewController {
     setupGestures()
     
     // Create the default buttons
-    self.defaultButtons = [
-        builder.buildUserTrackingButton(for: mapView),
-        builder.buildCompassButton(for: mapView)
-      ].compactMap { $0 }
+    if showDefaultButtons {
+      defaultButtons = [
+          builder.buildUserTrackingButton(for: mapView),
+          builder.buildCompassButton(for: mapView)
+        ].compactMap { $0 }
+    } else {
+      defaultButtons = []
+    }
     
     // Setting up additional constraints
     cardWrapperHeightConstraint.constant = extendedMinY * -1
