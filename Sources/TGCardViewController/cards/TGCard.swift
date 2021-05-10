@@ -157,7 +157,7 @@ open class TGCard: UIResponder, NSCoding {
   }
   
   open override var next: UIResponder? {
-    return parentCard ?? controller
+    return parentCard ?? controller?.originalNext
   }
   
   // MARK: - Restoration

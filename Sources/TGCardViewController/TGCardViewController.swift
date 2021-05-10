@@ -258,6 +258,8 @@ open class TGCardViewController: UIViewController {
   private var previousStatusBarStyle: UIStatusBarStyle?
   private var headerStatusBarStyle: UIStatusBarStyle?
 
+  private(set) var originalNext: UIResponder?
+  
   // MARK: - UIViewController
   
   open override func awakeFromNib() {
@@ -2132,6 +2134,15 @@ extension TGCardViewController {
     // controller
 
     topCard?.becomeFirstResponder()
+  }
+  
+  open override var next: UIResponder? {
+    get {
+      topCard ?? originalNext
+    }
+    set {
+      originalNext = newValue
+    }
   }
   
   open override var canBecomeFirstResponder: Bool {
