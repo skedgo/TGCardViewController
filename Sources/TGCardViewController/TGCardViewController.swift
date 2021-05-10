@@ -2168,6 +2168,12 @@ extension TGCardViewController {
     ]
     
     if presentedViewController != nil {
+      #if targetEnvironment(macCatalyst)
+      commands.append(
+        UIKeyCommand(
+          input: "d", modifierFlags: .command, action: #selector(dismissPresentee)
+      ))
+      #else
       commands.append(
         UIKeyCommand(
           input: "w", modifierFlags: .command, action: #selector(dismissPresentee),
@@ -2177,18 +2183,11 @@ extension TGCardViewController {
           )
       ))
       
-      #if targetEnvironment(macCatalyst)
-      commands.append(
-        UIKeyCommand(
-          input: "d", modifierFlags: .command, action: #selector(dismissPresentee)
-      ))
-      #else
       commands.append(
         UIKeyCommand(
           input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissPresentee)
       ))
       #endif
-
 
     } else if topCard != nil, cards.count > 1 || delegate != nil {
       commands.append(
