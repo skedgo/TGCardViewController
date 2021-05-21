@@ -206,13 +206,13 @@ open class TGCardViewController: UIViewController {
   private var didAddInitialCards = false
   
   /// The style that's applied to the cards' top and bottom map tool
-  /// bar itms.
+  /// bar items.
   ///
-  /// @default: `TGButtonStyle.roundedRect`
-  public var buttonStyle: TGButtonStyle = .roundedRect {
+  /// @default: `TGButtonStyle()`
+  public var buttonStyle: TGButtonStyle = .init() {
     didSet { applyToolbarItemStyle() }
   }
-  
+
   /// Toggle for the default current location and compass buttons.
   ///
   /// - warning: Needs to be set **before** first loading the view controller's view.
@@ -1636,17 +1636,44 @@ extension TGCardViewController {
   }
   
   private func applyToolbarItemStyle() {
-    switch self.buttonStyle {
-    case .roundedRect:
-      topFloatingViewWrapper.layer.cornerRadius = 8
-      bottomFloatingViewWrapper.layer.cornerRadius = 8
-    case .circle:
-      topFloatingViewWrapper.layer.cornerRadius = topFloatingViewWrapper.frame.width / 2
-      bottomFloatingViewWrapper.layer.cornerRadius = bottomFloatingViewWrapper.frame.height / 2
-    case .none:
-      topFloatingViewWrapper.layer.cornerRadius = 0
-      bottomFloatingViewWrapper.layer.cornerRadius = 0
+    func apply(on view: UIView) {
+      switch buttonStyle.shape {
+      case .roundedRect:
+        view.layer.cornerRadius = 8
+      case .circle:
+        view.layer.cornerRadius = view.frame.width / 2
+      case .none:
+        view.layer.cornerRadius = 0
+      }
+      
+      if let customTint = buttonStyle.tintColor {
+        view.tintColor = customTint
+      }
+
+      guard let visualView = view as? UIVisualEffectView else {
+        return assertionFailure()
+      }
+      if buttonStyle.isTranslucent {
+        visualView.effect = UIBlurEffect(style: .regular)
+        visualView.layer.borderWidth = 0
+        visualView.layer.shadowOpacity = 0
+      } else {
+        if #available(iOS 13.0, *) {
+          visualView.effect = UIBlurEffect(style: .systemThickMaterial)
+        } else {
+          visualView.effect = UIBlurEffect(style: .extraLight)
+        }
+        visualView.layer.borderColor = UIColor(white: 0, alpha: 0.05).cgColor
+        visualView.layer.borderWidth = 0.5
+        visualView.layer.shadowOpacity = 0.16
+        visualView.layer.shadowColor = UIColor.black.cgColor
+        visualView.layer.shadowOffset = .init(width: 0, height: 2)
+        visualView.layer.shadowRadius = 4
+      }
     }
+    
+    apply(on: topFloatingViewWrapper)
+    apply(on: bottomFloatingViewWrapper)
   }
   
   private func updateFloatingViewsContent() {

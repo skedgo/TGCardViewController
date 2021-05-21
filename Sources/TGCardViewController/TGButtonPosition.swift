@@ -6,7 +6,7 @@
 //  Copyright © 2018 SkedGo Pty Ltd. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public enum TGButtonPosition {
   /// In the top right of the map, underneath the status bar
@@ -18,14 +18,30 @@ public enum TGButtonPosition {
   case bottom
 }
 
-public enum TGButtonStyle {
-  /// Rectangle with rounded corners
-  case roundedRect
+public struct TGButtonStyle {
+  /// Default style is rounded rect, no special tint colour and translucent
+  public init(shape: TGButtonStyle.Shape = .roundedRect, tintColor: UIColor? = nil, isTranslucent: Bool = true) {
+    self.shape = shape
+    self.tintColor = tintColor
+    self.isTranslucent = isTranslucent
+  }
   
-  /// Circular. Note this also looks half-decent when there's only a
-  /// single button per toolbar.
-  case circle
+  public enum Shape {
+    /// Rectangle with rounded corners
+    case roundedRect
+    
+    /// Circular. Note this also looks half-decent when there's only a
+    /// single button per toolbar.
+    case circle
+    
+    /// No ornamentation
+    case none
+  }
   
-  /// No ornamentation
-  case none
+  public let shape: Shape
+  
+  /// Custom tint colour. Uses default tint colour if set to `nil`
+  public let tintColor: UIColor?
+  
+  public let isTranslucent: Bool
 }
