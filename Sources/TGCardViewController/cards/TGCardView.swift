@@ -99,11 +99,11 @@ public class TGCardView: TGCornerView {
     dismissButton?.isSpringLoaded = isSpringLoaded
   }
   
-  weak var owningCard: TGCard?
+  private weak var owningCard: TGCard?
   
-  public override var next: UIResponder? {
-    return owningCard
-  }
+  public override var canBecomeFirstResponder: Bool { true }
+  
+  public override var next: UIResponder? { owningCard }
   
   func configure(with card: TGCard) {
     self.owningCard = card
