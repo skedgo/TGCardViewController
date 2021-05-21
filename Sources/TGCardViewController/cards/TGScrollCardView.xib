@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17132" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -26,32 +26,19 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BVa-Zk-vPf" userLabel="Content Separator">
-                    <rect key="frame" x="0.0" y="152" width="375" height="1"/>
+                    <rect key="frame" x="0.0" y="152.5" width="375" height="0.5"/>
                     <color key="backgroundColor" red="0.81960784313725488" green="0.81960784313725488" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="1" id="V4j-cP-Twe"/>
+                        <constraint firstAttribute="height" constant="0.5" id="V4j-cP-Twe"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8CX-8x-KQh">
-                    <rect key="frame" x="299" y="583" width="60" height="60"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="60" id="7h8-1D-VSK"/>
-                        <constraint firstAttribute="height" constant="60" id="LPw-ci-An0"/>
-                    </constraints>
-                    <state key="normal" title="Button"/>
-                    <connections>
-                        <action selector="floatingButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="8KO-h6-Zze"/>
-                    </connections>
-                </button>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="4TM-kT-hhY"/>
-                <constraint firstAttribute="trailing" secondItem="8CX-8x-KQh" secondAttribute="trailing" constant="16" id="526-vy-eNr"/>
                 <constraint firstAttribute="trailing" secondItem="BVa-Zk-vPf" secondAttribute="trailing" id="CO8-ZL-OS1"/>
                 <constraint firstItem="z8r-SX-8cz" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="ErA-B2-YqQ"/>
-                <constraint firstItem="BVa-Zk-vPf" firstAttribute="top" secondItem="z8r-SX-8cz" secondAttribute="bottom" constant="-1" id="FqL-uv-qrm"/>
-                <constraint firstAttribute="bottom" secondItem="8CX-8x-KQh" secondAttribute="bottom" constant="20" id="GdD-xC-t2f"/>
+                <constraint firstItem="BVa-Zk-vPf" firstAttribute="top" secondItem="z8r-SX-8cz" secondAttribute="bottom" constant="-0.5" id="FqL-uv-qrm"/>
                 <constraint firstItem="BVa-Zk-vPf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="IEb-Pd-vkL"/>
                 <constraint firstItem="lf5-YV-zqk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="JhJ-X6-bzM"/>
                 <constraint firstItem="TwM-rE-f4a" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="MDl-un-wgE"/>
@@ -65,7 +52,6 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="contentSeparator" destination="BVa-Zk-vPf" id="083-IL-zVL"/>
-                <outlet property="floatingButton" destination="8CX-8x-KQh" id="YP1-li-oqc"/>
                 <outlet property="grabHandle" destination="lf5-YV-zqk" id="fmS-0K-Vki"/>
                 <outlet property="scrollViewWrapper" destination="TwM-rE-f4a" id="H0P-4t-wWt"/>
                 <outlet property="titleViewPlaceholder" destination="z8r-SX-8cz" id="H73-7J-aRa"/>

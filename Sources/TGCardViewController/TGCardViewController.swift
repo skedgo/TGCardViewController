@@ -81,7 +81,7 @@ open class TGCardViewController: UIViewController {
     /// top of the card to keep a bit of the map always showing through.
     fileprivate static let minMapSpace: CGFloat = 50
     
-    fileprivate static let minMapSpaceWithHomeIndicator: CGFloat = 25
+    fileprivate static let minMapSpaceWithHomeIndicator: CGFloat = 12
     
     fileprivate static let minCardHeightWhenCollapsed: CGFloat = 44 * 0.66
     
@@ -323,9 +323,9 @@ open class TGCardViewController: UIViewController {
     // Add a bit of a shadow behind card.
     if mode == .floating {
       cardWrapperShadow.layer.shadowColor = UIColor.black.cgColor
-      cardWrapperShadow.layer.shadowOffset = .zero
-      cardWrapperShadow.layer.shadowRadius = 12
-      cardWrapperShadow.layer.shadowOpacity = 0.5
+      cardWrapperShadow.layer.shadowOffset = .init(width: 0, height: 2)
+      cardWrapperShadow.layer.shadowRadius = 4
+      cardWrapperShadow.layer.shadowOpacity = 0.16
       updateShadowPaths()
     }
     

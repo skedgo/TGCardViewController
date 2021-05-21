@@ -38,12 +38,6 @@ public class TGCardView: TGCornerView {
   /// card view.
   @IBOutlet weak var contentSeparator: UIView?
   
-  /// Optional floating button.
-  ///
-  /// The button is only visible when the corresponding action closure
-  /// is set.
-  @IBOutlet weak var floatingButton: UIButton?
-  
   /// Each card view needs a scroll view where the main content of the
   /// card goes. The card controller need access to it, in order to
   /// handling dragging the card up and down.
@@ -76,25 +70,12 @@ public class TGCardView: TGCornerView {
     return scrollView.frame.minY
   }
   
-  /// The closure to execute when the button is pressed.
-  var onFloatingButtonPressed: (() -> Void)? {
-    didSet {
-      floatingButton?.isHidden = onFloatingButtonPressed == nil
-    }
-  }
-  
   override public func awakeFromNib() {
     super.awakeFromNib()
     
     contentSeparator?.isHidden = true
     if #available(iOS 13.0, *) {
-      contentSeparator?.backgroundColor = .separator
-    }
-    
-    if let floatie = floatingButton {
-      floatie.isHidden = true
-      floatie.setImage(nil, for: .normal)
-      floatie.setTitle(nil, for: .normal)      
+      contentSeparator?.backgroundColor = .opaqueSeparator
     }
   }
   
@@ -153,21 +134,6 @@ public class TGCardView: TGCornerView {
     
     // Apply custom styling
     applyStyling(card.style)
-    
-    if let action = card.floatingButtonAction {
-      // TODO: We should add an accessibility label here
-      // See: https://gitlab.com/SkedGo/tripgo-cards-ios/merge_requests/14#note_27632714
-      floatingButton?.setTitle(nil, for: .normal)
-      
-      switch action.style {
-      case .add(let color):
-        floatingButton?.setImage(TGCardStyleKit.imageOfFloatingButton(floatingButtonBackground: color), for: .normal)
-      case .custom(let image):
-        floatingButton?.setImage(image, for: .normal)
-      }
-      
-      onFloatingButtonPressed = action.onPressed
-    }
   }
   
   // MARK: - Title View Configuration
@@ -249,9 +215,4 @@ public class TGCardView: TGCornerView {
     contentScrollView?.alpha = value
   }
   
-  // MARK: - User interaction
-  
-  @IBAction func floatingButtonTapped(_ sender: Any) {
-    onFloatingButtonPressed?()
-  }
 }

@@ -47,13 +47,6 @@ open class TGCard: UIResponder, NSCoding {
     case none
   }
   
-  /// Enumeration of supported floating button styles. Use by setting
-  /// `card.floatingButtonAction`.
-  public enum FloatingButtonStyle {
-    case add(UIColor)
-    case custom(UIImage)
-  }
-  
   /// The default image for the close button on a card, with default color
   public static let closeButtonImage = TGCardStyleKit.imageOfCardCloseIcon()
 
@@ -121,9 +114,6 @@ open class TGCard: UIResponder, NSCoding {
   /// - Warning: Only has an impact if set right after initialisations and before
   ///   the card is pushed.
   public var showCloseButton = true
-  
-  /// The action to execute when floating button is pressed.
-  public var floatingButtonAction: (style: FloatingButtonStyle, onPressed: () -> Void)?
   
   // MARK: - Creating Cards
   

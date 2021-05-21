@@ -109,55 +109,6 @@ class TGCardStyleKit : NSObject {
 
     }
 
-    @objc dynamic class func drawFloatingButton(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 60, height: 60), resizing: ResizingBehavior = .aspectFit, floatingButtonBackground: UIColor = UIColor(red: 0.000, green: 0.800, blue: 0.400, alpha: 1.000)) {
-        //// General Declarations
-        let context = UIGraphicsGetCurrentContext()!
-        
-        //// Resize to Target Frame
-        context.saveGState()
-        let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 60, height: 60), target: targetFrame)
-        context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
-        context.scaleBy(x: resizedFrame.width / 60, y: resizedFrame.height / 60)
-        let resizedShadowScale: CGFloat = min(resizedFrame.width / 60, resizedFrame.height / 60)
-
-
-
-        //// Shadow Declarations
-        let shadow = NSShadow()
-        shadow.shadowColor = UIColor.black.withAlphaComponent(0.54)
-        shadow.shadowOffset = CGSize(width: 1, height: 1)
-        shadow.shadowBlurRadius = 4
-
-        //// Variable Declarations
-        let length: CGFloat = 20
-        let innerOrigin = CGPoint(x: length / 4.0, y: length / 4.0)
-
-        //// Oval Drawing
-        let ovalPath = UIBezierPath(ovalIn: CGRect(x: innerOrigin.x, y: innerOrigin.y, width: (length + 30), height: (length + 30)))
-        context.saveGState()
-        context.setShadow(offset: CGSize(width: shadow.shadowOffset.width * resizedShadowScale, height: shadow.shadowOffset.height * resizedShadowScale), blur: shadow.shadowBlurRadius * resizedShadowScale, color: (shadow.shadowColor as! UIColor).cgColor)
-        floatingButtonBackground.setFill()
-        ovalPath.fill()
-        context.restoreGState()
-
-
-
-        //// Bezier Drawing
-        let bezierPath = UIBezierPath()
-        bezierPath.move(to: CGPoint(x: 19.5, y: 30.16))
-        bezierPath.addLine(to: CGPoint(x: 39.5, y: 30.16))
-        bezierPath.move(to: CGPoint(x: 30.06, y: 20.5))
-        bezierPath.addLine(to: CGPoint(x: 30.06, y: 40.5))
-        floatingButtonBackground.setFill()
-        bezierPath.fill()
-        UIColor.white.setStroke()
-        bezierPath.lineWidth = 1
-        bezierPath.stroke()
-        
-        context.restoreGState()
-
-    }
-
     @objc dynamic class func drawCardArrowIcon(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 24, height: 24), resizing: ResizingBehavior = .aspectFit, closeButtonBackground: UIColor = UIColor(red: 0.130, green: 0.160, blue: 0.200, alpha: 0.080), closeButtonCross: UIColor = UIColor(red: 0.440, green: 0.460, blue: 0.480, alpha: 1.000), arrowRotation: CGFloat = 0) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
@@ -246,16 +197,6 @@ class TGCardStyleKit : NSObject {
         UIGraphicsEndImageContext()
 
         return imageOfCardCloseIcon
-    }
-
-    @objc dynamic class func imageOfFloatingButton(floatingButtonBackground: UIColor = UIColor(red: 0.000, green: 0.800, blue: 0.400, alpha: 1.000)) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: 60, height: 60), false, 0)
-            TGCardStyleKit.drawFloatingButton(floatingButtonBackground: floatingButtonBackground)
-
-        let imageOfFloatingButton = UIGraphicsGetImageFromCurrentImageContext()!.withRenderingMode(.alwaysOriginal)
-        UIGraphicsEndImageContext()
-
-        return imageOfFloatingButton
     }
 
     @objc dynamic class func imageOfCardArrowIcon(closeButtonBackground: UIColor = UIColor(red: 0.130, green: 0.160, blue: 0.200, alpha: 0.080), closeButtonCross: UIColor = UIColor(red: 0.440, green: 0.460, blue: 0.480, alpha: 1.000), arrowRotation: CGFloat = 0) -> UIImage {

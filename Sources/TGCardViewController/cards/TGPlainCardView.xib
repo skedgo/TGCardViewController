@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17132" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -30,10 +30,10 @@
                     </variation>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Its-ul-Cm5" userLabel="Content Separator">
-                    <rect key="frame" x="0.0" y="120" width="375" height="1"/>
+                    <rect key="frame" x="0.0" y="120.5" width="375" height="0.5"/>
                     <color key="backgroundColor" red="0.81960784310000001" green="0.81960784310000001" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="1" id="Zg8-LF-Hmk"/>
+                        <constraint firstAttribute="height" constant="0.5" id="Zg8-LF-Hmk"/>
                     </constraints>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dar-6n-Caw">
@@ -50,30 +50,15 @@
                         <constraint firstItem="fpj-MI-D7T" firstAttribute="top" secondItem="Dar-6n-Caw" secondAttribute="top" id="p6T-g1-McS"/>
                     </constraints>
                 </scrollView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nd-sh-0Ix">
-                    <rect key="frame" x="299" y="587" width="60" height="60"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="60" id="7ZP-C3-aEX"/>
-                        <constraint firstAttribute="height" constant="60" id="ATe-Ig-GPI"/>
-                    </constraints>
-                    <state key="normal" title="Button">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="floatingButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="Qfp-Ez-FAg"/>
-                    </connections>
-                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="IKp-9B-y5N" secondAttribute="trailing" id="3MF-bI-QHe"/>
                 <constraint firstAttribute="trailing" secondItem="Dar-6n-Caw" secondAttribute="trailing" id="EeC-BN-kQR"/>
-                <constraint firstAttribute="trailing" secondItem="4nd-sh-0Ix" secondAttribute="trailing" constant="16" id="GnZ-2v-ue3"/>
                 <constraint firstItem="Dar-6n-Caw" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="GxS-7a-gUP"/>
                 <constraint firstItem="IKp-9B-y5N" firstAttribute="top" secondItem="JFj-Bl-Nt0" secondAttribute="bottom" id="LFt-PC-oUG"/>
                 <constraint firstItem="JFj-Bl-Nt0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="OuN-YF-8oH"/>
-                <constraint firstAttribute="bottom" secondItem="4nd-sh-0Ix" secondAttribute="bottom" constant="20" id="PZz-Gq-neg"/>
-                <constraint firstItem="Its-ul-Cm5" firstAttribute="top" secondItem="IKp-9B-y5N" secondAttribute="bottom" constant="-1" id="afn-gy-HPN"/>
+                <constraint firstItem="Its-ul-Cm5" firstAttribute="top" secondItem="IKp-9B-y5N" secondAttribute="bottom" constant="-0.5" id="afn-gy-HPN"/>
                 <constraint firstItem="Its-ul-Cm5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="eqc-mq-Atd"/>
                 <constraint firstAttribute="bottom" secondItem="Dar-6n-Caw" secondAttribute="bottom" id="gnL-8s-eXj"/>
                 <constraint firstItem="IKp-9B-y5N" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="hrP-Gb-G0l"/>
@@ -92,7 +77,6 @@
                 <outlet property="contentSeparator" destination="Its-ul-Cm5" id="20V-OO-GtA"/>
                 <outlet property="contentView" destination="fpj-MI-D7T" id="xMy-mv-ixq"/>
                 <outlet property="contentViewHeightEqualToSuperviewHeightConstraint" destination="vO2-Tx-eXR" id="QSI-Qq-dXx"/>
-                <outlet property="floatingButton" destination="4nd-sh-0Ix" id="Dfx-Mg-Sgd"/>
                 <outlet property="grabHandle" destination="JFj-Bl-Nt0" id="RDe-nF-gpP"/>
                 <outlet property="titleViewPlaceholder" destination="IKp-9B-y5N" id="k2L-7f-2D6"/>
                 <outlet property="titleViewPlaceholderHeight" destination="bKP-gV-MiA" id="uTE-vC-HM8"/>
