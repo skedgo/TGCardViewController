@@ -2173,6 +2173,11 @@ extension TGCardViewController {
         UIKeyCommand(
           input: "d", modifierFlags: .command, action: #selector(dismissPresentee)
       ))
+
+      commands.append(
+        UIKeyCommand(
+          input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissPresentee)
+      ))
       #else
       commands.append(
         UIKeyCommand(
