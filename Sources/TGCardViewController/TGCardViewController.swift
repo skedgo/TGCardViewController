@@ -1534,7 +1534,7 @@ extension TGCardViewController {
     let card = cardElement?.card ?? topCard
     let view = cardElement?.view ?? topCardView
     let isForceExtended = card?.mapManager == nil || mode == .sidebar
-    view?.grabHandles.forEach { $0.isHidden = isForceExtended }
+    view?.grabHandles.forEach { $0.alpha = isForceExtended ? 0 : 1 }
   }
 }
 
