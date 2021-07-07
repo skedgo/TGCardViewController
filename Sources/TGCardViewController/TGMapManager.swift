@@ -155,9 +155,11 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
       return
     }
     
+    self.mapView = nil // Importing to do this before removing annotations
+                       // as that can trigger deselection, and we want
+                       // to say `isActive = false` then.
     mapView.removeAnnotations(annotations)
     mapView.delegate = nil
-    self.mapView = nil
 
     previousMapState?.restore(for: mapView)
   }
