@@ -109,7 +109,7 @@ public class TGCardView: TGCornerView {
     self.owningCard = card
     
     if let placeholder = titleViewPlaceholder {
-      let titleView: UIView?
+      let titleView: UIView
       switch card.title {
       case .default(let title, let subtitle, let accessoryView):
         let defaultTitleView = TGCardDefaultTitleView.newInstance()
@@ -122,14 +122,14 @@ public class TGCardView: TGCornerView {
         customDismissButton = button
 
       case .none:
-        titleView = nil
+        let emptyView = UIView()
+        emptyView.heightAnchor.constraint(equalToConstant: 0).isActive = true
+        titleView = emptyView
       }
       
-      if let titleView = titleView {
-        placeholder.addSubview(titleView)
-        titleView.snap(to: placeholder)
-        self.titleView = titleView
-      }
+      placeholder.addSubview(titleView)
+      titleView.snap(to: placeholder)
+      self.titleView = titleView
     }
     
     // Apply custom styling
