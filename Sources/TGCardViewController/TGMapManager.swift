@@ -10,6 +10,7 @@ import Foundation
 
 import MapKit
 
+@MainActor
 public protocol TGCompatibleMapManager: AnyObject {
   
   /// Called to add content to the map
@@ -38,6 +39,7 @@ public protocol TGCompatibleMapManager: AnyObject {
   var edgePadding: UIEdgeInsets { get set }
 }
 
+@MainActor
 open class TGMapManager: NSObject, TGCompatibleMapManager {
   public enum Zoom: Double {
     case road     = 5  // local level => how do I navigate on the road?
@@ -50,12 +52,14 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
     let showsUserLocation: Bool
     let showsTraffic: Bool
     
+    @MainActor
     init(for mapView: MKMapView) {
       showsScale = mapView.showsScale
       showsUserLocation = mapView.showsUserLocation
       showsTraffic = mapView.showsTraffic
     }
     
+    @MainActor
     func restore(for mapView: MKMapView) {
       mapView.showsScale = showsScale
       mapView.showsUserLocation = showsUserLocation

@@ -14,6 +14,7 @@ import UIKit
 
 import MapKit
 
+@MainActor
 public protocol TGCardViewControllerDelegate: AnyObject {
   func requestsDismissal(for controller: TGCardViewController)
 }
@@ -74,6 +75,7 @@ public protocol TGCardViewControllerDelegate: AnyObject {
 /// 2. Do it yourself by not calling `super` and using convenience initialisers
 ///    for `init(coder:). The typical approach here is to save and restore the
 ///    basic information, to then call your usual `init` methods on the cards.
+@MainActor
 open class TGCardViewController: UIViewController {
   
   fileprivate enum Constants {
@@ -264,6 +266,7 @@ open class TGCardViewController: UIViewController {
 
   // MARK: - UIViewController
   
+  @MainActor
   open override func awakeFromNib() {
     super.awakeFromNib()
     
@@ -400,21 +403,6 @@ open class TGCardViewController: UIViewController {
       cardWrapperDesiredTopConstraint.constant = distanceFromHeaderView
     }
     
-    // Now is the time to restore
-    if let position = restoredCardPosition {
-      moveCard(to: position, animated: false)
-      
-      // During the state restoration process, cards are pushed and
-      // for those with header views, they will be built, position
-      // and height calculated. However, the view controller's `view`
-      // may not have the correct safe area inset at this point.
-      // We, thus, adjust the position and height here so correct
-      // safe area insets are used in the calculations.
-      updateHeaderConstraints()
-      
-      restoredCardPosition = nil
-    }
-    
     topCard?.willAppear(animated: animated)
   }
   
@@ -525,78 +513,6 @@ open class TGCardViewController: UIViewController {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
-  
-  // MARK: - UIStateRestoring
-  
-  private var restoredCardPosition: TGCardPosition?
-  private var restoredCards: [(card: TGCard, lastPosition: TGCardPosition)]?
-  
-  private struct RestorableCard: Codable {
-    let cardData: Data
-    let lastPosition: TGCardPosition
-  }
-
-  open override func encodeRestorableState(with coder: NSCoder) {
-    defer { super.encodeRestorableState(with: coder) }
-    
-    coder.encode(cardPosition.rawValue, forKey: "cardPosition")
-
-    // We encode all the cards, even if they might not be able to get restored
-    // later. We filter that out when decoding, later.
-    // We do this funky method way here of using codable and having data in
-    // there, so that we can later selectively decode some of them, even if
-    // others fail to get decoded.
-    do {
-      let cardInfos = try cards
-        .map { card, position, _ in
-          (try NSKeyedArchiver.archivedData(withRootObject: card, requiringSecureCoding: false), position)
-        }
-        .map(RestorableCard.init)
-      let cardData = try PropertyListEncoder().encode(cardInfos)
-      coder.encode(cardData, forKey: "cardData")
-    } catch {
-      assertionFailure("Encoding cards failed due to: \(error)")
-    }
-  }
-
-  open override func decodeRestorableState(with coder: NSCoder) {
-    defer { super.decodeRestorableState(with: coder) }
-
-    if let rawPosition = coder.decodeObject(of: NSString.self, forKey: "cardPosition") {
-      restoredCardPosition = TGCardPosition(rawValue: rawPosition as String)
-    }
-    
-    // Decode the stack up to the first card failing, e.g., returning `nil`
-    // from its `init(coder:)` method.
-    if let cardData = coder.decodeObject(forKey: "cardData") as? Data,
-       let cardInfos = try? PropertyListDecoder().decode([RestorableCard].self, from: cardData) {
-      var successfullyRestored = [(card: TGCard, lastPosition: TGCardPosition)]()
-      for restorable in cardInfos {
-        guard let card = try? NSKeyedUnarchiver.unarchivedObject(ofClass: TGCard.self, from: restorable.cardData) else {
-          break // don't go any further in the stack
-        }
-        successfullyRestored.append((card: card, lastPosition: restorable.lastPosition))
-      }
-      self.restoredCards = successfullyRestored
-    }
-    if let cards = coder.decodeObject(of: [TGCard.self], forKey: "cards") as? [TGCard] {
-      self.restoredCards = cards.map { ($0, .peaking) }
-    }
-  }
-  
-  open override func applicationFinishedRestoringState() {
-    super.applicationFinishedRestoringState()
-    
-    // Now add the content
-    if let toRestore = restoredCards {
-      for (index, element) in toRestore.enumerated() {
-        guard rootCard == nil || index > 0 else { continue }
-        push(element.card, animated: false)
-      }
-      restoredCards = nil
-    }
-  }
-  
   
   // MARK: - Card positioning
   
@@ -1638,6 +1554,7 @@ extension TGCardViewController {
   }
   
   private func applyToolbarItemStyle() {
+    @MainActor
     func apply(on view: UIView) {
       switch buttonStyle.shape {
       case .roundedRect:
@@ -1814,6 +1731,7 @@ extension TGCardViewController {
   }
   
   private func updateHeaderStyle() {
+    @MainActor
     func applyCornerStyle(to view: UIView) {
       let radius: CGFloat = 16
       let roundAllCorners = cardIsNextToMap(in: traitCollection)
@@ -1827,7 +1745,10 @@ extension TGCardViewController {
     
     headerView.backgroundColor = topCard?.style.backgroundColor ?? .white
     applyCornerStyle(to: headerView)
-    headerView.subviews.compactMap { $0 as? TGHeaderView }.forEach(applyCornerStyle(to:))
+    headerView.subviews
+      .compactMap { $0 as? TGHeaderView }
+      .forEach { applyCornerStyle(to: $0) }
+    
     updateStatusBar(headerIsVisible: isShowingHeader)
 
     // same shadow as for card wrapper
@@ -2062,6 +1983,7 @@ extension TGCardViewController: TGCardDelegate {
 
 extension TGCardViewController {
   
+  @MainActor
   override open func accessibilityPerformEscape() -> Bool {
     return popMaybe()
   }
@@ -2079,11 +2001,11 @@ extension TGCardViewController {
   private func buildCardHandleAccessibilityActions() -> [UIAccessibilityCustomAction] {
     return [
       UIAccessibilityCustomAction(
-        name: NSLocalizedString("Collapse", bundle: .cardVC, comment: "Accessibility action to collapse card"),
+        name: NSLocalizedString("Collapse", bundle: .module, comment: "Accessibility action to collapse card"),
         target: self, selector: #selector(collapse)
       ),
       UIAccessibilityCustomAction(
-        name: NSLocalizedString("Expand", bundle: .cardVC, comment: "Accessibility action to expand card"),
+        name: NSLocalizedString("Expand", bundle: .module, comment: "Accessibility action to expand card"),
         target: self, selector: #selector(expand)
       )
     ]
@@ -2128,25 +2050,25 @@ extension TGCardViewController {
     switch position ?? cardPosition {
     case .collapsed:
       handle.accessibilityLabel = NSLocalizedString(
-        "Card controller minimised", bundle: .cardVC,
+        "Card controller minimised", bundle: .module,
         comment: "Card handle accessibility description for collapsed state"
       )
       
     case .extended:
       handle.accessibilityLabel = NSLocalizedString(
-        "Card controller full screen", bundle: .cardVC,
+        "Card controller full screen", bundle: .module,
         comment: "Card handle accessibility description for collapsed state"
       )
 
     case .peaking:
       handle.accessibilityLabel = NSLocalizedString(
-        "Card controller half screen", bundle: .cardVC,
+        "Card controller half screen", bundle: .module,
         comment: "Card handle accessibility description for collapsed state"
       )
     }
     
     handle.accessibilityHint = NSLocalizedString(
-      "Adjust the size of the card overlaying the map.", bundle: .cardVC,
+      "Adjust the size of the card overlaying the map.", bundle: .module,
       comment: ""
     )
   }
@@ -2174,14 +2096,14 @@ extension TGCardViewController {
       UIKeyCommand(
         input: UIKeyCommand.inputUpArrow, modifierFlags: .control, action: #selector(expand),
         maybeDiscoverabilityTitle: NSLocalizedString(
-          "Expand card", bundle: .cardVC,
+          "Expand card", bundle: .module,
           comment: "Discovery hint for keyboard shortcuts"
         )
       ),
       UIKeyCommand(
         input: UIKeyCommand.inputDownArrow, modifierFlags: .control, action: #selector(collapse),
         maybeDiscoverabilityTitle: NSLocalizedString(
-          "Collapse card", bundle: .cardVC,
+          "Collapse card", bundle: .module,
           comment: "Discovery hint for keyboard shortcuts"
         )
       ),
@@ -2203,7 +2125,7 @@ extension TGCardViewController {
         UIKeyCommand(
           input: "w", modifierFlags: .command, action: #selector(dismissPresentee),
           maybeDiscoverabilityTitle: NSLocalizedString(
-            "Dismiss", bundle: .cardVC,
+            "Dismiss", bundle: .module,
             comment: "Discovery hint for keyboard shortcuts"
           )
       ))
@@ -2219,7 +2141,7 @@ extension TGCardViewController {
         UIKeyCommand(
           input: "[", modifierFlags: .command, action: #selector(pop),
           maybeDiscoverabilityTitle: NSLocalizedString(
-            "Back to previous card", bundle: .cardVC,
+            "Back to previous card", bundle: .module,
             comment: "Discovery hint for keyboard shortcuts"
           )
       ))
