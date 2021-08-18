@@ -110,7 +110,11 @@ open class TGCardViewController: UIViewController {
     case sidebar
   }
   
+  #if SWIFT_PACKAGE
   public static var bundle = Bundle.module
+  #else
+  public static var bundle = Bundle(for: TGCardViewController.self)
+  #endif
   
   open weak var delegate: TGCardViewControllerDelegate?
   

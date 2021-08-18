@@ -251,7 +251,7 @@ extension ExampleTableDataSource : UITableViewDelegate {
         self.stops.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .automatic)
       }
-      return UIMenu(__title: "", image: nil, identifier: nil, children: [action])
+      return UIMenu(children: [action])
     }
     
     return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: provider)
