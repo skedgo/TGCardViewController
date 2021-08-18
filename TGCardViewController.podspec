@@ -6,7 +6,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "TGCardViewController"
-  s.version      = "1.5"
+  s.version      = "1.6.1"
   s.summary      = "Card-based view controller for mapping apps"
 
   s.description  = <<-DESC
@@ -41,7 +41,7 @@ Pod::Spec.new do |s|
   #
 
   s.platform     = :ios, "12.4"
-  s.swift_version = '5.2'
+  s.swift_version = '5.4'
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
@@ -56,7 +56,7 @@ Pod::Spec.new do |s|
   # ――― Source Code + Resources ―――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
 
-  s.source_files  = "TGCardViewController/generic/**/*.swift"
-  s.resources = "TGCardViewController/generic/**/*.xib"
+  s.source_files  = "Sources/TGCardViewController/**/*.swift"
+  s.resources = "Sources/TGCardViewController/**/*.xib"
 
 end
