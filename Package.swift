@@ -18,6 +18,8 @@ let package = Package(
   targets: [
     .target(
       name: "TGCardViewController",
-      dependencies: [])
+      dependencies: [],
+      exclude: ["Supporting Files/Info.plist"]
+    )
   ]
 )
