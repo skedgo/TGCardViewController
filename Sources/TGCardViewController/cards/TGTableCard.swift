@@ -155,8 +155,14 @@ open class TGTableCard: TGCard {
         return
     }
     
-    embeddedScrollView.contentInset.bottom = scrollCardView.safeAreaInsets.bottom
-    embeddedScrollView.verticalScrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom
+    if scrollCardView.safeAreaInsets.bottom == 0 {
+      embeddedScrollView.contentInset.bottom = scrollCardView.safeAreaInsets.bottom + 16
+      embeddedScrollView.verticalScrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom + 16
+    } else {
+      embeddedScrollView.contentInset.bottom = scrollCardView.safeAreaInsets.bottom
+      embeddedScrollView.verticalScrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom
+    }
+    
     
     autoDeselect(scrollCardView)
   }
