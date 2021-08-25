@@ -155,8 +155,17 @@ open class TGTableCard: TGCard {
         return
     }
     
-    embeddedScrollView.contentInset.bottom = scrollCardView.safeAreaInsets.bottom
-    embeddedScrollView.verticalScrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom
+    if scrollCardView.safeAreaInsets.bottom == 0 {
+      // For devices with physical Home button, we need to add some extra padding
+      // from the bottom, otherwise, the last row of the table view will be
+      // partially hidden below the screen.
+      embeddedScrollView.contentInset.bottom = scrollCardView.safeAreaInsets.bottom + 16
+      embeddedScrollView.verticalScrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom + 16
+    } else {
+      embeddedScrollView.contentInset.bottom = scrollCardView.safeAreaInsets.bottom
+      embeddedScrollView.verticalScrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom
+    }
+    
     
     autoDeselect(scrollCardView)
   }
