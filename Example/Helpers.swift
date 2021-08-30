@@ -13,9 +13,9 @@ import TGCardViewController
 
 extension TGMapManager {
   
-  @nonobjc static var nuremberg  = TGMapManager(lat:  49.45, lng:  11.08, level: .country)
-  @nonobjc static var london     = TGMapManager(lat:  51.46, lng:  -0.09)
-  @nonobjc static var sydney     = TGMapManager(lat: -33.86, lng: 151.21)
+  static var nuremberg  = TGMapManager(lat:  49.45, lng:  11.08, level: .country)
+  static var london     = TGMapManager(lat:  51.46, lng:  -0.09)
+  static var sydney     = TGMapManager(lat: -33.86, lng: 151.21)
   
   fileprivate convenience init(lat: CLLocationDegrees, lng: CLLocationDegrees, level: Zoom = .city) {
     self.init()

@@ -11,6 +11,7 @@ import MapKit
 
 import TGCardViewController
 
+@MainActor
 class ExampleCityCard : TGPlainCard {
   
   enum City: String {
@@ -26,6 +27,7 @@ class ExampleCityCard : TGPlainCard {
       }
     }
     
+    @MainActor
     var manager: TGMapManager {
       switch self {
       case .london: return .london
