@@ -663,12 +663,6 @@ open class TGCardViewController: UIViewController {
   ///         map area to work with).
   fileprivate func mapEdgePadding(for position: TGCardPosition) -> UIEdgeInsets {
     assert(mapView.frame.isEmpty == false, "Don't call this before we have a map view frame.")
-    
-    if true {
-      // This is not necessary anymore as we're setting the additional safe area
-      return .zero
-    }
-    
     let top: CGFloat
     let bottom: CGFloat
     let left: CGFloat
@@ -696,7 +690,6 @@ open class TGCardViewController: UIViewController {
       let height = max(mapView.frame.width, mapView.frame.height)
       bottom = height - cardY
     }
-    
     
     return UIEdgeInsets(top: top, left: left, bottom: bottom, right: 0)
   }
