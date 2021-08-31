@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3A7C348A201F2C0B00F66A35 /* TGCardViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7C3483201F2C0B00F66A35 /* TGCardViewController.framework */; };
 		3A7C348B201F2C0B00F66A35 /* TGCardViewController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A7C3483201F2C0B00F66A35 /* TGCardViewController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3AC6891D26DDE14C00AFB1AB /* TGMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC6891C26DDE14C00AFB1AB /* TGMapViewController.swift */; };
 		3ACD924C26CCF88F0075CCF3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3ACD922426CCF88F0075CCF3 /* Localizable.strings */; };
 		3ACD924D26CCF88F0075CCF3 /* TGButtonPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD922626CCF88F0075CCF3 /* TGButtonPosition.swift */; };
 		3ACD924E26CCF88F0075CCF3 /* UIView+Snap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD922726CCF88F0075CCF3 /* UIView+Snap.swift */; };
@@ -101,6 +102,7 @@
 		3AA58E6320D8FEAB00FE37B0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		3AA58E6420D8FEB400FE37B0 /* TGCardViewController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = TGCardViewController.podspec; sourceTree = SOURCE_ROOT; };
 		3AA58E6520D8FEBA00FE37B0 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
+		3AC6891C26DDE14C00AFB1AB /* TGMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TGMapViewController.swift; sourceTree = "<group>"; };
 		3ACA74801E716AFC00408678 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3ACD922526CCF88F0075CCF3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3ACD922626CCF88F0075CCF3 /* TGButtonPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGButtonPosition.swift; sourceTree = "<group>"; };
@@ -230,6 +232,7 @@
 				3ACD924426CCF88F0075CCF3 /* TGCompatibleMapBuilder.swift */,
 				3ACD922826CCF88F0075CCF3 /* TGCompatibleMapBuilder+MapKit.swift */,
 				3ACD924326CCF88F0075CCF3 /* TGMapManager.swift */,
+				3AC6891C26DDE14C00AFB1AB /* TGMapViewController.swift */,
 				3ACD922726CCF88F0075CCF3 /* UIView+Snap.swift */,
 				3ACD92AD26CCF9C30075CCF3 /* Supporting Files */,
 			);
@@ -510,6 +513,7 @@
 				3ACD926D26CCF88F0075CCF3 /* TGKeyboardTableView.swift in Sources */,
 				3ACD925226CCF88F0075CCF3 /* TGCard.swift in Sources */,
 				3ACD925F26CCF88F0075CCF3 /* TGPageCardView.swift in Sources */,
+				3AC6891D26DDE14C00AFB1AB /* TGMapViewController.swift in Sources */,
 				3ACD925926CCF88F0075CCF3 /* TGPlainCard.swift in Sources */,
 				3ACD925826CCF88F0075CCF3 /* TGPageCard.swift in Sources */,
 				3ACD926526CCF88F0075CCF3 /* TGGrabHandleView.swift in Sources */,

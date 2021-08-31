@@ -147,7 +147,6 @@ open class TGCardViewController: UIViewController {
   
   @IBOutlet weak var headerView: UIView!
   @IBOutlet weak var mapViewWrapper: UIView!
-  public weak var mapView: UIView!
   @IBOutlet weak var mapShadow: UIView!
   @IBOutlet weak var cardWrapperShadow: UIView!
   @IBOutlet public weak var cardWrapperContent: UIView!
@@ -185,6 +184,9 @@ open class TGCardViewController: UIViewController {
   @IBOutlet weak var statusBarBlurHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var topInfoViewWrapperCenterXConstraint: NSLayoutConstraint!
   
+  var mapViewController = TGMapViewController()
+  public var mapView: UIView! { mapViewController.mapView }
+  
   var panner: UIPanGestureRecognizer!
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
@@ -196,7 +198,10 @@ open class TGCardViewController: UIViewController {
   /// `takeCharge(of:edgePadding:animated:)` and `cleanUp(_:animated:)` calls.
   ///
   /// @default: An instance of `TGMapKitBuilder`, i.e., using Apple's MapKit.
-  public var builder: TGCompatibleMapBuilder = TGMapKitBuilder()
+  public var builder: TGCompatibleMapBuilder {
+    get { mapViewController.builder }
+    set { mapViewController.builder = newValue }
+  }
   
   /// The card to display at the root. If you have more than one, use `initialCards`
   public var rootCard: TGCard? {
@@ -290,15 +295,16 @@ open class TGCardViewController: UIViewController {
       sidebarSeparator.backgroundColor = UIColor(white: 1.0, alpha: 0.85)
     }
     
-    let mapView = builder.buildMapView()
+    addChild(mapViewController)
+    let mapView: UIView! = mapViewController.view
     mapViewWrapper.addSubview(mapView)
     mapView.topAnchor.constraint(equalTo: mapViewWrapper.topAnchor).isActive = true
     mapView.trailingAnchor.constraint(equalTo: mapViewWrapper.trailingAnchor).isActive = true
     mapView.bottomAnchor.constraint(equalTo: mapViewWrapper.bottomAnchor).isActive = true
     mapView.leadingAnchor.constraint(equalTo: mapViewWrapper.leadingAnchor).isActive = true
     mapView.translatesAutoresizingMaskIntoConstraints = false
-    self.mapView = mapView
-
+    mapViewController.didMove(toParent: self)
+    
     setupGestures()
     
     // Create the default buttons
@@ -314,7 +320,6 @@ open class TGCardViewController: UIViewController {
     // Setting up additional constraints
     cardWrapperHeightConstraint.constant = extendedMinY * -1
     cardWrapperMinOverlapTopConstraint.constant = 0
-    additionalSafeAreaInsets.bottom = 0
     
     // Hide the bars at first
     hideHeader(animated: false)
@@ -497,7 +502,7 @@ open class TGCardViewController: UIViewController {
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     
-    if view.superview != nil, !mapView.frame.isEmpty, view.window != nil {
+    if view.superview != nil, !mapView.frame.isEmpty {
       if !didAddInitialCards {
         didAddInitialCards = true
         initialCards.forEach { push($0, animated: false) }
@@ -523,10 +528,6 @@ open class TGCardViewController: UIViewController {
     }
   }
   
-  override open func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
   
   // MARK: - UIStateRestoring
   
@@ -1229,37 +1230,35 @@ extension TGCardViewController {
     // The constraint moves the card into place
     cardWrapperDesiredTopConstraint.constant = y
     
-    guard let window = view.window else { return }
-    
+    var mapInsets = UIEdgeInsets.zero
     if !cardIsNextToMap(in: traitCollection) {
       // Adjusting the safe area moves the map's attribution and adjust how it
       // centres the current location, etc.
-      additionalSafeAreaInsets.bottom = min(
-        view.bounds.height - peakY,
+      mapInsets.bottom = min(
+        view.bounds.height - peakY - view.safeAreaInsets.bottom,
         max(
-          view.bounds.height - y,
+          view.bounds.height - y - view.safeAreaInsets.bottom,
           cardWrapperMinOverlapTopConstraint.constant
         )
-      ) - window.safeAreaInsets.bottom
-      
-      additionalSafeAreaInsets.left = 0
-      additionalSafeAreaInsets.right = 0
+      )
     } else {
-      additionalSafeAreaInsets.bottom = 0
-      additionalSafeAreaInsets.left = view.frame.width * 0.38 // same as in storyboard
-      additionalSafeAreaInsets.right = 0
+      mapInsets.left = view.frame.width * 0.38 // same as in storyboard
     }
+    if !bottomFloatingView.arrangedSubviews.isEmpty {
+      mapInsets.right = bottomFloatingViewWrapper.bounds.width
+    }
+    mapViewController.additionalSafeAreaInsets = mapInsets
   }
   
   private func updateCardStructure(card: TGCardView?, position: TGCardPosition?) {
     // Adjusting the safe area moves the map's attribution and adjust how it
     // centres the current location, etc.
-    if let cardView = card, let window = view.window {
+    if let cardView = card {
       let bottomOverlap = max(
         Constants.minCardHeightWhenCollapsed,
         cardView.headerHeight(for: position ?? .collapsed)
       )
-      cardWrapperMinOverlapTopConstraint.constant = bottomOverlap + window.safeAreaInsets.bottom
+      cardWrapperMinOverlapTopConstraint.constant = bottomOverlap
     } else {
       cardWrapperMinOverlapTopConstraint.constant = 0
     }
@@ -1273,16 +1272,9 @@ extension TGCardViewController {
     }
 
     let mapIsInteractive = cardIsNextToMap(in: traitCollection) || position != .extended
-      
-    // This is a weird but functioning way of making the map not accessible
-    // in a reliable way
-    mapView.accessibilityFrame = mapIsInteractive ? mapView.frame : .zero
-    
-    mapView.isUserInteractionEnabled = mapIsInteractive
+    mapViewController.isUserInteractionEnabled = mapIsInteractive
     topFloatingViewWrapper.isUserInteractionEnabled = mapIsInteractive
     bottomFloatingViewWrapper.isUserInteractionEnabled = mapIsInteractive
-    
-    UIAccessibility.post(notification: .layoutChanged, argument: nil)
   }
   
   /// Determines where to snap the card wrapper to, considering its current
