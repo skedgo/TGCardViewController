@@ -407,7 +407,7 @@ open class TGCardViewController: UIViewController {
     }
     
     // Now is the time to restore
-    if let position = restoredCardPosition {
+    if let position = restoredCardPosition, didAddInitialCards {
       moveCard(to: position, animated: false)
       
       // During the state restoration process, cards are pushed and
@@ -832,7 +832,7 @@ extension TGCardViewController {
     
     // 1. Determine where the new card will go
     let forceExtended = (top.mapManager == nil)
-    let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.initialPosition, direction: .down)
+    let animateTo = cardLocation(forDesired: forceExtended ? .extended : restoredCardPosition ?? top.initialPosition, direction: .down)
 
     // 2. Updating card logic and informing of transition
     let oldTop = cardWithView(atIndex: cards.count - 1)
@@ -908,9 +908,12 @@ extension TGCardViewController {
       hideHeader(animated: animated)
     }
     
+    // Incoming card has its own top and bottom floating views.
+    updateFloatingViewsContent()
+    
     // 6. Set new position of the wrapper (which is relative to the header)
-    mapViewController.additionalSafeAreaInsets = updateCardPosition(y: animateTo.y)
     updateCardStructure(card: cardView, position: .collapsed)
+    mapViewController.additionalSafeAreaInsets = updateCardPosition(y: animateTo.y)
     
     // Notify that we have completed building the card view and its header view.
     top.cardView = cardView
@@ -927,9 +930,6 @@ extension TGCardViewController {
     }
     top.delegate = self
 
-    // Incoming card has its own top and bottom floating views.
-    updateFloatingViewsContent()
-    
     // Since the header view may be animated in & out, it's best to update the
     // height of the card's content wrapper.
     updateContentWrapperHeightConstraint()
@@ -1068,6 +1068,7 @@ extension TGCardViewController {
     newTop?.view?.alpha = 1
 
     // We only animate to the previous position if the card obscures the map
+    updateCardStructure(card: newTop?.view, position: newTop?.lastPosition)
     let animateTo: TGCardPosition
     let forceExtended = newTop?.card.mapManager == nil
     if forceExtended || !cardIsNextToMap(in: traitCollection) {
@@ -1077,8 +1078,6 @@ extension TGCardViewController {
     } else {
       animateTo = cardPosition
     }
-    updateCardStructure(card: newTop?.view, position: newTop?.lastPosition)
-    
     
     // Since the header may be animated in and out, it's safer to update the height
     // of the card's content wrapper.
@@ -1229,7 +1228,7 @@ extension TGCardViewController {
     // centres the current location, etc.
     var mapInsets = UIEdgeInsets.zero
     if cardIsNextToMap(in: traitCollection) {
-      mapInsets.left = view.frame.width * 0.38 // same as in storyboard
+      mapInsets.left = traitCollection.horizontalSizeClass == .regular ? 360 : view.frame.width * 0.38 // same as in storyboard
     } else {
       // Our view has the full height, including what's below safe area insets.
       // The maximum interactive area is that without the bottom and anything

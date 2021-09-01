@@ -22,7 +22,7 @@ class ExampleRootCard : TGTableCard {
     #else
     title = .default("Card Demo")
     #endif
-    super.init(title: title, dataSource: source, delegate: source, mapManager: TGMapManager.nuremberg)
+    super.init(title: title, dataSource: source, delegate: source, mapManager: TGMapManager.nuremberg, initialPosition: .collapsed)
     
     source.onSelect = { item in
       self.controller?.push(item.card)
