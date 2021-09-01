@@ -76,14 +76,14 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
     return annotations
   }
   
-  open func reactToNewEdgePadding(_ edgePadding: UIEdgeInsets) {}
+  open func edgePaddingDidUpdate(_ edgePadding: UIEdgeInsets) {}
   
   /// How zoomed in/out the map should be when displaying the
   /// content the first time. Defaults to `.city`
   public var preferredZoomLevel: Zoom = .city
   
   public var edgePadding: UIEdgeInsets = .zero {
-    didSet { reactToNewEdgePadding(edgePadding)}
+    didSet { edgePaddingDidUpdate(edgePadding)}
   }
   
   /// Set to `false` to disable restoring the previous map rect when popping back to this
@@ -99,27 +99,24 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
     return mapView != nil
   }
   
-  public override init() {
-  }
+  public override init() {}
   
   public func takeCharge(of mapView: UIView, edgePadding: UIEdgeInsets, animated: Bool) {
     guard let mapView = mapView as? MKMapView else { preconditionFailure() }
-    takeCharge(of: mapView, edgePadding: edgePadding, animated: animated)
+    self.edgePadding = edgePadding
+    takeCharge(of: mapView, animated: animated)
   }
   
   /// Takes charge of the map view, adding the map manager's content
   ///
   /// - Parameters:
   ///   - mapView: Map view to take charge of
-  ///   - edgePadding: Edge padding of the map view, e.g., if parts of the map view is
-  /// obscured by other views.
   ///   - animated: If adding content should be animated
-  open func takeCharge(of mapView: MKMapView, edgePadding: UIEdgeInsets, animated: Bool) {
+  open func takeCharge(of mapView: MKMapView, animated: Bool) {
     previousMapState = MapState(for: mapView)
     
     self.mapView = mapView
     mapView.delegate = self
-    self.edgePadding = edgePadding
     
     mapView.addAnnotations(annotations)
     
@@ -167,59 +164,41 @@ open class TGMapManager: NSObject, TGCompatibleMapManager {
   public func zoom(to annotations: [MKAnnotation], animated: Bool) {
     mapView?.showAnnotations(annotations,
                              minimumZoomLevel: preferredZoomLevel.rawValue,
-                             edgePadding: edgePadding,
                              animated: animated)
   }
 
   public func zoom(to mapRect: MKMapRect, animated: Bool) {
     mapView?.showMapRect(mapRect,
                          minimumZoomLevel: preferredZoomLevel.rawValue,
-                         edgePadding: edgePadding,
                          animated: animated)
   }
 
   public var centerCoordinate: CLLocationCoordinate2D? {
-    guard let mapView = mapView else { return nil }
-    
-    let visibleWidth = mapView.frame.width - edgePadding.left - edgePadding.right
-    let visibleHeight = mapView.frame.height - edgePadding.top - edgePadding.bottom
-    
-    let centerPoint = CGPoint(x: edgePadding.left + visibleWidth / 2, y: edgePadding.top + visibleHeight / 2)
-    return mapView.convert(centerPoint, toCoordinateFrom: mapView)
+    mapView?.centerCoordinate
   }
 
   public func setCenter(_ coordinate: CLLocationCoordinate2D, animated: Bool) {
-    mapView?.setCenter(coordinate, edgePadding: edgePadding, animated: animated)
+    mapView?.setCenter(coordinate, animated: animated)
   }
   
 }
 
-
-extension TGMapManager: MKMapViewDelegate {
-  
-}
-
+extension TGMapManager: MKMapViewDelegate {}
 
 extension MKMapView {
   
   func showAnnotations(_ annotations: [MKAnnotation],
                        minimumZoomLevel: Double,
-                       edgePadding: UIEdgeInsets = .zero,
                        animated: Bool) {
     
     guard !annotations.isEmpty else { return }
     
-    // Note: Using zero insets here as we'll respect the inspect already in the
-    //       call below when setting the visible map rect - otherwise we adjust
-    //       for it twice.
-    let mapRect = mapRectThatFits(annotations.boundingMapRect, edgePadding: .zero)
-    
-    showMapRect(mapRect, minimumZoomLevel: minimumZoomLevel, edgePadding: edgePadding, animated: animated)
+    let mapRect = mapRectThatFits(annotations.boundingMapRect)
+    showMapRect(mapRect, minimumZoomLevel: minimumZoomLevel, animated: animated)
   }
   
   func showMapRect(_ mapRect: MKMapRect,
                    minimumZoomLevel: Double,
-                   edgePadding: UIEdgeInsets = .zero,
                    animated: Bool) {
     
     guard !mapRect.isNull else { return }
@@ -231,43 +210,7 @@ extension MKMapView {
       mapRectToShow = self.mapRect(forZoomLevel: minimumZoomLevel, centeredOn: center)
     }
     
-    // If we're in extended mode, the edge padding is very large and zooming
-    // will zoom out a lot; so we cap it at half the height.
-    var edgePaddingToUse = edgePadding
-    if edgePaddingToUse.bottom > bounds.height / 2 {
-      edgePaddingToUse.bottom = bounds.height / 2
-    }
-    
-    setVisibleMapRect(mapRectToShow, edgePadding: edgePaddingToUse, animated: animated)
-  }
-  
-  func setCenter(_ coordinate: CLLocationCoordinate2D,
-                 edgePadding: UIEdgeInsets,
-                 animated: Bool) {
-    
-    // Coordinate at the currently visible center, considering edge padding
-    let visibleCenterPoint = CGPoint(
-      x: edgePadding.left + (frame.width - edgePadding.left - edgePadding.right) / 2,
-      y: edgePadding.top + (frame.height - edgePadding.top - edgePadding.bottom) / 2
-    )
-    let visibleCenter = convert(visibleCenterPoint, toCoordinateFrom: self)
-    
-    // Map view's center
-    let unadjustedCenter = centerCoordinate
-    
-    // New map view center, will be the desired coordinate, plus the offset
-    // Note: Won't work well if this is on a different part of the planet,
-    //       which is why we double check for validate coordinates below.
-    let newCenter = CLLocationCoordinate2D(
-      latitude: coordinate.latitude + (unadjustedCenter.latitude - visibleCenter.latitude) / 2,
-      longitude: coordinate.longitude + (unadjustedCenter.longitude - visibleCenter.longitude) / 2
-    )
-    
-    if CLLocationCoordinate2DIsValid(newCenter) {
-      setCenter(newCenter, animated: animated)
-    } else {
-      setCenter(coordinate, animated: animated)
-    }
+    setVisibleMapRect(mapRectToShow, animated: animated)
   }
   
 }
@@ -306,10 +249,10 @@ extension MKMapView {
     }
   }
   
-  func setZoomLevel(_ zoomLevel: Double, edgePadding: UIEdgeInsets = .zero, animated: Bool) {
+  func setZoomLevel(_ zoomLevel: Double, animated: Bool) {
     let center = MKMapPoint(centerCoordinate)
     let mapRect = self.mapRect(forZoomLevel: zoomLevel, centeredOn: center)
-    setVisibleMapRect(mapRect, edgePadding: edgePadding, animated: animated)
+    setVisibleMapRect(mapRect, animated: animated)
   }
   
   fileprivate func zoomLevel(of mapRect: MKMapRect) -> Double {
