@@ -51,7 +51,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                     <subviews>
                         <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7" userLabel="Map View Wrapper">
-                            <rect key="frame" x="0.0" y="60" width="375" height="752"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         </view>
                         <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="Bxf-J1-ygI" userLabel="Top Info Wrapper">
                             <rect key="frame" x="16" y="52" width="343" height="44"/>
@@ -152,7 +152,7 @@
                             </constraints>
                         </view>
                         <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1uG-yl-0le" userLabel="Map Shadow">
-                            <rect key="frame" x="0.0" y="60" width="375" height="752"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             <accessibility key="accessibilityConfiguration">
                                 <accessibilityTraits key="traits" notEnabled="YES"/>
@@ -214,10 +214,10 @@
                             </userDefinedRuntimeAttributes>
                         </visualEffectView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O" userLabel="Card Wrapper Shadow">
-                            <rect key="frame" x="0.0" y="560" width="375" height="702"/>
+                            <rect key="frame" x="0.0" y="560" width="375" height="762"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aqL-1W-7nJ" userLabel="Card Wrapper Content">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="702"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="762"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </subviews>
@@ -250,7 +250,6 @@
                         <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="XA2-1g-kYz" secondAttribute="top" id="0es-h4-clN"/>
                         <constraint firstItem="DJJ-p5-rXz" firstAttribute="top" secondItem="p4A-z3-3Ce" secondAttribute="top" constant="8" id="0oW-ac-gCq"/>
                         <constraint firstItem="ewk-8T-6Fw" firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="0wl-hr-BEj"/>
-                        <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="ewk-8T-6Fw" secondAttribute="bottom" id="1Mc-Uh-pXD"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="centerX" secondItem="zI8-lz-Md7" secondAttribute="centerX" id="4HE-3s-wMK"/>
                         <constraint firstAttribute="trailing" secondItem="u6M-z2-2xb" secondAttribute="trailing" constant="22" id="4dC-NG-76m"/>
                         <constraint firstItem="Bui-Tf-j0O" firstAttribute="width" secondItem="XA2-1g-kYz" secondAttribute="width" multiplier="0.38" id="52A-gC-vvw"/>
@@ -292,7 +291,6 @@
                     <variation key="default">
                         <mask key="constraints">
                             <exclude reference="iRG-l2-Ubl"/>
-                            <exclude reference="0es-h4-clN"/>
                             <exclude reference="QcC-bz-xjm"/>
                             <exclude reference="Xw1-VR-Evc"/>
                             <exclude reference="52A-gC-vvw"/>
@@ -311,8 +309,6 @@
                         </mask>
                         <mask key="constraints">
                             <include reference="iRG-l2-Ubl"/>
-                            <include reference="0es-h4-clN"/>
-                            <exclude reference="1Mc-Uh-pXD"/>
                             <include reference="QcC-bz-xjm"/>
                             <exclude reference="aLo-hb-3fH"/>
                             <exclude reference="7ls-iv-MHj"/>
@@ -325,8 +321,6 @@
                         </mask>
                         <mask key="constraints">
                             <include reference="Vi9-1z-ei1"/>
-                            <include reference="0es-h4-clN"/>
-                            <exclude reference="1Mc-Uh-pXD"/>
                             <include reference="52A-gC-vvw"/>
                             <exclude reference="DGx-yq-huX"/>
                         </mask>

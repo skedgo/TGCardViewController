@@ -328,7 +328,7 @@ open class TGCardViewController: UIViewController {
     hideInfoView(animated: false)
 
     // Collapse card at first
-    updateCardPosition(y: collapsedMinY)
+    mapViewController.additionalSafeAreaInsets = updateCardPosition(y: collapsedMinY)
     
     // Add a bit of a shadow behind card.
     if mode == .floating {
@@ -403,7 +403,7 @@ open class TGCardViewController: UIViewController {
       case (_, .peaking):    distanceFromHeaderView = peakY
       case (_, .extended):   distanceFromHeaderView = extendedMinY
       }
-      updateCardPosition(y: distanceFromHeaderView)
+      mapViewController.additionalSafeAreaInsets = updateCardPosition(y: distanceFromHeaderView)
     }
     
     // Now is the time to restore
@@ -474,7 +474,7 @@ open class TGCardViewController: UIViewController {
       // height of VC increased or decreased, but for simplicity just using
       // `up` is fine.
       let location = cardLocation(forDesired: previous, direction: .up)
-      updateCardPosition(y: location.y)
+      mapViewController.additionalSafeAreaInsets = updateCardPosition(y: location.y)
     }
 
     // The position of a card's header also depends on size classes
@@ -893,10 +893,6 @@ extension TGCardViewController {
     updatePannerInteractivity()
     updateGrabHandleVisibility()
     
-    // 6. Set new position of the wrapper
-    updateCardPosition(y: animateTo.y)
-    updateCardStructure(card: cardView, position: .collapsed)
-
     let header = top.buildHeaderView()
     if let header = header {
       // Keep this to restore it later when hiding the header
@@ -911,6 +907,10 @@ extension TGCardViewController {
     } else if isShowingHeader {
       hideHeader(animated: animated)
     }
+    
+    // 6. Set new position of the wrapper (which is relative to the header)
+    mapViewController.additionalSafeAreaInsets = updateCardPosition(y: animateTo.y)
+    updateCardStructure(card: cardView, position: .collapsed)
     
     // Notify that we have completed building the card view and its header view.
     top.cardView = cardView
@@ -1055,21 +1055,6 @@ extension TGCardViewController {
     updatePannerInteractivity(for: newTop)
     updateGrabHandleVisibility(for: newTop)
     
-    // 4. Determine and set new position of the card wrapper
-    newTop?.view?.alpha = 1
-
-    // We only animate to the previous position if the card obscures the map
-    let animateTo: TGCardPosition
-    let forceExtended = newTop?.card.mapManager == nil
-    if forceExtended || !cardIsNextToMap(in: traitCollection) {
-      let target = cardLocation(forDesired: forceExtended ? .extended : newTop?.lastPosition, direction: .down)
-      animateTo = target.position
-      updateCardPosition(y: target.y)
-    } else {
-      animateTo = cardPosition
-    }
-    updateCardStructure(card: newTop?.view, position: newTop?.lastPosition)
-    
     // TODO: It'd be better if we didn't have to build the header again, but could
     //       just re-use it from the previous push. 
     // See https://gitlab.com/SkedGo/tripgo-cards-ios/issues/7.
@@ -1078,6 +1063,22 @@ extension TGCardViewController {
     } else if isShowingHeader {
       hideHeader(animated: animated)
     }
+    
+    // 4. Determine and set new position of the card wrapper (relative to header!)
+    newTop?.view?.alpha = 1
+
+    // We only animate to the previous position if the card obscures the map
+    let animateTo: TGCardPosition
+    let forceExtended = newTop?.card.mapManager == nil
+    if forceExtended || !cardIsNextToMap(in: traitCollection) {
+      let target = cardLocation(forDesired: forceExtended ? .extended : newTop?.lastPosition, direction: .down)
+      animateTo = target.position
+      mapViewController.additionalSafeAreaInsets = updateCardPosition(y: target.y)
+    } else {
+      animateTo = cardPosition
+    }
+    updateCardStructure(card: newTop?.view, position: newTop?.lastPosition)
+    
     
     // Since the header may be animated in and out, it's safer to update the height
     // of the card's content wrapper.
@@ -1219,28 +1220,37 @@ extension TGCardViewController {
     }
   }
   
-  private func updateCardPosition(y: CGFloat) {
+  /// - Returns: The map inset to apply to the map view controller. Set it directly or in an animation block.
+  private func updateCardPosition(y: CGFloat) -> UIEdgeInsets {
     // The constraint moves the card into place
     cardWrapperDesiredTopConstraint.constant = y
     
+    // Adjusting the safe area moves the map's attribution and adjust how it
+    // centres the current location, etc.
     var mapInsets = UIEdgeInsets.zero
-    if !cardIsNextToMap(in: traitCollection) {
-      // Adjusting the safe area moves the map's attribution and adjust how it
-      // centres the current location, etc.
+    if cardIsNextToMap(in: traitCollection) {
+      mapInsets.left = view.frame.width * 0.38 // same as in storyboard
+    } else {
+      // Our view has the full height, including what's below safe area insets.
+      // The maximum interactive area is that without the bottom and anything
+      // covered by the optional header at the top.
+      let maxHeight = view.bounds.height - view.safeAreaInsets.bottom - headerView.frame.maxY
       mapInsets.bottom = min(
-        view.bounds.height - peakY - view.safeAreaInsets.bottom,
+        maxHeight - peakY, // Don't collapse more than peaking. Instead we
+                           // disable the map when extended in a related code
+                           // path.
         max(
-          view.bounds.height - y - view.safeAreaInsets.bottom,
-          cardWrapperMinOverlapTopConstraint.constant
+          maxHeight - y,   // The usual case while dragging.
+          cardWrapperMinOverlapTopConstraint.constant // Don't extend beyond
+                           // what the card covers when it's collapsed.
         )
       )
-    } else {
-      mapInsets.left = view.frame.width * 0.38 // same as in storyboard
+      mapInsets.top = headerView.frame.maxY
     }
     if !bottomFloatingView.arrangedSubviews.isEmpty {
       mapInsets.right = bottomFloatingViewWrapper.bounds.width
     }
-    mapViewController.additionalSafeAreaInsets = mapInsets
+    return mapInsets
   }
   
   private func updateCardStructure(card: TGCardView?, position: TGCardPosition?) {
@@ -1341,7 +1351,7 @@ extension TGCardViewController {
     // animates nicely and not too suddenly.
     duration = min(max(duration, Constants.snapAnimationMinimumDuration), 1.3)
     
-    updateCardPosition(y: snapTo.y)
+    let mapInset = updateCardPosition(y: snapTo.y)
     view.setNeedsUpdateConstraints()
     
     UIView.animate(
@@ -1355,6 +1365,7 @@ extension TGCardViewController {
         self.topCardView?.adjustContentAlpha(to: snapTo.position == .collapsed ? 0 : 1)
         self.updateFloatingViewsVisibility(for: snapTo.position)
         self.view.layoutIfNeeded()
+        self.mapViewController.additionalSafeAreaInsets = mapInset
       }, completion: { _ in
         self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: snapTo.position)
         self.topCard?.didMove(to: snapTo.position, animated: true)
@@ -1413,7 +1424,7 @@ extension TGCardViewController {
     let newY = currentCardY + translation.y
     if (newY >= extendedMinY) && (newY <= collapsedMinY) {
       recogniser.setTranslation(.zero, in: cardWrapperContent)
-      updateCardPosition(y: newY)
+      mapViewController.additionalSafeAreaInsets = updateCardPosition(y: newY)
       
       // Set alpha according to scrolling state, for a smooth transition
       // Collapsed: 0, peakY: 1
@@ -1497,7 +1508,7 @@ extension TGCardViewController {
       // This is where the magic happens: We move the card down and make
       // the scroll view appear to stay in place (it's important to not
       // set the content offset to zero here!)
-      updateCardPosition(y: extendedMinY - negativity)
+      self.mapViewController.additionalSafeAreaInsets = updateCardPosition(y: extendedMinY - negativity)
       scrollView.transform = CGAffineTransform(translationX: 0, y: negativity)
       scrollView.verticalScrollIndicatorInsets.top = negativity * -1
       
@@ -1535,7 +1546,7 @@ extension TGCardViewController {
     
     let animateTo = cardLocation(forDesired: position, direction: direction)
     
-    updateCardPosition(y: animateTo.y)
+    let mapInsets = updateCardPosition(y: animateTo.y)
     view.setNeedsUpdateConstraints()
     
     UIView.animate(
@@ -1547,6 +1558,7 @@ extension TGCardViewController {
         self.topCardView?.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
         self.updateFloatingViewsVisibility(for: animateTo.position)
         self.view.layoutIfNeeded()
+        self.mapViewController.additionalSafeAreaInsets = mapInsets
     },
       completion: { _ in
         self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: animateTo.position)
