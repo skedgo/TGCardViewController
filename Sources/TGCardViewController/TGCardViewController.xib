@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="ipad12_9rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -44,29 +44,29 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" restorationIdentifier="CardViewController" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XA2-1g-kYz" userLabel="Content View">
-                    <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                     <subviews>
                         <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="zI8-lz-Md7" userLabel="Map View Wrapper">
-                            <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         </view>
                         <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="Bxf-J1-ygI" userLabel="Top Info Wrapper">
-                            <rect key="frame" x="376" y="8" width="272" height="44"/>
+                            <rect key="frame" x="16" y="52" width="343" height="44"/>
                             <constraints>
                                 <constraint firstAttribute="height" priority="750" constant="44" placeholder="YES" id="SYM-Qy-rtL"/>
                             </constraints>
                         </view>
                         <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" placeholderIntrinsicWidth="45" placeholderIntrinsicHeight="91" translatesAutoresizingMaskIntoConstraints="NO" id="DJJ-p5-rXz" userLabel="Top Floating View Wrapper">
-                            <rect key="frame" x="664" y="8" width="352" height="91"/>
+                            <rect key="frame" x="367" y="52" width="0.0" height="91"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="3Nr-Q0-9p1">
-                                <rect key="frame" x="0.0" y="0.0" width="352" height="91"/>
+                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="91"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="KR7-zo-rfe" userLabel="Top floating view">
-                                        <rect key="frame" x="0.0" y="0.0" width="352" height="91"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="91"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUA-9F-ExZ">
                                                 <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
@@ -108,19 +108,19 @@
                             </userDefinedRuntimeAttributes>
                         </visualEffectView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zlR-ey-yL8" userLabel="Sidebar Background">
-                            <rect key="frame" x="0.0" y="0.0" width="360" height="1346"/>
+                            <rect key="frame" x="0.0" y="44" width="375" height="734"/>
                             <subviews>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IEW-xx-P4c">
-                                    <rect key="frame" x="0.0" y="0.0" width="360" height="1346"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="734"/>
                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="KLf-du-5ZR">
-                                        <rect key="frame" x="0.0" y="0.0" width="360" height="1346"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="734"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EWh-dP-38F">
-                                                <rect key="frame" x="0.0" y="0.0" width="120" height="1218"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="135" height="606"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="PaT-N6-scp">
-                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="1218"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="135" height="606"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </view>
                                                 <vibrancyEffect>
@@ -133,7 +133,7 @@
                                     <blurEffect style="regular"/>
                                 </visualEffectView>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2dL-e1-o2y">
-                                    <rect key="frame" x="360" y="0.0" width="1" height="1346"/>
+                                    <rect key="frame" x="375" y="0.0" width="1" height="734"/>
                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="1" id="QnL-37-2Pi"/>
@@ -152,17 +152,21 @@
                             </constraints>
                         </view>
                         <view userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1uG-yl-0le" userLabel="Map Shadow">
-                            <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <accessibility key="accessibilityConfiguration">
+                                <accessibilityTraits key="traits" notEnabled="YES"/>
+                                <bool key="isElement" value="YES"/>
+                            </accessibility>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewk-8T-6Fw" userLabel="Header View">
-                            <rect key="frame" x="0.0" y="0.0" width="360" height="60"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="60" id="dMP-Sd-KN9"/>
                             </constraints>
                         </view>
                         <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="91" placeholderIntrinsicHeight="45" translatesAutoresizingMaskIntoConstraints="NO" id="u6M-z2-2xb" userLabel="Bottom Floating View Wrapper">
-                            <rect key="frame" x="925" y="1293" width="91" height="45"/>
+                            <rect key="frame" x="276" y="507" width="91" height="45"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="qM8-dd-KXi">
                                 <rect key="frame" x="0.0" y="0.0" width="91" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -210,10 +214,10 @@
                             </userDefinedRuntimeAttributes>
                         </visualEffectView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O" userLabel="Card Wrapper Shadow">
-                            <rect key="frame" x="0.0" y="560" width="360" height="1316"/>
+                            <rect key="frame" x="0.0" y="560" width="375" height="762"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aqL-1W-7nJ" userLabel="Card Wrapper Content">
-                                    <rect key="frame" x="0.0" y="0.0" width="360" height="1316"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="762"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </subviews>
@@ -246,12 +250,11 @@
                         <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="XA2-1g-kYz" secondAttribute="top" id="0es-h4-clN"/>
                         <constraint firstItem="DJJ-p5-rXz" firstAttribute="top" secondItem="p4A-z3-3Ce" secondAttribute="top" constant="8" id="0oW-ac-gCq"/>
                         <constraint firstItem="ewk-8T-6Fw" firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="0wl-hr-BEj"/>
-                        <constraint firstItem="zI8-lz-Md7" firstAttribute="top" secondItem="ewk-8T-6Fw" secondAttribute="bottom" constant="-16" id="1Mc-Uh-pXD"/>
                         <constraint firstItem="1uG-yl-0le" firstAttribute="centerX" secondItem="zI8-lz-Md7" secondAttribute="centerX" id="4HE-3s-wMK"/>
                         <constraint firstAttribute="trailing" secondItem="u6M-z2-2xb" secondAttribute="trailing" constant="22" id="4dC-NG-76m"/>
                         <constraint firstItem="Bui-Tf-j0O" firstAttribute="width" secondItem="XA2-1g-kYz" secondAttribute="width" multiplier="0.38" id="52A-gC-vvw"/>
                         <constraint firstItem="DJJ-p5-rXz" firstAttribute="top" secondItem="Bxf-J1-ygI" secondAttribute="top" id="6kN-Lc-OQo"/>
-                        <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="u6M-z2-2xb" secondAttribute="bottom" constant="8" id="7ls-iv-MHj"/>
+                        <constraint firstItem="Bui-Tf-j0O" firstAttribute="top" secondItem="u6M-z2-2xb" secondAttribute="bottom" priority="250" constant="8" id="7ls-iv-MHj"/>
                         <constraint firstItem="p4A-z3-3Ce" firstAttribute="bottom" secondItem="zlR-ey-yL8" secondAttribute="bottom" id="99e-sv-Sle"/>
                         <constraint firstItem="Bui-Tf-j0O" firstAttribute="leading" secondItem="p4A-z3-3Ce" secondAttribute="leading" priority="999" id="D5D-bp-P3t">
                             <variation key="widthClass=regular" constant="8"/>
@@ -281,14 +284,14 @@
                         <constraint firstItem="zI8-lz-Md7" firstAttribute="leading" secondItem="XA2-1g-kYz" secondAttribute="leading" id="qWk-nn-wsJ"/>
                         <constraint firstAttribute="bottom" secondItem="zI8-lz-Md7" secondAttribute="bottom" id="sRh-ZW-PW0"/>
                         <constraint firstItem="Bui-Tf-j0O" firstAttribute="leading" secondItem="p4A-z3-3Ce" secondAttribute="leading" id="tnn-M0-K20"/>
+                        <constraint firstItem="p4A-z3-3Ce" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="u6M-z2-2xb" secondAttribute="bottom" constant="32" id="xKO-88-hba"/>
                         <constraint firstItem="ewk-8T-6Fw" firstAttribute="leading" secondItem="Bui-Tf-j0O" secondAttribute="leading" id="xxs-tH-iF9"/>
-                        <constraint firstItem="p4A-z3-3Ce" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Bui-Tf-j0O" secondAttribute="top" constant="100" id="zKc-st-3DD"/>
+                        <constraint firstItem="p4A-z3-3Ce" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Bui-Tf-j0O" secondAttribute="top" id="zKc-st-3DD"/>
                     </constraints>
                     <variation key="default">
                         <mask key="constraints">
                             <exclude reference="iRG-l2-Ubl"/>
                             <exclude reference="QcC-bz-xjm"/>
-                            <exclude reference="0es-h4-clN"/>
                             <exclude reference="Xw1-VR-Evc"/>
                             <exclude reference="52A-gC-vvw"/>
                             <exclude reference="4dC-NG-76m"/>
@@ -308,8 +311,6 @@
                             <include reference="iRG-l2-Ubl"/>
                             <include reference="QcC-bz-xjm"/>
                             <exclude reference="aLo-hb-3fH"/>
-                            <include reference="0es-h4-clN"/>
-                            <exclude reference="1Mc-Uh-pXD"/>
                             <exclude reference="7ls-iv-MHj"/>
                             <exclude reference="DGx-yq-huX"/>
                         </mask>
@@ -320,17 +321,15 @@
                         </mask>
                         <mask key="constraints">
                             <include reference="Vi9-1z-ei1"/>
-                            <include reference="0es-h4-clN"/>
-                            <exclude reference="1Mc-Uh-pXD"/>
                             <include reference="52A-gC-vvw"/>
                             <exclude reference="DGx-yq-huX"/>
                         </mask>
                     </variation>
                 </view>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hZy-nx-c0N">
-                    <rect key="frame" x="0.0" y="0.0" width="1024" height="20"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Dt1-tF-s3W">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="20"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
                     <constraints>

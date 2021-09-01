@@ -49,7 +49,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3A789DF926DCA6C70035B61F /* TGCardViewController */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TGCardViewController; sourceTree = "<group>"; };
+		3A6C292B26DF25B7009FBC28 /* TGCardViewController */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TGCardViewController; sourceTree = "<group>"; };
 		3AA58E6320D8FEAB00FE37B0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		3AA58E6420D8FEB400FE37B0 /* TGCardViewController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = TGCardViewController.podspec; sourceTree = SOURCE_ROOT; };
 		3AA58E6520D8FEBA00FE37B0 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
@@ -106,7 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				3ACD927026CCF8AA0075CCF3 /* Metadata */,
-				3A789DF926DCA6C70035B61F /* TGCardViewController */,
+				3A6C292B26DF25B7009FBC28 /* TGCardViewController */,
 				3ACD927126CCF8CB0075CCF3 /* Example */,
 				3ACA74811E716AFC00408678 /* Products */,
 				3A789DFA26DCA6DB0035B61F /* Frameworks */,
@@ -434,7 +434,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Example.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Example/Supporting Files/Example.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = JFT62W5LA3;
@@ -454,7 +454,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Example.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Example/Supporting Files/Example.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = JFT62W5LA3;

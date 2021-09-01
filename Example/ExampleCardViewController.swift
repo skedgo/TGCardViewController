@@ -21,6 +21,12 @@ class ExampleCardViewController: TGCardViewController {
   
   override func viewDidLoad() {
     rootCard = ExampleRootCard()
+
+    if #available(iOS 13.0, *) {
+      // This is useful for debugging positioning of things that might sneak
+      // under the card, e.g., the map's attribution label
+      rootCard?.style.backgroundColor = .systemBackground.withAlphaComponent(0.4)
+    }
     
     navigationButtonsAreSpringLoaded = true
     

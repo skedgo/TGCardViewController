@@ -58,10 +58,10 @@ class ExampleMapManager: TGMapManager, NSCoding {
     aCoder.encode(annotations.map(CodingAnnotation.init), forKey: "annotations")
   }
   
-  override func takeCharge(of mapView: MKMapView, edgePadding: UIEdgeInsets, animated: Bool) {
+  override func takeCharge(of mapView: MKMapView, animated: Bool) {
     mapView.delegate = self
     
-    super.takeCharge(of: mapView, edgePadding: edgePadding, animated: animated)
+    super.takeCharge(of: mapView, animated: animated)
   }
   
   func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
