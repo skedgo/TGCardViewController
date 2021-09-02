@@ -1,12 +1,6 @@
-#
-#  Be sure to run `pod spec lint TGCardViewController.podspec' to ensure this is a
-#  valid spec and to remove all comments including this before submitting the spec.
-#
-
 Pod::Spec.new do |s|
-
   s.name         = "TGCardViewController"
-  s.version      = "1.6.1"
+  s.version      = "1.7.0"
   s.summary      = "Card-based view controller for mapping apps"
 
   s.description  = <<-DESC
@@ -15,47 +9,25 @@ Pod::Spec.new do |s|
     controller - or a combination thereof.
                    DESC
 
-  s.homepage     = "https://gitlab.com/SkedGo/iOS/TGCardViewController"
+  s.homepage     = "https://github.com/skedgo/TGCardViewController"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
-
-  # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  #
   s.license      = 'Apache License, Version 2.0'
-
-
-  # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  #
-  #  Specify the authors of the library, with email addresses. Email addresses
-  #  of the authors are extracted from the SCM log. E.g. $ git log. CocoaPods also
-  #  accepts just a name if you'd rather not provide an email address.
-  #
-  #  Specify a social_media_url where others can refer to, for example a twitter
-  #  profile URL.
-  #
-
   s.authors             = { "Adrian Schoenig": "adrian@skedgo.com",
                             "Brian Huang": "brian@skedgo.com" }
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
-
   s.platform     = :ios, "12.4"
   s.swift_version = '5.4'
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
-  #  Specify the location from where the source should be retrieved.
-  #  Supports git, hg, bzr, svn and HTTP.
-  #
-
-  # s.source       = { git: "." }
-  s.source       = { :git => "https://gitlab.com/SkedGo/iOS/tripgo-cards-ios.git", :tag => "v#{s.version}" }
+  s.source       = { :git => "https://github.com/skedgo/TGCardViewController.git", :tag => "#{s.version}" }
 
 
   # ――― Source Code + Resources ―――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
-
   s.source_files  = "Sources/TGCardViewController/**/*.swift"
   s.resources = "Sources/TGCardViewController/**/*.xib"
 
