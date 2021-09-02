@@ -1663,6 +1663,13 @@ extension TGCardViewController {
       
       // update the map shadow; have to hide it in `extended`
       self.updateMapShadow(for: show ? self.cardPosition : .collapsed)
+      
+      // adjust the maps insets
+      if show {
+        self.mapViewController.additionalSafeAreaInsets = self.updateCardPosition(y: self.cardWrapperDesiredTopConstraint.constant)
+      } else {
+        self.mapViewController.additionalSafeAreaInsets = .zero
+      }
     }
   }
   
