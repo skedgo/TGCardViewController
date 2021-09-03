@@ -628,9 +628,12 @@ open class TGCardViewController: UIViewController {
   /// Call this if you changed the status of the toolbar at the bottom, it might not be reflected automatically,
   /// so it's best to call this to make sure it is.
   public func didUpdateToolbarVisibility(animated: Bool = true) {
+    let mapInsets = self.updateCardPosition(y: cardWrapperDesiredTopConstraint.constant)
+    
     view.setNeedsUpdateConstraints()
     UIView.animate(withDuration: animated ? 0.25 : 0) {
       self.view.updateConstraints()
+      self.mapViewController.additionalSafeAreaInsets = mapInsets
     }
   }
   
