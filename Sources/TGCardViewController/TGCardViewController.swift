@@ -897,7 +897,7 @@ extension TGCardViewController {
     }
     
     // Incoming card has its own top and bottom floating views.
-    updateFloatingViewsContent()
+    updateFloatingViewsContent(card: top)
     
     // 6. Set new position of the wrapper (which is relative to the header)
     updateCardStructure(card: cardView, position: .collapsed)
@@ -1075,7 +1075,7 @@ extension TGCardViewController {
     // to previous card's values. Note that, we force a clean up of floating views
     // because the popping card may have added views that are only applicable to it-
     // self.
-    updateFloatingViewsContent()
+    updateFloatingViewsContent(card: newTop?.card)
     
     // Notify that constraints need to be updated in the next cycle.
     view.setNeedsUpdateConstraints()
@@ -1722,7 +1722,7 @@ extension TGCardViewController {
     apply(on: bottomFloatingViewWrapper)
   }
   
-  private func updateFloatingViewsContent() {
+  private func updateFloatingViewsContent(card: TGCard?) {
     var topViews: [UIView] = []
     var bottomViews: [UIView] = []
     
@@ -1734,7 +1734,7 @@ extension TGCardViewController {
     // Because we want to relocate buttons in the top toolbar
     // to the bottom toolbar when header is present, so it is
     // important that we set up bottom toolbar first!
-    if let newBottoms = topCard?.bottomMapToolBarItems {
+    if let newBottoms = card?.bottomMapToolBarItems {
       bottomViews.append(contentsOf: newBottoms)
     }
     
@@ -1745,7 +1745,7 @@ extension TGCardViewController {
     }
     
     // Now we can proceed with setting up toolbar at the top.
-    if let newTops = topCard?.topMapToolBarItems {
+    if let newTops = card?.topMapToolBarItems {
       topViews.append(contentsOf: newTops)
     }
     
