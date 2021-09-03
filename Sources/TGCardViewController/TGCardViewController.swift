@@ -176,9 +176,7 @@ open class TGCardViewController: UIViewController {
   
   // Positioning the floating views.
   @IBOutlet weak var topFloatingViewTopConstraint: NSLayoutConstraint!
-  @IBOutlet weak var topFloatingViewTrailingToSuperConstraint: NSLayoutConstraint!
   @IBOutlet weak var topFloatingViewTrailingToSafeAreaConstraint: NSLayoutConstraint!
-  @IBOutlet weak var bottomFloatingViewTrailingToSuperConstraint: NSLayoutConstraint!
   @IBOutlet weak var bottomFloatingViewTrailingToSafeAreaConstraint: NSLayoutConstraint!
   @IBOutlet weak var bottomFloatingViewBottomConstraint: NSLayoutConstraint! // only active in landscape
   
@@ -339,17 +337,11 @@ open class TGCardViewController: UIViewController {
       cardWrapperShadow.layer.shadowOffset = .init(width: 0, height: 2)
       cardWrapperShadow.layer.shadowRadius = 4
       cardWrapperShadow.layer.shadowOpacity = 0.16
-      updateShadowPaths()
     }
     
     monitorVoiceOverStatus()
   }
-  
-  private func updateShadowPaths() {
-    cardWrapperShadow.layer.shadowPath = UIBezierPath(rect: cardWrapperShadow.bounds).cgPath
-    headerView.layer.shadowPath = UIBezierPath(rect: headerView.bounds).cgPath
-  }
-  
+
   private func setupGestures() {
     
     // Panner for dragging cards up and down
@@ -472,9 +464,6 @@ open class TGCardViewController: UIViewController {
     // The visibility of floating views depends on size classes too.
     updateFloatingViewsVisibility()
     
-    // Re-render the shadow paths to the new sizing
-    updateShadowPaths()
-    
     // When we started a paging card in the peak state while the device is in
     // portrait mode, all of its contents are not scrollable. If we now switch
     // to landscape mode, the card will be in the extended state, which requires
@@ -506,7 +495,6 @@ open class TGCardViewController: UIViewController {
     updateFloatingViewsConstraints()
     updateTopInfoViewConstraints()
     view.setNeedsUpdateConstraints()
-    updateShadowPaths()
     
     if !mapView.frame.isEmpty {
       let edgePadding = mapEdgePadding(for: cardPosition)
@@ -825,7 +813,7 @@ extension TGCardViewController {
     }
     
     // Incoming card has its own top and bottom floating views.
-    updateFloatingViewsContent()
+    updateFloatingViewsContent(card: top)
     
     // 6. Set new position of the wrapper (which is relative to the header)
     updateCardStructure(card: cardView, position: .collapsed)
@@ -1003,7 +991,7 @@ extension TGCardViewController {
     // to previous card's values. Note that, we force a clean up of floating views
     // because the popping card may have added views that are only applicable to it-
     // self.
-    updateFloatingViewsContent()
+    updateFloatingViewsContent(card: newTop?.card)
     
     // Notify that constraints need to be updated in the next cycle.
     view.setNeedsUpdateConstraints()
@@ -1144,7 +1132,7 @@ extension TGCardViewController {
     // centres the current location, etc.
     var mapInsets = UIEdgeInsets.zero
     if cardIsNextToMap(in: traitCollection) {
-      mapInsets.left = traitCollection.horizontalSizeClass == .regular ? 360 : view.frame.width * 0.38 // same as in storyboard
+      mapInsets.left = cardWrapperShadow.isHidden ? 0 : (traitCollection.horizontalSizeClass == .regular ? 360 : view.frame.width * 0.38) // same as in storyboard
     } else {
       // Our view has the full height, including what's below safe area insets.
       // The maximum interactive area is that without the bottom and anything
@@ -1651,7 +1639,7 @@ extension TGCardViewController {
     apply(on: bottomFloatingViewWrapper)
   }
   
-  private func updateFloatingViewsContent() {
+  private func updateFloatingViewsContent(card: TGCard?) {
     var topViews: [UIView] = []
     var bottomViews: [UIView] = []
     
@@ -1663,7 +1651,7 @@ extension TGCardViewController {
     // Because we want to relocate buttons in the top toolbar
     // to the bottom toolbar when header is present, so it is
     // important that we set up bottom toolbar first!
-    if let newBottoms = topCard?.bottomMapToolBarItems {
+    if let newBottoms = card?.bottomMapToolBarItems {
       bottomViews.append(contentsOf: newBottoms)
     }
     
@@ -1674,7 +1662,7 @@ extension TGCardViewController {
     }
     
     // Now we can proceed with setting up toolbar at the top.
-    if let newTops = topCard?.topMapToolBarItems {
+    if let newTops = card?.topMapToolBarItems {
       topViews.append(contentsOf: newTops)
     }
     
@@ -1711,37 +1699,14 @@ extension TGCardViewController {
   private func updateFloatingViewsConstraints() {
     if cardIsNextToMap(in: traitCollection) {
       bottomFloatingViewBottomConstraint.constant = deviceIsiPhoneX() ? 0 : 8
-      if deviceIsiPhoneX() {
-        topFloatingViewTopConstraint.constant = view.safeAreaInsets.bottom
-        NSLayoutConstraint.deactivate([
-          topFloatingViewTrailingToSafeAreaConstraint,
-          bottomFloatingViewTrailingToSafeAreaConstraint
-        ])
-        NSLayoutConstraint.activate([
-          topFloatingViewTrailingToSuperConstraint,
-          bottomFloatingViewTrailingToSuperConstraint
-        ])
-      } else {
-        topFloatingViewTopConstraint.constant = 8
-        NSLayoutConstraint.deactivate([
-          topFloatingViewTrailingToSuperConstraint,
-          bottomFloatingViewTrailingToSuperConstraint
-        ])
-        NSLayoutConstraint.activate([
-          topFloatingViewTrailingToSafeAreaConstraint,
-          bottomFloatingViewTrailingToSafeAreaConstraint
-        ])
-      }
+      bottomFloatingViewTrailingToSafeAreaConstraint.constant = deviceIsiPhoneX() ? 0 : 8
+      topFloatingViewTrailingToSafeAreaConstraint.constant = deviceIsiPhoneX() ? 0 : 8
+      topFloatingViewTopConstraint.constant = deviceIsiPhoneX() ? view.safeAreaInsets.bottom : 8
     } else {
+      bottomFloatingViewBottomConstraint.constant = 8
+      bottomFloatingViewTrailingToSafeAreaConstraint.constant = 8
+      topFloatingViewTrailingToSafeAreaConstraint.constant = 8
       topFloatingViewTopConstraint.constant = 8
-      NSLayoutConstraint.deactivate([
-        topFloatingViewTrailingToSuperConstraint,
-        bottomFloatingViewTrailingToSuperConstraint
-      ])
-      NSLayoutConstraint.activate([
-        topFloatingViewTrailingToSafeAreaConstraint,
-        bottomFloatingViewTrailingToSafeAreaConstraint
-      ])
     }
   }
   
@@ -1812,7 +1777,6 @@ extension TGCardViewController {
     headerView.layer.shadowOffset = .zero
     headerView.layer.shadowRadius = 12
     headerView.layer.shadowOpacity = 0.5
-    updateShadowPaths()
   }
   
   private func updateHeaderConstraints() {
