@@ -1,7 +1,7 @@
 # TripGo Card View Controller
 
-This is a repo for providing the card-based design for TripGo as well as the
-(upcoming) TripKitUI SDK by SkedGo.
+This is a repo for providing the card-based design for [TripGo](https://apps.apple.com/au/app/tripgo/id533630842) as well as the
+[TripKitUI SDK](https://github.com/skedgo/tripkit-ios) by [SkedGo](https://skedgo.com).
 
 
 ## Specs
