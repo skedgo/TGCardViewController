@@ -147,25 +147,10 @@ open class TGTableCard: TGCard {
   open override func didAppear(animated: Bool) {
     super.didAppear(animated: animated)
     
-    guard
-      let scrollCardView = cardView as? TGScrollCardView,
-      let embeddedScrollView = scrollCardView.embeddedScrollView
-      else {
-        assertionFailure()
-        return
+    guard let scrollCardView = cardView as? TGScrollCardView else {
+      assertionFailure()
+      return
     }
-    
-    var adjustment: CGFloat = 0
-    if let header = controller?.headerView {
-      adjustment = header.frame.maxY
-    }
-    
-    if scrollCardView.safeAreaInsets.bottom > 0 {
-      adjustment -= scrollCardView.safeAreaInsets.bottom
-    }
-    
-    embeddedScrollView.contentInset.bottom = scrollCardView.safeAreaInsets.bottom + adjustment
-    embeddedScrollView.verticalScrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom + adjustment
     
     autoDeselect(scrollCardView)
   }

@@ -514,8 +514,12 @@ open class TGCardViewController: UIViewController {
         mapManager.edgePadding = edgePadding
       }
     }
+    
+    if let scrollView = topCardView?.contentScrollView {
+      scrollView.contentInset.bottom = cardIsNextToMap(in: traitCollection) ? view.safeAreaInsets.bottom : headerView.frame.maxY
+      scrollView.verticalScrollIndicatorInsets.bottom = cardIsNextToMap(in: traitCollection) ? view.safeAreaInsets.bottom : headerView.frame.maxY
+    }
   }
-  
   
   // MARK: - UIStateRestoring
   
