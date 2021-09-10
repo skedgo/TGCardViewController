@@ -516,8 +516,12 @@ open class TGCardViewController: UIViewController {
     }
     
     if let scrollView = topCardView?.contentScrollView {
-      scrollView.contentInset.bottom = cardIsNextToMap(in: traitCollection) ? view.safeAreaInsets.bottom : headerView.frame.maxY
-      scrollView.verticalScrollIndicatorInsets.bottom = cardIsNextToMap(in: traitCollection) ? view.safeAreaInsets.bottom : headerView.frame.maxY
+      view.updateConstraintsIfNeeded() // to get the correct frames
+
+      let adjustedBottom = cardIsNextToMap(in: traitCollection) ? view.safeAreaInsets.bottom : (headerView.frame.maxY + view.safeAreaInsets.top - view.safeAreaInsets.bottom)
+      
+      scrollView.contentInset.bottom = adjustedBottom
+      scrollView.verticalScrollIndicatorInsets.bottom = adjustedBottom
     }
   }
   
