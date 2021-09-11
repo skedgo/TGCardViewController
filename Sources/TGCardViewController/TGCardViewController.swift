@@ -607,12 +607,12 @@ open class TGCardViewController: UIViewController {
     
     // Add it a bit of extra space around the switch-over to still detect
     // same position after hiding/showing bars
-    let peakMargin = peakY - 44
-    let collapsedMargin = collapsedMinY - 44
+    let peakMargin = max(extendedMinY, peakY - 44)
+    let collapsedMargin = max(peakY, collapsedMinY - 44)
     
     switch (cardY, traitCollection.verticalSizeClass) {
-    case (0..<peakMargin, _):                       return .extended
-    case (peakMargin..<collapsedMargin, .regular):  return .peaking
+    case (0...peakMargin, _):                       return .extended
+    case (peakMargin...collapsedMargin, .regular):  return .peaking
     default:                                        return .collapsed
     }
   }
@@ -620,13 +620,9 @@ open class TGCardViewController: UIViewController {
   fileprivate var extendedMinY: CGFloat {
     var value = topOverlap
     
-    if let navigationBar = navigationController?.navigationBar {
-      value += navigationBar.frame.height
-    }
-    if mode == .floating, view.safeAreaInsets.bottom > 0 {
-      value += Constants.minMapSpaceWithHomeIndicator
-    } else if mode == .floating {
-      value += Constants.minMapSpace
+    if mode == .floating {
+      let bottomMinSpace = view.safeAreaInsets.bottom > 0 ? Constants.minMapSpaceWithHomeIndicator : Constants.minMapSpace
+      value += bottomMinSpace
     }
     
     return value
