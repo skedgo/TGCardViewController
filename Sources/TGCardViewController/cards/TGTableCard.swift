@@ -147,25 +147,10 @@ open class TGTableCard: TGCard {
   open override func didAppear(animated: Bool) {
     super.didAppear(animated: animated)
     
-    guard
-      let scrollCardView = cardView as? TGScrollCardView,
-      let embeddedScrollView = scrollCardView.embeddedScrollView
-      else {
-        assertionFailure()
-        return
+    guard let scrollCardView = cardView as? TGScrollCardView else {
+      assertionFailure()
+      return
     }
-    
-    if scrollCardView.safeAreaInsets.bottom == 0 {
-      // For devices with physical Home button, we need to add some extra padding
-      // from the bottom, otherwise, the last row of the table view will be
-      // partially hidden below the screen.
-      embeddedScrollView.contentInset.bottom = scrollCardView.safeAreaInsets.bottom + 16
-      embeddedScrollView.verticalScrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom + 16
-    } else {
-      embeddedScrollView.contentInset.bottom = scrollCardView.safeAreaInsets.bottom
-      embeddedScrollView.verticalScrollIndicatorInsets.bottom = scrollCardView.safeAreaInsets.bottom
-    }
-    
     
     autoDeselect(scrollCardView)
   }
