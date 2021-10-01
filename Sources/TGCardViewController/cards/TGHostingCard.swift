@@ -22,7 +22,7 @@ open class TGHostingCard<Content>: TGCard where Content: View {
               mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     
-    self.host = UIHostingController(rootView: rootView)
+    self.host = TGHostingController(rootView: rootView)
     
     super.init(title: title, mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
@@ -38,8 +38,7 @@ open class TGHostingCard<Content>: TGCard where Content: View {
     
     host.beginAppearanceTransition(true, animated: false)
     
-    let scroller = UIScrollView()
-    scroller.translatesAutoresizingMaskIntoConstraints = false
+    let scroller = UIScrollView(frame: .zero)
 
     host.view.translatesAutoresizingMaskIntoConstraints = false
     scroller.addSubview(host.view)
@@ -47,8 +46,8 @@ open class TGHostingCard<Content>: TGCard where Content: View {
       host.view.leadingAnchor.constraint(equalTo: scroller.leadingAnchor),
       host.view.topAnchor.constraint(equalTo: scroller.topAnchor),
       host.view.trailingAnchor.constraint(equalTo: scroller.trailingAnchor),
-      host.view.bottomAnchor.constraint(equalTo: scroller.bottomAnchor),
     ])
+    
     view.configure(scroller, with: self)
     
     host.view.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
@@ -57,4 +56,17 @@ open class TGHostingCard<Content>: TGCard where Content: View {
     return view
   }
   
+}
+
+@available(iOS 13.0, *)
+fileprivate class TGHostingController<Content>: UIHostingController<Content> where Content: View {
+  
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    if let scroller = view.superview as? UIScrollView {
+      let size = sizeThatFits(in: scroller.bounds.size)
+      scroller.contentSize = size
+      view.heightAnchor.constraint(equalToConstant: size.height).isActive = true
+    }
+  }
 }
