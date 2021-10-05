@@ -2094,13 +2094,37 @@ extension TGCardViewController {
   }
   
   private func monitorVoiceOverStatus() {
-    NotificationCenter.default.addObserver(self, selector: #selector(updateForVoiceOverStatusChange),
-                                           name: UIAccessibility.voiceOverStatusDidChangeNotification, object: nil)
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(updateForVoiceOverStatusChange),
+      name: UIAccessibility.voiceOverStatusDidChangeNotification,
+      object: nil
+    )
+
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(updateForVoiceOverFocusChange),
+      name: UIAccessibility.elementFocusedNotification,
+      object: nil
+    )
   }
   
   @objc
   private func updateForVoiceOverStatusChange() {
     updateCardScrolling(allow: cardPosition == .extended, view: topCardView)
+  }
+  
+  @objc
+  private func updateForVoiceOverFocusChange(notification: Notification) {
+    guard let selection = notification.userInfo?[UIAccessibility.focusedElementUserInfoKey] as? UIAccessibilityElement else { return }
+    
+    // When the card is not in extended, and you use voice over to navigate
+    // through the elements, you can go beyond the screens space if you're near
+    // the end of a scroll view. If this happens, we switch to extended state
+    // to make the focus visible on the card. This mirrors Apple Maps.
+    if selection.accessibilityFrame.maxY > UIScreen.main.bounds.maxY, cardPosition != .extended {
+      switchTo(.extended, direction: .up, animated: true)
+    }
   }
   
   private func buildCardHandleAccessibilityActions() -> [UIAccessibilityCustomAction] {
