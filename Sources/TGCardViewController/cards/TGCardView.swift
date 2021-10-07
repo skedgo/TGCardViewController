@@ -70,6 +70,10 @@ public class TGCardView: TGCornerView {
     return scrollView.frame.minY
   }
   
+  var preferredView: UIView {
+    titleView ?? self
+  }
+  
   override public func awakeFromNib() {
     super.awakeFromNib()
     

@@ -38,6 +38,10 @@ class TGPageCardView: TGCardView {
     (contentView.subviews as? [TGCardView]) ?? []
   }
   
+  override var preferredView: UIView {
+    cardViews.first?.preferredView ?? self
+  }
+  
   override var grabHandles: [TGGrabHandleView] {
     cardViews.compactMap { $0.grabHandle }
   }
