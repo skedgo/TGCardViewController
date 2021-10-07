@@ -70,7 +70,9 @@ public class TGCardView: TGCornerView {
     return scrollView.frame.minY
   }
   
-  var preferredView: UIView {
+  /// The preferred view to select using VoiceOver or similar technologies
+  /// when this card appears.
+  public var preferredView: UIView {
     titleView ?? self
   }
   
