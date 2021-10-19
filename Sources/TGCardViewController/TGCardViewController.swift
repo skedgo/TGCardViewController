@@ -1676,8 +1676,10 @@ extension TGCardViewController {
     UIView.animate(withDuration: animated ? 0.25: 0) {
       self.topFloatingViewWrapper.alpha = fade ? 0 : 1
       self.topFloatingViewWrapper.isUserInteractionEnabled = !fade
+      self.topFloatingViewWrapper.isAccessibilityElement = !fade
       self.bottomFloatingViewWrapper.alpha = fade ? 0 : 1
       self.bottomFloatingViewWrapper.isUserInteractionEnabled = !fade
+      self.bottomFloatingViewWrapper.isAccessibilityElement = !fade
     }
   }
   
