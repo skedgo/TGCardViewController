@@ -38,6 +38,12 @@ class TGPageCardView: TGCardView {
     (contentView.subviews as? [TGCardView]) ?? []
   }
   
+  private func cardView(index: Int) -> TGCardView? {
+    let cardViews = self.cardViews
+    guard index >= 0, index <= cardViews.count else { return nil }
+    return cardViews[index]
+  }
+  
   override var preferredView: UIView {
     cardViews.first?.preferredView ?? self
   }
@@ -136,6 +142,8 @@ class TGPageCardView: TGCardView {
     // This will be used in both `moveForward` and `moveBackward`, so
     // it's important to "initailise" this value correctly.
     lastHorizontalOffset = CGFloat(pageCard.initialPageIndex) * (frame.width + Constants.spaceBetweenCards)
+    
+    self.accessibilityElements = [cardView(index: pageCard.initialPageIndex)].compactMap { $0 }
   }
   
   override func updateDismissButton(show: Bool, isSpringLoaded: Bool) {
@@ -206,6 +214,10 @@ class TGPageCardView: TGCardView {
   }
   
   func moveForward(animated: Bool = true) {
+    // Assign `visiblePage` here so that we allow paging there even if VoiceOver is enabled
+    visiblePage = min(cardViews.count - 1, visiblePage + 1)
+    self.accessibilityElements = [cardView(index: visiblePage)].compactMap { $0 }
+
     // Shift by the entire width of the card view
     let nextFullWidthHorizontalOffset = pager.contentOffset.x + frame.width + Constants.spaceBetweenCards
     
@@ -230,6 +242,10 @@ class TGPageCardView: TGCardView {
   }
   
   func moveBackward(animated: Bool = true) {
+    // Assign `visiblePage` here so that we allow paging there even if VoiceOver is enabled
+    visiblePage = max(0, visiblePage - 1)
+    self.accessibilityElements = [cardView(index: visiblePage)].compactMap { $0 }
+
     // See `moveForward()` for comments.
     let nextFullWidthHorizontalOffset = pager.contentOffset.x - frame.width - Constants.spaceBetweenCards
     let nextFullPageHorizontalOffset = lastHorizontalOffset - frame.width - Constants.spaceBetweenCards
@@ -246,9 +262,12 @@ class TGPageCardView: TGCardView {
   func move(to cardIndex: Int, animated: Bool = true) {
     // index must fall within the range of available content cards.
     guard 0..<contentView.subviews.count ~= cardIndex else { return }
-    
+
+    // Assign `visiblePage` here so that we allow paging there even if VoiceOver is enabled
+    visiblePage = cardIndex
+    self.accessibilityElements = [cardView(index: visiblePage)].compactMap { $0 }
+
     let newX = (frame.width + Constants.spaceBetweenCards) * CGFloat(cardIndex)
-    
     pager.setContentOffset(CGPoint(x: newX, y: 0), animated: animated)
   }
   
@@ -273,6 +292,15 @@ extension TGPageCardView: UIScrollViewDelegate {
   }
   
   fileprivate func scrollViewDidComeToCompleteStop(_ scrollView: UIScrollView) {
+    
+    // Don't allow paging by scrolling when VoiceOver is running. This is working
+    // around a weird behaviour in (at least) iOS 15 that immediately scrolls to
+    // offset.y == 0 on presenting the initial page.
+    if UIAccessibility.isVoiceOverRunning, currentPage != visiblePage {
+      move(to: visiblePage, animated: false)
+      return
+    }
+    
     delegate?.didChangeCurrentPage(to: currentPage, animated: true)
     visiblePage = currentPage
     lastHorizontalOffset = scrollView.contentOffset.y
