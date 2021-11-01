@@ -236,6 +236,8 @@ open class TGCardViewController: UIViewController {
   
   private var defaultButtons: [UIView]!
   
+  private var allowFloatingViews: Bool = true
+  
   public var draggingCardEnabled: Bool {
     get {
       panner.isEnabled
@@ -1646,6 +1648,7 @@ extension TGCardViewController {
   
   public func toggleMapOverlays(show: Bool, animated: Bool = true) {
     // Map buttons
+    self.allowFloatingViews = show
     if show {
       updateFloatingViewsVisibility(for: cardPosition, animated: animated)
     } else {
@@ -1684,12 +1687,16 @@ extension TGCardViewController {
   }
   
   private func updateFloatingViewsVisibility(for position: TGCardPosition? = nil, animated: Bool = false) {
-    if cardIsNextToMap(in: traitCollection) {
+    let fade: Bool
+    if !allowFloatingViews {
+      fade = true
+    } else if cardIsNextToMap(in: traitCollection) {
       // When card is on the side of the map, always show the floating views.
-      fadeMapFloatingViews(false, animated: animated)
+      fade = false
     } else {
-      fadeMapFloatingViews(position ?? cardPosition == .extended, animated: animated)
+      fade = position ?? cardPosition == .extended
     }
+    fadeMapFloatingViews(fade, animated: animated)
   }
   
   private func applyToolbarItemStyle() {
