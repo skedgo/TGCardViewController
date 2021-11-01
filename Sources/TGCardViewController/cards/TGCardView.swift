@@ -70,6 +70,12 @@ public class TGCardView: TGCornerView {
     return scrollView.frame.minY
   }
   
+  /// The preferred view to select using VoiceOver or similar technologies
+  /// when this card appears.
+  public var preferredView: UIView {
+    titleView ?? self
+  }
+  
   override public func awakeFromNib() {
     super.awakeFromNib()
     

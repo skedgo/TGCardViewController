@@ -238,6 +238,8 @@ open class TGCardViewController: UIViewController {
   
   private var defaultButtons: [UIView]!
   
+  private var allowFloatingViews: Bool = true
+  
   public var draggingCardEnabled: Bool {
     get {
       panner.isEnabled
@@ -901,6 +903,7 @@ extension TGCardViewController {
         self.updateForNewPosition(position: animateTo.position)
         self.updateResponderChainForNewTopCard()
         self.toggleCardWrappers(hide: cardView == nil)
+        UIAccessibility.post(notification: .screenChanged, argument: cardView?.preferredView)
         completionHandler?()
       }
     )
@@ -1058,6 +1061,7 @@ extension TGCardViewController {
         self.updateResponderChainForNewTopCard()
         self.isPopping = false
         self.toggleCardWrappers(hide: newTop?.view == nil)
+        UIAccessibility.post(notification: .screenChanged, argument: topView?.preferredView)
         completionHandler?()
       }
     )
@@ -1561,6 +1565,7 @@ extension TGCardViewController {
   
   public func toggleMapOverlays(show: Bool, animated: Bool = true) {
     // Map buttons
+    self.allowFloatingViews = show
     if show {
       updateFloatingViewsVisibility(for: cardPosition, animated: animated)
     } else {
@@ -1591,18 +1596,24 @@ extension TGCardViewController {
     UIView.animate(withDuration: animated ? 0.25: 0) {
       self.topFloatingViewWrapper.alpha = fade ? 0 : 1
       self.topFloatingViewWrapper.isUserInteractionEnabled = !fade
+      self.topFloatingViewWrapper.isAccessibilityElement = !fade
       self.bottomFloatingViewWrapper.alpha = fade ? 0 : 1
       self.bottomFloatingViewWrapper.isUserInteractionEnabled = !fade
+      self.bottomFloatingViewWrapper.isAccessibilityElement = !fade
     }
   }
   
   private func updateFloatingViewsVisibility(for position: TGCardPosition? = nil, animated: Bool = false) {
-    if cardIsNextToMap(in: traitCollection) {
+    let fade: Bool
+    if !allowFloatingViews {
+      fade = true
+    } else if cardIsNextToMap(in: traitCollection) {
       // When card is on the side of the map, always show the floating views.
-      fadeMapFloatingViews(false, animated: animated)
+      fade = false
     } else {
-      fadeMapFloatingViews(position ?? cardPosition == .extended, animated: animated)
+      fade = position ?? cardPosition == .extended
     }
+    fadeMapFloatingViews(fade, animated: animated)
   }
   
   private func applyToolbarItemStyle() {
