@@ -29,26 +29,6 @@ class ExampleTableCard : TGTableCard {
     bottomMapToolBarItems = [UIButton.dummyDetailDisclosureButton()]
   }
   
-  required init?(coder: NSCoder) {
-    pushOnTap = coder.decodeBool(forKey: "pushOnTap")
-
-    super.init(coder: coder)
-    
-    handleMacSelection = source.handleSelection
-    mapManager = coder.decodeObject(forKey: "mapManager") as? ExampleMapManager
-    tableViewDataSource = source
-    tableViewDelegate = source
-  }
-  
-  override func encode(with aCoder: NSCoder) {
-    super.encode(with: aCoder)
-    
-    assert(mapManager is ExampleMapManager)
-    aCoder.encode(mapManager, forKey: "mapManager")
-    
-    aCoder.encode(pushOnTap, forKey: "pushOnTap")
-  }
-  
   override func didBuild(tableView: UITableView) {
     super.didBuild(tableView: tableView)
 

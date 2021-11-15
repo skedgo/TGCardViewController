@@ -89,16 +89,6 @@ open class TGTableCard: TGCard {
                mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
   
-  public required init?(coder: NSCoder) {
-    self.tableStyle = UITableView.Style(rawValue: coder.decodeInteger(forKey: "tableStyle")) ?? .plain
-    super.init(coder: coder)
-  }
-  
-  open override func encode(with aCoder: NSCoder) {
-    super.encode(with: aCoder)
-    aCoder.encode(tableStyle.rawValue, forKey: "tableStyle")
-  }
-
   // MARK: - Card Life Cycle
   
   /// Called when the views have been built the first time

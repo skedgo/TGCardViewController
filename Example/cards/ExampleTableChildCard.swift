@@ -27,8 +27,5 @@ class ExampleTableChildCard : TGPlainCard {
     
     super.init(title: .default(wrappedTitle ?? "No title", annotation.subtitle ?? nil, nil), contentView: label, mapManager: mapManager, initialPosition: .collapsed)
   }
-  
-  required init?(coder: NSCoder) {
-    return nil
-  }
+
 }

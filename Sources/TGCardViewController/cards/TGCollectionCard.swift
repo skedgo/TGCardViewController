@@ -48,19 +48,6 @@ open class TGCollectionCard: TGCard {
     super.init(title: title, mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
   
-  public required init?(coder: NSCoder) {
-    guard let layout = coder.decodeArchived(UICollectionViewLayout.self, forKey: "collectionViewLayout") else {
-      return nil
-    }
-    self.collectionViewLayout = layout
-    super.init(coder: coder)
-  }
-  
-  open override func encode(with aCoder: NSCoder) {
-    super.encode(with: aCoder)
-    aCoder.encodeArchive(collectionViewLayout, forKey: "collectionViewLayout")
-  }
-  
   // MARK: - Card Life Cycle
   
   open func didBuild(collectionView: UICollectionView, headerView: TGHeaderView?) {

@@ -28,13 +28,4 @@ class ExampleChildCard : TGPlainCard {
     self.bottomMapToolBarItems = [] // This forces an empty bottom floating view
   }
   
-  required init?(coder: NSCoder) {
-    // Note that this correctly restores the views, title and buttons, but
-    // not the map manager...
-    super.init(coder: coder)
-    
-    // ... so we do it manually.
-    mapManager = TGMapManager.sydney
-  }
-  
 }

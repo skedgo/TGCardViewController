@@ -102,39 +102,6 @@ open class TGPageCard: TGCard {
     cards.forEach { $0.parentCard = self }
   }
   
-  public required init?(coder: NSCoder) {
-    guard let cards = coder.decodeObject(forKey: "cards") as? [TGCard] else {
-      return nil
-    }
-    let initialPage = coder.decodeInteger(forKey: "initialPageIndex")
-    self.headerAccessoryView = coder.decodeView(forKey: "headerAccessoryView")
-    self.includeHeader = coder.decodeBool(forKey: "includeHeader")
-    
-    assert(TGPageCard.allCardsHaveMapManagers(in: cards), "TGCardVC doesn't yet properly handle " +
-      "page cards where some cards don't have map managers. It won't crash but will experience " +
-      "unexpected behaviour, such as the 'extended' mode not getting enforced or getting stuck " +
-      "in 'extended' mode.")
-    
-    self.cards = cards
-    self.initialPageIndex = min(initialPage, cards.count - 1)
-
-    // TGPageCard itself doesn't have a map manager. Instead, it passes through
-    // the manager that handles the map view for the current card. This is
-    // set on intialising and then updated whenever we scroll.
-    let mapManager = cards[initialPage].mapManager
-    
-    super.init(title: .none, mapManager: mapManager, initialPosition: .peaking)
-
-    cards.forEach { $0.parentCard = self }
-  }
-  
-  open override func encode(with aCoder: NSCoder) {
-    aCoder.encode(currentPageIndex, forKey: "initialPageIndex")
-    aCoder.encode(cards, forKey: "cards")
-    aCoder.encode(includeHeader, forKey: "includeHeader")
-    aCoder.encode(view: headerAccessoryView, forKey: "headerAccessoryView")
-  }
-  
   fileprivate static func allCardsHaveMapManagers(in cards: [TGCard]) -> Bool {
     for card in cards where card.mapManager == nil {
       return false

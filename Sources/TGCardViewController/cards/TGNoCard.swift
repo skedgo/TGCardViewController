@@ -19,14 +19,6 @@ open class TGNoCard: TGCard {
     )
   }
   
-  public required init?(coder: NSCoder) {
-    super.init(coder: coder)
-  }
-  
-  open override func encode(with aCoder: NSCoder) {
-    super.encode(with: aCoder)
-  }
-  
   public override func buildCardView() -> TGCardView? {
     return nil
   }
