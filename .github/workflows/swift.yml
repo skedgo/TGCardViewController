@@ -26,9 +26,7 @@ jobs:
       with:
         xcode-version: '13.0' # latest-stable
     - uses: actions/checkout@v2
-    - name: Build TripKitUIExample
-      run: xcodebuild build -project TripKit.xcodeproj -scheme TripKitUIExample -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 8'
-    - name: Build MiniMap
+    - name: Build Example
       run: |
         cd Examples
         xcodebuild build
