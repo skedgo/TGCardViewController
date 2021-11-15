@@ -17,10 +17,6 @@ class ExampleCustomTitleCard: TGPlainCard {
     super.init(title: .custom(titleView, dismissButton: titleView.dismissButton), contentView: content, mapManager: TGMapManager.sydney, initialPosition: .collapsed)
   }
   
-  required convenience init?(coder: NSCoder) {
-    self.init()
-  }
-  
   override func buildHeaderView() -> TGHeaderView? {
     return TurnByTurnHeaderView.newInstance()
   }

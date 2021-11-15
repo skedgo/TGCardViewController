@@ -64,11 +64,6 @@ class ExampleRootCard : TGTableCard {
     self.bottomMapToolBarItems = [contactAddButton]
   }
   
-  required convenience init?(coder: NSCoder) {
-    // A very simple kind of "restoring", but just using the regular init.
-    self.init()
-  }
-  
   override func didBuild(tableView: UITableView) {
     super.didBuild(tableView: tableView)
     

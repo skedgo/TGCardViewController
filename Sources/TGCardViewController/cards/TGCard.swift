@@ -26,7 +26,7 @@ import UIKit
 /// - note: This is a `UIResponder` which is usefulf or supporting per-card
 ///     keyboard shortcuts. Thusly subclasses NSObject to make it easy to
 ///     implement various UIKit protocols in subclasses.
-open class TGCard: UIResponder, NSCoding {
+open class TGCard: UIResponder {
   
   /// Enumeration of supported "title" configurations, i.e., what goes at the
   /// top of the card
@@ -148,61 +148,6 @@ open class TGCard: UIResponder, NSCoding {
   
   open override var next: UIResponder? {
     return parentCard ?? controller
-  }
-  
-  // MARK: - Restoration
-  
-  public required init?(coder: NSCoder) {
-    switch coder.decodeObject(forKey: "title.type") as? String {
-    case "custom":
-      if let view = coder.decodeView(forKey: "title.view") {
-        let button = coder.decodeView(forKey: "title.button") as? UIButton
-        title = .custom(view, dismissButton: button)
-      } else {
-        title = .none
-      }
-      
-    case "default":
-      if let title = coder.decodeObject(forKey: "title.title") as? String {
-        self.title = .default(
-          title,
-          coder.decodeObject(forKey: "title.subtitle") as? String,
-          coder.decodeView(forKey: "title.view")
-        )
-      } else {
-        title = .none
-      }
-    default:
-      title = .none
-    }
-    
-    if let rawPosition = coder.decodeObject(forKey: "initialPosition") as? String {
-      self.initialPosition = TGCardPosition(rawValue: rawPosition)
-    } else {
-      self.initialPosition = .extended
-    }
-    self.topMapToolBarItems = coder.decodeArchived([UIView].self, forKey: "topMapToolBarItems")
-    self.bottomMapToolBarItems = coder.decodeArchived([UIView].self, forKey: "bottomMapToolBarItems")
-  }
-  
-  open func encode(with aCoder: NSCoder) {
-    switch title {
-    case .custom(let view, let button):
-      aCoder.encode("custom", forKey: "title.type")
-      aCoder.encode(view: view, forKey: "title.view")
-      aCoder.encode(view: button, forKey: "title.button")
-    case .default(let title, let subtitle, let view):
-      aCoder.encode("default", forKey: "title.type")
-      aCoder.encode(title, forKey: "title.title")
-      aCoder.encode(subtitle, forKey: "title.subtitle")
-      aCoder.encode(view: view, forKey: "title.view")
-    case .none:
-      aCoder.encode("none", forKey: "title.type")
-    }
-    
-    aCoder.encode(initialPosition?.rawValue, forKey: "initialPosition")
-    aCoder.encodeArchive(topMapToolBarItems, forKey: "topMapToolBarItems")
-    aCoder.encodeArchive(bottomMapToolBarItems, forKey: "bottomMapToolBarItems")
   }
   
   // MARK: - Creating Card Views.

@@ -50,6 +50,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3AA996FF27422BC200F4F15F /* TGCardViewController */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TGCardViewController; path = ..; sourceTree = "<group>"; };
 		3ACA74801E716AFC00408678 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AD3BA3E27421B8700E33015 /* Example.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Example.xcodeproj; sourceTree = "<group>"; };
 		3AD3BA4127421B8700E33015 /* ExampleCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleCardViewController.swift; sourceTree = "<group>"; };
@@ -97,6 +98,7 @@
 		3ACA74771E716AFC00408678 = {
 			isa = PBXGroup;
 			children = (
+				3AA996FF27422BC200F4F15F /* TGCardViewController */,
 				3AD3BA3D27421B8700E33015 /* Example */,
 				3ACA74811E716AFC00408678 /* Products */,
 			);

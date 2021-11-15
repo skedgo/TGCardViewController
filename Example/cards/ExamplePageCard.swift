@@ -32,11 +32,6 @@ class ExamplePageCard: TGPageCard {
     self.bottomMapToolBarItems = [UIButton.dummyInfoLightButton()]
   }
   
-  required init?(coder: NSCoder) {
-    // Note that this restores the child cards and the jump button.
-    super.init(coder: coder)
-  }
-  
   override func didBuild(cardView: TGCardView?, headerView: TGHeaderView?) {
     super.didBuild(cardView: cardView, headerView: headerView)
     

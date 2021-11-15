@@ -27,10 +27,6 @@ open class TGHostingCard<Content>: TGCard where Content: View {
     super.init(title: title, mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
   
-  public required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-  
   // MARK: - Constructing views
   
   open override func buildCardView() -> TGCardView? {
