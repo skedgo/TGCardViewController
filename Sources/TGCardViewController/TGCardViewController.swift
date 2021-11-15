@@ -193,11 +193,11 @@ open class TGCardViewController: UIViewController {
   var edgePanner: UIScreenEdgePanGestureRecognizer!
   
   /// Builder that determines what kind of map to use. The builder's
-  /// `buildMapView()` method will be once initially, and the map instance will
+  /// `buildMapView` method will be once initially, and the map instance will
   /// then be passed to the card's `mapManager` via the
   /// `takeCharge(of:edgePadding:animated:)` and `cleanUp(_:animated:)` calls.
   ///
-  /// @default: An instance of `TGMapKitBuilder`, i.e., using Apple's MapKit.
+  /// Defaults to an instance of ``TGMapKitBuilder``, i.e., using Apple's MapKit.
   public var builder: TGCompatibleMapBuilder {
     get { mapViewController.builder }
     set { mapViewController.builder = newValue }
@@ -217,7 +217,7 @@ open class TGCardViewController: UIViewController {
   /// The style that's applied to the cards' top and bottom map tool
   /// bar items.
   ///
-  /// @default: `TGButtonStyle()`
+  /// Defaults to an empty ``TGButtonStyle``.
   public var buttonStyle: TGButtonStyle = .init() {
     didSet { applyToolbarItemStyle() }
   }
@@ -291,12 +291,8 @@ open class TGCardViewController: UIViewController {
     cardWrapperStaticLeadingConstraint.isActive   = mode == .sidebar
     toggleCardWrappers(hide: true)
     
-    if #available(iOS 13.0, *) {
-      sidebarSeparator.backgroundColor = .separator
-      sidebarVisualEffectView.effect = UIBlurEffect(style: .systemThickMaterial)
-    } else {
-      sidebarSeparator.backgroundColor = UIColor(white: 1.0, alpha: 0.85)
-    }
+    sidebarSeparator.backgroundColor = .separator
+    sidebarVisualEffectView.effect = UIBlurEffect(style: .systemThickMaterial)
     
     addChild(mapViewController)
     let mapView: UIView! = mapViewController.view
@@ -1640,11 +1636,7 @@ extension TGCardViewController {
         visualView.layer.borderWidth = 0
         visualView.layer.shadowOpacity = 0
       } else {
-        if #available(iOS 13.0, *) {
-          visualView.effect = UIBlurEffect(style: .systemThickMaterial)
-        } else {
-          visualView.effect = UIBlurEffect(style: .extraLight)
-        }
+        visualView.effect = UIBlurEffect(style: .systemThickMaterial)
         visualView.layer.borderColor = UIColor(white: 0, alpha: 0.05).cgColor
         visualView.layer.borderWidth = 0.5
         visualView.layer.shadowOpacity = 0.16
@@ -1742,11 +1734,7 @@ extension TGCardViewController {
         } else {
           separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
         }
-        if #available(iOS 13.0, *) {
-          separator.backgroundColor = .separator
-        } else {
-          separator.backgroundColor = UIColor(white: 1.0, alpha: 0.85)
-        }
+        separator.backgroundColor = .separator
         floatingView.addArrangedSubview(separator)
       }
       floatingView.addArrangedSubview(view)
@@ -2153,15 +2141,15 @@ extension TGCardViewController {
   open override var keyCommands: [UIKeyCommand]? {
     var commands = [
       UIKeyCommand(
-        input: UIKeyCommand.inputUpArrow, modifierFlags: .control, action: #selector(expand),
-        maybeDiscoverabilityTitle: NSLocalizedString(
+        action: #selector(expand), input: UIKeyCommand.inputUpArrow, modifierFlags: .control,
+        discoverabilityTitle: NSLocalizedString(
           "Expand card", bundle: .module,
           comment: "Discovery hint for keyboard shortcuts"
         )
       ),
       UIKeyCommand(
-        input: UIKeyCommand.inputDownArrow, modifierFlags: .control, action: #selector(collapse),
-        maybeDiscoverabilityTitle: NSLocalizedString(
+        action: #selector(collapse), input: UIKeyCommand.inputDownArrow, modifierFlags: .control,
+        discoverabilityTitle: NSLocalizedString(
           "Collapse card", bundle: .module,
           comment: "Discovery hint for keyboard shortcuts"
         )
@@ -2182,8 +2170,8 @@ extension TGCardViewController {
       #else
       commands.append(
         UIKeyCommand(
-          input: "w", modifierFlags: .command, action: #selector(dismissPresentee),
-          maybeDiscoverabilityTitle: NSLocalizedString(
+          action: #selector(dismissPresentee), input: "w", modifierFlags: .command,
+          discoverabilityTitle: NSLocalizedString(
             "Dismiss", bundle: .module,
             comment: "Discovery hint for keyboard shortcuts"
           )
@@ -2198,8 +2186,8 @@ extension TGCardViewController {
     } else if topCard != nil, cards.count > 1 || delegate != nil {
       commands.append(
         UIKeyCommand(
-          input: "[", modifierFlags: .command, action: #selector(pop),
-          maybeDiscoverabilityTitle: NSLocalizedString(
+          action: #selector(pop), input: "[", modifierFlags: .command,
+          discoverabilityTitle: NSLocalizedString(
             "Back to previous card", bundle: .module,
             comment: "Discovery hint for keyboard shortcuts"
           )

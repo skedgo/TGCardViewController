@@ -8,6 +8,12 @@
 
 import UIKit
 
+/// A builder that provides the view which powers the map component of TGCardViewController.
+///
+/// You can use any mapping UI library as long as you provide a builder for it and then make sure
+/// your ``TGMapManager`` subclasses handle it properly.
+///
+/// For an example, see ``TGMapKitBuilder`` which uses Apple's MapKit.
 public protocol TGCompatibleMapBuilder {
   
   /// Creates a new map view, which will be the map view for the card view controller

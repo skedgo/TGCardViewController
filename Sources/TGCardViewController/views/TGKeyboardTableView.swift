@@ -13,14 +13,6 @@ import UIKit
 /// Adopted from [@douglashill]( https://gist.github.com/douglashill/50728432881ef37e8b49f2a5917f462d).
 class TGKeyboardTableView: UITableView {
 
-  // These properties may be set or overridden to provide discoverability titles for key commands.
-  var selectAboveDiscoverabilityTitle: String?
-  var selectBelowDiscoverabilityTitle: String?
-  var selectTopDiscoverabilityTitle: String?
-  var selectBottomDiscoverabilityTitle: String?
-  var clearSelectionDiscoverabilityTitle: String?
-  var activateSelectionDiscoverabilityTitle: String?
-  
   private(set) var selectedViaKeyboard: Bool = false
   
   // Used on Catalyst to intercept taps
@@ -74,34 +66,28 @@ class TGKeyboardTableView: UITableView {
     
     // Arrow navigation
     commands.append(UIKeyCommand(
-      input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectAbove),
-      maybeDiscoverabilityTitle: selectAboveDiscoverabilityTitle
+      input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectAbove)
     ))
     commands.append(UIKeyCommand(
-      input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectBelow),
-      maybeDiscoverabilityTitle: selectBelowDiscoverabilityTitle
+      input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectBelow)
     ))
     commands.append(UIKeyCommand(
-      input: UIKeyCommand.inputUpArrow, modifierFlags: .command, action: #selector(selectTop),
-      maybeDiscoverabilityTitle: selectTopDiscoverabilityTitle
+      input: UIKeyCommand.inputUpArrow, modifierFlags: .command, action: #selector(selectTop)
     ))
     commands.append(UIKeyCommand(
-      input: UIKeyCommand.inputDownArrow, modifierFlags: .command, action: #selector(selectBottom),
-      maybeDiscoverabilityTitle: selectBottomDiscoverabilityTitle
+      input: UIKeyCommand.inputDownArrow, modifierFlags: .command, action: #selector(selectBottom)
     ))
     
     // Deselect
     commands.append(UIKeyCommand(
-      input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(clearSelection),
-      maybeDiscoverabilityTitle: clearSelectionDiscoverabilityTitle
+      input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(clearSelection)
     ))
     
     // Select
     commands.append(UIKeyCommand(
       input: " ", modifierFlags: [], action: #selector(activateSelection)))
     commands.append(UIKeyCommand(
-      input: "\r", modifierFlags: [], action: #selector(activateSelection),
-      maybeDiscoverabilityTitle: activateSelectionDiscoverabilityTitle
+      input: "\r", modifierFlags: [], action: #selector(activateSelection)
     ))
     
     return commands
@@ -243,26 +229,5 @@ class TGKeyboardTableView: UITableView {
     #else
     delegate?.tableView?(self, didSelectRowAt: indexPathForSelectedRow)
     #endif
-  }
-}
-
-extension UIKeyCommand {
-  convenience init(input: String, modifierFlags: UIKeyModifierFlags, action: Selector,
-                   maybeDiscoverabilityTitle: String?) {
-    if #available(iOS 13.0, *) {
-      self.init(
-        title: "", image: nil,
-        action: action,
-        input: input, modifierFlags: modifierFlags,
-        discoverabilityTitle: maybeDiscoverabilityTitle
-      )
-    } else {
-      if let discoverabilityTitle = maybeDiscoverabilityTitle {
-        self.init(input: input, modifierFlags: modifierFlags, action: action,
-                  discoverabilityTitle: discoverabilityTitle)
-      } else {
-        self.init(input: input, modifierFlags: modifierFlags, action: action)
-      }
-    }
   }
 }

@@ -49,7 +49,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3A6C292B26DF25B7009FBC28 /* TGCardViewController */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TGCardViewController; sourceTree = "<group>"; };
 		3AA58E6320D8FEAB00FE37B0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		3AA58E6420D8FEB400FE37B0 /* TGCardViewController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = TGCardViewController.podspec; sourceTree = SOURCE_ROOT; };
 		3AA58E6520D8FEBA00FE37B0 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
@@ -81,6 +80,7 @@
 		3ACD928E26CCF8CB0075CCF3 /* TurnByTurnTitleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TurnByTurnTitleView.xib; sourceTree = "<group>"; };
 		3ACD928F26CCF8CB0075CCF3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3ACD929026CCF8CB0075CCF3 /* Example.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
+		3AD3B9DA2742115D00E33015 /* TGCardViewController */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TGCardViewController; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,7 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				3ACD927026CCF8AA0075CCF3 /* Metadata */,
-				3A6C292B26DF25B7009FBC28 /* TGCardViewController */,
+				3AD3B9D92742115D00E33015 /* Packages */,
 				3ACD927126CCF8CB0075CCF3 /* Example */,
 				3ACA74811E716AFC00408678 /* Products */,
 				3A789DFA26DCA6DB0035B61F /* Frameworks */,
@@ -187,6 +187,14 @@
 				3ACD928626CCF8CB0075CCF3 /* Main.storyboard */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3AD3B9D92742115D00E33015 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				3AD3B9DA2742115D00E33015 /* TGCardViewController */,
+			);
+			name = Packages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -365,7 +373,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -420,7 +428,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;

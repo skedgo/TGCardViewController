@@ -12,63 +12,29 @@ public struct TGCardStyle {
   
   public static let `default` = TGCardStyle()
 
-  /// @default Bold system font with size 17pt.
+  /// Font to use for title, defaults to bold system font with size 17pt.
   public var titleFont: UIFont = .boldSystemFont(ofSize: 17)
 
-  /// @default: System label color (iOS 13); black (up to iOS 12)
-  public var titleTextColor: UIColor = {
-    if #available(iOS 13.0, *) {
-      return .label
-    } else {
-      return .black
-    }
-  }()
+  /// Title colour, defaults to system label color
+  public var titleTextColor: UIColor = .label
 
-  /// @default Regular system font with size 15pt.
+  /// Font to use for subtitles, defaults to system font with size 15pt.
   public var subtitleFont: UIFont = .systemFont(ofSize: 15)
 
-  /// @default: System secondary label color (iOS 13); light grey (up to iOS 12)
-  public var subtitleTextColor: UIColor = {
-    if #available(iOS 13.0, *) {
-      return .secondaryLabel
-    } else {
-      return .lightGray
-    }
-  }()
+  /// Colour for subtitles, defaults to secondary label color
+  public var subtitleTextColor: UIColor = .secondaryLabel
 
-  /// @default: System background color (iOS 13); white (up to iOS 12)
-  public var backgroundColor: UIColor = {
-    if #available(iOS 13.0, *) {
-      return .systemBackground
-    } else {
-      return .white
-    }
-  }()
+  /// Colour to use for the background, defaults to system background color
+  public var backgroundColor: UIColor = .systemBackground
   
-  /// @default: System secondary label color (iOS 13); Grayscale @ 70% (up to iOS 12)
-  public var grabHandleColor: UIColor = {
-    if #available(iOS 13.0, *) {
-      return .secondaryLabel
-    } else {
-      return #colorLiteral(red: 0.7552321553, green: 0.7552321553, blue: 0.7552321553, alpha: 1)
-    }
-  }()
+  /// Colour to use for the grab handle on the card, defaults to system secondary label color
+  public var grabHandleColor: UIColor = .secondaryLabel
+  
+  /// Colour for the cross is close button, defaults to system secondary label
+  public var closeButtonCrossColor: UIColor = .secondaryLabel
 
-  /// @default: TripKitUI Black 5
-  public var closeButtonBackgroundColor: UIColor = {
-     if #available(iOS 13.0, *) {
-        return .tertiarySystemGroupedBackground
-     } else {
-       return #colorLiteral(red: 0.13, green: 0.16, blue: 0.2, alpha: 0.08)
-     }
-  }()
-  
-  public var closeButtonCrossColor: UIColor = {
-     if #available(iOS 13.0, *) {
-       return .secondaryLabel
-     } else {
-       return  #colorLiteral(red: 0.44, green: 0.46, blue: 0.48, alpha: 1.0)
-     }
-   }()
+
+  /// Colour for the close button's background, defaults to tertiary system grouped background
+  public var closeButtonBackgroundColor: UIColor = .tertiarySystemGroupedBackground
   
 }
