@@ -44,8 +44,8 @@ class ExampleRootCard : TGTableCard {
     
     // Floating views
     let infoButton = UIButton(type: .infoLight)
-    infoButton.backgroundColor = #colorLiteral(red: 1, green: 0.7137254902, blue: 0.7568627451, alpha: 1)
-    infoButton.tintColor = .white
+//    infoButton.backgroundColor = #colorLiteral(red: 1, green: 0.7137254902, blue: 0.7568627451, alpha: 1)
+//    infoButton.tintColor = .white
     NSLayoutConstraint.activate([
         infoButton.widthAnchor.constraint(equalToConstant: 45),
         infoButton.heightAnchor.constraint(equalToConstant: 45)
@@ -54,8 +54,8 @@ class ExampleRootCard : TGTableCard {
     self.topMapToolBarItems = [infoButton]
     
     let contactAddButton = UIButton(type: .contactAdd)
-    contactAddButton.backgroundColor = #colorLiteral(red: 1, green: 0.7137254902, blue: 0.7568627451, alpha: 1)
-    contactAddButton.tintColor = .white
+//    contactAddButton.backgroundColor = #colorLiteral(red: 1, green: 0.7137254902, blue: 0.7568627451, alpha: 1)
+//    contactAddButton.tintColor = .white
     NSLayoutConstraint.activate([
         contactAddButton.widthAnchor.constraint(equalToConstant: 45),
         contactAddButton.heightAnchor.constraint(equalToConstant: 45)

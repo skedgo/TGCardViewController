@@ -1,7 +1,17 @@
 # TGCardViewController
 
-Provides a card-based view controller for mapping applications where the card's content is in sync with a map, similar to how Apple Maps works. For an application of this see the
-[TripKitUI SDK](https://github.com/skedgo/tripkit-ios) and [TripGo](https://apps.apple.com/au/app/tripgo/id533630842) by [SkedGo](https://skedgo.com).
+Provides a card-based view controller for mapping applications where the card's content is in sync with a map, similar to how Apple Maps works. For an application of this see the [TripKitUI SDK](https://github.com/skedgo/tripkit-ios) and [TripGo](https://apps.apple.com/au/app/tripgo/id533630842) by [SkedGo](https://skedgo.com).
+
+<img src="Docs/collapsed.png" alt="Collapsed" width="213" height="379" align="left" />
+
+<img src="Docs/peaking.png" alt="Peaking" width="213" height="379" align="left" />
+
+<img src="Docs/expanded.png" alt="Expanded" width="213" height="379" align="left" />
+
+<img src="Docs/custom_header.png" alt="Custom header" width="213" height="379" />
+
+<hr/>
+
 
 ## Specs
 
