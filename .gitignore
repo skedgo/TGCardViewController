@@ -3,10 +3,13 @@
 
 # SPM
 .build
+.swiftpm/xcode
 
 # Xcode
 **/xcuserdata
 **/xcshareddata
+build/
+Example/build
 
 # Carthage
 /Carthage

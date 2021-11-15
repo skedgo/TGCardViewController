@@ -24,7 +24,7 @@ class ExampleCardViewController: TGCardViewController {
 
     // This is useful for debugging positioning of things that might sneak
     // under the card, e.g., the map's attribution label
-    rootCard?.style.backgroundColor = .systemBackground.withAlphaComponent(0.4)
+    rootCard?.style.backgroundColor = .systemBackground.withAlphaComponent(0.8)
     
     navigationButtonsAreSpringLoaded = true
     
