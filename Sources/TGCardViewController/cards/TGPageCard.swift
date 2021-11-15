@@ -307,17 +307,17 @@ extension TGPageCard {
     if currentPageIndex > 0 {
       commands.append(
         UIKeyCommand(
-          input: UIKeyCommand.inputLeftArrow, modifierFlags: .control, action: #selector(moveBackward),
-          maybeDiscoverabilityTitle: NSLocalizedString(
-            "Previous card", bundle: .cardVC, comment: "Discovery hint for keyboard shortcuts")
+          action: #selector(moveBackward), input: UIKeyCommand.inputLeftArrow, modifierFlags: .control,
+          discoverabilityTitle: NSLocalizedString(
+            "Previous card", bundle: .module, comment: "Discovery hint for keyboard shortcuts")
       ))
     }
     if currentPageIndex < cards.count - 1 {
       commands.append(
         UIKeyCommand(
-          input: UIKeyCommand.inputRightArrow, modifierFlags: .control, action: #selector(moveForward),
-          maybeDiscoverabilityTitle: NSLocalizedString(
-            "Next card", bundle: .cardVC, comment: "Discovery hint for keyboard shortcuts")
+          action: #selector(moveForward), input: UIKeyCommand.inputRightArrow, modifierFlags: .control,
+          discoverabilityTitle: NSLocalizedString(
+            "Next card", bundle: .module, comment: "Discovery hint for keyboard shortcuts")
       ))
     }
     

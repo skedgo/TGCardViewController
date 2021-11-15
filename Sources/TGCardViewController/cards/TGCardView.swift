@@ -80,9 +80,7 @@ public class TGCardView: TGCornerView {
     super.awakeFromNib()
     
     contentSeparator?.isHidden = true
-    if #available(iOS 13.0, *) {
-      contentSeparator?.backgroundColor = .opaqueSeparator
-    }
+    contentSeparator?.backgroundColor = .opaqueSeparator
   }
   
   // MARK: - Content Configuration

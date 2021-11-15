@@ -327,6 +327,7 @@ open class TGCard: UIResponder, NSCoding {
 
 // MARK: -
 
+@MainActor
 public protocol TGCardDelegate: AnyObject {
   /// Called whenever the map manager of the card is changing
   ///

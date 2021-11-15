@@ -16,17 +16,15 @@ class ExampleCardViewController: TGCardViewController {
   required init(coder aDecoder: NSCoder) {
     // When loading from the storyboard we don't want to use the controller
     // as defined in the storyboard but instead use the TGCardViewController.xib
-    super.init(nibName: "TGCardViewController", bundle: Bundle(for: TGCardViewController.self))
+    super.init(nibName: "TGCardViewController", bundle: TGCardViewController.bundle)
   }
   
   override func viewDidLoad() {
     rootCard = ExampleRootCard()
 
-    if #available(iOS 13.0, *) {
-      // This is useful for debugging positioning of things that might sneak
-      // under the card, e.g., the map's attribution label
-      rootCard?.style.backgroundColor = .systemBackground.withAlphaComponent(0.4)
-    }
+    // This is useful for debugging positioning of things that might sneak
+    // under the card, e.g., the map's attribution label
+    rootCard?.style.backgroundColor = .systemBackground.withAlphaComponent(0.8)
     
     navigationButtonsAreSpringLoaded = true
     

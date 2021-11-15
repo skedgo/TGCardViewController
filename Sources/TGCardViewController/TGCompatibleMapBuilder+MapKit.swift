@@ -9,13 +9,21 @@
 import Foundation
 import MapKit
 
+/// A map builder that uses Apple's MapKit framework.
+///
+/// Uses an instance of `MKMapView` as the shared map, supports compass button, and user tracking
+/// button. However, to enable the user tracking button, make sure to provide a block to
+/// ``askForLocationPermissions``.
 public class TGMapKitBuilder: TGCompatibleMapBuilder {
   public var askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)?
   
   private var compassObservation: NSKeyValueObservation?
   
+  /// The default map rect to use on start-up. If not supplied, it will use default behaviour from `MKMapView`
+  /// which focuses on the user's country.
   public var startOnMapRect: MKMapRect = .null
   
+  /// Uses MapKit's `MKMapView`
   public func buildMapView() -> UIView {
     let mapView = MKMapView()
     if !startOnMapRect.isNull {
@@ -24,6 +32,7 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
     return mapView
   }
 
+  /// Uses MapKit's `MKCompassButton`
   public func buildCompassButton(for mapView: UIView) -> UIView? {
     guard let mapView = mapView as? MKMapView else { preconditionFailure() }
     mapView.showsCompass = false
@@ -56,6 +65,7 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
     return background
   }
 
+  /// Uses MapKit's `MKUserTrackingButton`
   public func buildUserTrackingButton(for mapView: UIView) -> UIView? {
     guard askForLocationPermissions != nil else { return nil }
     guard let mapView = mapView as? MKMapView else { preconditionFailure() }

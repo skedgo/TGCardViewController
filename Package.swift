@@ -7,7 +7,7 @@ let package = Package(
   name: "TGCardViewController",
   defaultLocalization: "en",
   platforms: [
-    .iOS(.v12)
+    .iOS(.v13)
   ],
   products: [
     .library(
@@ -18,8 +18,7 @@ let package = Package(
   targets: [
     .target(
       name: "TGCardViewController",
-      dependencies: [],
-      exclude: ["Supporting Files/Info.plist"]
+      dependencies: []
     )
   ]
 )
