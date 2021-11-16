@@ -1,5 +1,9 @@
 # TGCardViewController
 
+[![CI](https://github.com/skedgo/TGCardViewController/actions/workflows/swift.yml/badge.svg)](https://github.com/skedgo/TGCardViewController/actions/workflows/swift.yml)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fskedgo%2FTGCardViewController%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/skedgo/TGCardViewController)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fskedgo%2FTGCardViewController%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/skedgo/TGCardViewController)
+
 Provides a card-based view controller for mapping applications where the card's content is in sync with a map, similar to how Apple Maps works. For an application of this see the [TripKitUI SDK](https://github.com/skedgo/tripkit-ios) and [TripGo](https://apps.apple.com/au/app/tripgo/id533630842) by [SkedGo](https://skedgo.com).
 
 <img src="Docs/collapsed.png" alt="Collapsed" width="213" height="379" align="left" />
