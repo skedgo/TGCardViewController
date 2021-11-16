@@ -12,6 +12,61 @@ Provides a card-based view controller for mapping applications where the card's 
 
 <hr/>
 
+## Installation and usage
+
+### Install
+
+<details>
+<summary>Via Swift Package Manager (recommended)</summary>
+
+1. Add it to your `Package.swift` file (or add it as a dependency through Xcode):
+
+```swift
+.package(url: "https://github.com/skedgo/TGCardViewController.git", from: "1.7.5")
+```
+
+</details>
+
+<details>
+<summary>Via CocoaPods</summary>
+
+1. Check out the repo and make it accessible to your project, e.g., as a git submodule
+2. Add it to your `Podfile`, e.g.:
+
+	`pod 'TGCardViewController`
+
+3. Run `pod update`
+
+</details>
+	
+### Add it to your app
+
+1. Create a `TGCardViewController` subclass and use it in your storyboard
+2. Override `init(coder:)` so that the instance from the storyboard isn't used, but instead `TGCardViewController.xib`:
+
+    ```swift
+    import TGCardViewController
+    
+    class CardViewController: TGCardViewController {
+
+      required init(coder aDecoder: NSCoder) {
+        // When loading from the storyboard we don't want to use the controller
+        // as defined in the storyboard but instead use the TGCardViewController.xib
+        super.init(nibName: "TGCardViewController", bundle: TGCardViewController.bundle)
+      }
+
+      ...
+    }
+    ```
+
+3. Create a `TGCard` subclass, that represents the card at the top level, and add then push that in your view controller's `viewDidLoad`:
+
+    ```swift
+      override func viewDidLoad() {
+        rootCard = MyRootCard()
+        super.viewDidLoad()
+      }
+    ```
 
 ## Specs
 
@@ -107,56 +162,6 @@ Map buttons:
 - [x] VoiceOver Accessibility
 - [x] Keyboard shortcuts
 
-
-## Installation and usage
-
-### Install
-
-Via Swift Package Manager (recommended):
-
-1. Add it to your `Package.swift` file (or add it as a dependency through Xcode):
-
-```swift
-.package(url: "https://github.com/skedgo/TGCardViewController.git", from: "1.7.5")
-```
-
-Via CocoaPods:
-
-1. Check out the repo and make it accessible to your project, e.g., as a git submodule
-2. Add it to your `Podfile`, e.g.:
-
-    `pod 'TGCardViewController'
-
-3. Run `pod update`
-
-### Add it to your app
-
-1. Create a `TGCardViewController` subclass and use it in your storyboard
-2. Override `init(coder:)` so that the instance from the storyboard isn't used, but instead `TGCardViewController.xib`:
-
-    ```swift
-    import TGCardViewController
-    
-    class CardViewController: TGCardViewController {
-
-      required init(coder aDecoder: NSCoder) {
-        // When loading from the storyboard we don't want to use the controller
-        // as defined in the storyboard but instead use the TGCardViewController.xib
-        super.init(nibName: "TGCardViewController", bundle: TGCardViewController.bundle)
-      }
-
-      ...
-    }
-    ```
-
-3. Create a `TGCard` subclass, that represents the card at the top level, and add then push that in your view controller's `viewDidLoad`:
-
-    ```swift
-      override func viewDidLoad() {
-        rootCard = MyRootCard()
-        super.viewDidLoad()
-      }
-    ```
 
 ## End-user documentation
 
