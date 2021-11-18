@@ -899,7 +899,9 @@ extension TGCardViewController {
         self.updateForNewPosition(position: animateTo.position)
         self.updateResponderChainForNewTopCard()
         self.toggleCardWrappers(hide: cardView == nil)
-        UIAccessibility.post(notification: .screenChanged, argument: cardView?.preferredView)
+        if let preferred = top.preferredView {
+          UIAccessibility.post(notification: .screenChanged, argument: preferred)
+        }
         completionHandler?()
       }
     )
@@ -1057,7 +1059,9 @@ extension TGCardViewController {
         self.updateResponderChainForNewTopCard()
         self.isPopping = false
         self.toggleCardWrappers(hide: newTop?.view == nil)
-        UIAccessibility.post(notification: .screenChanged, argument: topView?.preferredView)
+        if let preferred = newTop?.card.preferredView {
+          UIAccessibility.post(notification: .screenChanged, argument: preferred)
+        }
         completionHandler?()
       }
     )

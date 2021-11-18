@@ -96,6 +96,16 @@ open class TGCard: UIResponder {
   /// Title of the card
   public let title: CardTitle
   
+  /// The preferred view to select using VoiceOver or similar technologies
+  /// when this card appears.
+  ///
+  /// If this returns `nil`, then nothing will be passed by VoiceOver automatically
+  /// and you should handle it yourself. Defaults to the underlying `TGCardView`'s
+  /// `preferredView`.
+  open var preferredView: UIView? {
+    cardView?.preferredView
+  }
+  
   /// The manager that handles the content of the map for this card
   public var mapManager: TGCompatibleMapManager? {
     didSet {
