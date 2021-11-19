@@ -741,7 +741,7 @@ extension TGCardViewController {
     top.controller = self
     
     // 1. Determine where the new card will go
-    let forceExtended = (top.mapManager == nil)
+    let forceExtended = (top.mapManager == nil) || (cardPosition == .extended && UIAccessibility.isVoiceOverRunning)
     let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.initialPosition, direction: .down)
 
     // 2. Updating card logic and informing of transition
@@ -983,7 +983,7 @@ extension TGCardViewController {
     // We only animate to the previous position if the card obscures the map
     updateCardStructure(card: newTop?.view, position: newTop?.lastPosition)
     let animateTo: TGCardPosition
-    let forceExtended = newTop?.card.mapManager == nil
+    let forceExtended = newTop?.card.mapManager == nil || (cardPosition == .extended && UIAccessibility.isVoiceOverRunning)
     if forceExtended || !cardIsNextToMap(in: traitCollection) {
       let target = cardLocation(forDesired: forceExtended ? .extended : newTop?.lastPosition, direction: .down)
       animateTo = target.position
