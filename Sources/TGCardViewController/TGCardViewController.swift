@@ -1594,12 +1594,12 @@ extension TGCardViewController {
   
   private func fadeMapFloatingViews(_ fade: Bool, animated: Bool) {
     UIView.animate(withDuration: animated ? 0.25: 0) {
+      self.topFloatingViewWrapper.accessibilityElements = fade ? [] : nil
       self.topFloatingViewWrapper.alpha = fade ? 0 : 1
       self.topFloatingViewWrapper.isUserInteractionEnabled = !fade
-      self.topFloatingViewWrapper.isAccessibilityElement = !fade
+      self.bottomFloatingViewWrapper.accessibilityElements = fade ? [] : nil
       self.bottomFloatingViewWrapper.alpha = fade ? 0 : 1
       self.bottomFloatingViewWrapper.isUserInteractionEnabled = !fade
-      self.bottomFloatingViewWrapper.isAccessibilityElement = !fade
     }
   }
   
