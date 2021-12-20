@@ -19,13 +19,17 @@ public protocol TGInteractiveCardTitle: UIView {
   
 }
 
+public protocol TGPreferrableView {
+  var preferredView: UIView? { get }
+}
+
 /// The view for the card itself.
 ///
 /// Cannot be subclassed, by usually used to programatically update the
 /// title/subtitle of the card or to get access to the card's table view or
 /// collection view - by checking if an instance of this class is a
 /// `TGScrollCardView` instance.
-public class TGCardView: TGCornerView {
+public class TGCardView: TGCornerView, TGPreferrableView {
   
   /// Each card view needs a grab handle, which the controller
   /// might hide and show.
@@ -72,8 +76,8 @@ public class TGCardView: TGCornerView {
   
   /// The preferred view to select using VoiceOver or similar technologies
   /// when this card appears.
-  public var preferredView: UIView {
-    titleView ?? self
+  public var preferredView: UIView? {
+    (titleView as? TGPreferrableView)?.preferredView ?? titleView ?? self
   }
   
   override public func awakeFromNib() {

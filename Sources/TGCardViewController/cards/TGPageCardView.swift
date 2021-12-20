@@ -44,7 +44,7 @@ class TGPageCardView: TGCardView {
     return cardViews[index]
   }
   
-  override var preferredView: UIView {
+  override var preferredView: UIView? {
     cardViews.first?.preferredView ?? self
   }
   
