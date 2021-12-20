@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TGCardDefaultTitleView: UIView {
+class TGCardDefaultTitleView: UIView, TGPreferrableView {
   
   @IBOutlet weak var topLevelStack: UIStackView!
   @IBOutlet weak var labelStack: UIStackView!
@@ -37,6 +37,21 @@ class TGCardDefaultTitleView: UIView {
     let heightConstraint = dismissButton.heightAnchor.constraint(equalToConstant: 44)
     heightConstraint.priority = .defaultHigh
     heightConstraint.isActive = true
+  }
+  
+  var preferredView: UIView? {
+    titleLabel ?? subtitleLabel
+  }
+  
+  override var accessibilityElements: [Any]? {
+    get {
+      [ dismissButton,
+        titleLabel,
+        subtitleLabel,
+        accessoryViewContainer
+      ].compactMap { $0 }
+    }
+    set { }
   }
   
   // MARK: - Creating New Views

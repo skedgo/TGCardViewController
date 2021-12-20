@@ -26,7 +26,7 @@ import UIKit
 /// - note: This is a `UIResponder` which is usefulf or supporting per-card
 ///     keyboard shortcuts. Thusly subclasses NSObject to make it easy to
 ///     implement various UIKit protocols in subclasses.
-open class TGCard: UIResponder {
+open class TGCard: UIResponder, TGPreferrableView {
   
   /// Enumeration of supported "title" configurations, i.e., what goes at the
   /// top of the card
