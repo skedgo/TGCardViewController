@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 protocol TGPageCardViewDelegate: AnyObject {
   
   func didChangeCurrentPage(to index: Int, animated: Bool)
@@ -17,7 +16,7 @@ protocol TGPageCardViewDelegate: AnyObject {
 
 class TGPageCardView: TGCardView {
   
-  fileprivate enum Constants {
+  private enum Constants {
     static let animationDuration: Double = 0.4
     static let spaceBetweenCards: CGFloat = 5
   }
@@ -28,14 +27,21 @@ class TGPageCardView: TGCardView {
 
   @IBOutlet weak var pagerTrailingConstant: NSLayoutConstraint!
   
-  fileprivate var lastHorizontalOffset: CGFloat = 0
+  private var lastHorizontalOffset: CGFloat = 0
   
-  fileprivate var visiblePage: Int = 0
+  private var visiblePageLefty: Int = 0
+  
+  private var visiblePageLogical: Int = 0
 
   weak var delegate: TGPageCardViewDelegate?
   
+  /// The card views, ordered as provided, i.e., logically first one first; not by how it appears.
   var cardViews: [TGCardView] {
     (contentView.subviews as? [TGCardView]) ?? []
+  }
+  
+  private var pageCount: Int {
+    cardViews.count
   }
   
   private func cardView(index: Int) -> TGCardView? {
@@ -44,12 +50,13 @@ class TGPageCardView: TGCardView {
     return cardViews[index]
   }
   
+  private var topView: UIView?
   override var preferredView: UIView? {
-    cardViews.first?.preferredView ?? self
+    topView ?? self
   }
   
   override var grabHandles: [TGGrabHandleView] {
-    cardViews.compactMap { $0.grabHandle }
+    cardViews.compactMap(\.grabHandle)
   }
   
   override var headerHeight: CGFloat {
@@ -72,11 +79,8 @@ class TGPageCardView: TGCardView {
   
   override var contentScrollView: UIScrollView? {
     get {
-      guard currentPage < cardViews.count else {
-        return nil
-      }
-      
-      return cardViews[currentPage].contentScrollView
+      let logical = currentLogicalIndex()
+      return cardView(index: logical)?.contentScrollView
     }
     set {
       assertionFailure("Don't set this on paging a PageCard. Was set to \(String(describing: newValue)).")
@@ -89,7 +93,7 @@ class TGPageCardView: TGCardView {
     // remove corner as we want each card to show its own corners
     layer.mask = nil
     
-    move(to: visiblePage, animated: false)
+    move(to: visiblePageLogical, animated: false)
   }
   
   // MARK: - New instance
@@ -137,13 +141,18 @@ class TGPageCardView: TGCardView {
     
     // Page card doesn't always start with page 0. So we keep a reference
     // to the first page index, which can then be used at a later point.
-    visiblePage = pageCard.initialPageIndex
-    
+    visiblePageLogical = pageCard.initialPageIndex
+    visiblePageLefty = isRightToLeft
+      ? contents.count - 1 - pageCard.initialPageIndex
+      : pageCard.initialPageIndex
+
     // This will be used in both `moveForward` and `moveBackward`, so
     // it's important to "initailise" this value correctly.
-    lastHorizontalOffset = CGFloat(pageCard.initialPageIndex) * (frame.width + Constants.spaceBetweenCards)
+    lastHorizontalOffset = CGFloat(visiblePageLefty) * (frame.width + Constants.spaceBetweenCards)
     
-    self.accessibilityElements = [cardView(index: pageCard.initialPageIndex)].compactMap { $0 }
+    let topMost = cardView(index: visiblePageLogical)
+    self.accessibilityElements = [topMost].compactMap { $0 }
+    self.topView = topMost
   }
   
   override func updateDismissButton(show: Bool, isSpringLoaded: Bool) {
@@ -208,15 +217,48 @@ class TGPageCardView: TGCardView {
   
   // MARK: - Navigation
   
-  var currentPage: Int {
+  private var isRightToLeft: Bool {
+    traitCollection.layoutDirection == .rightToLeft
+  }
+  
+  private func currentLeftyIndex() -> Int {
     // Using `floor` here as we're getting fractions here, e.g., on iPhone X in landscape
     return Int(floor(pager.contentOffset.x) / (floor(frame.width) + Constants.spaceBetweenCards))
   }
   
+  private func currentLogicalIndex() -> Int {
+    let lefty = currentLeftyIndex()
+    return isRightToLeft ? pageCount - lefty - 1 : lefty
+  }
+  
+  var currentPage: Int {
+    currentLogicalIndex()
+  }
+  
   func moveForward(animated: Bool = true) {
+    if isRightToLeft {
+      moveLeft(animated: animated)
+    } else {
+      moveRight(animated: animated)
+    }
+  }
+  
+  func moveBackward(animated: Bool = true) {
+    if isRightToLeft {
+      moveRight(animated: animated)
+    } else {
+      moveLeft(animated: animated)
+    }
+  }
+  
+  private func moveRight(animated: Bool) {
     // Assign `visiblePage` here so that we allow paging there even if VoiceOver is enabled
-    visiblePage = min(cardViews.count - 1, visiblePage + 1)
-    self.accessibilityElements = [cardView(index: visiblePage)].compactMap { $0 }
+    visiblePageLefty = min(cardViews.count - 1, visiblePageLefty + 1)
+    visiblePageLogical = isRightToLeft ? pageCount - visiblePageLefty - 1 : visiblePageLefty
+    
+    let topMost = cardView(index: visiblePageLogical)
+    self.accessibilityElements = [topMost].compactMap { $0 }
+    self.topView = topMost
 
     // Shift by the entire width of the card view
     let nextFullWidthHorizontalOffset = pager.contentOffset.x + frame.width + Constants.spaceBetweenCards
@@ -241,12 +283,16 @@ class TGPageCardView: TGCardView {
     lastHorizontalOffset = horizontalOffset
   }
   
-  func moveBackward(animated: Bool = true) {
+  private func moveLeft(animated: Bool) {
     // Assign `visiblePage` here so that we allow paging there even if VoiceOver is enabled
-    visiblePage = max(0, visiblePage - 1)
-    self.accessibilityElements = [cardView(index: visiblePage)].compactMap { $0 }
+    visiblePageLefty = max(0, visiblePageLefty - 1)
+    visiblePageLogical = isRightToLeft ? pageCount - visiblePageLefty - 1 : visiblePageLefty
 
-    // See `moveForward()` for comments.
+    let topMost = cardView(index: visiblePageLogical)
+    self.accessibilityElements = [topMost].compactMap { $0 }
+    self.topView = topMost
+
+    // See `moveRight()` for comments.
     let nextFullWidthHorizontalOffset = pager.contentOffset.x - frame.width - Constants.spaceBetweenCards
     let nextFullPageHorizontalOffset = lastHorizontalOffset - frame.width - Constants.spaceBetweenCards
     let horizontalOffset = fmax(nextFullPageHorizontalOffset, nextFullWidthHorizontalOffset)
@@ -260,14 +306,22 @@ class TGPageCardView: TGCardView {
   }
   
   func move(to cardIndex: Int, animated: Bool = true) {
+    let leftIndex = isRightToLeft
+      ? pageCount - cardIndex - 1
+      : cardIndex
+    
     // index must fall within the range of available content cards.
-    guard 0..<contentView.subviews.count ~= cardIndex else { return }
+    guard 0..<contentView.subviews.count ~= leftIndex else { return }
 
     // Assign `visiblePage` here so that we allow paging there even if VoiceOver is enabled
-    visiblePage = cardIndex
-    self.accessibilityElements = [cardView(index: visiblePage)].compactMap { $0 }
+    visiblePageLefty = leftIndex
+    visiblePageLogical = cardIndex
 
-    let newX = (frame.width + Constants.spaceBetweenCards) * CGFloat(cardIndex)
+    let topMost = cardView(index: visiblePageLogical)
+    self.accessibilityElements = [topMost].compactMap { $0 }
+    self.topView = topMost
+
+    let newX = (frame.width + Constants.spaceBetweenCards) * CGFloat(leftIndex)
     pager.setContentOffset(CGPoint(x: newX, y: 0), animated: animated)
   }
   
@@ -291,19 +345,23 @@ extension TGPageCardView: UIScrollViewDelegate {
     scrollViewDidComeToCompleteStop(scrollView)
   }
   
-  fileprivate func scrollViewDidComeToCompleteStop(_ scrollView: UIScrollView) {
-    
+  private func scrollViewDidComeToCompleteStop(_ scrollView: UIScrollView) {
     // Don't allow paging by scrolling when VoiceOver is running. This is working
     // around a weird behaviour in (at least) iOS 15 that immediately scrolls to
     // offset.y == 0 on presenting the initial page.
-    if UIAccessibility.isVoiceOverRunning, currentPage != visiblePage {
-      move(to: visiblePage, animated: false)
+    let logical = currentLogicalIndex()
+    if UIAccessibility.isVoiceOverRunning, visiblePageLogical != logical {
+      move(to: visiblePageLogical, animated: false)
       return
     }
     
-    delegate?.didChangeCurrentPage(to: currentPage, animated: true)
-    visiblePage = currentPage
+    visiblePageLogical = logical
+    delegate?.didChangeCurrentPage(to: logical, animated: true)
     lastHorizontalOffset = scrollView.contentOffset.y
+    
+    let topMost = cardView(index: logical)
+    self.accessibilityElements = [topMost].compactMap { $0 }
+    self.topView = topMost
   }
   
 }

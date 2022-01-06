@@ -372,7 +372,7 @@ open class TGCardViewController: UIViewController {
     let edgePanner = UIScreenEdgePanGestureRecognizer()
     edgePanner.addTarget(self, action: #selector(popMaybe))
     edgePanner.isEnabled = mode == .floating
-    edgePanner.edges = .left
+    edgePanner.edges = traitCollection.layoutDirection == .leftToRight ? .left : .right
     view.addGestureRecognizer(edgePanner)
     self.edgePanner = edgePanner
   }
@@ -1144,7 +1144,12 @@ extension TGCardViewController {
     // centres the current location, etc.
     var mapInsets = UIEdgeInsets.zero
     if cardIsNextToMap(in: traitCollection) {
-      mapInsets.left = cardWrapperShadow.isHidden ? 0 : (traitCollection.horizontalSizeClass == .regular ? 360 : view.frame.width * 0.38) // same as in storyboard
+      let cardWidth = cardWrapperShadow.isHidden ? 0 : (traitCollection.horizontalSizeClass == .regular ? 360 : view.frame.width * 0.38) // same as in storyboard
+      if traitCollection.layoutDirection == .rightToLeft {
+        mapInsets.right = cardWidth
+      } else {
+        mapInsets.left = cardWidth
+      }
     } else {
       // Our view has the full height, including what's below safe area insets.
       // The maximum interactive area is that without the bottom and anything
@@ -1163,7 +1168,12 @@ extension TGCardViewController {
       mapInsets.top = headerView.frame.maxY
     }
     if !bottomFloatingView.arrangedSubviews.isEmpty {
-      mapInsets.right = bottomFloatingViewWrapper.bounds.width
+      let floatingWidth = bottomFloatingViewWrapper.bounds.width
+      if traitCollection.layoutDirection == .rightToLeft {
+        mapInsets.left = floatingWidth
+      } else {
+        mapInsets.right = floatingWidth
+      }
     }
     return mapInsets
   }
