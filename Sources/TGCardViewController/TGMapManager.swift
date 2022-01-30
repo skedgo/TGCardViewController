@@ -260,7 +260,8 @@ extension MKMapView {
   }
   
   fileprivate func zoomLevel(of mapRect: MKMapRect) -> Double {
-    return log(mapRect.size.width / Double(frame.height)) / log(2) + 1
+    let calculated = log(mapRect.size.width / Double(frame.height)) / log(2) + 1
+    return min(20, max(1, calculated)) // force 1-20 range
   }
   
   fileprivate func mapRect(forZoomLevel zoomLevel: Double, centeredOn center: MKMapPoint) -> MKMapRect {
