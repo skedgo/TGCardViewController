@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "TGCardViewController"
-  s.version      = "1.7.5"
+  s.version      = "2.1.2"
   s.summary      = "Card-based view controller for mapping apps"
 
   s.description  = <<-DESC
@@ -10,7 +10,6 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = "https://github.com/skedgo/TGCardViewController"
-  # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
   s.license      = 'Apache License, Version 2.0'
   s.authors             = { "Adrian Schoenig": "adrian@skedgo.com",
@@ -23,6 +22,7 @@ Pod::Spec.new do |s|
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
+  # s.source       = { git: '.'}
   s.source       = { :git => "https://github.com/skedgo/TGCardViewController.git", :tag => "#{s.version}" }
 
 

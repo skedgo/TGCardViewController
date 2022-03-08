@@ -276,7 +276,7 @@ extension TGPageCard {
         UIKeyCommand(
           action: #selector(moveBackward), input: UIKeyCommand.inputLeftArrow, modifierFlags: .control,
           discoverabilityTitle: NSLocalizedString(
-            "Previous card", bundle: .module, comment: "Discovery hint for keyboard shortcuts")
+            "Previous card", bundle: TGCardViewController.bundle, comment: "Discovery hint for keyboard shortcuts")
       ))
     }
     if currentPageIndex < cards.count - 1 {
@@ -284,7 +284,7 @@ extension TGPageCard {
         UIKeyCommand(
           action: #selector(moveForward), input: UIKeyCommand.inputRightArrow, modifierFlags: .control,
           discoverabilityTitle: NSLocalizedString(
-            "Next card", bundle: .module, comment: "Discovery hint for keyboard shortcuts")
+            "Next card", bundle: TGCardViewController.bundle, comment: "Discovery hint for keyboard shortcuts")
       ))
     }
     

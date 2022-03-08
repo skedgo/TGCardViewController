@@ -15,7 +15,7 @@ public class TGPageHeaderView: TGHeaderView {
   
   static func instantiate() -> TGPageHeaderView {
     guard
-      let view = Bundle.module.loadNibNamed("TGPageHeaderView", owner: nil, options: nil)!.first as? TGPageHeaderView
+      let view = TGCardViewController.bundle.loadNibNamed("TGPageHeaderView", owner: nil, options: nil)!.first as? TGPageHeaderView
       else { preconditionFailure() }
     return view
   }

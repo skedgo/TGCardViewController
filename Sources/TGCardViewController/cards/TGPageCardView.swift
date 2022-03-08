@@ -100,7 +100,7 @@ class TGPageCardView: TGCardView {
   
   static func instantiate() -> TGPageCardView {
     guard
-      let view = Bundle.module.loadNibNamed("TGPageCardView", owner: nil, options: nil)!.first as? TGPageCardView
+      let view = TGCardViewController.bundle.loadNibNamed("TGPageCardView", owner: nil, options: nil)!.first as? TGPageCardView
       else { preconditionFailure() }
     return view
     

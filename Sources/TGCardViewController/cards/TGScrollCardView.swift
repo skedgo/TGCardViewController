@@ -29,7 +29,7 @@ public class TGScrollCardView: TGCardView {
   
   static func instantiate() -> TGScrollCardView {
     guard
-      let view = Bundle.module.loadNibNamed("TGScrollCardView", owner: nil, options: nil)!.first as? TGScrollCardView
+      let view = TGCardViewController.bundle.loadNibNamed("TGScrollCardView", owner: nil, options: nil)!.first as? TGScrollCardView
       else { preconditionFailure() }
     return view
   }
