@@ -10,6 +10,11 @@ import Foundation
 
 import MapKit
 
+/// Protocol for a class that manages the map-equivalent of a specific card.
+///
+/// The underlying map view will be passed from map manager to map maanger as cards get pushed and popped.
+/// Can work with any kind of map view class that's a subclass of `UIView`. See ``TGMapManager``
+/// for a map manager that is based on `MKMapView`.
 @MainActor
 public protocol TGCompatibleMapManager: AnyObject {
   
@@ -39,6 +44,7 @@ public protocol TGCompatibleMapManager: AnyObject {
   var edgePadding: UIEdgeInsets { get set }
 }
 
+/// Map manager that is based on MapKit, should be subclassed.
 @MainActor
 open class TGMapManager: NSObject, TGCompatibleMapManager {
   public enum Zoom: Double {

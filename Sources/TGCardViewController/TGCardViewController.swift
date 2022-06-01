@@ -21,6 +21,9 @@ public protocol TGCardViewControllerDelegate: AnyObject {
 
 /// The root view controller for using cards in your app.
 ///
+/// A single view controller that'll manages a single map view (which can be from MapKit or any other
+/// mapping framework) and stack of cards (see ``TGCard``). The cards can have a map manager, and
+/// pushing and popping cards will pass the map view to the card's map manager (see ``TGCompatibleMapManager``).
 ///
 /// ## How to use this in your app
 ///
@@ -30,7 +33,7 @@ public protocol TGCardViewControllerDelegate: AnyObject {
 /// instance from the storyboard isn’t used, but instead the pre-configured one
 /// from `TGCardViewController.xib`:
 ///
-/// ```
+/// ```swift
 /// import TGCardViewController
 ///
 /// class CardViewController: TGCardViewController {
@@ -48,7 +51,7 @@ public protocol TGCardViewControllerDelegate: AnyObject {
 /// Third, and last, create a `TGCard` that represents the card at the top
 /// level, and add then set that in your view controller’s `viewDidLoad`:
 ///
-/// ```
+/// ```swift
 /// override func viewDidLoad() {
 ///   rootCard = MyRootCard()
 ///   super.viewDidLoad()
@@ -73,7 +76,7 @@ public protocol TGCardViewControllerDelegate: AnyObject {
 ///    details. Note that map managers, delegates and data source will *not*
 ///    be restored this way.
 /// 2. Do it yourself by not calling `super` and using convenience initialisers
-///    for `init(coder:). The typical approach here is to save and restore the
+///    for `init(coder:)`. The typical approach here is to save and restore the
 ///    basic information, to then call your usual `init` methods on the cards.
 @MainActor
 open class TGCardViewController: UIViewController {
