@@ -1195,6 +1195,17 @@ extension TGCardViewController {
     }
   }
   
+  /// Call this whenever the height of the current card's title has changed.
+  ///
+  /// Generally not necessary to call, unless where you use a custom card title and it's height changed
+  /// after the card was first presented.
+  public func cardTitleHeightDidChanged() {
+    topCardView?.updateConstraintsIfNeeded()
+    topCardView?.layoutIfNeeded()
+
+    updateCardStructure(card: topCardView, position: cardPosition)
+  }
+  
   private func updateForNewPosition(position: TGCardPosition) {
     previousCardPosition = position
     
