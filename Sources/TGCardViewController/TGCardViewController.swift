@@ -1617,6 +1617,9 @@ extension TGCardViewController {
   private func deviceIsiPhoneX() -> Bool { view.window?.safeAreaInsets.bottom ?? 0 > 0 }
   
   private func fadeMapFloatingViews(_ fade: Bool, animated: Bool) {
+    topFloatingViewWrapper.isHidden = false
+    bottomFloatingViewWrapper.isHidden = false
+    
     UIView.animate(withDuration: animated ? 0.25: 0) {
       self.topFloatingViewWrapper.accessibilityElements = fade ? [] : nil
       self.topFloatingViewWrapper.alpha = fade ? 0 : 1
@@ -1624,6 +1627,9 @@ extension TGCardViewController {
       self.bottomFloatingViewWrapper.accessibilityElements = fade ? [] : nil
       self.bottomFloatingViewWrapper.alpha = fade ? 0 : 1
       self.bottomFloatingViewWrapper.isUserInteractionEnabled = !fade
+    } completion: { _ in
+      self.topFloatingViewWrapper.isHidden = fade
+      self.bottomFloatingViewWrapper.isHidden = false
     }
   }
   
@@ -1676,6 +1682,10 @@ extension TGCardViewController {
     
     apply(on: topFloatingViewWrapper)
     apply(on: bottomFloatingViewWrapper)
+  }
+  
+  public func updateMapToolbarItems() {
+    updateFloatingViewsContent(card: topCard)
   }
   
   private func updateFloatingViewsContent(card: TGCard?) {
