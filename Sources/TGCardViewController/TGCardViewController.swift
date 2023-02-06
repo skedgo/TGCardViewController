@@ -749,6 +749,7 @@ extension TGCardViewController {
 
     // 2. Updating card logic and informing of transition
     let oldTop = cardWithView(atIndex: cards.count - 1)
+    let oldShadowFrame = cardWrapperShadow.frame
     let notify = isVisible
     if notify {
       oldTop?.card.willDisappear(animated: animated)
@@ -792,7 +793,8 @@ extension TGCardViewController {
       // 4. Place the new view coming, preparing to animate in from the bottom
       cardView.frame = cardWrapperContent.bounds
       if animated {
-        cardView.frame.origin.y = cardWrapperContent.frame.maxY
+        let offset = cardView.convert(.init(x: 0, y: mapViewWrapper.frame.maxY), to: cardWrapperShadow).y
+        cardView.frame.origin.y = offset
       }
       cardWrapperContent.addSubview(cardView)
       
@@ -831,6 +833,22 @@ extension TGCardViewController {
     // Notify that we have completed building the card view and its header view.
     top.cardView = cardView
     top.didBuild(cardView: cardView, headerView: header)
+    
+    // The previous call can cause a glitch where the render loop is run, if
+    // the cards to certain things. To avoid this, we revert back to the old
+    // frame, just in case.
+    #if DEBUG
+    if !cardWrapperShadow.frame.equalTo(oldShadowFrame) {
+      print("""
+          === TGCardViewController misuse ==================================
+          WARNING: Your implementation of TGCard.didBuild caused a layout
+          cycle, which leads to a UI glitch when pushing cards. Review your
+          code.
+          ==================================================================
+          """)
+    }
+    #endif
+    
     if notify {
       top.willAppear(animated: animated)
     }
@@ -854,7 +872,7 @@ extension TGCardViewController {
     // old. Only do that if the previous transition completed, i.e., we didn't
     // already have such a shadow.
     
-    if oldTop != nil && animated && cardTransitionShadow == nil, let cardView = cardView {
+    if oldTop != nil, animated, cardTransitionShadow == nil, let cardView = cardView {
       let shadow = TGCornerView(frame: cardWrapperContent.bounds)
       shadow.frame.size.height += 50 // for bounciness
       shadow.backgroundColor = .black
@@ -875,6 +893,10 @@ extension TGCardViewController {
       cardAnimations()
       oldTop?.view?.alpha = 0
     }
+    
+    // Also animate the shadow (and the old top card) to the new position.
+    let newShadow = self.cardWrapperShadow.frame
+    self.cardWrapperShadow.frame = oldShadowFrame
 
     UIView.animate(
       withDuration: animated ? Constants.pushAnimationDuration : 0,
@@ -884,6 +906,7 @@ extension TGCardViewController {
       options: [.curveEaseInOut],
       animations: {
         self.view.layoutIfNeeded()
+        self.cardWrapperShadow.frame = newShadow
         self.updateFloatingViewsVisibility()
         if self.mode == .floating {
           cardAnimations()
