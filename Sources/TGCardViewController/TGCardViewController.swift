@@ -838,7 +838,7 @@ extension TGCardViewController {
     // the cards to certain things. To avoid this, we revert back to the old
     // frame, just in case.
     #if DEBUG
-    if !cardWrapperShadow.frame.equalTo(oldShadowFrame) {
+    if let newInitial = top.initialPosition, cardPosition != newInitial, !cardWrapperShadow.frame.origin.equalTo(oldShadowFrame.origin) {
       print("""
           === TGCardViewController misuse ==================================
           WARNING: Your implementation of TGCard.didBuild caused a layout
