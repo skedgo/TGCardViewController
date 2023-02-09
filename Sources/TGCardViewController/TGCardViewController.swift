@@ -894,9 +894,15 @@ extension TGCardViewController {
       oldTop?.view?.alpha = 0
     }
     
+    // In some cases, the cardWrapperShadow frame might already have been
+    // updated before the animation was applied. If that happaned, we reset
+    // it temporarily back and animate it.
     // Also animate the shadow (and the old top card) to the new position.
-    let newShadow = self.cardWrapperShadow.frame
-    self.cardWrapperShadow.frame = oldShadowFrame
+    let newShadow = cardWrapperShadow.frame
+    let fixUpShadow = !newShadow.origin.equalTo(oldShadowFrame.origin)
+    if fixUpShadow {
+      self.cardWrapperShadow.frame = oldShadowFrame
+    }
 
     UIView.animate(
       withDuration: animated ? Constants.pushAnimationDuration : 0,
@@ -906,7 +912,9 @@ extension TGCardViewController {
       options: [.curveEaseInOut],
       animations: {
         self.view.layoutIfNeeded()
-        self.cardWrapperShadow.frame = newShadow
+        if fixUpShadow {
+          self.cardWrapperShadow.frame = newShadow
+        }
         self.updateFloatingViewsVisibility()
         if self.mode == .floating {
           cardAnimations()
