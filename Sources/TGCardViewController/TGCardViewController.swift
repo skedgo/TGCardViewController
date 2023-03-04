@@ -483,7 +483,7 @@ open class TGCardViewController: UIViewController {
     if view.superview != nil, !mapView.frame.isEmpty {
       if !didAddInitialCards {
         didAddInitialCards = true
-        initialCards.forEach { push($0, animated: false) }
+        initialCards.forEach { push($0, animated: false, allowToNotify: $0 == initialCards.last, completionHandler: nil) }
       }
       
       fixPositioning()
@@ -734,6 +734,15 @@ extension TGCardViewController {
                    copyStyle: Bool = true,
                    completionHandler: (() -> Void)? = nil
   ) {
+    push(top, animated: animated, copyStyle: copyStyle, allowToNotify: true, completionHandler: completionHandler)
+  }
+    
+  private func push(_ top: TGCard,
+                    animated: Bool,
+                    copyStyle: Bool = true,
+                    allowToNotify: Bool,
+                    completionHandler: (() -> Void)?
+  ) {
     guard isViewLoaded else {
       return assertionFailure("Tried to push before view was loaded")
     }
@@ -750,7 +759,7 @@ extension TGCardViewController {
     // 2. Updating card logic and informing of transition
     let oldTop = cardWithView(atIndex: cards.count - 1)
     let oldShadowFrame = cardWrapperShadow.frame
-    let notify = isVisible
+    let notify = isVisible && allowToNotify
     if notify {
       oldTop?.card.willDisappear(animated: animated)
     }
