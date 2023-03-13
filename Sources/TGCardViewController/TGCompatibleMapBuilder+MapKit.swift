@@ -15,6 +15,10 @@ import MapKit
 /// button. However, to enable the user tracking button, make sure to provide a block to
 /// ``askForLocationPermissions``.
 public class TGMapKitBuilder: TGCompatibleMapBuilder {
+  public init(askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)? = nil) {
+    self.askForLocationPermissions = askForLocationPermissions
+  }
+  
   public var askForLocationPermissions: ((_ completion: @escaping (Bool) -> Void) -> Void)?
   
   private var compassObservation: NSKeyValueObservation?
