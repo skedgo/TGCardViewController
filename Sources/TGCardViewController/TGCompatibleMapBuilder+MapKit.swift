@@ -86,16 +86,21 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
     tracker.centerXAnchor.constraint(equalTo: background.centerXAnchor).isActive = true
     tracker.centerYAnchor.constraint(equalTo: background.centerYAnchor).isActive = true
     
-    // MKUserTrackingButton in iOS 11 just goes into a dumb spinner mode, if
-    // no permissions are granted. To work around this, we disable it and instead
-    // intercept taps.
-    // The way we handle the DisposeBag might(?) introduce a retain cycle, but
-    // this only exists until you provide access to the current location.
-    if CLLocationManager.authorizationStatus() == .notDetermined {
+    // MKUserTrackingButton in iOS 11-16 just goes into a dumb spinner mode, if
+    // no permissions are granted. To work around this, we disable it and
+    // instead intercept taps.
+    switch CLLocationManager.authorizationStatus() {
+    case .notDetermined, .denied, .restricted:
       Self.updateTracker(tracker, enabled: false)
       let tapper = UITapGestureRecognizer()
       tapper.addTarget(self, action: #selector(trackerButtonPressed))
       background.addGestureRecognizer(tapper)
+      
+    case .authorizedAlways, .authorizedWhenInUse:
+      break
+
+    @unknown default:
+      assertionFailure()
     }
     
     if #available(iOS 13.4, *) {
@@ -111,15 +116,21 @@ public class TGMapKitBuilder: TGCompatibleMapBuilder {
       preconditionFailure()
     }
     
-    // authorisation might have since been granted
-    guard CLLocationManager.authorizationStatus() == .notDetermined else {
+    switch CLLocationManager.authorizationStatus() {
+    case .authorizedAlways, .authorizedWhenInUse:
+      // authorisation might have since been granted
       Self.updateTracker(tracker, enabled: true)
       tracker.mapView?.userTrackingMode = .follow
-      return
-    }
-    
-    askForLocationPermissions? { success in
-      guard success else { return }
+      
+    case .notDetermined, .denied, .restricted:
+      askForLocationPermissions? { success in
+        guard success else { return }
+        Self.updateTracker(tracker, enabled: true)
+        tracker.mapView?.userTrackingMode = .follow
+      }
+      
+    @unknown default:
+      assertionFailure()
       Self.updateTracker(tracker, enabled: true)
       tracker.mapView?.userTrackingMode = .follow
     }
