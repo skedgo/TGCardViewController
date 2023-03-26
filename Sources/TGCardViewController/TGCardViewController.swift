@@ -579,7 +579,7 @@ open class TGCardViewController: UIViewController {
     
     if cardIsNextToMap(in: traitCollection) {
       // The map is to the right of the card, which we account for when not collapsed
-      let ignoreCard = position == .collapsed && traitCollection.verticalSizeClass == .regular
+      let ignoreCard = (position == .collapsed && traitCollection.verticalSizeClass == .regular) || cardWrapperShadow.isHidden
       left = ignoreCard ? 0 : cardWrapperShadow.frame.maxX
       bottom = 0
       top = topOverlap
