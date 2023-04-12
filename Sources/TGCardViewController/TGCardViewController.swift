@@ -1627,7 +1627,7 @@ extension TGCardViewController {
 
 extension TGCardViewController {
   
-  public func toggleMapOverlays(show: Bool, animated: Bool = true) {
+  public func toggleMapOverlays(show: Bool, animated: Bool = true, completion: ((Bool) -> Void)? = nil) {
     // Map buttons
     self.allowFloatingViews = show
     if show {
@@ -1651,6 +1651,8 @@ extension TGCardViewController {
       } else {
         self.mapViewController.additionalSafeAreaInsets = .zero
       }
+    } completion: { finished in
+      completion?(finished)
     }
   }
   
