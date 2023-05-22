@@ -1252,7 +1252,7 @@ extension TGCardViewController {
     topCardView?.grabHandles.forEach {
       updateCardHandleAccessibility(handle: $0, position: position)
     }
-
+    
     let mapIsInteractive = cardIsNextToMap(in: traitCollection) || position != .extended
     mapViewController.isUserInteractionEnabled = mapIsInteractive
     topFloatingViewWrapper.isUserInteractionEnabled = mapIsInteractive
@@ -1454,7 +1454,8 @@ extension TGCardViewController {
       mode == .floating,
       let scrollView = recogniser.view as? UIScrollView,
       scrollView == topCardView?.contentScrollView,
-      panner.isEnabled
+      panner.isEnabled,
+      scrollView.refreshControl == nil
       else { return }
     
     let negativity = scrollView.contentOffset.y
@@ -1992,6 +1993,14 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
       case .extended:             return true
       case .collapsed, .peaking:  return false
       }
+      
+    } else if gestureRecognizer == panner {
+      // Don't allow panning if the card is extended and there's a refresh
+      // control
+      guard let innerScroll = topCardView?.contentScrollView else { return true }
+      return cardWrapperDesiredTopConstraint.constant > extendedMinY
+        || innerScroll.refreshControl == nil
+        || touch.location(in: innerScroll).y <= 0
       
     } else {
       return true
