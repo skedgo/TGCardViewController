@@ -470,6 +470,8 @@ open class TGCardViewController: UIViewController {
     // to landscape mode, the card will be in the extended state, which requires
     // the card's contents to be scrollable. Hence, we reenable the scolling.
     updateCardScrolling(allow: true, view: topCardView)
+    
+    topCard?.traitCollectionsDidChange(previousTraitCollection)
   }
   
   private func updateCardScrolling(allow: Bool, view: TGCardView?) {
