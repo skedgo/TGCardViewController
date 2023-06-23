@@ -471,7 +471,7 @@ open class TGCardViewController: UIViewController {
     // the card's contents to be scrollable. Hence, we reenable the scolling.
     updateCardScrolling(allow: true, view: topCardView)
     
-    topCard?.traitCollectionsDidChange(previousTraitCollection)
+    topCard?.traitCollectionDidChange(previousTraitCollection)
   }
   
   private func updateCardScrolling(allow: Bool, view: TGCardView?) {
