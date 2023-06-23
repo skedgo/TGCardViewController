@@ -270,6 +270,14 @@ open class TGCard: UIResponder, TGPreferrableView {
     viewIsVisible = false
   }
   
+  /// Called when the card is the top card and the trait collection of the TGCardViewController change
+  ///
+  /// Get the current/new trait collection by calling `controller?.traitCollection`.
+  ///
+  /// - Parameter previousTraitCollection: Previous trait collection, if any
+  open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+  }
+  
   /// Called when the card moved, potentially to a new position
   ///
   /// - Parameters:
