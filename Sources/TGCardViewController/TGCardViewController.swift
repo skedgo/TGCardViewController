@@ -193,7 +193,7 @@ open class TGCardViewController: UIViewController {
   var panner: UIPanGestureRecognizer!
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
-#if !os(xrOS)
+#if !os(visionOS)
   var edgePanner: UIScreenEdgePanGestureRecognizer!
 #endif
   
@@ -373,7 +373,7 @@ open class TGCardViewController: UIViewController {
     mapShadow.addGestureRecognizer(mapTapper)
     self.mapShadowTapper = mapTapper
     
-#if !os(xrOS)
+#if !os(visionOS)
     // Edge panning to go back
     let edgePanner = UIScreenEdgePanGestureRecognizer()
     edgePanner.addTarget(self, action: #selector(popMaybe))
@@ -1976,7 +1976,7 @@ extension TGCardViewController {
       headerStatusBarStyle = nil
     }
 
-#if !os(xrOS)
+#if !os(visionOS)
     setNeedsStatusBarAppearanceUpdate()
 #endif
   }
@@ -2121,7 +2121,7 @@ extension TGCardViewController {
       object: nil
     )
 
-#if !os(xrOS)
+#if !os(visionOS)
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(updateForVoiceOverFocusChange),
@@ -2136,7 +2136,7 @@ extension TGCardViewController {
     updateCardScrolling(allow: cardPosition == .extended, view: topCardView)
   }
   
-#if !os(xrOS)
+#if !os(visionOS)
   @objc
   private func updateForVoiceOverFocusChange(notification: Notification) {
     guard let selection = notification.userInfo?[UIAccessibility.focusedElementUserInfoKey] as? UIAccessibilityElement else { return }
