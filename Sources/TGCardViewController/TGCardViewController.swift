@@ -193,7 +193,9 @@ open class TGCardViewController: UIViewController {
   var panner: UIPanGestureRecognizer!
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
+#if !os(visionOS)
   var edgePanner: UIScreenEdgePanGestureRecognizer!
+#endif
   
   /// Builder that determines what kind of map to use. The builder's
   /// `buildMapView` method will be once initially, and the map instance will
@@ -371,6 +373,7 @@ open class TGCardViewController: UIViewController {
     mapShadow.addGestureRecognizer(mapTapper)
     self.mapShadowTapper = mapTapper
     
+#if !os(visionOS)
     // Edge panning to go back
     let edgePanner = UIScreenEdgePanGestureRecognizer()
     edgePanner.addTarget(self, action: #selector(popMaybe))
@@ -378,6 +381,7 @@ open class TGCardViewController: UIViewController {
     edgePanner.edges = traitCollection.layoutDirection == .leftToRight ? .left : .right
     view.addGestureRecognizer(edgePanner)
     self.edgePanner = edgePanner
+#endif
   }
   
   override open func viewWillAppear(_ animated: Bool) {
@@ -1971,7 +1975,10 @@ extension TGCardViewController {
     } else if !headerIsVisible {
       headerStatusBarStyle = nil
     }
+
+#if !os(visionOS)
     setNeedsStatusBarAppearanceUpdate()
+#endif
   }
   
 }
@@ -2114,12 +2121,14 @@ extension TGCardViewController {
       object: nil
     )
 
+#if !os(visionOS)
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(updateForVoiceOverFocusChange),
       name: UIAccessibility.elementFocusedNotification,
       object: nil
     )
+#endif
   }
   
   @objc
@@ -2127,6 +2136,7 @@ extension TGCardViewController {
     updateCardScrolling(allow: cardPosition == .extended, view: topCardView)
   }
   
+#if !os(visionOS)
   @objc
   private func updateForVoiceOverFocusChange(notification: Notification) {
     guard let selection = notification.userInfo?[UIAccessibility.focusedElementUserInfoKey] as? UIAccessibilityElement else { return }
@@ -2139,6 +2149,7 @@ extension TGCardViewController {
       switchTo(.extended, direction: .up, animated: true)
     }
   }
+#endif
   
   private func buildCardHandleAccessibilityActions() -> [UIAccessibilityCustomAction] {
     return [
