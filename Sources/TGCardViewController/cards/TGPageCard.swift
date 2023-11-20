@@ -46,7 +46,7 @@ open class TGPageCard: TGCard {
     return pageCard.currentPage
   }
   
-  fileprivate var currentCard: TGCard {
+  public var currentCard: TGCard {
     return cards[currentPageIndex]
   }
   
