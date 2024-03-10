@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,7 +14,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="miC-Fv-7h9">
-                    <rect key="frame" x="16" y="8" width="343" height="651"/>
+                    <rect key="frame" x="16" y="192" width="343" height="467"/>
                     <string key="text">Who rides there so late through the night dark and drear?
 The father it is, with his infant so dear;
 He holdeth the boy tightly clasp'd in his arm,
@@ -60,16 +58,28 @@ The child in his arms finds he motionless, dead.</string>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="erlking" translatesAutoresizingMaskIntoConstraints="NO" id="eZG-SF-4iT">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="176"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="eZG-SF-4iT" secondAttribute="height" multiplier="640:300" id="DD0-Za-H6m"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="0.13725490200000001" green="0.69411764710000001" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="miC-Fv-7h9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="IuK-Hf-Zgg"/>
+                <constraint firstItem="miC-Fv-7h9" firstAttribute="top" secondItem="eZG-SF-4iT" secondAttribute="bottom" constant="16" id="Kez-VD-uti"/>
                 <constraint firstAttribute="trailing" secondItem="miC-Fv-7h9" secondAttribute="trailing" constant="16" id="YMl-Xn-hwv"/>
                 <constraint firstAttribute="bottom" secondItem="miC-Fv-7h9" secondAttribute="bottom" constant="8" id="b27-ev-qpJ"/>
-                <constraint firstItem="miC-Fv-7h9" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="bO8-eg-BwL"/>
+                <constraint firstItem="eZG-SF-4iT" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="hrq-An-fgl"/>
+                <constraint firstAttribute="trailing" secondItem="eZG-SF-4iT" secondAttribute="trailing" id="sKn-qQ-A8j"/>
+                <constraint firstItem="eZG-SF-4iT" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="uMS-ZZ-95l"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
-            <point key="canvasLocation" x="33.5" y="54.5"/>
+            <point key="canvasLocation" x="53.600000000000001" y="49.025487256371818"/>
         </view>
     </objects>
+    <resources>
+        <image name="erlking" width="640" height="300"/>
+    </resources>
 </document>

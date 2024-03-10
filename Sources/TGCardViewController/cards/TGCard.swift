@@ -229,6 +229,13 @@ open class TGCard: UIResponder, TGPreferrableView {
   
   // MARK: - Managing Card Life Cycle
   
+  open func willAdjustContentAlpha(_ value: CGFloat) {
+  }
+  
+  open func shouldToggleSeparator(show: Bool, offset: CGFloat) -> Bool {
+    return true
+  }
+  
   /// Called just before the card becomes visible
   ///
   /// Called when card gets pushed onto a card

@@ -24,9 +24,12 @@ open class TGPlainCard: TGCard {
   /// Can have interactive elements.
   public let contentView: UIView?
   
+  public let extended: Bool
+  
   public init(
     title: CardTitle,
     contentView: UIView? = nil,
+    extended: Bool = false,
     mapManager: TGCompatibleMapManager? = nil,
     initialPosition: TGCardPosition? = nil
     ) {
@@ -35,6 +38,7 @@ open class TGPlainCard: TGCard {
             "scrolling. Use `TGTableCardView` instead.")
     
     self.contentView = contentView
+    self.extended = extended
     
     super.init(title: title, mapManager: mapManager, initialPosition: initialPosition)
   }
@@ -57,9 +61,15 @@ open class TGPlainCard: TGCard {
   }
   
   open override func buildCardView() -> TGCardView? {
-    let view = TGPlainCardView.instantiate()
+    let view = TGPlainCardView.instantiate(extended: extended)
     view.configure(with: self)
     return view
+  }
+  
+  open override func willAppear(animated: Bool) {
+    cardView?.contentScrollView?.contentOffset = .zero
+    
+    super.willAppear(animated: animated)
   }
   
 }
