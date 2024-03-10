@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 /// A card representing the content currently displayed
 ///
@@ -42,9 +43,18 @@ open class TGCard: UIResponder, TGPreferrableView {
     /// use the default style.
     case custom(UIView, dismissButton: UIButton? = nil)
     
+    case customExtended(any View)
+    
     /// No title at all. Make sure to call `controller?.pop()`
     /// when appropriate.
     case none
+    
+    var isExtended: Bool {
+      switch self {
+      case .customExtended: return true
+      case .default, .custom, .none: return false
+      }
+    }
   }
   
   /// The default image for the close button on a card, with default color
@@ -245,6 +255,9 @@ open class TGCard: UIResponder, TGPreferrableView {
   /// - Parameter animated: If it'll be animated
   open func willAppear(animated: Bool) {
 //    print("+. \(title) will appear")
+    
+    cardView?.contentScrollView?.contentOffset = .zero
+    
     viewIsVisible = true
   }
   

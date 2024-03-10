@@ -6,6 +6,7 @@
 //  Copyright © 2017 SkedGo Pty Ltd. All rights reserved.
 //
 
+import SwiftUI
 import UIKit
 
 public protocol TGInteractiveCardTitle: UIView {
@@ -70,6 +71,8 @@ public class TGCardView: TGCornerView, TGPreferrableView {
   weak var titleView: UIView?
   
   weak var customDismissButton: UIButton?
+  
+  private var titleHost: UIHostingController<AnyView>?
   
   private var contentScrollViewObservation: NSKeyValueObservation?
   
@@ -140,6 +143,12 @@ public class TGCardView: TGCornerView, TGPreferrableView {
       case .custom(let view, let button):
         titleView = view
         customDismissButton = button
+        
+      case .customExtended(let view):
+        let titleHost = UIHostingController(rootView: AnyView(view))
+        self.titleHost = titleHost
+        titleHost.view.backgroundColor = .clear
+        titleView = titleHost.view
 
       case .none:
         let emptyView = UIView()
@@ -234,7 +243,18 @@ public class TGCardView: TGCornerView, TGPreferrableView {
   // MARK: - Content view configuration
   
   func showSeparator(_ show: Bool, offset: CGFloat) {
-    contentSeparator?.isHidden = !show
+    if let owningCard, owningCard.shouldToggleSeparator(show: show, offset: offset) {
+      contentSeparator?.isHidden = !show
+      
+    } else if owningCard?.title.isExtended == true, let contentScrollView, contentScrollView.isDecelerating, offset < 0 {
+      // This handles the case where you fling the content down further than the
+      // top. It looks wierd if this would then scroll or bounce into negative
+      // space, so we just stop apruptly at 0.
+      // We consider `.isDecelerating` to let you do this while actively
+      // dragging, to not stop that gesture, as that would brea, dragging the
+      // card down by the scroll view, when you start with a scroll.
+      contentScrollView.contentOffset.y = 0
+    }
   }
   
   func allowContentScrolling(_ allowScrolling: Bool) {
@@ -242,6 +262,8 @@ public class TGCardView: TGCornerView, TGPreferrableView {
   }
   
   func adjustContentAlpha(to value: CGFloat) {
+    owningCard?.willAdjustContentAlpha(value)
+    
     contentScrollView?.alpha = value
   }
   

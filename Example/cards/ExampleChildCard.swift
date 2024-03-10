@@ -12,26 +12,22 @@ import MapKit
 
 import TGCardViewController
 
+@available(iOS 16.0, *)
 class ExampleChildCard : TGPlainCard {
   
   private let titleHandler: TitleHandler
-  var titleHost: UIHostingController<TitleView>
   var contentHost: UIHostingController<ContentView>
   
   init() {
     let handler = TitleHandler()
     self.titleHandler = handler
-    let titleHost = UIHostingController(rootView: TitleView(handler: handler))
-    titleHost.view.backgroundColor = .clear
-    self.titleHost = titleHost
     
     let contentHost = UIHostingController(rootView: ContentView())
     self.contentHost = contentHost
     
     super.init(
-      title: .custom(titleHost.view, dismissButton: nil),
+      title: .customExtended(TitleView(handler: handler)),
       contentView: contentHost.view,
-      extended: true,
       mapManager: TGMapManager.sydney
     )
     
@@ -63,6 +59,7 @@ private class TitleHandler: ObservableObject {
   init() {}
 }
 
+@available(iOS 16.0, *)
 struct TitleView: View {
   @ObservedObject fileprivate var handler: TitleHandler
   
@@ -105,6 +102,7 @@ struct TitleView: View {
   }
 }
 
+@available(iOS 16.0, *)
 struct ContentView: View {
   var body: some View {
     VStack {

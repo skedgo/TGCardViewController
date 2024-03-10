@@ -42,7 +42,7 @@ class TGPlainCardView: TGCardView {
       adjustment += handle.frame.height
     }
     
-    if plainCard.extended {
+    if card.title.isExtended {
       contentScrollView?.contentInset.top = adjustment
     } else {
       contentViewHeightEqualToSuperviewHeightConstraint.constant = -1*adjustment
@@ -58,26 +58,6 @@ class TGPlainCardView: TGCardView {
       contentView.trailingAnchor.constraint(equalTo: content.trailingAnchor).isActive = true
       contentView.bottomAnchor.constraint(equalTo: content.bottomAnchor).isActive = true
     }
-  }
-  
-  override func showSeparator(_ show: Bool, offset: CGFloat) {
-    if let owningCard, owningCard.shouldToggleSeparator(show: show, offset: offset) {
-      super.showSeparator(show, offset: offset)
-      
-    } else if (owningCard as? TGPlainCard)?.extended == true, let contentScrollView, contentScrollView.isDecelerating, offset < 0 {
-      // This handles the case where you fling the content down further than the
-      // top. It looks wierd if this would then scroll or bounce into negative
-      // space, so we just stop apruptly at 0.
-      // We consider `.isDecelerating` to let you do this while actively
-      // dragging, to not stop that gesture, as that would brea, dragging the
-      // card down by the scroll view, when you start with a scroll.
-      contentScrollView.contentOffset.y = 0
-    }
-  }
-  
-  override func adjustContentAlpha(to value: CGFloat) {
-    owningCard?.willAdjustContentAlpha(value)
-    super.adjustContentAlpha(to: value)
   }
   
 }

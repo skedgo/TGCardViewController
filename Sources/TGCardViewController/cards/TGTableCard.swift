@@ -162,7 +162,7 @@ open class TGTableCard: TGCard {
   // MARK: - Constructing views
   
   open override func buildCardView() -> TGCardView? {
-    let view = TGScrollCardView.instantiate()
+    let view = TGScrollCardView.instantiate(extended: title.isExtended)
     view.configure(with: self)
     return view
   }

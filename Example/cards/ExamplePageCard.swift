@@ -14,11 +14,15 @@ import TGCardViewController
 class ExamplePageCard: TGPageCard {
   
   init() {
-    let card1 = ExampleCityCard(city: .sydney)
-    let card2 = ExampleTableCard(pushOnTap: false)
-    let card3 = ExampleChildCard()
-    let card4 = ExampleCityCard(city: .nuremberg)
-    super.init(cards: [card1, card2, card3, card4])
+    var cards: [TGCard] = []
+    cards.append(ExampleCityCard(city: .sydney))
+    cards.append(ExampleTableCard(pushOnTap: false))
+    if #available(iOS 16.0, *) {
+      cards.append(ExampleChildCard())
+    }
+    cards.append(ExampleCityCard(city: .nuremberg))
+    
+    super.init(cards: cards)
 
     // Custom accessory for testing jumping around
     let jumpButton = UIButton(type: .roundedRect)

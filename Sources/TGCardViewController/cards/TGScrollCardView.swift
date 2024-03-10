@@ -27,9 +27,9 @@ public class TGScrollCardView: TGCardView {
   
   // MARK: - New instances
   
-  static func instantiate() -> TGScrollCardView {
+  static func instantiate(extended: Bool) -> TGScrollCardView {
     guard
-      let view = TGCardViewController.bundle.loadNibNamed("TGScrollCardView", owner: nil, options: nil)!.first as? TGScrollCardView
+      let view = TGCardViewController.bundle.loadNibNamed(extended ? "TGScrollExtendedCardView" : "TGScrollCardView", owner: nil, options: nil)!.first as? TGScrollCardView
       else { preconditionFailure() }
     return view
   }
@@ -79,6 +79,10 @@ public class TGScrollCardView: TGCardView {
     
     self.embeddedScrollView = scrollView
     contentScrollView = scrollView
+    
+    if card.title.isExtended {
+      scrollView.contentInset.top = headerHeight
+    }
   }
   
   override func applyStyling(_ style: TGCardStyle) {
