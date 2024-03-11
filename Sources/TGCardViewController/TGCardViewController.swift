@@ -511,12 +511,18 @@ open class TGCardViewController: UIViewController {
     }
     
     if let scrollView = topCardView?.contentScrollView {
+      let previousTop = scrollView.contentOffset.y
       view.updateConstraintsIfNeeded() // to get the correct frames
 
       let adjustedBottom = cardIsNextToMap(in: traitCollection) ? view.safeAreaInsets.bottom : (headerView.frame.maxY + view.safeAreaInsets.top - view.safeAreaInsets.bottom)
       
       scrollView.contentInset.bottom = adjustedBottom
       scrollView.verticalScrollIndicatorInsets.bottom = adjustedBottom
+      
+      if topCard?.autoIgnoreContentInset == true {
+        // Changing the bottom scrolls, so we go back to where it was
+        scrollView.contentInset.top = previousTop
+      }
     }
   }
   
@@ -815,8 +821,12 @@ extension TGCardViewController {
       
       // Give AutoLayout a nudge to layout the card view, now that we have
       // the right height. This is so that we can use `cardView.headerHeight`.
+      let previousInset = cardView.contentScrollView?.contentOffset.y
       cardView.setNeedsUpdateConstraints()
       cardView.layoutIfNeeded()
+      if topCard?.autoIgnoreContentInset == true, let previousInset {
+        cardView.contentScrollView?.contentOffset.y = previousInset
+      }
     }
     
     // 5. Special handling of when the new top card has no map content
@@ -1464,7 +1474,7 @@ extension TGCardViewController {
       scrollView.refreshControl == nil
       else { return }
     
-    let negativity = scrollView.contentOffset.y
+    let negativity = scrollView.contentOffset.y + scrollView.contentInset.top
     
     switch (negativity, recogniser.state) {
     case (0 ..< CGFloat.infinity, _):
@@ -1477,7 +1487,9 @@ extension TGCardViewController {
       // it's appearing: scrolled to the top with zero inset
       scrollView.transform = .identity
       scrollView.scrollIndicatorInsets = scrollView.contentInset // .zero
-      scrollView.contentOffset = .zero
+      if topCard?.autoIgnoreContentInset == true {
+        scrollView.contentOffset = .zero
+      }
       
       // Stop the "residual" scroll motion in the scroll view, and instead
       // stay snapped to offset 0.

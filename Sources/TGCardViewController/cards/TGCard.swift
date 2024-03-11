@@ -216,6 +216,20 @@ open class TGCard: UIResponder, TGPreferrableView {
   ///   - cardView: The card view that got built
   ///   - headerView: The header view, typically used by `TGPageCard`.
   open func didBuild(cardView: TGCardView?, headerView: TGHeaderView?) {
+    if title.isExtended, let cardView {
+      cardView.contentScrollView?.contentInset.top = cardView.headerHeight
+      if autoIgnoreContentInset {
+        cardView.contentScrollView?.contentOffset.y = 0
+      }
+    }
+  }
+  
+  public var autoIgnoreContentInset: Bool = false {
+    didSet {
+      if autoIgnoreContentInset, let scrollView = cardView?.contentScrollView, scrollView.contentOffset.y < 0 {
+        scrollView.contentOffset.y = 0
+      }
+    }
   }
   
   /// The card view. Gets set before `didBuild` is called
@@ -256,7 +270,9 @@ open class TGCard: UIResponder, TGPreferrableView {
   open func willAppear(animated: Bool) {
 //    print("+. \(title) will appear")
     
-    cardView?.contentScrollView?.contentOffset = .zero
+    if autoIgnoreContentInset {
+      cardView?.contentScrollView?.contentOffset.y = 0
+    }
     
     viewIsVisible = true
   }

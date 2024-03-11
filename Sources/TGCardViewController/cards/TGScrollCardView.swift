@@ -82,6 +82,9 @@ public class TGScrollCardView: TGCardView {
     
     if card.title.isExtended {
       scrollView.contentInset.top = headerHeight
+      if card.autoIgnoreContentInset {
+        scrollView.contentOffset.y = 0
+      }
     }
   }
   

@@ -246,7 +246,7 @@ public class TGCardView: TGCornerView, TGPreferrableView {
     if let owningCard, owningCard.shouldToggleSeparator(show: show, offset: offset) {
       contentSeparator?.isHidden = !show
       
-    } else if owningCard?.title.isExtended == true, let contentScrollView, contentScrollView.isDecelerating, offset < 0 {
+    } else if let owningCard, owningCard.title.isExtended, owningCard.autoIgnoreContentInset, let contentScrollView, contentScrollView.isDecelerating, offset < 0 {
       // This handles the case where you fling the content down further than the
       // top. It looks wierd if this would then scroll or bounce into negative
       // space, so we just stop apruptly at 0.
@@ -259,6 +259,12 @@ public class TGCardView: TGCornerView, TGPreferrableView {
   
   func allowContentScrolling(_ allowScrolling: Bool) {
     contentScrollView?.isScrollEnabled = allowScrolling
+    
+    // Disabling this seems to scroll weirdly enough; so if we want to
+    // ignore the content inset; let's just pin it to th top.
+    if !allowScrolling, owningCard?.autoIgnoreContentInset == true {
+      contentScrollView?.contentOffset.y = 0
+    }
   }
   
   func adjustContentAlpha(to value: CGFloat) {
