@@ -16,9 +16,9 @@ class TGPlainCardView: TGCardView {
   
   // MARK: - New instances
   
-  static func instantiate() -> TGPlainCardView {
+  static func instantiate(extended: Bool) -> TGPlainCardView {
     guard
-      let view = TGCardViewController.bundle.loadNibNamed("TGPlainCardView", owner: nil, options: nil)!.first as? TGPlainCardView
+      let view = TGCardViewController.bundle.loadNibNamed(extended ? "TGPlainExtendedCardView" : "TGPlainCardView", owner: nil, options: nil)!.first as? TGPlainCardView
       else { preconditionFailure() }
     return view
   }
@@ -41,7 +41,13 @@ class TGPlainCardView: TGCardView {
     if let handle = grabHandle {
       adjustment += handle.frame.height
     }
-    contentViewHeightEqualToSuperviewHeightConstraint.constant = -1*adjustment
+    
+    if card.title.isExtended {
+      contentScrollView?.contentInset.top = adjustment
+    } else {
+      contentViewHeightEqualToSuperviewHeightConstraint.constant = -1*adjustment
+    }
+    
     
     // build the main content
     if let content = plainCard.contentView {

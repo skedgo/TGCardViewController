@@ -6,6 +6,7 @@
 //  Copyright © 2017 SkedGo Pty Ltd. All rights reserved.
 //
 
+import SwiftUI
 import UIKit
 
 public protocol TGInteractiveCardTitle: UIView {
@@ -50,8 +51,19 @@ public class TGCardView: TGCornerView, TGPreferrableView {
     didSet {
       contentScrollViewObservation = contentScrollView?
         .observe(\UIScrollView.contentOffset) { [weak self] scrollView, _ in
-        guard let separator = self?.contentSeparator, scrollView.isScrollEnabled else { return }
-        separator.isHidden = scrollView.contentOffset.y <= 0
+          guard scrollView.isScrollEnabled else { return }
+          let scrollOffset = scrollView.contentOffset.y
+          
+          // What is this you ask? This deals with dragging down the card by
+          // the content of the scroll view. This is achieved by setting a
+          // transform in `TGCardViewController`. Technially, you'd want to
+          // subtract the transform.ty from the scroll offset, however the
+          // transform lags behind the offset by a few frames. So we simplify
+          // this to just treat it as 0 offset if there's a transform as you
+          // drag down, which pins the scroll view effectively to a "visual"
+          // offset of 0.
+          let actualOffset = scrollView.transform.ty < 0 ? 0 : scrollOffset
+          self?.showSeparator(actualOffset > 0, offset: actualOffset)
       }
     }
   }
@@ -59,6 +71,8 @@ public class TGCardView: TGCornerView, TGPreferrableView {
   weak var titleView: UIView?
   
   weak var customDismissButton: UIButton?
+  
+  private var titleHost: UIHostingController<AnyView>?
   
   private var contentScrollViewObservation: NSKeyValueObservation?
   
@@ -71,8 +85,8 @@ public class TGCardView: TGCornerView, TGPreferrableView {
   ///
   /// - Warning: Might not be accurate if the view hasn't been layed out.
   var headerHeight: CGFloat {
-    guard let scrollView = contentScrollView else { return 0 }
-    return scrollView.frame.minY
+    guard let separator = contentSeparator else { return 0 }
+    return separator.frame.maxY
   }
   
   /// The preferred view to select using VoiceOver or similar technologies
@@ -108,7 +122,7 @@ public class TGCardView: TGCornerView, TGPreferrableView {
     dismissButton?.isSpringLoaded = isSpringLoaded
   }
   
-  private weak var owningCard: TGCard?
+  weak var owningCard: TGCard?
   
   public override var canBecomeFirstResponder: Bool { true }
   
@@ -129,6 +143,12 @@ public class TGCardView: TGCornerView, TGPreferrableView {
       case .custom(let view, let button):
         titleView = view
         customDismissButton = button
+        
+      case .customExtended(let view):
+        let titleHost = UIHostingController(rootView: AnyView(view))
+        self.titleHost = titleHost
+        titleHost.view.backgroundColor = .clear
+        titleView = titleHost.view
 
       case .none:
         let emptyView = UIView()
@@ -138,6 +158,7 @@ public class TGCardView: TGCornerView, TGPreferrableView {
       
       placeholder.addSubview(titleView)
       titleView.snap(to: placeholder)
+      
       self.titleView = titleView
     }
     
@@ -168,6 +189,10 @@ public class TGCardView: TGCornerView, TGPreferrableView {
   }
   
   func headerHeight(for position: TGCardPosition) -> CGFloat {
+    if let contentSeparator {
+      return contentSeparator.frame.maxY
+    }
+    
     guard let scrollView = contentScrollView else {
       return 0
     }
@@ -217,11 +242,34 @@ public class TGCardView: TGCornerView, TGPreferrableView {
   
   // MARK: - Content view configuration
   
+  func showSeparator(_ show: Bool, offset: CGFloat) {
+    if let owningCard, owningCard.shouldToggleSeparator(show: show, offset: offset) {
+      contentSeparator?.isHidden = !show
+      
+    } else if let owningCard, owningCard.title.isExtended, owningCard.autoIgnoreContentInset, let contentScrollView, contentScrollView.isDecelerating, offset < 0 {
+      // This handles the case where you fling the content down further than the
+      // top. It looks wierd if this would then scroll or bounce into negative
+      // space, so we just stop apruptly at 0.
+      // We consider `.isDecelerating` to let you do this while actively
+      // dragging, to not stop that gesture, as that would brea, dragging the
+      // card down by the scroll view, when you start with a scroll.
+      contentScrollView.contentOffset.y = 0
+    }
+  }
+  
   func allowContentScrolling(_ allowScrolling: Bool) {
     contentScrollView?.isScrollEnabled = allowScrolling
+    
+    // Disabling this seems to scroll weirdly enough; so if we want to
+    // ignore the content inset; let's just pin it to th top.
+    if !allowScrolling, owningCard?.autoIgnoreContentInset == true {
+      contentScrollView?.contentOffset.y = 0
+    }
   }
   
   func adjustContentAlpha(to value: CGFloat) {
+    owningCard?.willAdjustContentAlpha(value)
+    
     contentScrollView?.alpha = value
   }
   

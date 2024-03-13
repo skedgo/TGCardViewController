@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 /// A card representing the content currently displayed
 ///
@@ -42,9 +43,18 @@ open class TGCard: UIResponder, TGPreferrableView {
     /// use the default style.
     case custom(UIView, dismissButton: UIButton? = nil)
     
+    case customExtended(any View)
+    
     /// No title at all. Make sure to call `controller?.pop()`
     /// when appropriate.
     case none
+    
+    var isExtended: Bool {
+      switch self {
+      case .customExtended: return true
+      case .default, .custom, .none: return false
+      }
+    }
   }
   
   /// The default image for the close button on a card, with default color
@@ -206,6 +216,19 @@ open class TGCard: UIResponder, TGPreferrableView {
   ///   - cardView: The card view that got built
   ///   - headerView: The header view, typically used by `TGPageCard`.
   open func didBuild(cardView: TGCardView?, headerView: TGHeaderView?) {
+    if title.isExtended, let cardView {
+      cardView.contentScrollView?.contentInset.top = autoIgnoreContentInset ? 0 : cardView.headerHeight
+    }
+  }
+  
+  public var autoIgnoreContentInset: Bool = false {
+    didSet {
+      guard autoIgnoreContentInset != oldValue, title.isExtended, let cardView, let scrollView = cardView.contentScrollView else { return }
+      
+      scrollView.contentInset.top = autoIgnoreContentInset ? 0 : cardView.headerHeight
+      scrollView.contentOffset.y = autoIgnoreContentInset ? 0 : cardView.headerHeight * -1
+      cardView.showSeparator(true, offset: scrollView.contentOffset.y)
+    }
   }
   
   /// The card view. Gets set before `didBuild` is called
@@ -229,6 +252,13 @@ open class TGCard: UIResponder, TGPreferrableView {
   
   // MARK: - Managing Card Life Cycle
   
+  open func willAdjustContentAlpha(_ value: CGFloat) {
+  }
+  
+  open func shouldToggleSeparator(show: Bool, offset: CGFloat) -> Bool {
+    return true
+  }
+  
   /// Called just before the card becomes visible
   ///
   /// Called when card gets pushed onto a card
@@ -238,6 +268,7 @@ open class TGCard: UIResponder, TGPreferrableView {
   /// - Parameter animated: If it'll be animated
   open func willAppear(animated: Bool) {
 //    print("+. \(title) will appear")
+    
     viewIsVisible = true
   }
   
