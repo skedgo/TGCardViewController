@@ -226,8 +226,15 @@ open class TGCard: UIResponder, TGPreferrableView {
   
   public var autoIgnoreContentInset: Bool = false {
     didSet {
-      if autoIgnoreContentInset, let scrollView = cardView?.contentScrollView, scrollView.contentOffset.y < 0 {
+      guard autoIgnoreContentInset != oldValue, title.isExtended, let cardView, let scrollView = cardView.contentScrollView else { return }
+      
+      if autoIgnoreContentInset, scrollView.contentOffset.y < 0 {
         scrollView.contentOffset.y = 0
+        cardView.showSeparator(true, offset: 0)
+        
+      } else if !autoIgnoreContentInset, scrollView.contentOffset.y > cardView.headerHeight * -1 {
+        scrollView.contentOffset.y = cardView.headerHeight * -1
+        cardView.showSeparator(true, offset: cardView.headerHeight * -1)
       }
     }
   }
