@@ -497,6 +497,8 @@ open class TGCardViewController: UIViewController {
   }
   
   private func fixPositioning() {
+    let previousScrollOffset = topCardView?.contentScrollView?.contentOffset.y
+
     statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
     updateFloatingViewsConstraints()
@@ -511,7 +513,6 @@ open class TGCardViewController: UIViewController {
     }
     
     if let scrollView = topCardView?.contentScrollView {
-      let previousTop = scrollView.contentOffset.y
       view.updateConstraintsIfNeeded() // to get the correct frames
 
       let adjustedBottom = cardIsNextToMap(in: traitCollection) ? view.safeAreaInsets.bottom : (headerView.frame.maxY + view.safeAreaInsets.top - view.safeAreaInsets.bottom)
@@ -519,9 +520,9 @@ open class TGCardViewController: UIViewController {
       scrollView.contentInset.bottom = adjustedBottom
       scrollView.verticalScrollIndicatorInsets.bottom = adjustedBottom
       
-      if topCard?.autoIgnoreContentInset == true {
+      if topCard?.autoIgnoreContentInset == true, let previousScrollOffset {
         // Changing the bottom scrolls, so we go back to where it was
-        scrollView.contentInset.top = previousTop
+        scrollView.contentOffset.y =  previousScrollOffset
       }
     }
   }
