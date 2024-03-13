@@ -217,10 +217,7 @@ open class TGCard: UIResponder, TGPreferrableView {
   ///   - headerView: The header view, typically used by `TGPageCard`.
   open func didBuild(cardView: TGCardView?, headerView: TGHeaderView?) {
     if title.isExtended, let cardView {
-      cardView.contentScrollView?.contentInset.top = cardView.headerHeight
-      if autoIgnoreContentInset {
-        cardView.contentScrollView?.contentOffset.y = 0
-      }
+      cardView.contentScrollView?.contentInset.top = autoIgnoreContentInset ? 0 : cardView.headerHeight
     }
   }
   
@@ -228,14 +225,9 @@ open class TGCard: UIResponder, TGPreferrableView {
     didSet {
       guard autoIgnoreContentInset != oldValue, title.isExtended, let cardView, let scrollView = cardView.contentScrollView else { return }
       
-      if autoIgnoreContentInset, scrollView.contentOffset.y < 0 {
-        scrollView.contentOffset.y = 0
-        cardView.showSeparator(true, offset: 0)
-        
-      } else if !autoIgnoreContentInset, scrollView.contentOffset.y > cardView.headerHeight * -1 {
-        scrollView.contentOffset.y = cardView.headerHeight * -1
-        cardView.showSeparator(true, offset: cardView.headerHeight * -1)
-      }
+      scrollView.contentInset.top = autoIgnoreContentInset ? 0 : cardView.headerHeight
+      scrollView.contentOffset.y = autoIgnoreContentInset ? 0 : cardView.headerHeight * -1
+      cardView.showSeparator(true, offset: scrollView.contentOffset.y)
     }
   }
   
@@ -276,10 +268,6 @@ open class TGCard: UIResponder, TGPreferrableView {
   /// - Parameter animated: If it'll be animated
   open func willAppear(animated: Bool) {
 //    print("+. \(title) will appear")
-    
-    if autoIgnoreContentInset {
-      cardView?.contentScrollView?.contentOffset.y = 0
-    }
     
     viewIsVisible = true
   }
