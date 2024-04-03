@@ -57,7 +57,7 @@ open class TGPlainCard: TGCard {
   }
   
   open override func buildCardView() -> TGCardView? {
-    let view = TGPlainCardView.instantiate()
+    let view = TGPlainCardView.instantiate(extended: title.isExtended)
     view.configure(with: self)
     return view
   }

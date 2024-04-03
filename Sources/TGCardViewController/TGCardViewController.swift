@@ -497,6 +497,8 @@ open class TGCardViewController: UIViewController {
   }
   
   private func fixPositioning() {
+    let previousScrollOffset = topCardView?.contentScrollView?.contentOffset.y
+
     statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
     updateFloatingViewsConstraints()
@@ -517,6 +519,11 @@ open class TGCardViewController: UIViewController {
       
       scrollView.contentInset.bottom = adjustedBottom
       scrollView.verticalScrollIndicatorInsets.bottom = adjustedBottom
+      
+      if topCard?.autoIgnoreContentInset == true, let previousScrollOffset {
+        // Changing the bottom scrolls, so we go back to where it was
+        scrollView.contentOffset.y =  previousScrollOffset
+      }
     }
   }
   
@@ -815,8 +822,12 @@ extension TGCardViewController {
       
       // Give AutoLayout a nudge to layout the card view, now that we have
       // the right height. This is so that we can use `cardView.headerHeight`.
+      let previousInset = cardView.contentScrollView?.contentOffset.y
       cardView.setNeedsUpdateConstraints()
       cardView.layoutIfNeeded()
+      if topCard?.autoIgnoreContentInset == true, let previousInset {
+        cardView.contentScrollView?.contentOffset.y = previousInset
+      }
     }
     
     // 5. Special handling of when the new top card has no map content
@@ -1464,20 +1475,33 @@ extension TGCardViewController {
       scrollView.refreshControl == nil
       else { return }
     
-    let negativity = scrollView.contentOffset.y
+    let negativity = scrollView.contentOffset.y + scrollView.contentInset.top
     
     switch (negativity, recogniser.state) {
     case (0 ..< CGFloat.infinity, _):
       // Reset the transformation whenever we get back to positive offset
       scrollView.transform = .identity
-      scrollView.scrollIndicatorInsets = .zero
+      scrollView.scrollIndicatorInsets = scrollView.contentInset // .zero
       
     case (_, .ended), (_, .cancelled):
       // When we finish up, we bring the scroll view back to the state how
       // it's appearing: scrolled to the top with zero inset
       scrollView.transform = .identity
-      scrollView.scrollIndicatorInsets = .zero
-      scrollView.contentOffset = .zero
+      scrollView.scrollIndicatorInsets = scrollView.contentInset // .zero
+      if topCard?.autoIgnoreContentInset == true {
+        scrollView.contentOffset = .zero
+      }
+      
+      // Stop the "residual" scroll motion in the scroll view, and instead
+      // stay snapped to offset 0.
+      //
+      // Without this you get funny behaviour if you start a card on expanded
+      // but scroll down a little; then you start dragging with scroll to zero
+      // you keep scrolling and fling it a little that it snaps to the peaking
+      // position.
+      if #available(iOS 17.4, *) {
+        scrollView.stopScrollingAndZooming()
+      }
       
       guard traitCollection.verticalSizeClass != .compact else {
         return
@@ -1496,7 +1520,7 @@ extension TGCardViewController {
       // set the content offset to zero here!)
       self.mapViewController.additionalSafeAreaInsets = updateCardPosition(y: extendedMinY - negativity)
       scrollView.transform = CGAffineTransform(translationX: 0, y: negativity)
-      scrollView.verticalScrollIndicatorInsets.top = negativity * -1
+      scrollView.verticalScrollIndicatorInsets.top = scrollView.contentInset.top + negativity * -1
       
     default:
       // Ignore other states such as began, failed, etc.

@@ -121,12 +121,17 @@ fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSou
   
   var onSelect: ((Item) -> Void)?
   
-  let items: [Item] = [
-    (title: "Show Erlking", card: ExampleChildCard()),
-    (title: "Show Table",   card: ExampleTableCard()),
-    (title: "Show Pages",   card: ExamplePageCard()),
-    (title: "Custom title", card: ExampleCustomTitleCard())
-  ]
+  let items: [Item] = {
+    var items: [Item] = [
+      (title: "Show Table",   card: ExampleTableCard()),
+      (title: "Show Pages",   card: ExamplePageCard()),
+      (title: "Custom title", card: ExampleCustomTitleCard()),
+    ]
+    if #available(iOS 16.0, *) {
+      items.append((title: "Show Erlking", card: ExampleChildCard()))
+    }
+    return items
+  }()
   
   func handleSelection(_ indexPath: IndexPath) {
     onSelect?(items[indexPath.row])
