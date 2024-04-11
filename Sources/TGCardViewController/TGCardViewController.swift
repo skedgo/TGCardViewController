@@ -1499,7 +1499,7 @@ extension TGCardViewController {
       // but scroll down a little; then you start dragging with scroll to zero
       // you keep scrolling and fling it a little that it snaps to the peaking
       // position.
-      if #available(iOS 17.4, *) {
+      if #available(iOS 17.4, visionOS 1.1, *) {
         scrollView.stopScrollingAndZooming()
       }
       
