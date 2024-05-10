@@ -1499,9 +1499,11 @@ extension TGCardViewController {
       // but scroll down a little; then you start dragging with scroll to zero
       // you keep scrolling and fling it a little that it snaps to the peaking
       // position.
+#if swift(>=5.10) // Proxy for Xcode 15.3+
       if #available(iOS 17.4, visionOS 1.1, *) {
         scrollView.stopScrollingAndZooming()
       }
+#endif
       
       guard traitCollection.verticalSizeClass != .compact else {
         return
