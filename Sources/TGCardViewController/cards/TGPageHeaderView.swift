@@ -13,6 +13,9 @@ public class TGPageHeaderView: TGHeaderView {
   @IBOutlet weak var accessoryWrapperView: UIView!
   @IBOutlet weak var accessoryWrapperHeightConstraint: NSLayoutConstraint!
   
+  @IBOutlet weak var accessoryTrailingConstraint: NSLayoutConstraint!
+  @IBOutlet weak var buttonTrailingConstraint: NSLayoutConstraint!
+  
   static func instantiate() -> TGPageHeaderView {
     guard
       let view = TGCardViewController.bundle.loadNibNamed("TGPageHeaderView", owner: nil, options: nil)!.first as? TGPageHeaderView
@@ -68,7 +71,17 @@ public class TGPageHeaderView: TGHeaderView {
   
   var rightAction: (() -> Void)? {
     didSet {
-      rightButton?.isHidden = (rightAction == nil)
+      if rightAction != nil {
+        rightButton?.isHidden = false
+        accessoryTrailingConstraint.priority = .defaultLow
+        buttonTrailingConstraint.priority = .required
+        setNeedsUpdateConstraints()
+      } else {
+        rightButton?.isHidden = true
+        accessoryTrailingConstraint.priority = .required
+        buttonTrailingConstraint.priority = .defaultLow
+        setNeedsUpdateConstraints()
+      }
     }
   }
   
