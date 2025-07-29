@@ -155,6 +155,7 @@ open class TGCardViewController: UIViewController {
   @IBOutlet weak var mapShadow: UIView!
   @IBOutlet weak var cardWrapperShadow: UIView!
   @IBOutlet public weak var cardWrapperContent: UIView!
+  @IBOutlet weak var cardWrapperEffectView: UIVisualEffectView!
   fileprivate weak var cardTransitionShadow: UIView?
   @IBOutlet weak var statusBarBlurView: UIVisualEffectView!
   @IBOutlet weak var topFloatingView: UIStackView!
@@ -308,6 +309,13 @@ open class TGCardViewController: UIViewController {
     mapView.leadingAnchor.constraint(equalTo: mapViewWrapper.leadingAnchor).isActive = true
     mapView.translatesAutoresizingMaskIntoConstraints = false
     mapViewController.didMove(toParent: self)
+    
+    if #available(iOS 26.0, *) {
+      cardWrapperEffectView.effect = UIGlassEffect(style: .regular)
+      cardWrapperEffectView.cornerConfiguration = .corners(radius: 44)
+    } else {
+      cardWrapperEffectView.effect = nil
+    }
     
     setupGestures()
     
@@ -623,6 +631,14 @@ open class TGCardViewController: UIViewController {
   fileprivate func updateMapShadow(for position: TGCardPosition) {
     mapShadow.alpha = position == .extended ? Constants.mapShadowVisibleAlpha : 0
     mapShadow.isUserInteractionEnabled = position == .extended
+    
+    if #available(iOS 26.0, *) {
+      let background: UIColor = position == .extended ? .systemBackground : .clear
+      topCardView?.grabHandle?.backgroundColor = background
+      topCardView?.titleView?.backgroundColor = background
+      cardWrapperContent.backgroundColor = background
+      cardWrapperContent.layer.cornerRadius = position == .extended ? 44 : 0
+    }
   }
   
   private func toggleCardWrappers(hide: Bool, prepareOnly: Bool = false) {
@@ -899,18 +915,18 @@ extension TGCardViewController {
     // already have such a shadow.
     
     if oldTop != nil, animated, cardTransitionShadow == nil, let cardView = cardView {
-      let shadow = TGCornerView(frame: cardWrapperContent.bounds)
+      let shadow = TGCornerView(frame: cardWrapperEffectView.bounds)
       shadow.frame.size.height += 50 // for bounciness
       shadow.backgroundColor = .black
       shadow.alpha = 0
-      cardWrapperContent.insertSubview(shadow, belowSubview: cardView)
+      cardWrapperEffectView.contentView.insertSubview(shadow, belowSubview: cardWrapperContent)
       cardTransitionShadow = shadow
     }
     
     let cardAnimations = {
       self.toggleCardWrappers(hide: cardView == nil, prepareOnly: true)
 
-      guard let cardView = cardView else { return }
+      guard let cardView else { return }
       self.updateMapShadow(for: animateTo.position)
       cardView.frame = self.cardWrapperContent.bounds
       self.cardTransitionShadow?.alpha = 0.15
@@ -1069,10 +1085,10 @@ extension TGCardViewController {
     // We animate the view moving back down to the bottom
     // we also temporarily insert a shadow view again, if there's a card below    
     if animated, newTop != nil, cardTransitionShadow == nil, let topView = topView {
-      let shadow = TGCornerView(frame: cardWrapperContent.bounds)
+      let shadow = TGCornerView(frame: cardWrapperEffectView.bounds)
       shadow.backgroundColor = .black
       shadow.alpha = 0.15
-      cardWrapperContent.insertSubview(shadow, belowSubview: topView)
+      cardWrapperEffectView.contentView.insertSubview(shadow, belowSubview: cardWrapperContent)
       cardTransitionShadow = shadow
     }
     
@@ -1874,7 +1890,12 @@ extension TGCardViewController {
   private func updateHeaderStyle() {
     @MainActor
     func applyCornerStyle(to view: UIView) {
-      let radius: CGFloat = 16
+      let radius: CGFloat
+      if #available(iOS 26.0, *) {
+        radius = 44
+      } else {
+        radius = 16
+      }
       let roundAllCorners = cardIsNextToMap(in: traitCollection)
       
       view.layer.maskedCorners = roundAllCorners

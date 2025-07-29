@@ -17,6 +17,10 @@ class TGCardDefaultTitleView: UIView, TGPreferrableView {
   @IBOutlet weak var dismissButton: UIButton!
   @IBOutlet weak var accessoryViewContainer: UIView!
   
+  @IBOutlet weak var topLevelTopConstraint: NSLayoutConstraint!
+  @IBOutlet weak var labelStackLeadingConstraint: NSLayoutConstraint!
+  @IBOutlet weak var innerTrailingConstraint: NSLayoutConstraint!
+  
   // By default, the top level stack snaps to all edges
   // of the default title view. The space to the bottom
   // edge is exposed, so that we can allow the accessory
@@ -25,6 +29,18 @@ class TGCardDefaultTitleView: UIView, TGPreferrableView {
   
   override func awakeFromNib() {
     super.awakeFromNib()
+    
+    if #available(iOS 26.0, *) {
+      topLevelTopConstraint.constant = 0
+      labelStackLeadingConstraint.constant = 22
+      innerTrailingConstraint.constant = 37 // 9 pixels extra space to the side
+      
+      titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 32).isActive = true
+    } else {
+      topLevelTopConstraint.constant = 8
+      labelStackLeadingConstraint.constant = 16
+      innerTrailingConstraint.constant = 28
+    }
     
     // Here we set the minimum width and height to provide sufficient hit
     // target. The priority is lowered because we may need to hide the

@@ -127,7 +127,9 @@ open class TGCard: UIResponder, TGPreferrableView {
   }
   
   /// The position to display the card in, when pushing
-  public let initialPosition: TGCardPosition?
+  ///
+  /// Should only be modified until the card is first pushed.
+  public var initialPosition: TGCardPosition?
   
   /// Whether the close button should be visible on the card title
   ///
