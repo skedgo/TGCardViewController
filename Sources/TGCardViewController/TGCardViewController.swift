@@ -173,6 +173,8 @@ open class TGCardViewController: UIViewController {
   @IBOutlet weak var cardWrapperHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperDynamicLeadingConstraint: NSLayoutConstraint!
   @IBOutlet weak var cardWrapperStaticLeadingConstraint: NSLayoutConstraint!
+  @IBOutlet weak var cardWrapperDynamicTrailingConstraint: NSLayoutConstraint!
+  @IBOutlet weak var cardWrapperDynamicBottomConstraint: NSLayoutConstraint!
   
   // Positioning the header view
   @IBOutlet weak var headerViewHeightConstraint: NSLayoutConstraint!
@@ -295,6 +297,8 @@ open class TGCardViewController: UIViewController {
     TGCornerView.roundedCorners                   = mode == .floating
     cardWrapperDynamicLeadingConstraint.isActive  = mode == .floating
     cardWrapperStaticLeadingConstraint.isActive   = mode == .sidebar
+    cardWrapperDynamicTrailingConstraint.isActive = mode == .floating
+    cardWrapperDynamicBottomConstraint.isActive   = mode == .floating
     toggleCardWrappers(hide: true)
     
     sidebarSeparator.backgroundColor = .separator
@@ -312,7 +316,7 @@ open class TGCardViewController: UIViewController {
     
     if #available(iOS 26.0, *) {
       cardWrapperEffectView.effect = UIGlassEffect(style: .regular)
-      cardWrapperEffectView.cornerConfiguration = .corners(radius: 44)
+      cardWrapperEffectView.cornerConfiguration = .corners(topLeftRadius: 44, topRightRadius: 44, bottomLeftRadius: .containerConcentric(minimum: 44), bottomRightRadius: .containerConcentric(minimum: 44))
     } else {
       cardWrapperEffectView.effect = nil
     }
@@ -638,6 +642,10 @@ open class TGCardViewController: UIViewController {
       topCardView?.titleView?.backgroundColor = background
       cardWrapperContent.backgroundColor = background
       cardWrapperContent.layer.cornerRadius = position == .extended ? 44 : 0
+      
+      cardWrapperDynamicLeadingConstraint.constant  = position == .extended ? 0 : 8
+      cardWrapperDynamicTrailingConstraint.constant = position == .extended ? 0 : 8
+      cardWrapperDynamicBottomConstraint.constant   = position == .extended ? 0 : 8
     }
   }
   
