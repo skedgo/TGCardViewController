@@ -1496,6 +1496,10 @@ extension TGCardViewController {
   
   @objc
   fileprivate func handleInnerPan(_ recogniser: UIPanGestureRecognizer) {
+    if #available(iOS 26.0, *) {
+      return // Handled automatically. Woah.
+    }
+    
     guard
       mode == .floating,
       let scrollView = recogniser.view as? UIScrollView,
@@ -2137,7 +2141,14 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
       scrollView.isScrollEnabled = true
     }
     
-    return false
+    // iOS 26 and up automatically handles the dragging the outer card while
+    // we do the inner pan. So we can let it pass. This works in combination
+    // with the early exist in handleInnerPan.
+    if #available(iOS 26.0, *) {
+      return true
+    } else {
+      return false
+    }
   }
   
 }
