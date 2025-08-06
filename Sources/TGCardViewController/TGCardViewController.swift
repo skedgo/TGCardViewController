@@ -293,6 +293,10 @@ open class TGCardViewController: UIViewController {
   override open func viewDidLoad() {
     super.viewDidLoad()
     
+    if #available(iOS 26.0, *) {
+      statusBarBlurView.isHidden = true
+    }
+    
     // mode-specific styling
     TGCornerView.roundedCorners                   = mode == .floating
     cardWrapperDynamicLeadingConstraint.isActive  = mode == .floating
@@ -648,9 +652,15 @@ open class TGCardViewController: UIViewController {
       cardWrapperContent.backgroundColor = background
       cardWrapperContent.layer.cornerRadius = position == .extended ? 44 : 0
       
-      cardWrapperDynamicLeadingConstraint.constant  = position == .extended ? 0 : 8
-      cardWrapperDynamicTrailingConstraint.constant = position == .extended ? 0 : 8
-      cardWrapperDynamicBottomConstraint.constant   = position == .extended ? 0 : 8
+      let padding: CGFloat = switch position {
+      case .extended: 0
+      case .peaking: 6
+      case .collapsed: 22
+      }
+      
+      cardWrapperDynamicLeadingConstraint.constant  = padding
+      cardWrapperDynamicTrailingConstraint.constant = padding
+      cardWrapperDynamicBottomConstraint.constant   = padding
     }
   }
   
