@@ -20,9 +20,10 @@ public enum TGButtonPosition {
 
 public struct TGButtonStyle {
   /// Default style is rounded rect, no special tint colour and translucent
-  public init(shape: TGButtonStyle.Shape = .roundedRect, tintColor: UIColor? = nil, isTranslucent: Bool = true) {
+  public init(shape: TGButtonStyle.Shape = .roundedRect, tintColor: UIColor? = nil, trackingColor: UIColor? = nil, isTranslucent: Bool = true) {
     self.shape = shape
     self.tintColor = tintColor
+    self.trackingColor = trackingColor
     self.isTranslucent = isTranslucent
   }
   
@@ -42,6 +43,9 @@ public struct TGButtonStyle {
   
   /// Custom tint colour. Uses default tint colour if set to `nil`
   public let tintColor: UIColor?
-  
+
+  /// Prominent colour to pass to tracking button. Uses default tint colour if set to `nil`
+  public let trackingColor: UIColor?
+
   public let isTranslucent: Bool
 }

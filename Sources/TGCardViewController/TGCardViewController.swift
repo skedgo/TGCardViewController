@@ -323,6 +323,9 @@ open class TGCardViewController: UIViewController {
       cardWrapperEffectView.effect = UIGlassEffect(style: .regular)
       cardWrapperEffectView.cornerConfiguration = .corners(topLeftRadius: 44, topRightRadius: 44, bottomLeftRadius: .containerConcentric(minimum: 44), bottomRightRadius: .containerConcentric(minimum: 44))
       cardWrapperEffectView.clipsToBounds = true
+
+      // Map floating bar buttons don't need to be styled here, that's
+      // handled in `applyToolbarItemStyle`
     } else {
       cardWrapperEffectView.effect = nil
     }
@@ -1778,12 +1781,18 @@ extension TGCardViewController {
       
       if let customTint = buttonStyle.tintColor {
         view.tintColor = customTint
+      } else {
+        view.tintColor = nil
       }
 
       guard let visualView = view as? UIVisualEffectView else {
         return assertionFailure()
       }
-      if buttonStyle.isTranslucent {
+      if #available(iOS 26.0, *) {
+        visualView.effect = UIGlassEffect(style: .regular)
+        visualView.layer.borderWidth = 0
+        visualView.layer.shadowOpacity = 0
+      } else if buttonStyle.isTranslucent {
         visualView.effect = UIBlurEffect(style: .regular)
         visualView.layer.borderWidth = 0
         visualView.layer.shadowOpacity = 0
@@ -1800,6 +1809,22 @@ extension TGCardViewController {
     
     apply(on: topFloatingViewWrapper)
     apply(on: bottomFloatingViewWrapper)
+    
+    if showDefaultButtons, let defaultButtons, let customTint = buttonStyle.trackingColor {
+      for view in defaultButtons {
+        for subview in view.subviews {
+          if let tracker = subview as? MKUserTrackingButton {
+            tracker.tintColor = customTint
+
+            // For some reason the MKUserTrackingButton's internal doesn't want
+            // to inherit the tint of the button. So we go in deep.
+            for internalView in tracker.subviews {
+              internalView.tintColor = customTint
+            }
+          }
+        }
+      }
+    }
   }
   
   public func updateMapToolbarItems() {
