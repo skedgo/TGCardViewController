@@ -476,6 +476,7 @@ open class TGCardViewController: UIViewController {
     super.traitCollectionDidChange(previousTraitCollection)
     
     cardWrapperHeightConstraint.constant = extendedMinY * -1
+    cardWrapperStaticLeadingConstraint.isActive = cardIsNextToMap(in: traitCollection)
     
     // When trait collection changes, try to keep the same card position
     if let previous = previousCardPosition {
