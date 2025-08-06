@@ -314,12 +314,17 @@ open class TGCardViewController: UIViewController {
     mapView.translatesAutoresizingMaskIntoConstraints = false
     mapViewController.didMove(toParent: self)
     
+#if compiler(>=6.2) // Xcode 26
     if #available(iOS 26.0, *) {
       cardWrapperEffectView.effect = UIGlassEffect(style: .regular)
       cardWrapperEffectView.cornerConfiguration = .corners(topLeftRadius: 44, topRightRadius: 44, bottomLeftRadius: .containerConcentric(minimum: 44), bottomRightRadius: .containerConcentric(minimum: 44))
+      cardWrapperEffectView.clipsToBounds = true
     } else {
       cardWrapperEffectView.effect = nil
     }
+#else
+    cardWrapperEffectView.effect = nil
+#endif
     
     setupGestures()
     
@@ -922,7 +927,7 @@ extension TGCardViewController {
     // old. Only do that if the previous transition completed, i.e., we didn't
     // already have such a shadow.
     
-    if oldTop != nil, animated, cardTransitionShadow == nil, let cardView = cardView {
+    if oldTop != nil, animated, cardTransitionShadow == nil {
       let shadow = TGCornerView(frame: cardWrapperEffectView.bounds)
       shadow.frame.size.height += 50 // for bounciness
       shadow.backgroundColor = .black
@@ -1092,7 +1097,7 @@ extension TGCardViewController {
     // 5. Do the transition, optionally animated.
     // We animate the view moving back down to the bottom
     // we also temporarily insert a shadow view again, if there's a card below    
-    if animated, newTop != nil, cardTransitionShadow == nil, let topView = topView {
+    if animated, newTop != nil, cardTransitionShadow == nil {
       let shadow = TGCornerView(frame: cardWrapperEffectView.bounds)
       shadow.backgroundColor = .black
       shadow.alpha = 0.15
