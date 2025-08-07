@@ -13,6 +13,7 @@ public class TGPageHeaderView: TGHeaderView {
   @IBOutlet weak var accessoryWrapperView: UIView!
   @IBOutlet weak var accessoryWrapperHeightConstraint: NSLayoutConstraint!
   
+  @IBOutlet weak var accessoryLeadingConstraint: NSLayoutConstraint!
   @IBOutlet weak var accessoryTrailingConstraint: NSLayoutConstraint!
   @IBOutlet weak var buttonTrailingConstraint: NSLayoutConstraint!
   
@@ -25,6 +26,14 @@ public class TGPageHeaderView: TGHeaderView {
   
   override public func awakeFromNib() {
     super.awakeFromNib()
+    
+    if #available(iOS 26.0, *) {
+      accessoryLeadingConstraint.constant = 0
+      accessoryTrailingConstraint.constant = 0
+    } else {
+      accessoryLeadingConstraint.constant = 8
+      accessoryTrailingConstraint.constant = 8
+    }
     
     rightButton?.isHidden = true
     accessoryWrapperView.isHidden = true

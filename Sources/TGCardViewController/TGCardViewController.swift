@@ -1945,7 +1945,7 @@ extension TGCardViewController {
     func applyCornerStyle(to view: UIView) {
       let radius: CGFloat
       if #available(iOS 26.0, *) {
-        radius = 44
+        radius = 22
       } else {
         radius = 16
       }
@@ -1966,11 +1966,15 @@ extension TGCardViewController {
     
     updateStatusBar(headerIsVisible: isShowingHeader)
 
-    // same shadow as for card wrapper
-    headerView.layer.shadowColor = UIColor.black.cgColor
-    headerView.layer.shadowOffset = .zero
-    headerView.layer.shadowRadius = 12
-    headerView.layer.shadowOpacity = 0.5
+    if #available(iOS 26.0, *) {
+      // No header. Rely on this being a UIVisualEffectView
+    } else {
+      // same shadow as for card wrapper
+      headerView.layer.shadowColor = UIColor.black.cgColor
+      headerView.layer.shadowOffset = .zero
+      headerView.layer.shadowRadius = 12
+      headerView.layer.shadowOpacity = 0.5
+    }
   }
   
   private func updateHeaderConstraints() {
