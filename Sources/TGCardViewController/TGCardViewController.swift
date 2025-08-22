@@ -193,6 +193,8 @@ open class TGCardViewController: UIViewController {
   var mapViewController = TGMapViewController()
   public var mapView: UIView! { mapViewController.mapView }
   
+  private var initialScrollOffset: CGFloat = 0
+
   var panner: UIPanGestureRecognizer!
   var cardTapper: UITapGestureRecognizer!
   var mapShadowTapper: UITapGestureRecognizer!
@@ -1507,24 +1509,32 @@ extension TGCardViewController {
     
     switchTo(.peaking, direction: .down, animated: true)
   }
-  
+    
   @objc
   fileprivate func handleInnerPan(_ recogniser: UIPanGestureRecognizer) {
-    if #available(iOS 26.0, *) {
-      return // Handled automatically. Woah.
-    }
-    
     guard
       mode == .floating,
       let scrollView = recogniser.view as? UIScrollView,
       scrollView == topCardView?.contentScrollView,
       panner.isEnabled,
       scrollView.refreshControl == nil
-      else { return }
+    else {
+      return
+    }
     
-    let negativity = scrollView.contentOffset.y + scrollView.contentInset.top
+    let negativity: CGFloat
+    if #available(iOS 26.0, *), scrollView.contentOffset.y <= 0 {
+      negativity = (recogniser.translation(in: cardWrapperContent).y - initialScrollOffset) * -1
+    } else {
+      negativity = scrollView.contentOffset.y + scrollView.contentInset.top
+    }
     
     switch (negativity, recogniser.state) {
+      
+      
+    case (_, .began)    :
+      self.initialScrollOffset = scrollView.contentOffset.y
+      
     case (0 ..< CGFloat.infinity, _):
       // Reset the transformation whenever we get back to positive offset
       scrollView.transform = .identity
@@ -1568,9 +1578,11 @@ extension TGCardViewController {
       // the scroll view appear to stay in place (it's important to not
       // set the content offset to zero here!)
       self.mapViewController.additionalSafeAreaInsets = updateCardPosition(y: extendedMinY - negativity)
-      scrollView.transform = CGAffineTransform(translationX: 0, y: negativity)
-      scrollView.verticalScrollIndicatorInsets.top = scrollView.contentInset.top + negativity * -1
-      
+      if #unavailable(iOS 26.0) {
+        scrollView.transform = CGAffineTransform(translationX: 0, y: negativity)
+        scrollView.verticalScrollIndicatorInsets.top = scrollView.contentInset.top + negativity * -1
+      }
+
     default:
       // Ignore other states such as began, failed, etc.
       break
@@ -1790,7 +1802,9 @@ extension TGCardViewController {
         return assertionFailure()
       }
       if #available(iOS 26.0, *) {
+#if compiler(>=6.2) // Xcode 26 proxy
         visualView.effect = UIGlassEffect(style: .regular)
+#endif
         visualView.layer.borderWidth = 0
         visualView.layer.shadowOpacity = 0
       } else if buttonStyle.isTranslucent {
@@ -2185,7 +2199,7 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     // we do the inner pan. So we can let it pass. This works in combination
     // with the early exist in handleInnerPan.
     if #available(iOS 26.0, *) {
-      return true
+      return scrollView.contentOffset.y <= 0
     } else {
       return false
     }
