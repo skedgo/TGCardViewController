@@ -838,7 +838,7 @@ extension TGCardViewController {
     let cardView = top.buildCardView()
     cards.append( (top, animateTo.position, cardView) )
         
-    if let cardView = cardView {
+    if let cardView {
       cardView.dismissButton?.addTarget(self, action: #selector(closeTapped(sender:)), for: .touchUpInside)
       let showClose = (delegate != nil || cards.count > 1) && top.showCloseButton
       cardView.updateDismissButton(show: showClose, isSpringLoaded: navigationButtonsAreSpringLoaded)
@@ -859,6 +859,7 @@ extension TGCardViewController {
     
       // 4. Place the new view coming, preparing to animate in from the bottom
       cardView.frame = cardWrapperContent.bounds
+      cardView.alpha = 0
       if animated {
         let offset = cardView.convert(.init(x: 0, y: mapViewWrapper.frame.maxY), to: cardWrapperShadow).y
         cardView.frame.origin.y = offset
@@ -958,11 +959,12 @@ extension TGCardViewController {
       guard let cardView else { return }
       self.updateMapShadow(for: animateTo.position)
       cardView.frame = self.cardWrapperContent.bounds
+      cardView.alpha = 1
+      oldTop?.view?.alpha = 0
       self.cardTransitionShadow?.alpha = 0.15
     }
     if self.mode != .floating {
       cardAnimations()
-      oldTop?.view?.alpha = 0
     }
     
     // In some cases, the cardWrapperShadow frame might already have been
@@ -994,7 +996,6 @@ extension TGCardViewController {
       completion: { _ in
         self.updateCardScrolling(allow: animateTo.position == .extended, view: cardView)
         self.previousCardPosition = animateTo.position
-        oldTop?.view?.alpha = 0
         if notify {
           oldTop?.card.didDisappear(animated: animated)
           top.didAppear(animated: animated)
@@ -1083,7 +1084,7 @@ extension TGCardViewController {
     }
     
     // 4. Determine and set new position of the card wrapper (relative to header!)
-    newTop?.view?.alpha = 1
+    newTop?.view?.alpha = 0
 
     // We only animate to the previous position if the card obscures the map
     updateCardStructure(card: newTop?.view, position: newTop?.lastPosition)
@@ -1128,11 +1129,13 @@ extension TGCardViewController {
       topView?.frame.origin.y = self.cardWrapperContent.frame.maxY
       self.cardTransitionShadow?.alpha = 0
       newTop?.view?.adjustContentAlpha(to: animateTo == .collapsed ? 0 : 1)
+      
+      newTop?.view?.alpha = 1
+      topView?.alpha = 0
     }
     
     if mode != .floating {
       cardAnimations()
-      topView?.alpha = 0
     }
     
     UIView.animate(
@@ -1158,7 +1161,6 @@ extension TGCardViewController {
         }
         // This line did crash in Adrian's simulator but only happens rarely; when?!?
         topView?.removeFromSuperview()
-        topView?.alpha = 1
         self.cardTransitionShadow?.removeFromSuperview()
         self.updateForNewPosition(position: animateTo)
         self.updateResponderChainForNewTopCard()
