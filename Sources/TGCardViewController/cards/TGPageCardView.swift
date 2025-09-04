@@ -357,7 +357,7 @@ extension TGPageCardView: UIScrollViewDelegate {
     
     visiblePageLogical = logical
     delegate?.didChangeCurrentPage(to: logical, animated: true)
-    lastHorizontalOffset = scrollView.contentOffset.y
+    lastHorizontalOffset = scrollView.contentOffset.x
     
     let topMost = cardView(index: logical)
     self.accessibilityElements = [topMost].compactMap { $0 }
