@@ -478,7 +478,22 @@ open class TGCardViewController: UIViewController {
     super.traitCollectionDidChange(previousTraitCollection)
     
     cardWrapperHeightConstraint.constant = extendedMinY * -1
+    
+    // 1. Deactivate potentially conflicting constraints first
+    cardWrapperStaticLeadingConstraint.isActive = false
+    cardWrapperDynamicLeadingConstraint.isActive = false
+    cardWrapperDynamicTrailingConstraint.isActive = false
+    
+    // 2. Restore iOS 26 dynamic padding after trait collection changes (rotation/backgrounding)
+    updateMapShadow(for: cardPosition)
+    
+    // 3. Reactivate the correct constraints based on mode and layout
     cardWrapperStaticLeadingConstraint.isActive = cardIsNextToMap(in: traitCollection)
+    cardWrapperDynamicLeadingConstraint.isActive = mode == .floating
+    cardWrapperDynamicTrailingConstraint.isActive = mode == .floating
+    
+    // 4. Force layout with consistent state
+    view.layoutIfNeeded()
     
     // When trait collection changes, try to keep the same card position
     if let previous = previousCardPosition {
