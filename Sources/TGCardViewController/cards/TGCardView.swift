@@ -242,9 +242,20 @@ public class TGCardView: TGCornerView, TGPreferrableView {
   
   // MARK: - Content view configuration
   
+  private var forceHideSeparator = false
+  
+  func setSeparatorVisibility(forceHidden: Bool) {
+    forceHideSeparator = forceHidden
+    // Trigger separator update with current scroll state
+    if let contentScrollView = contentScrollView {
+      let actualOffset = contentScrollView.transform.ty < 0 ? 0 : contentScrollView.contentOffset.y
+      showSeparator(actualOffset > 0, offset: actualOffset)
+    }
+  }
+  
   func showSeparator(_ show: Bool, offset: CGFloat) {
     if let owningCard, owningCard.shouldToggleSeparator(show: show, offset: offset) {
-      contentSeparator?.isHidden = !show
+      contentSeparator?.isHidden = forceHideSeparator ? true : !show
       
     } else if let owningCard, owningCard.title.isExtended, owningCard.autoIgnoreContentInset, let contentScrollView, contentScrollView.isDecelerating, offset < 0 {
       // This handles the case where you fling the content down further than the

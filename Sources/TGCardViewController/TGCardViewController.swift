@@ -528,6 +528,7 @@ open class TGCardViewController: UIViewController {
 
     statusBarBlurHeightConstraint.constant = topOverlap
     topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
+    topCardView?.setSeparatorVisibility(forceHidden: cardPosition == .collapsed)
     updateFloatingViewsConstraints()
     updateTopInfoViewConstraints()
     view.setNeedsUpdateConstraints()
@@ -850,6 +851,7 @@ extension TGCardViewController {
       // which is an additional 34px on iPhone X, we will see part of the card content
       // coming through.
       cardView.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
+      cardView.setSeparatorVisibility(forceHidden: animateTo.position == .collapsed)
       
       // This allows us to continuously pull down the card view while its
       // content is scrolled to the top. Note this only applies when the
@@ -1130,6 +1132,7 @@ extension TGCardViewController {
       topView?.frame.origin.y = self.cardWrapperContent.frame.maxY
       self.cardTransitionShadow?.alpha = 0
       newTop?.view?.adjustContentAlpha(to: animateTo == .collapsed ? 0 : 1)
+      newTop?.view?.setSeparatorVisibility(forceHidden: animateTo == .collapsed)
       
       newTop?.view?.alpha = 1
       topView?.alpha = 0
@@ -1407,6 +1410,7 @@ extension TGCardViewController {
       animations: {
         self.updateMapShadow(for: snapTo.position)
         self.topCardView?.adjustContentAlpha(to: snapTo.position == .collapsed ? 0 : 1)
+        self.topCardView?.setSeparatorVisibility(forceHidden: snapTo.position == .collapsed)
         self.updateFloatingViewsVisibility(for: snapTo.position)
         self.view.layoutIfNeeded()
         self.mapViewController.additionalSafeAreaInsets = mapInset
@@ -1630,6 +1634,7 @@ extension TGCardViewController {
       animations: {
         self.updateMapShadow(for: animateTo.position)
         self.topCardView?.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
+        self.topCardView?.setSeparatorVisibility(forceHidden: animateTo.position == .collapsed)
         self.updateFloatingViewsVisibility(for: animateTo.position)
         self.view.layoutIfNeeded()
         self.mapViewController.additionalSafeAreaInsets = mapInsets
