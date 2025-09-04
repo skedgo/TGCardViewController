@@ -667,6 +667,7 @@ open class TGCardViewController: UIViewController {
       cardWrapperDynamicLeadingConstraint.constant  = padding
       cardWrapperDynamicTrailingConstraint.constant = padding
       cardWrapperDynamicBottomConstraint.constant   = padding
+      view.setNeedsUpdateConstraints()
     }
   }
   
@@ -2148,7 +2149,16 @@ extension TGCardViewController: UIGestureRecognizerDelegate {
     
     } else if let pager = (topCardView as? TGPageCardView)?.pager, other == pager.panGestureRecognizer {
       // When our panner fires, block panning of the page card
-      return false
+      if #available(iOS 26.0, *) {
+        // iOS 26: Allow vertical card dragging when swiping vertically,
+        // but block it during horizontal swipes to enable clean paging
+        let velocity = panner.velocity(in: cardWrapperContent)
+        let swipeHorizontally = abs(velocity.x) > abs(velocity.y)
+        return !swipeHorizontally
+
+      } else {
+        return false
+      }
     
     } else {
       // We don't want to interfere with any existing horizontal swipes, e.g., swipe to delete
