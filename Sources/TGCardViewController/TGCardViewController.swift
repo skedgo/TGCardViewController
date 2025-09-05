@@ -303,8 +303,13 @@ open class TGCardViewController: UIViewController {
     TGCornerView.roundedCorners                   = mode == .floating
     cardWrapperDynamicLeadingConstraint.isActive  = mode == .floating
     cardWrapperStaticLeadingConstraint.isActive   = mode == .sidebar
-    cardWrapperDynamicTrailingConstraint.isActive = mode == .floating
-    cardWrapperDynamicBottomConstraint.isActive   = mode == .floating
+    if #available(iOS 26.0, *) {
+      cardWrapperDynamicTrailingConstraint.isActive = mode == .floating
+      cardWrapperDynamicBottomConstraint.isActive   = mode == .floating
+    } else {
+      cardWrapperDynamicTrailingConstraint.isActive = true
+      cardWrapperDynamicBottomConstraint.isActive   = false
+    }
     toggleCardWrappers(hide: true)
     
     sidebarSeparator.backgroundColor = .separator
