@@ -298,16 +298,16 @@ open class TGCardViewController: UIViewController {
     if #available(iOS 26.0, *) {
       statusBarBlurView.isHidden = true
     }
+    let cardIsNextToMap = self.cardIsNextToMap(in: traitCollection)
     
     // mode-specific styling
     TGCornerView.roundedCorners                   = mode == .floating
     cardWrapperDynamicLeadingConstraint.isActive  = mode == .floating
     cardWrapperStaticLeadingConstraint.isActive   = mode == .sidebar
+    cardWrapperDynamicTrailingConstraint.isActive = mode == .floating && !cardIsNextToMap
     if #available(iOS 26.0, *) {
-      cardWrapperDynamicTrailingConstraint.isActive = mode == .floating
       cardWrapperDynamicBottomConstraint.isActive   = mode == .floating
     } else {
-      cardWrapperDynamicTrailingConstraint.isActive = true
       cardWrapperDynamicBottomConstraint.isActive   = false
     }
     toggleCardWrappers(hide: true)
@@ -328,7 +328,16 @@ open class TGCardViewController: UIViewController {
 #if compiler(>=6.2) // Xcode 26
     if #available(iOS 26.0, *) {
       cardWrapperEffectView.effect = UIGlassEffect(style: .regular)
-      cardWrapperEffectView.cornerConfiguration = .corners(topLeftRadius: 44, topRightRadius: 44, bottomLeftRadius: .containerConcentric(minimum: 44), bottomRightRadius: .containerConcentric(minimum: 44))
+      if cardIsNextToMap {
+        cardWrapperEffectView.cornerConfiguration = .corners(radius: 12)
+      } else {
+        cardWrapperEffectView.cornerConfiguration = .corners(
+          topLeftRadius: 44,
+          topRightRadius: 44,
+          bottomLeftRadius: .containerConcentric(minimum: 44),
+          bottomRightRadius: .containerConcentric(minimum: 44)
+        )
+      }
       cardWrapperEffectView.clipsToBounds = true
 
       // Map floating bar buttons don't need to be styled here, that's
@@ -484,6 +493,20 @@ open class TGCardViewController: UIViewController {
     
     cardWrapperHeightConstraint.constant = extendedMinY * -1
     
+    let cardIsNextToMap = cardIsNextToMap(in: traitCollection)
+    if #available(iOS 26.0, *) {
+      if cardIsNextToMap {
+        cardWrapperEffectView.cornerConfiguration = .corners(radius: 12)
+      } else {
+        cardWrapperEffectView.cornerConfiguration = .corners(
+          topLeftRadius: 44,
+          topRightRadius: 44,
+          bottomLeftRadius: .containerConcentric(minimum: 44),
+          bottomRightRadius: .containerConcentric(minimum: 44)
+        )
+      }
+    }
+    
     // 1. Deactivate potentially conflicting constraints first
     cardWrapperStaticLeadingConstraint.isActive = false
     cardWrapperDynamicLeadingConstraint.isActive = false
@@ -493,9 +516,9 @@ open class TGCardViewController: UIViewController {
     updateMapShadow(for: cardPosition)
     
     // 3. Reactivate the correct constraints based on mode and layout
-    cardWrapperStaticLeadingConstraint.isActive = cardIsNextToMap(in: traitCollection)
+    cardWrapperStaticLeadingConstraint.isActive = mode == .sidebar
     cardWrapperDynamicLeadingConstraint.isActive = mode == .floating
-    cardWrapperDynamicTrailingConstraint.isActive = mode == .floating
+    cardWrapperDynamicTrailingConstraint.isActive = mode == .floating && !cardIsNextToMap
     
     // 4. Force layout with consistent state
     view.layoutIfNeeded()
@@ -677,12 +700,13 @@ open class TGCardViewController: UIViewController {
       topCardView?.grabHandle?.backgroundColor = background
       topCardView?.titleView?.backgroundColor = background
       cardWrapperContent.backgroundColor = background
-      cardWrapperContent.layer.cornerRadius = position == .extended ? 44 : 0
       
-      let padding: CGFloat = switch position {
-      case .extended: 0
-      case .peaking: 6
-      case .collapsed: 22
+      let cardIsNextToMap = cardIsNextToMap(in: traitCollection)
+      let padding: CGFloat = switch (position, cardIsNextToMap) {
+      case (_, true): 12
+      case (.extended, _): 0
+      case (.peaking, _): 6
+      case (.collapsed, _): 22
       }
       
       cardWrapperDynamicLeadingConstraint.constant  = padding
