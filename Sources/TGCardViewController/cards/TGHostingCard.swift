@@ -1,9 +1,10 @@
 //
 //  TGHostingCard.swift
-//  
+//
 //
 //  Created by Adrian Schönig on 21/4/21.
 //
+
 
 import SwiftUI
 
@@ -15,16 +16,31 @@ import SwiftUI
 @available(iOS 13.0, *)
 open class TGHostingCard<Content>: TGCard where Content: View {
   
-  private let host: UIHostingController<Content>
+  private let host: UIHostingController<AnyView>
+  private let relay: _TGSizeRelay
   
   public init(title: CardTitle,
               rootView: Content,
               mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     
-    self.host = UIHostingController(rootView: rootView)
-    
+    let relay = _TGSizeRelay()
+    let observedRoot = rootView._tgOnSizeChange { [weak relay] in
+      relay?.onSize?($0)
+    }
+    self.host = UIHostingController(rootView: AnyView(observedRoot))
+    self.relay = relay
+
     super.init(title: title, mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
+
+    // After init, connect size changes to intrinsic invalidation so Auto Layout
+    // updates content height. UIHostingController doesn't manage to reliably
+    // do that itself, but nudging it this way does the trick.
+    relay.onSize = { [weak host = self.host] size in
+      guard let view = host?.view else { return }
+      view.invalidateIntrinsicContentSize()
+      view.setNeedsLayout()
+    }
   }
   
   open func didBuild(scrollView: UIScrollView) {
@@ -70,3 +86,38 @@ open class TGHostingCard<Content>: TGCard where Content: View {
   }
   
 }
+
+
+// MARK: - SwiftUI size reporting helper
+
+private struct _TGSizeKey: PreferenceKey {
+  static var defaultValue: CGSize = .zero
+  static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+    value = nextValue()
+  }
+}
+
+private struct _TGSizeReader: ViewModifier {
+  let onChange: (CGSize) -> Void
+  func body(content: Content) -> some View {
+    content
+      .background(
+        GeometryReader { proxy in
+          Color.clear
+            .preference(key: _TGSizeKey.self, value: proxy.size)
+            .onPreferenceChange(_TGSizeKey.self, perform: onChange)
+        }
+      )
+  }
+}
+
+private extension View {
+  func _tgOnSizeChange(_ perform: @escaping (CGSize) -> Void) -> some View {
+    modifier(_TGSizeReader(onChange: perform))
+  }
+}
+
+private final class _TGSizeRelay {
+  var onSize: ((CGSize) -> Void)?
+}
+
