@@ -22,7 +22,7 @@ open class TGHostingCard<Content>: TGCard where Content: View {
               mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     
-    self.host = TGHostingController(rootView: rootView)
+    self.host = UIHostingController(rootView: rootView)
     
     super.init(title: title, mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
   }
@@ -37,24 +37,23 @@ open class TGHostingCard<Content>: TGCard where Content: View {
   
   open override func buildCardView() -> TGCardView? {
     let view = TGScrollCardView.instantiate(extended: title.isExtended)
-    view.translatesAutoresizingMaskIntoConstraints = false
-    
-    host.beginAppearanceTransition(true, animated: false)
     
     let scroller = UIScrollView(frame: .zero)
+    view.configure(scroller, with: self)
 
+    host.beginAppearanceTransition(true, animated: false)
     host.view.translatesAutoresizingMaskIntoConstraints = false
     scroller.addSubview(host.view)
+
     NSLayoutConstraint.activate([
-      host.view.leadingAnchor.constraint(equalTo: scroller.leadingAnchor),
-      host.view.topAnchor.constraint(equalTo: scroller.topAnchor),
-      host.view.trailingAnchor.constraint(equalTo: scroller.trailingAnchor),
+      host.view.leadingAnchor.constraint(equalTo: scroller.contentLayoutGuide.leadingAnchor),
+      host.view.topAnchor.constraint(equalTo: scroller.contentLayoutGuide.topAnchor),
+      host.view.trailingAnchor.constraint(equalTo: scroller.contentLayoutGuide.trailingAnchor),
+      host.view.bottomAnchor.constraint(equalTo: scroller.contentLayoutGuide.bottomAnchor),
+      host.view.widthAnchor.constraint(equalTo: scroller.frameLayoutGuide.widthAnchor),
     ])
-    
-    view.configure(scroller, with: self)
-    
-    host.view.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
     host.endAppearanceTransition()
+    
     return view
   }
   
@@ -70,18 +69,4 @@ open class TGHostingCard<Content>: TGCard where Content: View {
     didBuild(scrollView: scrollView, cardView: cardView)
   }
   
-}
-
-@available(iOS 13.0, *)
-fileprivate class TGHostingController<Content>: UIHostingController<Content> where Content: View {
-  
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-
-    if let scroller = view.superview as? UIScrollView {
-      let size = sizeThatFits(in: scroller.bounds.size)
-      scroller.contentSize = size
-      view.heightAnchor.constraint(equalToConstant: size.height).isActive = true
-    }
-  }
 }
