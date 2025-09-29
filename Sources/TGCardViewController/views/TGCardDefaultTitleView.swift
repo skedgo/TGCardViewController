@@ -132,12 +132,7 @@ class TGCardDefaultTitleView: UIView, TGPreferrableView {
     
     if isInitial {
       dismissButton.isHidden = false
-      let closeButtonImage = TGCardStyleKit.imageOfCardCloseIcon(
-        closeButtonBackground: style.closeButtonBackgroundColor,
-        closeButtonCross: style.closeButtonCrossColor
-      )
-      dismissButton.setImage(closeButtonImage, for: .normal)
-      dismissButton.setTitle(nil, for: .normal)
+      TGCard.configureCloseButton(dismissButton, style: style)
     }
   }
   
