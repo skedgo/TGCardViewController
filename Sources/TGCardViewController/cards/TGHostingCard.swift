@@ -59,6 +59,7 @@ open class TGHostingCard<Content>: TGCard where Content: View {
 
     host.beginAppearanceTransition(true, animated: false)
     host.view.translatesAutoresizingMaskIntoConstraints = false
+    host.view.backgroundColor = .clear
     scroller.addSubview(host.view)
 
     NSLayoutConstraint.activate([
