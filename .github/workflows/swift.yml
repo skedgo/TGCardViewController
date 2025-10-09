@@ -16,7 +16,7 @@ jobs:
           xcode-version: latest-stable
       - uses: actions/checkout@v4
       - name: Build TGCardVC
-        run: xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 16'
+        run: xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 17'
 
   build_xcode_previous:
     runs-on: macos-15
