@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build_xcode_tahoe:
+  build_xcode_latest:
     runs-on: macos-26
 
     steps:
@@ -16,9 +16,9 @@ jobs:
           xcode-version: latest-stable
       - uses: actions/checkout@v4
       - name: Build TGCardVC
-        run: xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 14'
+        run: xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 16'
 
-  build_xcode_sequoia:
+  build_xcode_previous:
     runs-on: macos-15
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
@@ -26,7 +26,7 @@ jobs:
           xcode-version: latest-stable
       - uses: actions/checkout@v4
       - name: Build TGCardVC
-        run: xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 14'
+        run: xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 16'
 
   examples:
     runs-on: macos-15
@@ -39,4 +39,4 @@ jobs:
       - name: Build Example
         run: |
           cd Example
-          xcodebuild build -scheme 'Example' -destination 'platform=iOS Simulator,name=iPhone 14'
+          xcodebuild build -scheme 'Example' -destination 'platform=iOS Simulator,name=iPhone 16'
