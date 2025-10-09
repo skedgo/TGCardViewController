@@ -13,7 +13,17 @@ public struct TGCardStyle {
   public static let `default` = TGCardStyle()
 
   /// Font to use for title, defaults to bold system font with size 17pt.
-  public var titleFont: UIFont = .boldSystemFont(ofSize: 17)
+  public var titleFont: UIFont = {
+    if #available(iOS 26.0, *) {
+      if let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .largeTitle).withSymbolicTraits(.traitBold) {
+        return UIFont.init(descriptor: descriptor, size: descriptor.pointSize)
+      } else {
+        return .preferredFont(forTextStyle: .largeTitle)
+      }
+    } else {
+      return .boldSystemFont(ofSize: 17)
+    }
+  }()
 
   /// Title colour, defaults to system label color
   public var titleTextColor: UIColor = .label
@@ -25,7 +35,13 @@ public struct TGCardStyle {
   public var subtitleTextColor: UIColor = .secondaryLabel
 
   /// Colour to use for the background, defaults to system background color
-  public var backgroundColor: UIColor = .systemBackground
+  public var backgroundColor: UIColor = {
+    if #available(iOS 26.0, *) {
+      return .clear
+    } else {
+      return .systemBackground
+    }
+  }()
   
   /// Colour to use for the grab handle on the card, defaults to system secondary label color
   public var grabHandleColor: UIColor = .secondaryLabel

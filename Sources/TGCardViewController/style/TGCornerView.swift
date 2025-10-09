@@ -17,9 +17,15 @@ public class TGCornerView: UIView {
     super.layoutSubviews()
     
     if Self.roundedCorners {
+      let radius: CGFloat
+      if #available(iOS 26.0, *) {
+        radius = 44
+      } else {
+        radius = 16
+      }
       let path = UIBezierPath(roundedRect: self.bounds,
                               byRoundingCorners: [.topLeft, .topRight],
-                              cornerRadii: CGSize(width: 16, height: 16))
+                              cornerRadii: CGSize(width: radius, height: radius))
       let mask = CAShapeLayer()
       mask.path = path.cgPath
       layer.mask = mask

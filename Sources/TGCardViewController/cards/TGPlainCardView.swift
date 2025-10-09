@@ -25,12 +25,8 @@ class TGPlainCardView: TGCardView {
   
   // MARK: - Configuration
   
-  override func configure(with card: TGCard) {
-    guard let plainCard = card as? TGPlainCard else {
-      preconditionFailure()
-    }
-    
-    super.configure(with: plainCard)
+  func configure(with card: TGCard, contentView: UIView?) {
+    super.configure(with: card)
     
     // build the header
     var adjustment: CGFloat = 1.0 // accounted for the separator
@@ -48,15 +44,14 @@ class TGPlainCardView: TGCardView {
       contentViewHeightEqualToSuperviewHeightConstraint.constant = -1*adjustment
     }
     
-    
     // build the main content
-    if let content = plainCard.contentView {
+    if let content = contentView {
       content.translatesAutoresizingMaskIntoConstraints = false
-      contentView.addSubview(content)
-      content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-      content.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-      contentView.trailingAnchor.constraint(equalTo: content.trailingAnchor).isActive = true
-      contentView.bottomAnchor.constraint(equalTo: content.bottomAnchor).isActive = true
+      self.contentView.addSubview(content)
+      content.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
+      content.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
+      self.contentView.trailingAnchor.constraint(equalTo: content.trailingAnchor).isActive = true
+      self.contentView.bottomAnchor.constraint(equalTo: content.bottomAnchor).isActive = true
     }
   }
   
