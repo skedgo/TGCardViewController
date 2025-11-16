@@ -16,7 +16,7 @@ jobs:
           xcode-version: 26.0.1 # 26.1 is missing simulators on GitHub, as of November 2025
       - uses: actions/checkout@v4
       - name: Build TGCardVC
-        run: xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 17'
+        run: set -o pipefail && xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 17' | xcbeautify
 
   build_xcode_previous:
     runs-on: macos-15
@@ -26,7 +26,7 @@ jobs:
           xcode-version: 26.0.1 # 26.1 is missing simulators on GitHub, as of November 2025
       - uses: actions/checkout@v4
       - name: Build TGCardVC
-        run: xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 16'
+        run: set -o pipefail && xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 16' | xcbeautify
 
   examples:
     runs-on: macos-15
@@ -39,4 +39,4 @@ jobs:
       - name: Build Example
         run: |
           cd Example
-          xcodebuild build -scheme 'Example' -destination 'platform=iOS Simulator,name=iPhone 16'
+          set -o pipefail && xcodebuild build -scheme 'Example' -destination 'platform=iOS Simulator,name=iPhone 16' | xcbeautify
