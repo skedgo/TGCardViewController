@@ -11,32 +11,32 @@ jobs:
     runs-on: macos-14
 
     steps:
-    - uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: 15.3 # latest-stable
-    - uses: actions/checkout@v4
-    - name: Build TGCardVC
-      run: xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 14'
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: 26.0.1 # 26.1 is missing simulators on GitHub, as of November 2025
+      - uses: actions/checkout@v4
+      - name: Build TGCardVC
+        run: set -o pipefail && xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 17' | xcbeautify
 
   build_xcode_ventura:
     runs-on: macos-13
     steps:
-    - uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: latest-stable
-    - uses: actions/checkout@v4
-    - name: Build TGCardVC
-      run: xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 14'
-  
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: 26.0.1 # 26.1 is missing simulators on GitHub, as of November 2025
+      - uses: actions/checkout@v4
+      - name: Build TGCardVC
+        run: set -o pipefail && xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 16' | xcbeautify
+
   examples:
     runs-on: macos-14
 
     steps:
-    - uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: 15.3 # latest-stable
-    - uses: actions/checkout@v4
-    - name: Build Example
-      run: |
-        cd Example
-        xcodebuild build -scheme 'Example' -destination 'platform=iOS Simulator,name=iPhone 14'
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: 26.0.1 # 26.1 is missing simulators on GitHub, as of November 2025
+      - uses: actions/checkout@v4
+      - name: Build Example
+        run: |
+          cd Example
+          set -o pipefail && xcodebuild build -scheme 'Example' -destination 'platform=iOS Simulator,name=iPhone 16' | xcbeautify
