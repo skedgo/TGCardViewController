@@ -1083,6 +1083,7 @@ extension TGCardViewController {
       topView?.frame.origin.y = self.cardWrapperContent.frame.maxY
       self.cardTransitionShadow?.alpha = 0
       newTop?.view?.adjustContentAlpha(to: animateTo == .collapsed ? 0 : 1)
+      newTop?.view?.setSeparatorVisibility(forceHidden: animateTo == .collapsed)
     }
     
     if mode != .floating {

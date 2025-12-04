@@ -190,8 +190,16 @@ class TGCardStyleKit : NSObject {
     }
 
     @objc dynamic class func imageOfCardCloseIcon(closeButtonBackground: UIColor = UIColor(red: 0.130, green: 0.160, blue: 0.200, alpha: 0.080), closeButtonCross: UIColor = UIColor(red: 0.440, green: 0.460, blue: 0.480, alpha: 1.000)) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: 24, height: 24), false, 0)
-            TGCardStyleKit.drawCardCloseIcon(closeButtonBackground: closeButtonBackground, closeButtonCross: closeButtonCross)
+        let width: CGFloat
+        if #available(iOS 26.0, *) {
+            width = 44
+        } else {
+            width = 24
+        }
+        
+        let frame = CGRect(origin: .init(x: 0, y: 0), size: CGSize(width: width, height: width))
+        UIGraphicsBeginImageContextWithOptions(frame.size, false, 0)
+        TGCardStyleKit.drawCardCloseIcon(frame: frame, closeButtonBackground: closeButtonBackground, closeButtonCross: closeButtonCross)
 
         let imageOfCardCloseIcon = UIGraphicsGetImageFromCurrentImageContext()!.withRenderingMode(.alwaysOriginal)
         UIGraphicsEndImageContext()
@@ -200,8 +208,16 @@ class TGCardStyleKit : NSObject {
     }
 
     @objc dynamic class func imageOfCardArrowIcon(closeButtonBackground: UIColor = UIColor(red: 0.130, green: 0.160, blue: 0.200, alpha: 0.080), closeButtonCross: UIColor = UIColor(red: 0.440, green: 0.460, blue: 0.480, alpha: 1.000), arrowRotation: CGFloat = 0) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: 24, height: 24), false, 0)
-            TGCardStyleKit.drawCardArrowIcon(closeButtonBackground: closeButtonBackground, closeButtonCross: closeButtonCross, arrowRotation: arrowRotation)
+        let width: CGFloat
+        if #available(iOS 26.0, *) {
+            width = 44
+        } else {
+            width = 24
+        }
+        
+        let frame = CGRect(origin: .init(x: 0, y: 0), size: CGSize(width: width, height: width))
+        UIGraphicsBeginImageContextWithOptions(frame.size, false, 0)
+        TGCardStyleKit.drawCardArrowIcon(frame: frame, closeButtonBackground: closeButtonBackground, closeButtonCross: closeButtonCross, arrowRotation: arrowRotation)
 
         let imageOfCardArrowIcon = UIGraphicsGetImageFromCurrentImageContext()!.withRenderingMode(.alwaysOriginal)
         UIGraphicsEndImageContext()

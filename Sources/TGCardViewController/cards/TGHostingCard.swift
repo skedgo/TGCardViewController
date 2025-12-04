@@ -1,9 +1,10 @@
 //
 //  TGHostingCard.swift
-//  
+//
 //
 //  Created by Adrian Schönig on 21/4/21.
 //
+
 
 import SwiftUI
 
@@ -15,16 +16,37 @@ import SwiftUI
 @available(iOS 13.0, *)
 open class TGHostingCard<Content>: TGCard where Content: View {
   
-  private let host: UIHostingController<Content>
+  private let host: UIHostingController<AnyView>
+  private let relay: _TGSizeRelay
   
   public init(title: CardTitle,
               rootView: Content,
               mapManager: TGCompatibleMapManager? = nil,
               initialPosition: TGCardPosition? = nil) {
     
-    self.host = TGHostingController(rootView: rootView)
-    
+    let relay = _TGSizeRelay()
+    let observedRoot = rootView._tgOnSizeChange { [weak relay] in
+      relay?.onSize?($0)
+    }
+    self.host = UIHostingController(rootView: AnyView(observedRoot))
+    self.relay = relay
+
     super.init(title: title, mapManager: mapManager, initialPosition: mapManager != nil ? initialPosition : .extended)
+
+    // After init, connect size changes to intrinsic invalidation so Auto Layout
+    // updates content height. UIHostingController doesn't manage to reliably
+    // do that itself, but nudging it this way does the trick.
+    relay.onSize = { [weak host = self.host] size in
+      guard let view = host?.view else { return }
+      view.invalidateIntrinsicContentSize()
+      view.setNeedsLayout()
+    }
+  }
+  
+  open func didBuild(scrollView: UIScrollView) {
+  }
+  
+  open func didBuild(scrollView: UIScrollView, cardView: TGCardView) {
   }
   
   // MARK: - Constructing views
@@ -32,37 +54,71 @@ open class TGHostingCard<Content>: TGCard where Content: View {
   open override func buildCardView() -> TGCardView? {
     let view = TGScrollCardView.instantiate(extended: title.isExtended)
     
-    host.beginAppearanceTransition(true, animated: false)
-    
     let scroller = UIScrollView(frame: .zero)
-
-    host.view.translatesAutoresizingMaskIntoConstraints = false
-    scroller.addSubview(host.view)
-    NSLayoutConstraint.activate([
-      host.view.leadingAnchor.constraint(equalTo: scroller.leadingAnchor),
-      host.view.topAnchor.constraint(equalTo: scroller.topAnchor),
-      host.view.trailingAnchor.constraint(equalTo: scroller.trailingAnchor),
-    ])
-    
     view.configure(scroller, with: self)
-    
-    host.view.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-    
+
+    host.beginAppearanceTransition(true, animated: false)
+    host.view.translatesAutoresizingMaskIntoConstraints = false
+    host.view.backgroundColor = .clear
+    scroller.addSubview(host.view)
+
+    NSLayoutConstraint.activate([
+      host.view.leadingAnchor.constraint(equalTo: scroller.contentLayoutGuide.leadingAnchor),
+      host.view.topAnchor.constraint(equalTo: scroller.contentLayoutGuide.topAnchor),
+      host.view.trailingAnchor.constraint(equalTo: scroller.contentLayoutGuide.trailingAnchor),
+      host.view.bottomAnchor.constraint(equalTo: scroller.contentLayoutGuide.bottomAnchor),
+      host.view.widthAnchor.constraint(equalTo: scroller.frameLayoutGuide.widthAnchor),
+    ])
     host.endAppearanceTransition()
+    
     return view
   }
   
+  override public final func didBuild(cardView: TGCardView?, headerView: TGHeaderView?) {
+    
+    defer { super.didBuild(cardView: cardView, headerView: headerView) }
+    
+    guard let cardView, let scrollView = (cardView as? TGScrollCardView)?.embeddedScrollView else {
+      preconditionFailure()
+    }
+    
+    didBuild(scrollView: scrollView)
+    didBuild(scrollView: scrollView, cardView: cardView)
+  }
+  
 }
 
-@available(iOS 13.0, *)
-fileprivate class TGHostingController<Content>: UIHostingController<Content> where Content: View {
-  
-  override func viewWillLayoutSubviews() {
-    super.viewWillLayoutSubviews()
-    if let scroller = view.superview as? UIScrollView {
-      let size = sizeThatFits(in: scroller.bounds.size)
-      scroller.contentSize = size
-      view.heightAnchor.constraint(equalToConstant: size.height).isActive = true
-    }
+
+// MARK: - SwiftUI size reporting helper
+
+private struct _TGSizeKey: PreferenceKey {
+  static var defaultValue: CGSize = .zero
+  static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+    value = nextValue()
   }
 }
+
+private struct _TGSizeReader: ViewModifier {
+  let onChange: (CGSize) -> Void
+  func body(content: Content) -> some View {
+    content
+      .background(
+        GeometryReader { proxy in
+          Color.clear
+            .preference(key: _TGSizeKey.self, value: proxy.size)
+            .onPreferenceChange(_TGSizeKey.self, perform: onChange)
+        }
+      )
+  }
+}
+
+private extension View {
+  func _tgOnSizeChange(_ perform: @escaping (CGSize) -> Void) -> some View {
+    modifier(_TGSizeReader(onChange: perform))
+  }
+}
+
+private final class _TGSizeRelay {
+  var onSize: ((CGSize) -> Void)?
+}
+
