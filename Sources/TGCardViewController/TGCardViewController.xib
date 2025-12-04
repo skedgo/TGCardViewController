@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="ipad12_9rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,6 +17,7 @@
                 <outlet property="cardWrapperContent" destination="aqL-1W-7nJ" id="T2a-3v-TNe"/>
                 <outlet property="cardWrapperDesiredTopConstraint" destination="id3-Ed-1ft" id="O0H-J3-8up"/>
                 <outlet property="cardWrapperDynamicLeadingConstraint" destination="D5D-bp-P3t" id="1rz-Bx-b6b"/>
+                <outlet property="cardWrapperEffectView" destination="CzN-9o-Mb3" id="Wm0-JE-5Hq"/>
                 <outlet property="cardWrapperHeightConstraint" destination="hEc-8X-109" id="6Wy-Sm-juo"/>
                 <outlet property="cardWrapperMinOverlapTopConstraint" destination="zKc-st-3DD" id="5i9-Bz-hER"/>
                 <outlet property="cardWrapperShadow" destination="Bui-Tf-j0O" id="NnX-nR-CBb"/>
@@ -82,19 +83,19 @@
                             </userDefinedRuntimeAttributes>
                         </visualEffectView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zlR-ey-yL8" userLabel="Sidebar Background">
-                            <rect key="frame" x="0.0" y="24" width="360" height="1322"/>
+                            <rect key="frame" x="0.0" y="24" width="360" height="1292"/>
                             <subviews>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IEW-xx-P4c">
-                                    <rect key="frame" x="0.0" y="0.0" width="360" height="1322"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="360" height="1292"/>
                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="KLf-du-5ZR">
-                                        <rect key="frame" x="0.0" y="0.0" width="360" height="1322"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="360" height="1292"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EWh-dP-38F">
-                                                <rect key="frame" x="0.0" y="0.0" width="120" height="1194"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="120" height="1164"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="PaT-N6-scp">
-                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="1194"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="1164"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </view>
                                                 <vibrancyEffect>
@@ -107,7 +108,7 @@
                                     <blurEffect style="regular"/>
                                 </visualEffectView>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2dL-e1-o2y">
-                                    <rect key="frame" x="360" y="0.0" width="1" height="1322"/>
+                                    <rect key="frame" x="360" y="0.0" width="1" height="1292"/>
                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="1" id="QnL-37-2Pi"/>
@@ -140,7 +141,7 @@
                             </constraints>
                         </view>
                         <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="91" placeholderIntrinsicHeight="45" translatesAutoresizingMaskIntoConstraints="NO" id="u6M-z2-2xb" userLabel="Bottom Floating View Wrapper">
-                            <rect key="frame" x="925" y="1293" width="91" height="45"/>
+                            <rect key="frame" x="925" y="1263" width="91" height="45"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="qM8-dd-KXi">
                                 <rect key="frame" x="0.0" y="0.0" width="91" height="45"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -166,6 +167,14 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O" userLabel="Card Wrapper Shadow">
                             <rect key="frame" x="0.0" y="560" width="360" height="1316"/>
                             <subviews>
+                                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CzN-9o-Mb3">
+                                    <rect key="frame" x="0.0" y="0.0" width="360" height="1316"/>
+                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Cec-Sl-ACr">
+                                        <rect key="frame" x="0.0" y="0.0" width="360" height="1316"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </view>
+                                    <blurEffect style="regular"/>
+                                </visualEffectView>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aqL-1W-7nJ" userLabel="Card Wrapper Content">
                                     <rect key="frame" x="0.0" y="0.0" width="360" height="1316"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -174,22 +183,26 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" relation="lessThanOrEqual" constant="414" id="8rc-Rj-2HA"/>
+                                <constraint firstItem="CzN-9o-Mb3" firstAttribute="leading" secondItem="aqL-1W-7nJ" secondAttribute="leading" id="AwQ-TK-HWP"/>
                                 <constraint firstItem="aqL-1W-7nJ" firstAttribute="leading" secondItem="Bui-Tf-j0O" secondAttribute="leading" id="DBu-TB-tJO"/>
+                                <constraint firstItem="CzN-9o-Mb3" firstAttribute="top" secondItem="aqL-1W-7nJ" secondAttribute="top" id="DcY-ZC-f7O"/>
                                 <constraint firstItem="aqL-1W-7nJ" firstAttribute="top" secondItem="Bui-Tf-j0O" secondAttribute="top" id="Sw2-mc-NvU"/>
                                 <constraint firstAttribute="bottom" secondItem="aqL-1W-7nJ" secondAttribute="bottom" id="Uys-KQ-RD8"/>
+                                <constraint firstItem="CzN-9o-Mb3" firstAttribute="bottom" secondItem="aqL-1W-7nJ" secondAttribute="bottom" id="biS-i3-8w4"/>
                                 <constraint firstAttribute="width" priority="999" constant="360" id="ftZ-m5-F2i"/>
                                 <constraint firstAttribute="trailing" secondItem="aqL-1W-7nJ" secondAttribute="trailing" id="g07-Nl-Q8E"/>
+                                <constraint firstItem="CzN-9o-Mb3" firstAttribute="trailing" secondItem="aqL-1W-7nJ" secondAttribute="trailing" id="lm2-4m-jdf"/>
                             </constraints>
                             <variation key="default">
                                 <mask key="constraints">
-                                    <exclude reference="8rc-Rj-2HA"/>
                                     <exclude reference="ftZ-m5-F2i"/>
+                                    <exclude reference="8rc-Rj-2HA"/>
                                 </mask>
                             </variation>
                             <variation key="widthClass=regular">
                                 <mask key="constraints">
-                                    <include reference="8rc-Rj-2HA"/>
                                     <include reference="ftZ-m5-F2i"/>
+                                    <include reference="8rc-Rj-2HA"/>
                                 </mask>
                             </variation>
                         </view>
@@ -255,13 +268,13 @@
                         <mask key="constraints">
                             <exclude reference="4HE-3s-wMK"/>
                             <exclude reference="Q0s-vO-Y4E"/>
-                            <exclude reference="QhJ-7r-spa"/>
                             <exclude reference="ehb-Zi-cMv"/>
+                            <exclude reference="QhJ-7r-spa"/>
                             <include reference="iRG-l2-Ubl"/>
                             <include reference="QcC-bz-xjm"/>
                             <exclude reference="aLo-hb-3fH"/>
-                            <exclude reference="7ls-iv-MHj"/>
                             <exclude reference="DGx-yq-huX"/>
+                            <exclude reference="7ls-iv-MHj"/>
                         </mask>
                     </variation>
                     <variation key="heightClass=compact-widthClass=compact">
@@ -271,11 +284,11 @@
                         <mask key="constraints">
                             <exclude reference="4HE-3s-wMK"/>
                             <exclude reference="Q0s-vO-Y4E"/>
-                            <exclude reference="QhJ-7r-spa"/>
                             <exclude reference="ehb-Zi-cMv"/>
+                            <exclude reference="QhJ-7r-spa"/>
                             <include reference="Vi9-1z-ei1"/>
-                            <include reference="52A-gC-vvw"/>
                             <exclude reference="DGx-yq-huX"/>
+                            <include reference="52A-gC-vvw"/>
                         </mask>
                     </variation>
                 </view>
