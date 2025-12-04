@@ -83,13 +83,31 @@ open class TGCard: UIResponder, TGPreferrableView {
   }
   
   public static func configureCloseButton(_ button: UIButton, style: TGCardStyle = .default) {
-    let image = TGCardStyleKit.imageOfCardCloseIcon(
-      closeButtonBackground: style.closeButtonBackgroundColor,
-      closeButtonCross: style.closeButtonCrossColor
-    )
-    
-    button.setImage(image, for: .normal)
-    button.setTitle(nil, for: .normal)
+    if #available(iOS 26.0, *) {
+      for state: UIControl.State in [.normal, .highlighted, .selected, .disabled, .focused] {
+        button.setTitle(nil, for: state)
+      }
+      
+      var config = UIButton.Configuration.glass()
+      config.title = nil
+      config.image = UIImage(systemName: "xmark")
+      config.imagePlacement = .all
+      config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 22, weight: .medium)
+      config.imagePadding = 0
+      config.contentInsets = .init(top: 10, leading: 10, bottom: 10, trailing: 10)
+      config.cornerStyle = .capsule
+      
+      button.configuration = config
+      
+    } else {
+      let image = TGCardStyleKit.imageOfCardCloseIcon(
+        closeButtonBackground: style.closeButtonBackgroundColor,
+        closeButtonCross: style.closeButtonCrossColor
+      )
+      
+      button.setImage(image, for: .normal)
+      button.setTitle(nil, for: .normal)
+    }
   }
   
   /// A default image for an arrow pointing up or down, similar to the close button image
@@ -140,7 +158,9 @@ open class TGCard: UIResponder, TGPreferrableView {
   }
   
   /// The position to display the card in, when pushing
-  public let initialPosition: TGCardPosition?
+  ///
+  /// Should only be modified until the card is first pushed.
+  public var initialPosition: TGCardPosition?
   
   /// Whether the close button should be visible on the card title
   ///
