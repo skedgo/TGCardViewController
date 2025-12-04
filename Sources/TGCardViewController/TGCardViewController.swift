@@ -150,6 +150,7 @@ open class TGCardViewController: UIViewController {
     }
   }
   
+  @IBOutlet weak var headerEffectView: UIVisualEffectView!
   @IBOutlet weak var headerView: UIView!
   @IBOutlet weak var mapViewWrapper: UIView!
   @IBOutlet weak var mapShadow: UIView!
@@ -318,11 +319,16 @@ open class TGCardViewController: UIViewController {
     if #available(iOS 26.0, *) {
       cardWrapperEffectView.effect = UIGlassEffect(style: .regular)
       cardWrapperEffectView.cornerConfiguration = .corners(radius: 12)
+      
+      headerEffectView.effect = UIGlassEffect(style: .regular)
+      headerEffectView.cornerConfiguration = .corners(topLeftRadius: nil, topRightRadius: nil, bottomLeftRadius: 12, bottomRightRadius: 12)
     } else {
       cardWrapperEffectView.effect = nil
+      headerEffectView.effect = nil
     }
 #else
     cardWrapperEffectView.effect = nil
+    headerEffectView.effect = nil
 #endif
     
     setupGestures()
@@ -1903,7 +1909,7 @@ extension TGCardViewController {
   private func updateHeaderStyle() {
     @MainActor
     func applyCornerStyle(to view: UIView) {
-      let radius: CGFloat = 16
+      let radius: CGFloat = 12
       let roundAllCorners = cardIsNextToMap(in: traitCollection)
       
       view.layer.maskedCorners = roundAllCorners
@@ -1921,11 +1927,15 @@ extension TGCardViewController {
     
     updateStatusBar(headerIsVisible: isShowingHeader)
 
-    // same shadow as for card wrapper
-    headerView.layer.shadowColor = UIColor.black.cgColor
-    headerView.layer.shadowOffset = .zero
-    headerView.layer.shadowRadius = 12
-    headerView.layer.shadowOpacity = 0.5
+    if #available(iOS 26.0, *) {
+      // No shadow. Rely on headerEffectView
+    } else {
+      // same shadow as for card wrapper
+      headerView.layer.shadowColor = UIColor.black.cgColor
+      headerView.layer.shadowOffset = .zero
+      headerView.layer.shadowRadius = 12
+      headerView.layer.shadowOpacity = 0.5
+    }
   }
   
   private func updateHeaderConstraints() {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -14,14 +14,14 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="44" translatesAutoresizingMaskIntoConstraints="NO" id="OCh-my-Dlb">
-                    <rect key="frame" x="8" y="0.0" width="359" height="45"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="999" constant="44" id="0l9-rR-FKT"/>
                     </constraints>
                 </view>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pyb-jC-raq">
-                    <rect key="frame" x="375" y="0.5" width="46" height="44"/>
+                    <rect key="frame" x="383" y="0.5" width="46" height="44"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="6JN-fE-ZuQ"/>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="gHy-ly-PZq"/>
@@ -34,11 +34,11 @@
             </subviews>
             <constraints>
                 <constraint firstItem="Pyb-jC-raq" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OCh-my-Dlb" secondAttribute="trailing" constant="8" id="5Qb-fu-D1X"/>
-                <constraint firstAttribute="trailing" secondItem="OCh-my-Dlb" secondAttribute="trailing" constant="8" id="QJG-5Z-I6Z"/>
+                <constraint firstAttribute="trailing" secondItem="OCh-my-Dlb" secondAttribute="trailing" id="QJG-5Z-I6Z"/>
                 <constraint firstItem="OCh-my-Dlb" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" priority="750" id="QQf-ys-52l"/>
                 <constraint firstItem="Pyb-jC-raq" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="TgX-Dl-BGD"/>
                 <constraint firstItem="OCh-my-Dlb" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="aN7-j2-ag0"/>
-                <constraint firstItem="OCh-my-Dlb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="bei-eH-bzY"/>
+                <constraint firstItem="OCh-my-Dlb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" id="bei-eH-bzY"/>
                 <constraint firstAttribute="bottom" secondItem="OCh-my-Dlb" secondAttribute="bottom" id="ra6-e8-MxP"/>
                 <constraint firstAttribute="trailing" secondItem="Pyb-jC-raq" secondAttribute="trailing" priority="250" constant="8" id="yTg-vg-Ckc"/>
             </constraints>
