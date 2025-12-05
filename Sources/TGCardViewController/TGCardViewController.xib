@@ -127,7 +127,7 @@
                                 <constraint firstAttribute="trailing" secondItem="IEW-xx-P4c" secondAttribute="trailing" id="oR5-0D-YIT"/>
                             </constraints>
                         </view>
-                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8kB-3L-vHm">
+                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8kB-3L-vHm" userLabel="Header Effect View">
                             <rect key="frame" x="0.0" y="0.0" width="356" height="60"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KhP-77-z2W">
                                 <rect key="frame" x="0.0" y="0.0" width="356" height="60"/>
@@ -176,7 +176,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-Tf-j0O" userLabel="Card Wrapper Shadow">
                             <rect key="frame" x="0.0" y="560" width="356" height="1083"/>
                             <subviews>
-                                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CzN-9o-Mb3">
+                                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CzN-9o-Mb3" userLabel="Card Wrapper Effect View">
                                     <rect key="frame" x="0.0" y="0.0" width="356" height="1083"/>
                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Cec-Sl-ACr">
                                         <rect key="frame" x="0.0" y="0.0" width="356" height="1083"/>
