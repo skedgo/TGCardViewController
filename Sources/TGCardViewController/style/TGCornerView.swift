@@ -16,12 +16,12 @@ public class TGCornerView: UIView {
   override public func layoutSubviews() {
     super.layoutSubviews()
     
-    if Self.roundedCorners {
+    if Self.roundedCorners, false {
       let radius: CGFloat
-      if #available(iOS 26.0, *) {
+      if #available(iOS 26.0, *), false {
         radius = 44
       } else {
-        radius = 16
+        radius = 12
       }
       let path = UIBezierPath(roundedRect: self.bounds,
                               byRoundingCorners: [.topLeft, .topRight],
