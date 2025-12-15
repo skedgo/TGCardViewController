@@ -88,7 +88,12 @@ open class TGCard: UIResponder, TGPreferrableView {
         button.setTitle(nil, for: state)
       }
       
-      var config = UIButton.Configuration.glass()
+      var config: UIButton.Configuration
+#if os(visionOS)
+      config = .bordered()
+#else
+      config = .glass()
+#endif
       config.title = nil
       config.image = UIImage(systemName: "xmark")
       config.imagePlacement = .all

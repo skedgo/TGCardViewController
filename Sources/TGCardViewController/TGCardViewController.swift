@@ -314,22 +314,22 @@ open class TGCardViewController: UIViewController {
     mapView.leadingAnchor.constraint(equalTo: mapViewWrapper.leadingAnchor).isActive = true
     mapView.translatesAutoresizingMaskIntoConstraints = false
     mapViewController.didMove(toParent: self)
-    
-#if compiler(>=6.2) // Xcode 26
-    if #available(iOS 26.0, *) {
+
+    if #available(iOS 26.0, visionOS 26.0, *) {
+#if os(visionOS)
+      cardWrapperEffectView.effect = UIBlurEffect(style: .regular)
+      headerEffectView.effect = UIBlurEffect(style: .regular)
+#else
       cardWrapperEffectView.effect = UIGlassEffect(style: .regular)
+      headerEffectView.effect = UIGlassEffect(style: .regular)
+#endif
       cardWrapperEffectView.cornerConfiguration = .corners(radius: 12)
       
-      headerEffectView.effect = UIGlassEffect(style: .regular)
       headerEffectView.cornerConfiguration = .corners(topLeftRadius: nil, topRightRadius: nil, bottomLeftRadius: 12, bottomRightRadius: 12)
     } else {
       cardWrapperEffectView.effect = nil
       headerEffectView.effect = nil
     }
-#else
-    cardWrapperEffectView.effect = nil
-    headerEffectView.effect = nil
-#endif
     
     setupGestures()
     
@@ -925,25 +925,27 @@ extension TGCardViewController {
     // already have such a shadow.
     
     if let oldTop, animated, let cardView, cardTransitionShadow == nil {
-      if #unavailable(iOS 26.0) {
+      if #available(iOS 26.0, visionOS 26.0, *), let oldView = oldTop.view, let container = cardWrapperShadow.superview, let snapshot = oldView.snapshotView(afterScreenUpdates: false) {
+        var oldFrame = oldView.bounds
+        oldFrame.origin = oldView.convert(oldView.bounds.origin, to: container)
+        oldView.alpha = 0
+        
+#if os(visionOS)
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+#else
+        let visualEffectView = UIVisualEffectView(effect: UIGlassEffect(style: .regular))
+#endif
+        visualEffectView.contentView.addSubview(snapshot)
+        visualEffectView.frame = oldFrame
+        container.insertSubview(visualEffectView, belowSubview: cardWrapperShadow)
+        cardTransitionShadow = visualEffectView
+      } else {
         let shadow = TGCornerView(frame: cardWrapperContent.bounds)
         shadow.frame.size.height += 50 // for bounciness
         shadow.backgroundColor = .black
         shadow.alpha = 0
         cardWrapperContent.insertSubview(shadow, belowSubview: cardView)
         cardTransitionShadow = shadow
-        
-      } else if let oldView = oldTop.view, let container = cardWrapperShadow.superview, let snapshot = oldView.snapshotView(afterScreenUpdates: false) {
-        
-        var oldFrame = oldView.bounds
-        oldFrame.origin = oldView.convert(oldView.bounds.origin, to: container)
-        oldView.alpha = 0
-        
-        let visualEffectView = UIVisualEffectView(effect: UIGlassEffect(style: .regular))
-        visualEffectView.contentView.addSubview(snapshot)
-        visualEffectView.frame = oldFrame
-        container.insertSubview(visualEffectView, belowSubview: cardWrapperShadow)
-        cardTransitionShadow = visualEffectView
       }
     }
 
@@ -1111,24 +1113,27 @@ extension TGCardViewController {
     // We animate the view moving back down to the bottom
     // we also temporarily insert a shadow view again, if there's a card below    
     if animated, cardTransitionShadow == nil, let topView {
-      if #unavailable(iOS 26.0) {
+      if #available(iOS 26.0, visionOS 26.0, *), let container = cardWrapperShadow.superview, let snapshot = topView.snapshotView(afterScreenUpdates: false) {
+        topView.alpha = 0
+        var newFrame = topView.bounds
+        newFrame.origin = topView.convert(topView.bounds.origin, to: container)
+        
+#if os(visionOS)
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+#else
+        let visualEffectView = UIVisualEffectView(effect: UIGlassEffect(style: .regular))
+#endif
+        visualEffectView.contentView.addSubview(snapshot)
+        visualEffectView.frame = newFrame
+        container.insertSubview(visualEffectView, aboveSubview: cardWrapperShadow)
+        cardTransitionShadow = visualEffectView
+
+      } else {
         let shadow = TGCornerView(frame: cardWrapperContent.bounds)
         shadow.backgroundColor = .black
         shadow.alpha = 0.15
         cardWrapperContent.insertSubview(shadow, belowSubview: topView)
         cardTransitionShadow = shadow
-        
-      } else if let container = cardWrapperShadow.superview, let snapshot = topView.snapshotView(afterScreenUpdates: false) {
-        
-        topView.alpha = 0
-        var newFrame = topView.bounds
-        newFrame.origin = topView.convert(topView.bounds.origin, to: container)
-        
-        let visualEffectView = UIVisualEffectView(effect: UIGlassEffect(style: .regular))
-        visualEffectView.contentView.addSubview(snapshot)
-        visualEffectView.frame = newFrame
-        container.insertSubview(visualEffectView, aboveSubview: cardWrapperShadow)
-        cardTransitionShadow = visualEffectView
       }
     }
     
@@ -1807,7 +1812,9 @@ extension TGCardViewController {
         return assertionFailure()
       }
       if #available(iOS 26.0, *) {
-#if compiler(>=6.2) // Xcode 26 proxy
+#if os(visionOS)
+        visualView.effect = UIBlurEffect(style: .regular)
+#else
         visualView.effect = UIGlassEffect(style: .regular)
 #endif
         visualView.layer.borderWidth = 0
