@@ -100,8 +100,10 @@ open class TGCardViewController: UIViewController {
     fileprivate static let tapAnimationDuration = 0.25
 
     fileprivate static let mapShadowVisibleAlpha: CGFloat = 0.25
-    
+
     fileprivate static let floatingHeaderTopMargin: CGFloat = 20
+
+    fileprivate static let iOS26CornerRadius: CGFloat = 32
   }
   
   public enum Mode {
@@ -323,9 +325,14 @@ open class TGCardViewController: UIViewController {
       cardWrapperEffectView.effect = UIGlassEffect(style: .regular)
       headerEffectView.effect = UIGlassEffect(style: .regular)
 #endif
-      cardWrapperEffectView.cornerConfiguration = .corners(radius: 12)
-      
-      headerEffectView.cornerConfiguration = .corners(topLeftRadius: nil, topRightRadius: nil, bottomLeftRadius: 12, bottomRightRadius: 12)
+      cardWrapperEffectView.cornerConfiguration = .corners(radius: UICornerRadius.fixed(Constants.iOS26CornerRadius))
+
+      headerEffectView.cornerConfiguration = .corners(
+        topLeftRadius: nil,
+        topRightRadius: nil,
+        bottomLeftRadius: UICornerRadius.fixed(Constants.iOS26CornerRadius),
+        bottomRightRadius: UICornerRadius.fixed(Constants.iOS26CornerRadius)
+      )
     } else {
       cardWrapperEffectView.effect = nil
       headerEffectView.effect = nil
@@ -1953,7 +1960,12 @@ extension TGCardViewController {
   private func updateHeaderStyle() {
     @MainActor
     func applyCornerStyle(to view: UIView) {
-      let radius: CGFloat = 12
+      let radius: CGFloat
+      if #available(iOS 26.0, *) {
+        radius = Constants.iOS26CornerRadius
+      } else {
+        radius = 12
+      }
       let roundAllCorners = cardIsNextToMap(in: traitCollection)
       
       view.layer.maskedCorners = roundAllCorners
