@@ -325,9 +325,14 @@ open class TGCardViewController: UIViewController {
       cardWrapperEffectView.effect = UIGlassEffect(style: .regular)
       headerEffectView.effect = UIGlassEffect(style: .regular)
 #endif
-      cardWrapperEffectView.cornerConfiguration = .corners(radius: Constants.iOS26CornerRadius)
+      cardWrapperEffectView.cornerConfiguration = .corners(radius: UICornerRadius.fixed(Constants.iOS26CornerRadius))
 
-      headerEffectView.cornerConfiguration = .corners(topLeftRadius: nil, topRightRadius: nil, bottomLeftRadius: Constants.iOS26CornerRadius, bottomRightRadius: Constants.iOS26CornerRadius)
+      headerEffectView.cornerConfiguration = .corners(
+        topLeftRadius: nil,
+        topRightRadius: nil,
+        bottomLeftRadius: UICornerRadius.fixed(Constants.iOS26CornerRadius),
+        bottomRightRadius: UICornerRadius.fixed(Constants.iOS26CornerRadius)
+      )
     } else {
       cardWrapperEffectView.effect = nil
       headerEffectView.effect = nil
