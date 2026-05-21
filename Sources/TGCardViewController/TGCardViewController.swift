@@ -246,7 +246,26 @@ open class TGCardViewController: UIViewController {
   public var locationButtonPosition: TGButtonPosition = .top
   
   private var defaultButtons: [UIView]!
-  
+
+  /// Views to overlay on the top-right of the map *for every card*, in addition
+  /// to whatever each card's own `topMapToolBarItems` specifies. Use this for
+  /// controls that should be reachable from any screen — a profile button, a
+  /// global assistant entry point, etc.
+  ///
+  /// Items are arranged vertically. Per-card items (from `TGCard.topMapToolBarItems`)
+  /// appear *below* these persistent ones in the same column.
+  ///
+  /// - SeeAlso: `persistentBottomMapToolBarItems`
+  public var persistentTopMapToolBarItems: [UIView] = [] {
+    didSet { if isViewLoaded, defaultButtons != nil { updateMapToolbarItems() } }
+  }
+
+  /// Bottom-right counterpart of `persistentTopMapToolBarItems`. Items here are
+  /// arranged horizontally; per-card `bottomMapToolBarItems` appear to the right.
+  public var persistentBottomMapToolBarItems: [UIView] = [] {
+    didSet { if isViewLoaded, defaultButtons != nil { updateMapToolbarItems() } }
+  }
+
   private var allowFloatingViews: Bool = true
   
   public var draggingCardEnabled: Bool {
@@ -1861,6 +1880,7 @@ extension TGCardViewController {
     // Because we want to relocate buttons in the top toolbar
     // to the bottom toolbar when header is present, so it is
     // important that we set up bottom toolbar first!
+    bottomViews.append(contentsOf: persistentBottomMapToolBarItems)
     if let newBottoms = card?.bottomMapToolBarItems {
       bottomViews.append(contentsOf: newBottoms)
     }
@@ -1872,6 +1892,7 @@ extension TGCardViewController {
     }
     
     // Now we can proceed with setting up toolbar at the top.
+    topViews.append(contentsOf: persistentTopMapToolBarItems)
     if let newTops = card?.topMapToolBarItems {
       topViews.append(contentsOf: newTops)
     }
