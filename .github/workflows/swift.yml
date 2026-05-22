@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: 26.0.1 # 26.1 is missing simulators on GitHub, as of November 2025
+          xcode-version: 26.4 # macos-26 ships an iOS platform compatible with 26.4; 26.0 is no longer downloadable
       - uses: actions/checkout@v4
       - name: Build TGCardVC
         run: set -o pipefail && xcodebuild -workspace . -scheme TGCardViewController -destination 'platform=iOS Simulator,name=iPhone 17' | xcbeautify
