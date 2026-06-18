@@ -247,6 +247,25 @@ open class TGCardViewController: UIViewController {
   
   private var defaultButtons: [UIView]!
 
+  /// Horizontal stack hosting the top card's `floatingCardToolBarItems`. Added
+  /// to the controller's view (not the card), pinned to the bottom of the
+  /// card's visible area and clamped to the safe area so it stays on screen.
+  private lazy var cardFloatingView: UIStackView = {
+    let stack = UIStackView()
+    stack.axis = .horizontal
+    stack.spacing = 8
+    stack.alignment = .center
+    stack.translatesAutoresizingMaskIntoConstraints = false
+    stack.isHidden = true
+    return stack
+  }()
+
+  /// Swappable position constraints for `cardFloatingView`, toggled by
+  /// `applyCardFloatingAlignment(_:)` per the top card's alignment.
+  private var cardFloatingCenterXConstraint: NSLayoutConstraint?
+  private var cardFloatingLeadingConstraint: NSLayoutConstraint?
+  private var cardFloatingTrailingConstraint: NSLayoutConstraint?
+
   /// Views to overlay on the top-right of the map *for every card*, in addition
   /// to whatever each card's own `topMapToolBarItems` specifies. Use this for
   /// controls that should be reachable from any screen — a profile button, a
@@ -390,7 +409,57 @@ open class TGCardViewController: UIViewController {
       cardWrapperShadow.layer.shadowOpacity = 0.16
     }
     
+    setUpCardFloatingView()
+
     monitorVoiceOverStatus()
+  }
+
+  /// Pins `cardFloatingView` to the bottom of the card's visible area, clamped
+  /// to the safe area: it prefers the card's bottom but never drops below the
+  /// screen, so it stays visible whatever the card's drag position.
+  private func setUpCardFloatingView() {
+    view.addSubview(cardFloatingView)
+
+    let preferCardBottom = cardFloatingView.bottomAnchor.constraint(equalTo: cardWrapperContent.bottomAnchor, constant: -16)
+    preferCardBottom.priority = .defaultHigh
+
+    // The horizontal position is governed by these three equality constraints,
+    // toggled per card by `applyCardFloatingAlignment(_:)`. The leading/trailing
+    // *inequality* clamps below stay active for every alignment, so a wide row
+    // never overflows the card.
+    cardFloatingCenterXConstraint = cardFloatingView.centerXAnchor.constraint(equalTo: cardWrapperContent.centerXAnchor)
+    cardFloatingLeadingConstraint = cardFloatingView.leadingAnchor.constraint(equalTo: cardWrapperContent.leadingAnchor, constant: 16)
+    cardFloatingTrailingConstraint = cardFloatingView.trailingAnchor.constraint(equalTo: cardWrapperContent.trailingAnchor, constant: -16)
+
+    NSLayoutConstraint.activate([
+      cardFloatingView.leadingAnchor.constraint(greaterThanOrEqualTo: cardWrapperContent.leadingAnchor, constant: 16),
+      cardFloatingView.trailingAnchor.constraint(lessThanOrEqualTo: cardWrapperContent.trailingAnchor, constant: -16),
+      cardFloatingView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+      preferCardBottom,
+    ])
+
+    applyCardFloatingAlignment(.center)
+  }
+
+  /// Activates the position constraint(s) for the given alignment. `.fill` pins
+  /// both edges so the row stretches across the card; the others pin a single
+  /// edge or the centre and let the row size to its content.
+  private func applyCardFloatingAlignment(_ alignment: TGCard.FloatingCardToolBarAlignment) {
+    cardFloatingCenterXConstraint?.isActive = false
+    cardFloatingLeadingConstraint?.isActive = false
+    cardFloatingTrailingConstraint?.isActive = false
+
+    switch alignment {
+    case .center:
+      cardFloatingCenterXConstraint?.isActive = true
+    case .leading:
+      cardFloatingLeadingConstraint?.isActive = true
+    case .trailing:
+      cardFloatingTrailingConstraint?.isActive = true
+    case .fill:
+      cardFloatingLeadingConstraint?.isActive = true
+      cardFloatingTrailingConstraint?.isActive = true
+    }
   }
 
   private func setupGestures() {
@@ -911,6 +980,11 @@ extension TGCardViewController {
     // Notify that we have completed building the card view and its header view.
     top.cardView = cardView
     top.didBuild(cardView: cardView, headerView: header)
+
+    // Cards commonly configure their toolbar items in `didBuild`, which runs
+    // *after* the floating-view refresh above. Pick up any card-attached
+    // floating items now that the card has been built, so they aren't missed.
+    updateCardFloatingViewContent(card: top)
     
     // The previous call can cause a glitch where the render loop is run, if
     // the cards to certain things. To avoid this, we revert back to the old
@@ -1914,6 +1988,9 @@ extension TGCardViewController {
       cleanUpFloatingView(topFloatingView)
     }
     
+    // Card-attached floating items (pinned to the card, not over the map).
+    updateCardFloatingViewContent(card: card)
+
     // After contents are updated, we do a round of layout
     // pass, so the wrappers obtain their correct sizes.
     topFloatingViewWrapper.setNeedsLayout()
@@ -1926,7 +2003,23 @@ extension TGCardViewController {
     // wrappers' widths, e.g., the circle style.
     applyToolbarItemStyle()
   }
-  
+
+  /// (Re)populates the card-attached floating view from `card`'s
+  /// `floatingCardToolBarItems`. Safe to call repeatedly; a nil or empty list
+  /// hides it. Called both during the full floating-view refresh and right
+  /// after `didBuild`, since cards commonly configure their items there.
+  private func updateCardFloatingViewContent(card: TGCard?) {
+    if let cardItems = card?.floatingCardToolBarItems, !cardItems.isEmpty {
+      populateFloatingView(cardFloatingView, with: cardItems)
+      applyCardFloatingAlignment(card?.floatingCardToolBarAlignment ?? .center)
+      cardFloatingView.isHidden = false
+      view.bringSubviewToFront(cardFloatingView)
+    } else {
+      cleanUpFloatingView(cardFloatingView)
+      cardFloatingView.isHidden = true
+    }
+  }
+
   private func updateFloatingViewsConstraints() {
     if cardIsNextToMap(in: traitCollection) {
       bottomFloatingViewBottomConstraint.constant = deviceIsiPhoneX() ? 0 : 8
