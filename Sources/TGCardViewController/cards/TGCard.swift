@@ -225,7 +225,34 @@ open class TGCard: UIResponder, TGPreferrableView {
   ///
   /// - warning: items are arranged horizontally
   public var bottomMapToolBarItems: [UIView]?
-  
+
+  /// Each card can specify views to float at the bottom of the **card itself**
+  /// (rather than over the map). They are pinned to the bottom of the card's
+  /// visible area and clamped to the screen's safe area, so they stay visible
+  /// at any card position — including when the card is collapsed or peeking and
+  /// its content extends below the screen.
+  ///
+  /// - SeeAlso: `bottomMapToolBarItems`, to overlay on the bottom of the map.
+  /// - SeeAlso: `floatingCardToolBarAlignment`, to place them along the edge.
+  /// - warning: items are arranged horizontally
+  public var floatingCardToolBarItems: [UIView]?
+
+  /// How `floatingCardToolBarItems` are placed horizontally within the card.
+  ///
+  /// - `center` (default): centred as a group — suits a status pill.
+  /// - `leading` / `trailing`: pinned to one edge — e.g. a trailing,
+  ///   FAB-style primary action.
+  /// - `fill`: stretched across the card's width — e.g. a full-width button.
+  public enum FloatingCardToolBarAlignment {
+    case leading, center, trailing, fill
+  }
+
+  /// Horizontal placement of `floatingCardToolBarItems` within the card.
+  /// Defaults to `.center`.
+  ///
+  /// - SeeAlso: `floatingCardToolBarItems`
+  public var floatingCardToolBarAlignment: FloatingCardToolBarAlignment = .center
+
   /// Builds the card's optional header which will be pinned to the top
   ///
   /// - SeeAlso: `TGPageCard`, which relies on this for its navigation.
