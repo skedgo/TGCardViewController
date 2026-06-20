@@ -409,24 +409,27 @@ open class TGCardViewController: UIViewController {
       cardWrapperShadow.layer.shadowOpacity = 0.16
     }
     
-    setUpCardFloatingView()
-
     monitorVoiceOverStatus()
   }
 
-  /// Pins `cardFloatingView` to the bottom of the card's visible area, clamped
-  /// to the safe area: it prefers the card's bottom but never drops below the
-  /// screen, so it stays visible whatever the card's drag position.
-  private func setUpCardFloatingView() {
+  /// Lazily adds `cardFloatingView` and its constraints the first time a card
+  /// actually provides `floatingCardToolBarItems`, and they're torn down again
+  /// when a card without items becomes top (see `updateCardFloatingViewContent`).
+  /// So cards that don't use the affordance carry none of its layout and behave
+  /// exactly as before it existed.
+  ///
+  /// The bottom is pinned to the screen's safe area, **not** the card's bottom.
+  /// The card always reaches at or below the screen edge, so this is the same
+  /// place visually, but it avoids coupling this root-level view to the card
+  /// wrapper while the wrapper animates during push/pop — that coupling
+  /// corrupted the card's position layout for *every* card. Horizontal alignment
+  /// stays relative to the card (its x/width don't move during a vertical card
+  /// transition); the leading/trailing inequality clamps keep a wide row from
+  /// overflowing the card for any alignment.
+  private func installCardFloatingViewIfNeeded() {
+    guard cardFloatingView.superview == nil else { return }
     view.addSubview(cardFloatingView)
 
-    let preferCardBottom = cardFloatingView.bottomAnchor.constraint(equalTo: cardWrapperContent.bottomAnchor, constant: -16)
-    preferCardBottom.priority = .defaultHigh
-
-    // The horizontal position is governed by these three equality constraints,
-    // toggled per card by `applyCardFloatingAlignment(_:)`. The leading/trailing
-    // *inequality* clamps below stay active for every alignment, so a wide row
-    // never overflows the card.
     cardFloatingCenterXConstraint = cardFloatingView.centerXAnchor.constraint(equalTo: cardWrapperContent.centerXAnchor)
     cardFloatingLeadingConstraint = cardFloatingView.leadingAnchor.constraint(equalTo: cardWrapperContent.leadingAnchor, constant: 16)
     cardFloatingTrailingConstraint = cardFloatingView.trailingAnchor.constraint(equalTo: cardWrapperContent.trailingAnchor, constant: -16)
@@ -434,8 +437,7 @@ open class TGCardViewController: UIViewController {
     NSLayoutConstraint.activate([
       cardFloatingView.leadingAnchor.constraint(greaterThanOrEqualTo: cardWrapperContent.leadingAnchor, constant: 16),
       cardFloatingView.trailingAnchor.constraint(lessThanOrEqualTo: cardWrapperContent.trailingAnchor, constant: -16),
-      cardFloatingView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-      preferCardBottom,
+      cardFloatingView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
     ])
 
     applyCardFloatingAlignment(.center)
@@ -2005,11 +2007,14 @@ extension TGCardViewController {
   }
 
   /// (Re)populates the card-attached floating view from `card`'s
-  /// `floatingCardToolBarItems`. Safe to call repeatedly; a nil or empty list
-  /// hides it. Called both during the full floating-view refresh and right
-  /// after `didBuild`, since cards commonly configure their items there.
+  /// `floatingCardToolBarItems`. Safe to call repeatedly. The view and its
+  /// constraints are installed only when a card actually has items, and torn
+  /// down again otherwise — so a card without items carries none of the
+  /// affordance's layout. Called both during the full floating-view refresh and
+  /// right after `didBuild`, since cards commonly configure their items there.
   private func updateCardFloatingViewContent(card: TGCard?) {
     if let cardItems = card?.floatingCardToolBarItems, !cardItems.isEmpty {
+      installCardFloatingViewIfNeeded()
       populateFloatingView(cardFloatingView, with: cardItems)
       applyCardFloatingAlignment(card?.floatingCardToolBarAlignment ?? .center)
       cardFloatingView.isHidden = false
@@ -2017,6 +2022,9 @@ extension TGCardViewController {
     } else {
       cleanUpFloatingView(cardFloatingView)
       cardFloatingView.isHidden = true
+      // Drop the view and its constraints entirely when unused, so a card that
+      // doesn't adopt the affordance never has it coupled into the layout.
+      cardFloatingView.removeFromSuperview()
     }
   }
 
