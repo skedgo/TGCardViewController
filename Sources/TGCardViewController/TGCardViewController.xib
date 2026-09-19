@@ -232,7 +232,7 @@
                             <variation key="widthClass=regular" constant="8"/>
                             <variation key="heightClass=compact-widthClass=compact" constant="8"/>
                         </constraint>
-                        <constraint firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="DGx-yq-huX"/>
+                        <constraint firstItem="p4A-z3-3Ce" firstAttribute="trailing" secondItem="Bui-Tf-j0O" secondAttribute="trailing" id="DGx-yq-huX"/>
                         <constraint firstItem="DJJ-p5-rXz" firstAttribute="leading" secondItem="Bxf-J1-ygI" secondAttribute="trailing" priority="750" constant="16" id="EbM-gV-S5b"/>
                         <constraint firstItem="zlR-ey-yL8" firstAttribute="top" secondItem="p4A-z3-3Ce" secondAttribute="top" id="Fry-S6-Jdj"/>
                         <constraint firstItem="Bui-Tf-j0O" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="XA2-1g-kYz" secondAttribute="bottom" id="Jre-w3-XPE"/>
