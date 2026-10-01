@@ -941,6 +941,12 @@ extension TGCardViewController {
         
         cardWrapperEffectView.frame.origin.y = offset
       }
+      if #available(iOS 26.0, visionOS 26.0, *), mode == .floating {
+        // Match the corners of the glass behind the card, so that cards with a
+        // non-clear background don't stick out at the corners
+        cardView.cornerConfiguration = cardWrapperEffectView.cornerConfiguration
+        cardView.clipsToBounds = true
+      }
       cardWrapperContent.addSubview(cardView)
       
       // Give AutoLayout a nudge to layout the card view, now that we have
