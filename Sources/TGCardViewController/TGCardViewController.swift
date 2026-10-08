@@ -599,6 +599,10 @@ open class TGCardViewController: UIViewController {
   
   // MARK: - Presenting
   
+  // `@preconcurrency` as callers might not be isolated to the main actor yet,
+  // which UIKit tolerates for its own `present` and `dismiss`.
+  
+  @preconcurrency
   open override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
     guard let sheetHost, viewControllerToPresent !== sheetHost else {
       return super.present(viewControllerToPresent, animated: flag, completion: completion)
@@ -606,6 +610,7 @@ open class TGCardViewController: UIViewController {
     routePresentation(of: viewControllerToPresent, above: sheetHost, animated: flag, completion: completion)
   }
   
+  @preconcurrency
   open override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
     guard let sheetHost, presentedViewController === sheetHost else {
       return super.dismiss(animated: flag) { [weak self] in
