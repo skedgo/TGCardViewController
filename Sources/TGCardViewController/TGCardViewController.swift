@@ -81,14 +81,14 @@ public protocol TGCardViewControllerDelegate: AnyObject {
 @MainActor
 open class TGCardViewController: UIViewController {
   
-  fileprivate enum Constants {
+  enum Constants {
     /// The minimum number of points between the status bar and the
     /// top of the card to keep a bit of the map always showing through.
     fileprivate static let minMapSpace: CGFloat = 50
     
     fileprivate static let minMapSpaceWithHomeIndicator: CGFloat = 12
     
-    fileprivate static let minCardHeightWhenCollapsed: CGFloat = 44 * 0.66
+    static let minCardHeightWhenCollapsed: CGFloat = 44 * 0.66
     
     fileprivate static let pushAnimationDuration = 0.25
 
@@ -97,13 +97,16 @@ open class TGCardViewController: UIViewController {
     fileprivate static let snapAnimationMinimumDuration = 0.4
 
     /// The seconds for switching the top card to its new location after tapping it.
-    fileprivate static let tapAnimationDuration = 0.25
+    static let tapAnimationDuration = 0.25
 
     fileprivate static let mapShadowVisibleAlpha: CGFloat = 0.25
 
     fileprivate static let floatingHeaderTopMargin: CGFloat = 20
 
     fileprivate static let iOS26CornerRadius: CGFloat = 32
+
+    /// The space between the header and a system sheet, when the sheet is extended.
+    static let sheetSpacingBelowHeader: CGFloat = 8
   }
   
   public enum Mode {
@@ -135,6 +138,32 @@ open class TGCardViewController: UIViewController {
     return .floating
     #endif
   }()
+  
+  /// How the cards are presented: positioned by this controller itself, or in a
+  /// system sheet. Defaults to ``PresentationStyle-swift.enum/automatic``, which
+  /// uses system sheets on iOS 26+ where they fit. Check ``usesSystemSheet`` for
+  /// what's currently used.
+  ///
+  /// - Warning: Set before `viewDidLoad` is called.
+  public var presentationStyle: PresentationStyle = .automatic
+  
+  // MARK: System sheet state, see `TGCardViewController+SystemSheet.swift`
+  
+  /// Hosts the cards while they're shown in a system sheet
+  var sheetHost: TGSheetHostViewController?
+  var sheetContentHeightConstraint: NSLayoutConstraint?
+  var savedCardContentConstraints: [NSLayoutConstraint] = []
+  var savedCardWrapperEffect: UIVisualEffect?
+  var sheetDetentValues: [TGCardPosition: CGFloat] = [:]
+  var sheetTargetPosition: TGCardPosition?
+  var isSheetDraggingEnabled = true
+  
+  /// Set while the initial cards wait for the sheet, so that they don't flash up
+  /// in the classic presentation first
+  var isAwaitingSystemSheet = false
+  
+  /// Set while pushing or popping, which update the sheet in one go
+  var isTransitioningCards = false
   
   /// A Boolean value that specifies whether the close buttons
   /// on cards and headers are participating in spring-loaded
@@ -250,7 +279,7 @@ open class TGCardViewController: UIViewController {
   /// Horizontal stack hosting the top card's `floatingCardToolBarItems`. Added
   /// to the controller's view (not the card), pinned to the bottom of the
   /// card's visible area and clamped to the safe area so it stays on screen.
-  private lazy var cardFloatingView: UIStackView = {
+  lazy var cardFloatingView: UIStackView = {
     let stack = UIStackView()
     stack.axis = .horizontal
     stack.spacing = 8
@@ -285,14 +314,20 @@ open class TGCardViewController: UIViewController {
     didSet { if isViewLoaded, defaultButtons != nil { updateMapToolbarItems() } }
   }
 
-  private var allowFloatingViews: Bool = true
+  var allowFloatingViews: Bool = true
   
   public var draggingCardEnabled: Bool {
     get {
-      panner.isEnabled
+      usesSystemSheet ? isSheetDraggingEnabled : panner.isEnabled
     }
     set {
-      panner.isEnabled = newValue
+      isSheetDraggingEnabled = newValue
+      if usesSystemSheet {
+        // Pins the sheet to where it is or is going
+        applySheetPosition(animated: true)
+      } else {
+        panner.isEnabled = newValue
+      }
     }
   }
 
@@ -303,14 +338,14 @@ open class TGCardViewController: UIViewController {
   
   private var isDraggingCard = false
   
-  fileprivate var isVisible = false
+  var isVisible = false
   
   /// To stop popping too quickly which messes things up
   private var isPopping = false
   
   fileprivate var previousCardPosition: TGCardPosition?
   
-  fileprivate var cards = [(card: TGCard, lastPosition: TGCardPosition, view: TGCardView?)]()
+  var cards = [(card: TGCard, lastPosition: TGCardPosition, view: TGCardView?)]()
 
   // Before pushing a header that extends to the top
   private var previousStatusBarStyle: UIStatusBarStyle?
@@ -428,7 +463,8 @@ open class TGCardViewController: UIViewController {
   /// overflowing the card for any alignment.
   private func installCardFloatingViewIfNeeded() {
     guard cardFloatingView.superview == nil else { return }
-    view.addSubview(cardFloatingView)
+    let container = cardOverlayView
+    container.addSubview(cardFloatingView)
 
     cardFloatingCenterXConstraint = cardFloatingView.centerXAnchor.constraint(equalTo: cardWrapperContent.centerXAnchor)
     cardFloatingLeadingConstraint = cardFloatingView.leadingAnchor.constraint(equalTo: cardWrapperContent.leadingAnchor, constant: 16)
@@ -437,7 +473,7 @@ open class TGCardViewController: UIViewController {
     NSLayoutConstraint.activate([
       cardFloatingView.leadingAnchor.constraint(greaterThanOrEqualTo: cardWrapperContent.leadingAnchor, constant: 16),
       cardFloatingView.trailingAnchor.constraint(lessThanOrEqualTo: cardWrapperContent.trailingAnchor, constant: -16),
-      cardFloatingView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+      cardFloatingView.bottomAnchor.constraint(equalTo: container.safeAreaLayoutGuide.bottomAnchor, constant: -16),
     ])
 
     applyCardFloatingAlignment(.center)
@@ -506,7 +542,7 @@ open class TGCardViewController: UIViewController {
   override open func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    if view.superview != nil {
+    if view.superview != nil, !usesSystemSheet {
       // This is the distance from the top edge of the card to the
       // bottom of the header view and determines where the card
       // rests on the screen.
@@ -544,6 +580,8 @@ open class TGCardViewController: UIViewController {
 
     topCard?.didAppear(animated: animated)
     isVisible = true
+    
+    updateSystemSheetPresentation()
   }
   
   override open func viewWillDisappear(_ animated: Bool) {
@@ -551,6 +589,31 @@ open class TGCardViewController: UIViewController {
     
     topCard?.willDisappear(animated: animated)
     isVisible = false
+    
+    // The sheet would otherwise stay on screen when, say, another view
+    // controller gets pushed over this one. It comes back in `viewDidAppear`.
+    if sheetHost?.presentedViewController == nil {
+      uninstallSystemSheet(animated: false)
+    }
+  }
+  
+  // MARK: - Presenting
+  
+  open override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+    guard let sheetHost, viewControllerToPresent !== sheetHost else {
+      return super.present(viewControllerToPresent, animated: flag, completion: completion)
+    }
+    routePresentation(of: viewControllerToPresent, above: sheetHost, animated: flag, completion: completion)
+  }
+  
+  open override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+    guard let sheetHost, presentedViewController === sheetHost else {
+      return super.dismiss(animated: flag) { [weak self] in
+        completion?()
+        self?.updateSystemSheetPresentation()
+      }
+    }
+    routeDismissal(above: sheetHost, animated: flag, completion: completion)
   }
   
   override open func viewDidDisappear(_ animated: Bool) {
@@ -567,13 +630,27 @@ open class TGCardViewController: UIViewController {
     }, completion: nil)
   }
   
+  open override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.willTransition(to: newCollection, with: coordinator)
+    
+    // Leave the sheet before the size classes change, as the sheet would
+    // otherwise go full screen, and get it back once they have changed.
+    if usesSystemSheet, !wantsSystemSheet(for: newCollection) {
+      uninstallSystemSheet(animated: false)
+    } else if !usesSystemSheet, wantsSystemSheet(for: newCollection) {
+      coordinator.animate(alongsideTransition: nil) { [weak self] _ in
+        self?.updateSystemSheetPresentation()
+      }
+    }
+  }
+  
   override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
     
     cardWrapperHeightConstraint.constant = extendedMinY * -1
     
     // When trait collection changes, try to keep the same card position
-    if let previous = previousCardPosition {
+    if let previous = previousCardPosition, !usesSystemSheet {
       // Note: Ideally, we'd determine the direction by whether the available
       // height of VC increased or decreased, but for simplicity just using
       // `up` is fine.
@@ -594,11 +671,19 @@ open class TGCardViewController: UIViewController {
     // the card's contents to be scrollable. Hence, we reenable the scolling.
     updateCardScrolling(allow: true, view: topCardView)
     
+    if previousTraitCollection?.horizontalSizeClass != traitCollection.horizontalSizeClass
+        || previousTraitCollection?.verticalSizeClass != traitCollection.verticalSizeClass {
+      // In case `willTransition` wasn't called, e.g., when embedded
+      DispatchQueue.main.async { [weak self] in
+        self?.updateSystemSheetPresentation()
+      }
+    }
+    
     topCard?.traitCollectionDidChange(previousTraitCollection)
   }
   
-  private func updateCardScrolling(allow: Bool, view: TGCardView?) {
-    let allowScrolling = allow || UIAccessibility.isVoiceOverRunning || mode == .sidebar
+  func updateCardScrolling(allow: Bool, view: TGCardView?) {
+    let allowScrolling = allow || UIAccessibility.isVoiceOverRunning || mode == .sidebar || usesSystemSheet
     view?.allowContentScrolling(allowScrolling)
   }
   
@@ -608,10 +693,23 @@ open class TGCardViewController: UIViewController {
     if view.superview != nil, !mapView.frame.isEmpty {
       if !didAddInitialCards {
         didAddInitialCards = true
+        
+        // These get pushed the classic way and move into the sheet once we've
+        // appeared. Keep them hidden until then.
+        isAwaitingSystemSheet = wantsSystemSheet(for: traitCollection)
+        
         initialCards.forEach { push($0, animated: false, allowToNotify: $0 == initialCards.last, completionHandler: nil) }
       }
       
       fixPositioning()
+      
+      if isVisible, !usesSystemSheet, presentedViewController == nil, topCardView != nil, wantsSystemSheet(for: traitCollection) {
+        // We wanted a sheet earlier, but couldn't show it, e.g., as something
+        // else was presented at the time. Try again.
+        DispatchQueue.main.async { [weak self] in
+          self?.updateSystemSheetPresentation()
+        }
+      }
     }
   }
   
@@ -619,8 +717,8 @@ open class TGCardViewController: UIViewController {
     let previousScrollOffset = topCardView?.contentScrollView?.contentOffset.y
 
     statusBarBlurHeightConstraint.constant = topOverlap
-    topCardView?.adjustContentAlpha(to: cardPosition == .collapsed ? 0 : 1)
-    topCardView?.setSeparatorVisibility(forceHidden: cardPosition == .collapsed)
+    topCardView?.adjustContentAlpha(to: contentAlpha(for: cardPosition))
+    topCardView?.setSeparatorVisibility(forceHidden: forcesSeparatorHidden(for: cardPosition))
     updateFloatingViewsConstraints()
     updateTopInfoViewConstraints()
     view.setNeedsUpdateConstraints()
@@ -635,7 +733,16 @@ open class TGCardViewController: UIViewController {
     if let scrollView = topCardView?.contentScrollView {
       view.updateConstraintsIfNeeded() // to get the correct frames
 
-      let adjustedBottom = cardIsNextToMap(in: traitCollection) ? view.safeAreaInsets.bottom : (headerView.frame.maxY + view.safeAreaInsets.top - view.safeAreaInsets.bottom)
+      let adjustedBottom: CGFloat
+      if usesSystemSheet {
+        // The cards are as high as the extended sheet, and the scroll view
+        // adjusts for the sheet's safe area by itself
+        adjustedBottom = 0
+      } else if cardIsNextToMap(in: traitCollection) {
+        adjustedBottom = view.safeAreaInsets.bottom
+      } else {
+        adjustedBottom = headerView.frame.maxY + view.safeAreaInsets.top - view.safeAreaInsets.bottom
+      }
       
       scrollView.contentInset.bottom = adjustedBottom
       scrollView.verticalScrollIndicatorInsets.bottom = adjustedBottom
@@ -653,6 +760,7 @@ open class TGCardViewController: UIViewController {
   /// The current card position, inferred from the current drag position of the card
   public var cardPosition: TGCardPosition {
     guard mode == .floating else { return .extended }
+    if let sheetPosition { return sheetPosition }
     
     let cardY = cardWrapperDesiredTopConstraint.constant
     
@@ -668,7 +776,7 @@ open class TGCardViewController: UIViewController {
     }
   }
   
-  fileprivate var extendedMinY: CGFloat {
+  var extendedMinY: CGFloat {
     var value = topOverlap
     
     if mode == .floating {
@@ -704,13 +812,19 @@ open class TGCardViewController: UIViewController {
   ///         card positions, and capped at the peaking card position
   ///         for the extended overlap (to avoid only having a tiny
   ///         map area to work with).
-  fileprivate func mapEdgePadding(for position: TGCardPosition) -> UIEdgeInsets {
+  func mapEdgePadding(for position: TGCardPosition) -> UIEdgeInsets {
     assert(mapView.frame.isEmpty == false, "Don't call this before we have a map view frame.")
     let top: CGFloat
     let bottom: CGFloat
     let left: CGFloat
     
-    if cardIsNextToMap(in: traitCollection) {
+    if usesSystemSheet, let sheetBottom = sheetHeight(for: position == .collapsed ? .collapsed : .peaking) {
+      // As below, the card's overlap but capped at the peaking position
+      left = 0
+      top = isShowingHeader ? 0 : topOverlap
+      bottom = sheetBottom
+      
+    } else if cardIsNextToMap(in: traitCollection) {
       // The map is to the right of the card, which we account for when not collapsed
       let ignoreCard = (position == .collapsed && traitCollection.verticalSizeClass == .regular) || cardWrapperShadow.isHidden
       left = ignoreCard ? 0 : cardWrapperShadow.frame.maxX
@@ -740,18 +854,21 @@ open class TGCardViewController: UIViewController {
   /// Call this whenever the card position changes to properly configure the map shadow
   ///
   /// - Parameter position: New card position
-  fileprivate func updateMapShadow(for position: TGCardPosition) {
-    mapShadow.alpha = position == .extended ? Constants.mapShadowVisibleAlpha : 0
-    mapShadow.isUserInteractionEnabled = position == .extended
+  func updateMapShadow(for position: TGCardPosition) {
+    // The map stays interactive next to a system sheet
+    let showShadow = position == .extended && !usesSystemSheet
+    mapShadow.alpha = showShadow ? Constants.mapShadowVisibleAlpha : 0
+    mapShadow.isUserInteractionEnabled = showShadow
   }
   
-  private func toggleCardWrappers(hide: Bool, prepareOnly: Bool = false) {
+  func toggleCardWrappers(hide: Bool, prepareOnly: Bool = false) {
     if mode == .sidebar {
       sidebarBackground.alpha = hide ? 0 : 1
     } else {
       sidebarBackground.alpha = 0
     }
-    cardWrapperShadow.alpha = hide ? 0 : 1
+    // With a system sheet, the card wrapper is just an invisible placeholder
+    cardWrapperShadow.alpha = hide || usesSystemSheet || isAwaitingSystemSheet ? 0 : 1
 
     if !prepareOnly {
       if mode == .sidebar {
@@ -820,7 +937,7 @@ extension TGCardViewController {
     return cards.last?.card
   }
   
-  private var topCardView: TGCardView? {
+  var topCardView: TGCardView? {
     return cards.last?.view
   }
   
@@ -830,7 +947,7 @@ extension TGCardViewController {
 
 extension TGCardViewController {
   
-  fileprivate func cardLocation(forDesired desired: TGCardPosition?, direction: Direction)
+  func cardLocation(forDesired desired: TGCardPosition?, direction: Direction)
       -> (position: TGCardPosition, y: CGFloat) {
         
     guard mode == .floating else {
@@ -885,6 +1002,9 @@ extension TGCardViewController {
     // bar, which requires access to this property.
     top.controller = self
     
+    isTransitioningCards = true
+    defer { isTransitioningCards = false }
+    
     // 1. Determine where the new card will go
     let forceExtended = (top.mapManager == nil) || (cardPosition == .extended && UIAccessibility.isVoiceOverRunning)
     let animateTo = cardLocation(forDesired: forceExtended ? .extended : top.initialPosition, direction: .down)
@@ -923,8 +1043,8 @@ extension TGCardViewController {
       // below, since the card view is placed on the top of the bottom safe layout guide,
       // which is an additional 34px on iPhone X, we will see part of the card content
       // coming through.
-      cardView.adjustContentAlpha(to: animateTo.position == .collapsed ? 0 : 1)
-      cardView.setSeparatorVisibility(forceHidden: animateTo.position == .collapsed)
+      cardView.adjustContentAlpha(to: contentAlpha(for: animateTo.position))
+      cardView.setSeparatorVisibility(forceHidden: forcesSeparatorHidden(for: animateTo.position))
       
       // This allows us to continuously pull down the card view while its
       // content is scrolled to the top. Note this only applies when the
@@ -935,18 +1055,16 @@ extension TGCardViewController {
     
       // 4. Place the new view coming, preparing to animate in from the bottom
       cardView.frame = cardWrapperContent.bounds
-      if animated {
+      if animated, let sheetHost {
+        // Come in from the bottom of the sheet
+        cardView.frame.origin.y = sheetHost.view.bounds.height
+      } else if animated {
         let offset = cardView.convert(.init(x: 0, y: mapViewWrapper.frame.maxY), to: cardWrapperShadow).y
         cardView.frame.origin.y = offset
         
         cardWrapperEffectView.frame.origin.y = offset
       }
-      if #available(iOS 26.0, visionOS 26.0, *), mode == .floating {
-        // Match the corners of the glass behind the card, so that cards with a
-        // non-clear background don't stick out at the corners
-        cardView.cornerConfiguration = cardWrapperEffectView.cornerConfiguration
-        cardView.clipsToBounds = true
-      }
+      applyCorners(to: cardView)
       cardWrapperContent.addSubview(cardView)
       
       // Give AutoLayout a nudge to layout the card view, now that we have
@@ -983,7 +1101,13 @@ extension TGCardViewController {
     
     // 6. Set new position of the wrapper (which is relative to the header)
     updateCardStructure(card: cardView, position: .collapsed)
-    mapViewController.additionalSafeAreaInsets = updateCardPosition(y: animateTo.y)
+    if usesSystemSheet {
+      // Like with the classic panner, pushing re-enables dragging
+      isSheetDraggingEnabled = true
+      sheetTargetPosition = animateTo.position
+    } else {
+      mapViewController.additionalSafeAreaInsets = updateCardPosition(y: animateTo.y)
+    }
     
     // Notify that we have completed building the card view and its header view.
     top.cardView = cardView
@@ -1033,7 +1157,7 @@ extension TGCardViewController {
     // already have such a shadow.
     
     if let oldTop, animated, let cardView, cardTransitionShadow == nil {
-      if #available(iOS 26.0, visionOS 26.0, *), let oldView = oldTop.view, let container = cardWrapperShadow.superview, let snapshot = oldView.snapshotView(afterScreenUpdates: false) {
+      if #available(iOS 26.0, visionOS 26.0, *), let oldView = oldTop.view, let container = cardTransitionContainer, let snapshot = oldView.snapshotView(afterScreenUpdates: false) {
         var oldFrame = oldView.bounds
         oldFrame.origin = oldView.convert(oldView.bounds.origin, to: container)
         oldView.alpha = 0
@@ -1045,7 +1169,7 @@ extension TGCardViewController {
 #endif
         visualEffectView.contentView.addSubview(snapshot)
         visualEffectView.frame = oldFrame
-        container.insertSubview(visualEffectView, belowSubview: cardWrapperShadow)
+        container.insertSubview(visualEffectView, belowSubview: cardTransitionAnchor)
         cardTransitionShadow = visualEffectView
       } else {
         let shadow = TGCornerView(frame: cardWrapperContent.bounds)
@@ -1081,6 +1205,8 @@ extension TGCardViewController {
       self.cardWrapperShadow.frame = oldShadowFrame
     }
 
+    applySheetPosition(animateTo.position, animated: animated)
+    
     UIView.animate(
       withDuration: animated ? Constants.pushAnimationDuration : 0,
       delay: 0,
@@ -1111,6 +1237,8 @@ extension TGCardViewController {
         self.updateForNewPosition(position: animateTo.position)
         self.updateResponderChainForNewTopCard()
         self.toggleCardWrappers(hide: cardView == nil)
+        self.updateSheetContentScrollView()
+        self.updateSystemSheetPresentation()
         if let preferred = top.preferredView {
           UIAccessibility.post(notification: .screenChanged, argument: preferred)
         }
@@ -1151,6 +1279,8 @@ extension TGCardViewController {
     }
 
     isPopping = true
+    isTransitioningCards = true
+    defer { isTransitioningCards = false }
     let newTop = cardWithView(atIndex: cards.count - 2)
     let topView = topCardView
     
@@ -1199,7 +1329,13 @@ extension TGCardViewController {
     if forceExtended || !cardIsNextToMap(in: traitCollection) {
       let target = cardLocation(forDesired: forceExtended ? .extended : newTop?.lastPosition, direction: .down)
       animateTo = target.position
-      mapViewController.additionalSafeAreaInsets = updateCardPosition(y: target.y)
+      if usesSystemSheet {
+        // Like with the classic panner, popping re-enables dragging
+        isSheetDraggingEnabled = true
+        sheetTargetPosition = target.position
+      } else {
+        mapViewController.additionalSafeAreaInsets = updateCardPosition(y: target.y)
+      }
     } else {
       animateTo = cardPosition
     }
@@ -1221,7 +1357,7 @@ extension TGCardViewController {
     // We animate the view moving back down to the bottom
     // we also temporarily insert a shadow view again, if there's a card below    
     if animated, cardTransitionShadow == nil, let topView {
-      if #available(iOS 26.0, visionOS 26.0, *), let container = cardWrapperShadow.superview, let snapshot = topView.snapshotView(afterScreenUpdates: false) {
+      if #available(iOS 26.0, visionOS 26.0, *), let container = cardTransitionContainer, let snapshot = topView.snapshotView(afterScreenUpdates: false) {
         topView.alpha = 0
         var newFrame = topView.bounds
         newFrame.origin = topView.convert(topView.bounds.origin, to: container)
@@ -1233,7 +1369,7 @@ extension TGCardViewController {
 #endif
         visualEffectView.contentView.addSubview(snapshot)
         visualEffectView.frame = newFrame
-        container.insertSubview(visualEffectView, aboveSubview: cardWrapperShadow)
+        container.insertSubview(visualEffectView, aboveSubview: cardTransitionAnchor)
         cardTransitionShadow = visualEffectView
 
       } else {
@@ -1255,14 +1391,16 @@ extension TGCardViewController {
       } else {
         self.cardTransitionShadow?.frame.origin.y = self.cardWrapperContent.frame.maxY + 100
       }
-      newTop?.view?.adjustContentAlpha(to: animateTo == .collapsed ? 0 : 1)
-      newTop?.view?.setSeparatorVisibility(forceHidden: animateTo == .collapsed)
+      newTop?.view?.adjustContentAlpha(to: self.contentAlpha(for: animateTo))
+      newTop?.view?.setSeparatorVisibility(forceHidden: self.forcesSeparatorHidden(for: animateTo))
     }
     
     if mode != .floating {
       cardAnimations()
       topView?.alpha = 0
     }
+    
+    applySheetPosition(animateTo, animated: animated)
     
     UIView.animate(
       withDuration: animated ? Constants.pushAnimationDuration * 1.25 : 0,
@@ -1294,6 +1432,8 @@ extension TGCardViewController {
         self.updateResponderChainForNewTopCard()
         self.isPopping = false
         self.toggleCardWrappers(hide: newTop?.view == nil)
+        self.updateSheetContentScrollView()
+        self.updateSystemSheetPresentation()
         if let preferred = newTop?.card.preferredView {
           UIAccessibility.post(notification: .screenChanged, argument: preferred)
         }
@@ -1357,7 +1497,7 @@ extension TGCardViewController {
 
 extension TGCardViewController {
 
-  fileprivate enum Direction {
+  enum Direction {
     case up
     case down
     
@@ -1371,7 +1511,7 @@ extension TGCardViewController {
   }
   
   /// - Returns: The map inset to apply to the map view controller. Set it directly or in an animation block.
-  private func updateCardPosition(y: CGFloat) -> UIEdgeInsets {
+  func updateCardPosition(y: CGFloat) -> UIEdgeInsets {
     // The constraint moves the card into place
     cardWrapperDesiredTopConstraint.constant = y
     
@@ -1436,16 +1576,24 @@ extension TGCardViewController {
     topCardView?.layoutIfNeeded()
 
     updateCardStructure(card: topCardView, position: cardPosition)
+    
+    // The collapsed sheet shows exactly the title
+    applySheetPosition(animated: true)
   }
   
-  private func updateForNewPosition(position: TGCardPosition) {
+  func updateForNewPosition(position: TGCardPosition) {
     previousCardPosition = position
     
     topCardView?.grabHandles.forEach {
-      updateCardHandleAccessibility(handle: $0, position: position)
+      if usesSystemSheet {
+        // The sheet's grabber takes over
+        $0.isAccessibilityElement = false
+      } else {
+        updateCardHandleAccessibility(handle: $0, position: position)
+      }
     }
     
-    let mapIsInteractive = cardIsNextToMap(in: traitCollection) || position != .extended
+    let mapIsInteractive = usesSystemSheet || cardIsNextToMap(in: traitCollection) || position != .extended
     mapViewController.isUserInteractionEnabled = mapIsInteractive
     topFloatingViewWrapper.isUserInteractionEnabled = mapIsInteractive
     bottomFloatingViewWrapper.isUserInteractionEnabled = mapIsInteractive
@@ -1549,7 +1697,7 @@ extension TGCardViewController {
   
   @objc
   fileprivate func handlePan(_ recogniser: UIPanGestureRecognizer) {
-    guard mode == .floating else { return }
+    guard mode == .floating, !usesSystemSheet else { return }
     
     // Reset dragger state if we aren't currently moving, but ALSO not if it
     // just ended, we don't want to exit early and still snap then. We reset
@@ -1636,7 +1784,7 @@ extension TGCardViewController {
   
   @objc
   fileprivate func handleMapTap(_ recogniser: UITapGestureRecognizer) {
-    guard mode == .floating, cardPosition == .extended, topCard?.mapManager != nil else { return }
+    guard mode == .floating, !usesSystemSheet, cardPosition == .extended, topCard?.mapManager != nil else { return }
     
     switchTo(.peaking, direction: .down, animated: true)
   }
@@ -1645,6 +1793,7 @@ extension TGCardViewController {
   fileprivate func handleInnerPan(_ recogniser: UIPanGestureRecognizer) {
     guard
       mode == .floating,
+      !usesSystemSheet,
       let scrollView = recogniser.view as? UIScrollView,
       scrollView == topCardView?.contentScrollView,
       panner.isEnabled,
@@ -1734,6 +1883,19 @@ extension TGCardViewController {
     
     let animateTo = cardLocation(forDesired: position, direction: direction)
     
+    if usesSystemSheet {
+      UIView.animate(withDuration: animated ? Constants.tapAnimationDuration : 0) {
+        self.updateFloatingViewsVisibility(for: animateTo.position)
+      }
+      applySheetPosition(animateTo.position, animated: animated) {
+        self.topCard?.mapManager?.edgePadding = self.mapEdgePadding(for: animateTo.position)
+        self.topCard?.didMove(to: animateTo.position, animated: animated)
+        self.updateForNewPosition(position: animateTo.position)
+        handler?()
+      }
+      return
+    }
+    
     let mapInsets = updateCardPosition(y: animateTo.y)
     view.setNeedsUpdateConstraints()
     
@@ -1758,9 +1920,9 @@ extension TGCardViewController {
     })
   }
   
-  private func updatePannerInteractivity(for cardElement:
+  func updatePannerInteractivity(for cardElement:
       (card: TGCard, lastPosition: TGCardPosition, view: TGCardView?)? = nil) {
-    guard panningAllowed, mode == .floating else { return }
+    guard panningAllowed, mode == .floating, !usesSystemSheet else { return }
     let card = cardElement?.card ?? topCard
     let isForceExtended = card?.mapManager == nil
     panner.isEnabled = !isForceExtended
@@ -1772,11 +1934,12 @@ extension TGCardViewController {
 
 extension TGCardViewController {
   
-  private func updateGrabHandleVisibility(for cardElement:
+  func updateGrabHandleVisibility(for cardElement:
       (card: TGCard, lastPosition: TGCardPosition, view: TGCardView?)? = nil) {
     let card = cardElement?.card ?? topCard
     let view = cardElement?.view ?? topCardView
-    let isForceExtended = card?.mapManager == nil || mode == .sidebar
+    // A system sheet has its own grabber
+    let isForceExtended = card?.mapManager == nil || mode == .sidebar || usesSystemSheet
     view?.grabHandles.forEach { $0.alpha = isForceExtended ? 0 : 1 }
   }
 }
@@ -1848,9 +2011,13 @@ extension TGCardViewController {
     
     UIView.animate(withDuration: animated ? 0.25 : 0) {
       // hide the card and disable all card-based interaction
-      self.panner.isEnabled = show
-      self.cardWrapperShadow?.isUserInteractionEnabled = show
-      self.cardWrapperShadow?.alpha = show ? 1 : 0
+      if let sheetHost = self.sheetHost {
+        sheetHost.presentationController?.containerView?.alpha = show ? 1 : 0
+      } else {
+        self.panner.isEnabled = show
+        self.cardWrapperShadow?.isUserInteractionEnabled = show
+        self.cardWrapperShadow?.alpha = show ? 1 : 0
+      }
       
       // update the map shadow; have to hide it in `extended`
       self.updateMapShadow(for: show ? self.cardPosition : .collapsed)
@@ -1885,7 +2052,7 @@ extension TGCardViewController {
     }
   }
   
-  private func updateFloatingViewsVisibility(for position: TGCardPosition? = nil, animated: Bool = false) {
+  func updateFloatingViewsVisibility(for position: TGCardPosition? = nil, animated: Bool = false) {
     let fade: Bool
     if !allowFloatingViews {
       fade = true
@@ -2018,13 +2185,13 @@ extension TGCardViewController {
   /// down again otherwise — so a card without items carries none of the
   /// affordance's layout. Called both during the full floating-view refresh and
   /// right after `didBuild`, since cards commonly configure their items there.
-  private func updateCardFloatingViewContent(card: TGCard?) {
+  func updateCardFloatingViewContent(card: TGCard?) {
     if let cardItems = card?.floatingCardToolBarItems, !cardItems.isEmpty {
       installCardFloatingViewIfNeeded()
       populateFloatingView(cardFloatingView, with: cardItems)
       applyCardFloatingAlignment(card?.floatingCardToolBarAlignment ?? .center)
       cardFloatingView.isHidden = false
-      view.bringSubviewToFront(cardFloatingView)
+      cardFloatingView.superview?.bringSubviewToFront(cardFloatingView)
     } else {
       cleanUpFloatingView(cardFloatingView)
       cardFloatingView.isHidden = true
@@ -2081,7 +2248,7 @@ extension TGCardViewController {
 
 extension TGCardViewController {
 
-  fileprivate var isShowingHeader: Bool {
+  var isShowingHeader: Bool {
     return headerViewTopConstraint.constant > -1
   }
   
@@ -2157,6 +2324,11 @@ extension TGCardViewController {
     
     // notify UIKit the header's contraints need to be updated.
     view.setNeedsUpdateConstraints()
+    
+    // An extended sheet needs to make space for the header
+    if !isTransitioningCards {
+      applySheetPosition(animated: animated)
+    }
 
     // animate in
     let spring = cardIsNextToMap(in: traitCollection)
@@ -2177,6 +2349,9 @@ extension TGCardViewController {
   fileprivate func hideHeader(animated: Bool) {
     headerViewTopConstraint.constant = headerView.frame.height * -1
     view.setNeedsUpdateConstraints()
+    if !isTransitioningCards {
+      applySheetPosition(animated: animated)
+    }
     
     guard animated else {
       self.view.layoutIfNeeded()
@@ -2351,6 +2526,9 @@ extension TGCardViewController: TGCardDelegate {
   }
   
   public func contentScrollViewDidChange(old: UIScrollView?, for card: TGCard) {
+    if card === topCard {
+      updateSheetContentScrollView()
+    }
     guard panningAllowed, card === topCard, let view = topCardView else { return }
     
     old?.panGestureRecognizer.removeTarget(self, action: nil)
@@ -2514,7 +2692,7 @@ extension TGCardViewController {
       ),
     ]
     
-    if presentedViewController != nil {
+    if presentedOverlayViewController != nil {
       #if targetEnvironment(macCatalyst)
       commands.append(
         UIKeyCommand(
