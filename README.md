@@ -72,6 +72,32 @@ Provides a card-based view controller for mapping applications where the card's 
       }
     ```
 
+### System sheets on iOS 26+
+
+By default (`presentationStyle = .automatic`), on iOS 26 and later the cards are shown in a system sheet (`UISheetPresentationController`) whenever that's a good fit:
+
+| | Presentation |
+|---|---|
+| iPhone in portrait, narrow iPad window (compact width, regular height) | System sheet |
+| iPhone in landscape, iPad, Mac Catalyst, `mode = .sidebar` | Classic |
+| The card controller is itself presented, but not full screen | Classic |
+| iOS 25 and earlier | Classic |
+
+The controller switches between the two as the size classes change, e.g., when rotating. Set `presentationStyle` to `.classic` to opt out, or to `.systemSheet` to also use sheets on iOS 16 to 25. Check `usesSystemSheet` for what's currently in use.
+
+Cards, map managers, headers, map buttons and paging work the same in both. Differences with a system sheet:
+
+- The map isn't dimmed and stays interactive when the card is extended.
+- The sheet provides the grab handle, the material, the corners and the dragging.
+- When a header is showing, the extended card stops below it.
+- Sheets presented by cards (e.g., with detents) stack on top of the card's sheet.
+
+Because the sheet is the card controller's `presentedViewController`:
+
+- `present(_:animated:completion:)` and `dismiss(animated:completion:)` on the card controller present on top of the sheet, and dismiss what's on top of it, but never the sheet itself.
+- Use `presentedOverlayViewController` to check what's presented on top of the cards, instead of `presentedViewController`.
+- Use `cardOverlayView` instead of `view` for views that you constrain to views inside a card, e.g., tooltips.
+
 ## Specs
 
 ### 1. Basic functionality of cards
