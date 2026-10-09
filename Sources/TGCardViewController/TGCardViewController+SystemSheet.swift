@@ -160,16 +160,20 @@ extension TGCardViewController {
 
     // The cards keep the height they'd have when extended, and the sheet clips
     // them, rather than relaying them out whenever the sheet changes its height.
-    // Horizontally, they stay within the safe area, which keeps them clear of
-    // a vertical bar, e.g., on an iPhone Duo.
+    // Horizontally, they stay within the safe area, and clear of the column
+    // of a vertical bar, e.g., on an iPhone Duo; see `syncVerticalBarItems`.
     let heightConstraint = content.heightAnchor.constraint(equalToConstant: estimatedSheetContentHeight(in: host))
+    let leftConstraint = content.leftAnchor.constraint(equalTo: host.view.safeAreaLayoutGuide.leftAnchor)
+    let rightConstraint = host.view.safeAreaLayoutGuide.rightAnchor.constraint(equalTo: content.rightAnchor)
     NSLayoutConstraint.activate([
       content.topAnchor.constraint(equalTo: host.view.topAnchor),
-      content.leadingAnchor.constraint(equalTo: host.view.safeAreaLayoutGuide.leadingAnchor),
-      content.trailingAnchor.constraint(equalTo: host.view.safeAreaLayoutGuide.trailingAnchor),
+      leftConstraint,
+      rightConstraint,
       heightConstraint,
     ])
     sheetContentHeightConstraint = heightConstraint
+    sheetContentLeftConstraint = leftConstraint
+    sheetContentRightConstraint = rightConstraint
 
     // 2. Configure the sheet
     sheetHost = host
@@ -216,6 +220,8 @@ extension TGCardViewController {
       NSLayoutConstraint.activate(savedCardContentConstraints)
       savedCardContentConstraints = []
       sheetContentHeightConstraint = nil
+      sheetContentLeftConstraint = nil
+      sheetContentRightConstraint = nil
 
       updateCardChromeForPresentationStyle()
     }
@@ -401,6 +407,9 @@ extension TGCardViewController {
     else {
       suppressedCloseButtons.forEach { Self.setCloseButton($0, suppressed: false) }
       suppressedCloseButtons = []
+      if let host = sheetHost {
+        keepSheetContentClear(ofBarColumn: nil, in: host.view)
+      }
       mapVerticalBarItems?.removeFromSuperview()
       mapVerticalBarItems = nil
       sheetVerticalBarItems?.removeFromSuperview()
@@ -477,6 +486,7 @@ extension TGCardViewController {
       sheetItems.frame = frame
     }
     sheetItems.layoutIfNeeded()
+    keepSheetContentClear(ofBarColumn: frame, in: host.view)
     
     // Groups fade as a whole, so they don't get cut in half
     for (mapGroup, sheetGroup) in zip(mapItems.groups, sheetItems.groups) {
@@ -493,6 +503,34 @@ extension TGCardViewController {
       mapButton.accessibilityElementsHidden = !mapOwnsButton
       sheetButton.isUserInteractionEnabled = !mapOwnsButton
       sheetButton.accessibilityElementsHidden = mapOwnsButton
+    }
+  }
+  
+  /// Insets the cards in the sheet, so that they don't go under the column of
+  /// the vertical bar. The safe area covers that column for a bar on the
+  /// trailing edge, but not for one on the leading edge, e.g., on an unfolded
+  /// iPhone Duo when the app is on the left screen.
+  ///
+  /// - Parameters:
+  ///   - column: The bar's items in `hostView`'s coordinates, or `nil` if
+  ///     there's no vertical bar
+  ///   - hostView: The sheet's view
+  func keepSheetContentClear(ofBarColumn column: CGRect?, in hostView: UIView) {
+    var left: CGFloat = 0
+    var right: CGFloat = 0
+    if let column, !column.isEmpty {
+      let safe = hostView.safeAreaInsets
+      if column.midX < hostView.bounds.midX {
+        left = max(0, column.maxX - safe.left)
+      } else {
+        right = max(0, hostView.bounds.width - safe.right - column.minX)
+      }
+    }
+    if let constraint = sheetContentLeftConstraint, abs(constraint.constant - left) > 0.5 {
+      constraint.constant = left
+    }
+    if let constraint = sheetContentRightConstraint, abs(constraint.constant - right) > 0.5 {
+      constraint.constant = right
     }
   }
   

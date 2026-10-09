@@ -160,6 +160,8 @@ open class TGCardViewController: UIViewController {
   /// Hosts the cards while they're shown in a system sheet
   var sheetHost: TGSheetHostViewController?
   var sheetContentHeightConstraint: NSLayoutConstraint?
+  var sheetContentLeftConstraint: NSLayoutConstraint?
+  var sheetContentRightConstraint: NSLayoutConstraint?
   var savedCardContentConstraints: [NSLayoutConstraint] = []
   var savedCardWrapperEffect: UIVisualEffect?
   var sheetDetentValues: [TGCardPosition: CGFloat] = [:]
