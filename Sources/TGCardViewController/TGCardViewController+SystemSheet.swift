@@ -13,28 +13,27 @@ extension TGCardViewController {
   /// How a ``TGCardViewController`` presents its cards.
   public enum PresentationStyle {
 
-    /// Uses ``systemSheet`` where it's a good fit, and ``classic`` otherwise.
+    /// Shows the cards in a system sheet (`UISheetPresentationController`) on
+    /// iOS 27 and later, and uses ``classic`` otherwise.
     ///
-    /// System sheets are used on iOS 26 and later, in ``Mode-swift.enum/floating``
-    /// mode, in compact width and regular height (i.e., an iPhone in portrait or a
-    /// narrow iPad window), and only when the card controller isn't itself presented
-    /// in a sheet.
+    /// The sheet adapts to the size classes by itself: at the bottom in compact
+    /// width, e.g., an iPhone in portrait, and on the leading edge otherwise,
+    /// e.g., on iPad or an iPhone in landscape, like Maps.
+    ///
+    /// Sheets aren't used in ``Mode-swift.enum/sidebar`` mode, on Mac Catalyst
+    /// or visionOS, or when the card controller is itself presented other than
+    /// full screen.
     case automatic
 
     /// The card controller positions the cards itself, and they're dragged using
     /// its own gestures.
     case classic
-
-    /// Cards are shown in a system sheet (`UISheetPresentationController`) whenever
-    /// the size classes allow it (compact width and regular height), and in
-    /// ``Mode-swift.enum/floating`` mode. Falls back to ``classic`` otherwise.
-    case systemSheet
   }
 
   /// Whether the cards are currently shown in a system sheet.
   ///
-  /// This can change during the lifetime of the controller, e.g., when rotating
-  /// the device. See ``presentationStyle``.
+  /// See ``presentationStyle``. Doesn't change with the size classes, but the
+  /// sheet comes and goes with the cards, and while the controller is hidden.
   public var usesSystemSheet: Bool {
     sheetHost != nil
   }
@@ -67,24 +66,14 @@ extension TGCardViewController {
 
 extension TGCardViewController {
 
-  func wantsSystemSheet(for traits: UITraitCollection) -> Bool {
-#if targetEnvironment(macCatalyst) || os(visionOS)
-    return false
-#else
-    guard mode == .floating else { return false }
-
-    switch presentationStyle {
-    case .classic:
-      return false
-    case .automatic:
-      guard #available(iOS 26.0, *) else { return false }
-    case .systemSheet:
-      break
-    }
-
+  /// Whether the cards should be in a system sheet. Doesn't depend on the size
+  /// classes, as the sheet adapts to those by itself.
+  var wantsSystemSheet: Bool {
+#if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst) // Xcode 27 proxy, for the sheet placement API
     guard
-      traits.horizontalSizeClass == .compact,
-      traits.verticalSizeClass == .regular
+      #available(iOS 27.0, *),
+      presentationStyle == .automatic,
+      mode == .floating
     else { return false }
 
     // Don't show a sheet from a sheet. Being presented full screen is fine.
@@ -95,6 +84,31 @@ extension TGCardViewController {
     }
 
     return true
+#else
+    return false
+#endif
+  }
+
+  /// The sheet's width where it's not full width, like Maps'
+  static let sheetPreferredWidth: CGFloat = 400
+  
+  /// Sets up the sheet once, so that UIKit adapts it to the size class: full
+  /// width at the bottom in compact width, and narrower on the leading edge
+  /// otherwise, e.g., on iPad and phones in landscape, like Maps.
+  ///
+  /// - Note: Needs to be called before presenting.
+  private func configureSheetSizing(_ host: TGSheetHostViewController) {
+#if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst)
+    guard #available(iOS 27.0, *), let sheet = host.sheetPresentationController else { return }
+    sheet.preferredPlacement = .leading
+    // The width follows the preferred content size, when floating (rather
+    // than following the readable width) and when attached to an edge. Both
+    // are ignored in compact width, where the sheet spans the full width.
+    sheet.prefersPageSizing = false
+    sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+    // The height doesn't matter, as the detents decide it, but needs to be set,
+    // as UIKit ignores a preferred content size without one
+    host.preferredContentSize = CGSize(width: Self.sheetPreferredWidth, height: 1_000)
 #endif
   }
 
@@ -105,7 +119,7 @@ extension TGCardViewController {
   func updateSystemSheetPresentation() {
     guard isViewLoaded else { return }
 
-    let wantsSheet = wantsSystemSheet(for: traitCollection) && topCardView != nil
+    let wantsSheet = wantsSystemSheet && topCardView != nil
     if wantsSheet, sheetHost == nil {
       installSystemSheet()
     } else if !wantsSheet, sheetHost != nil {
@@ -184,7 +198,6 @@ extension TGCardViewController {
       sheet.delegate = host
       sheet.prefersScrollingExpandsWhenScrolledToEdge = true
       sheet.prefersEdgeAttachedInCompactHeight = true
-      sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = false
       sheetTargetPosition = position
       applySheetConfiguration(to: sheet, selecting: position)
     }
@@ -195,6 +208,7 @@ extension TGCardViewController {
     updateForNewPosition(position: position)
     updateSheetContentScrollView()
 
+    configureSheetSizing(host)
     super.present(host, animated: false)
   }
 
@@ -1033,6 +1047,24 @@ extension TGCardViewController {
       if abs(heightConstraint.constant - height) > 0.5 {
         heightConstraint.constant = height
       }
+    }
+
+    // A sheet that doesn't span the width keeps the map clear next to it,
+    // rather than below it
+    let sheetFrame = host.view.convert(host.view.bounds, to: view)
+    if sheetFrame.width < view.bounds.width * 0.75 {
+      var insets = UIEdgeInsets.zero
+      if view.effectiveUserInterfaceLayoutDirection == .rightToLeft {
+        insets.right = max(0, view.bounds.maxX - sheetFrame.minX - view.safeAreaInsets.right)
+      } else {
+        insets.left = max(0, sheetFrame.maxX - view.safeAreaInsets.left)
+      }
+      if mapViewController.additionalSafeAreaInsets != insets {
+        mapViewController.additionalSafeAreaInsets = insets
+      }
+      fadeCardContent(forSheetTop: sheetFrame.minY)
+      syncVerticalBarItems(sheetTop: sheetFrame.minY)
+      return
     }
 
     // The invisible card wrapper mirrors the top of the sheet, which moves the

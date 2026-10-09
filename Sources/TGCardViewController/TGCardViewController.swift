@@ -149,8 +149,8 @@ open class TGCardViewController: UIViewController {
   
   /// How the cards are presented: positioned by this controller itself, or in a
   /// system sheet. Defaults to ``PresentationStyle-swift.enum/automatic``, which
-  /// uses system sheets on iOS 26+ where they fit. Check ``usesSystemSheet`` for
-  /// what's currently used.
+  /// uses system sheets on iOS 27+. Check ``usesSystemSheet`` for what's
+  /// currently used.
   ///
   /// - Warning: Set before `viewDidLoad` is called.
   public var presentationStyle: PresentationStyle = .automatic
@@ -662,20 +662,6 @@ open class TGCardViewController: UIViewController {
     }, completion: nil)
   }
   
-  open override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-    super.willTransition(to: newCollection, with: coordinator)
-    
-    // Leave the sheet before the size classes change, as the sheet would
-    // otherwise go full screen, and get it back once they have changed.
-    if usesSystemSheet, !wantsSystemSheet(for: newCollection) {
-      uninstallSystemSheet(animated: false)
-    } else if !usesSystemSheet, wantsSystemSheet(for: newCollection) {
-      coordinator.animate(alongsideTransition: nil) { [weak self] _ in
-        self?.updateSystemSheetPresentation()
-      }
-    }
-  }
-  
   override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
     
@@ -703,14 +689,6 @@ open class TGCardViewController: UIViewController {
     // the card's contents to be scrollable. Hence, we reenable the scolling.
     updateCardScrolling(allow: true, view: topCardView)
     
-    if previousTraitCollection?.horizontalSizeClass != traitCollection.horizontalSizeClass
-        || previousTraitCollection?.verticalSizeClass != traitCollection.verticalSizeClass {
-      // In case `willTransition` wasn't called, e.g., when embedded
-      DispatchQueue.main.async { [weak self] in
-        self?.updateSystemSheetPresentation()
-      }
-    }
-    
     topCard?.traitCollectionDidChange(previousTraitCollection)
   }
   
@@ -728,14 +706,14 @@ open class TGCardViewController: UIViewController {
         
         // These get pushed the classic way and move into the sheet once we've
         // appeared. Keep them hidden until then.
-        isAwaitingSystemSheet = wantsSystemSheet(for: traitCollection)
+        isAwaitingSystemSheet = wantsSystemSheet
         
         initialCards.forEach { push($0, animated: false, allowToNotify: $0 == initialCards.last, completionHandler: nil) }
       }
       
       fixPositioning()
       
-      if isVisible, !usesSystemSheet, presentedViewController == nil, topCardView != nil, wantsSystemSheet(for: traitCollection) {
+      if isVisible, !usesSystemSheet, presentedViewController == nil, topCardView != nil, wantsSystemSheet {
         // We wanted a sheet earlier, but couldn't show it, e.g., as something
         // else was presented at the time. Try again.
         DispatchQueue.main.async { [weak self] in

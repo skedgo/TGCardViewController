@@ -9,7 +9,7 @@
 import UIKit
 
 /// Hosts the card stack in a system sheet, when ``TGCardViewController`` presents
-/// its cards using ``TGCardViewController/PresentationStyle-swift.enum/systemSheet``.
+/// its cards in one, see ``TGCardViewController/PresentationStyle-swift.enum/automatic``.
 ///
 /// The card controller stays in charge of the cards, the map and the header. This
 /// controller only provides the sheet's view, forwards the sheet's callbacks, and

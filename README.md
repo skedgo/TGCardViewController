@@ -72,18 +72,19 @@ Provides a card-based view controller for mapping applications where the card's 
       }
     ```
 
-### System sheets on iOS 26+
+### System sheets on iOS 27+
 
-By default (`presentationStyle = .automatic`), on iOS 26 and later the cards are shown in a system sheet (`UISheetPresentationController`) whenever that's a good fit:
+By default (`presentationStyle = .automatic`), on iOS 27 and later the cards are shown in a system sheet (`UISheetPresentationController`). The sheet adapts to the size classes by itself, like Maps':
 
 | | Presentation |
 |---|---|
-| iPhone in portrait, narrow iPad window (compact width, regular height) | System sheet |
-| iPhone in landscape, iPad, Mac Catalyst, `mode = .sidebar` | Classic |
+| Compact width, e.g., iPhone in portrait | Sheet at the bottom, full width |
+| Otherwise, e.g., iPad or iPhone in landscape | Sheet on the leading edge, 400pt wide |
+| Mac Catalyst, visionOS, `mode = .sidebar` | Classic |
 | The card controller is itself presented, but not full screen | Classic |
-| iOS 25 and earlier | Classic |
+| iOS 26 and earlier, or built with Xcode 26 and earlier | Classic |
 
-The controller switches between the two as the size classes change, e.g., when rotating. Set `presentationStyle` to `.classic` to opt out, or to `.systemSheet` to also use sheets on iOS 16 to 25. Check `usesSystemSheet` for what's currently in use.
+Set `presentationStyle` to `.classic` to opt out. Check `usesSystemSheet` for what's currently in use.
 
 Cards, map managers, headers, map buttons and paging work the same in both. Differences with a system sheet:
 
