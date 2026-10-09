@@ -108,6 +108,11 @@ open class TGCardViewController: UIViewController {
     /// The space between the header and a system sheet, when the sheet is extended.
     static let sheetSpacingBelowHeader: CGFloat = 8
     
+    /// The tallest a collapsed sheet can be while it still floats above the
+    /// bottom edge, rather than attaching to it with the bottom safe area added
+    /// below the content. Observed on iOS 26 for custom detents.
+    static let sheetMaximumFloatingHeight: CGFloat = 100
+    
     /// Pushing and popping cross-fade between cards in a system sheet
     static let sheetCrossFadeDuration = 0.25
   }

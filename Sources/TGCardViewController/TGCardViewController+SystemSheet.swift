@@ -313,7 +313,7 @@ extension TGCardViewController {
   /// The classic card hides everything but its title when collapsed, as the rest
   /// would show below the screen's safe area. The sheet clips that itself.
   func contentAlpha(for position: TGCardPosition) -> CGFloat {
-    usesSystemSheet || position != .collapsed ? 1 : 0
+    position != .collapsed ? 1 : 0
   }
   
   func forcesSeparatorHidden(for position: TGCardPosition) -> Bool {
@@ -853,10 +853,14 @@ extension TGCardViewController {
       extended = min(extended, available)
     }
 
-    let collapsed = max(
-      Constants.minCardHeightWhenCollapsed,
-      topCardView?.headerHeight(for: .collapsed) ?? 0
-    )
+    // Shows the title, with as much space below it as above it, where the
+    // sheet floats. A taller sheet attaches to the bottom edge and adds the
+    // bottom safe area below the title, so there it ends where the header does.
+    var collapsed = topCardView?.headerHeight(for: .collapsed) ?? 0
+    if let balanced = topCardView?.sheetCollapsedHeight(), balanced <= Constants.sheetMaximumFloatingHeight {
+      collapsed = balanced
+    }
+    collapsed = max(Constants.minCardHeightWhenCollapsed, collapsed)
 
     var peaking = UISheetPresentationController.Detent.medium().resolvedValue(in: context) ?? 0
     if peaking <= 0 || peaking >= extended {
@@ -987,6 +991,7 @@ extension TGCardViewController {
     }
     
     fadeMapFloatingViews(forSheetTop: sheetTop)
+    fadeCardContent(forSheetTop: sheetTop)
     
     // When the sheet settles, this is called once from within the sheet's
     // animation. Laying out now has the map buttons and insets follow along,
@@ -994,6 +999,25 @@ extension TGCardViewController {
     view.layoutIfNeeded()
     
     syncSheetBarItems(sheetTop: sheetTop)
+  }
+  
+  /// Like the classic card does while dragging, fade the card's content from
+  /// visible at the peaking height to hidden at the collapsed one, where the
+  /// sheet only shows the card's title.
+  private func fadeCardContent(forSheetTop sheetTop: CGFloat) {
+    guard
+      let cardView = topCardView,
+      let collapsedHeight = sheetHeight(for: .collapsed),
+      let peakingHeight = sheetHeight(for: .peaking),
+      peakingHeight > collapsedHeight
+    else { return }
+    
+    let height = view.bounds.height - sheetTop
+    let alpha = min(1, max(0, (height - collapsedHeight) / (peakingHeight - collapsedHeight)))
+    if let current = cardView.contentScrollView?.alpha, abs(current - alpha) < 0.01 {
+      return
+    }
+    cardView.adjustContentAlpha(to: alpha)
   }
   
   /// Like the classic card does while dragging, fade out the map's buttons as
