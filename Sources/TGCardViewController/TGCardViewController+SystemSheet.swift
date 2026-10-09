@@ -201,6 +201,7 @@ extension TGCardViewController {
     sheetHost = nil
     sheetTargetPosition = nil
     sheetDetentValues = [:]
+    updateSheetBarCloseButton()
 
     let moveCardsBack = { [self] in
       guard let content = cardWrapperContent else { return assertionFailure() }
@@ -339,8 +340,111 @@ extension TGCardViewController {
   /// Tells the sheet which scroll view to track for scrolling vs. resizing.
   func updateSheetContentScrollView() {
     sheetHost?.setContentScrollView(topCardView?.contentScrollView)
+    updateSheetBarCloseButton()
   }
 
+}
+
+// MARK: - Close button in the vertical bar
+
+extension TGCardViewController {
+  
+  /// The width of the bar region that the close button is centred in, which
+  /// matches the system's close buttons.
+  private static let barCloseButtonExtent: CGFloat = 44
+  
+  /// On devices with a vertical bar, e.g., the iPhone Duo's outer display, the
+  /// system puts a sheet's close button into that bar, below the status bar
+  /// when the sheet is at full height. Cards have their close buttons in their
+  /// titles, which then end up under the status bar. So while the cards are in
+  /// a system sheet next to a vertical bar, this hides the close buttons in the
+  /// top card's titles, and shows a stand-in where the system puts its close
+  /// buttons, which forwards taps to the card's own.
+  func updateSheetBarCloseButton() {
+    guard #available(iOS 27.1, *) else { return }
+    
+    let closeButtons: [UIButton]
+    let currentCloseButton: UIButton?
+    if let pageCard = topCard as? TGPageCard {
+      // Hide them on all pages, so they don't show up while paging
+      closeButtons = pageCard.cards.compactMap { $0.cardView?.dismissButton }
+      currentCloseButton = pageCard.currentCard.cardView?.dismissButton
+    } else {
+      currentCloseButton = topCardView?.dismissButton
+      closeButtons = [currentCloseButton].compactMap { $0 }
+    }
+    
+    let barEdge = sheetHost?.traitCollection.verticalBarEdge ?? .unspecified
+    guard
+      let host = sheetHost,
+      barEdge != .unspecified,
+      let currentCloseButton
+    else {
+      suppressedCloseButtons.forEach { Self.setCloseButton($0, suppressed: false) }
+      suppressedCloseButtons = []
+      sheetBarCloseButton?.removeFromSuperview()
+      sheetBarCloseButton = nil
+      sheetBarCloseButtonEdge = nil
+      return
+    }
+    
+    // Swap which buttons are hidden in the titles
+    for button in suppressedCloseButtons where !closeButtons.contains(button) {
+      Self.setCloseButton(button, suppressed: false)
+    }
+    closeButtons.forEach { Self.setCloseButton($0, suppressed: true) }
+    suppressedCloseButtons = closeButtons
+    
+    // The stand-in, centred at the top of the bar region, which follows the
+    // bar: in it at full height, at the top of the sheet otherwise
+    let edge: NSDirectionalRectEdge = barEdge == .leading ? .leading : .trailing
+    let barButton: UIButton
+    if let existing = sheetBarCloseButton, sheetBarCloseButtonEdge == edge, existing.superview === host.view {
+      barButton = existing
+    } else {
+      sheetBarCloseButton?.removeFromSuperview()
+      barButton = UIButton(type: .system)
+      barButton.translatesAutoresizingMaskIntoConstraints = false
+      barButton.addAction(UIAction { [weak self] _ in
+        self?.forwardBarCloseButtonTap()
+      }, for: .touchUpInside)
+      host.view.addSubview(barButton)
+      
+      let guide = host.view.layoutGuide(for: .bar(onEdge: edge, extent: Self.barCloseButtonExtent))
+      NSLayoutConstraint.activate([
+        barButton.topAnchor.constraint(equalTo: guide.topAnchor),
+        barButton.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
+      ])
+      sheetBarCloseButton = barButton
+      sheetBarCloseButtonEdge = edge
+    }
+    
+    TGCard.configureCloseButton(barButton, style: topCard?.style ?? .default)
+    barButton.accessibilityLabel = currentCloseButton.accessibilityLabel
+      ?? NSLocalizedString("Close card", bundle: TGCardViewController.bundle, comment: "")
+    barButton.isSpringLoaded = currentCloseButton.isSpringLoaded
+    barButton.isHidden = currentCloseButton.isHidden
+    host.view.bringSubviewToFront(barButton)
+  }
+  
+  private func forwardBarCloseButtonTap() {
+    let closeButton: UIButton?
+    if let pageCard = topCard as? TGPageCard {
+      closeButton = pageCard.currentCard.cardView?.dismissButton
+    } else {
+      closeButton = topCardView?.dismissButton
+    }
+    closeButton?.sendActions(for: .touchUpInside)
+  }
+  
+  /// Hides a close button in a card's title, without changing its layout, nor
+  /// its `isHidden`, which says whether the card should have a close button.
+  private static func setCloseButton(_ button: UIButton, suppressed: Bool) {
+    button.alpha = suppressed ? 0 : 1
+    button.isUserInteractionEnabled = !suppressed
+    button.accessibilityElementsHidden = suppressed
+  }
+  
 }
 
 // MARK: - Routing presentations

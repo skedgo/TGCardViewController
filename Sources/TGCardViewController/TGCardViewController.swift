@@ -168,6 +168,15 @@ open class TGCardViewController: UIViewController {
   /// Set while pushing or popping, which update the sheet in one go
   var isTransitioningCards = false
   
+  /// Stand-in for the top card's close button, placed where the system puts
+  /// close buttons on devices with a vertical bar, e.g., iPhone Duo
+  var sheetBarCloseButton: UIButton?
+  var sheetBarCloseButtonEdge: NSDirectionalRectEdge?
+  
+  /// The close buttons in the titles of the top card, hidden while
+  /// `sheetBarCloseButton` stands in for them
+  var suppressedCloseButtons: [UIButton] = []
+  
   /// A Boolean value that specifies whether the close buttons
   /// on cards and headers are participating in spring-loaded
   /// interaction for a drag and drop activity.
@@ -1127,6 +1136,9 @@ extension TGCardViewController {
     // floating items now that the card has been built, so they aren't missed.
     updateCardFloatingViewContent(card: top)
     
+    // Before the new card fades in, so that its own close button doesn't
+    updateSheetBarCloseButton()
+    
     // The previous call can cause a glitch where the render loop is run, if
     // the cards to certain things. To avoid this, we revert back to the old
     // frame, just in case.
@@ -1343,6 +1355,7 @@ extension TGCardViewController {
         newView.alpha = 0 // and cross-fade below
       }
     }
+    updateSheetBarCloseButton()
 
     // We only animate to the previous position if the card obscures the map
     updateCardStructure(card: newTop?.view, position: newTop?.lastPosition)

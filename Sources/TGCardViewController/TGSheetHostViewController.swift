@@ -59,6 +59,18 @@ final class TGSheetHostViewController: UIViewController {
     cardController ?? super.next
   }
 
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    if #available(iOS 27.1, *) {
+      // The close button follows the vertical bar, e.g., when folding an
+      // iPhone Duo
+      registerForTraitChanges(UITraitCollection.systemTraitsAffectingVerticalBarEdge) { (host: TGSheetHostViewController, _: UITraitCollection) in
+        host.cardController?.updateSheetBarCloseButton()
+      }
+    }
+  }
+  
   // MARK: - Appearance
   
   // Something presented full screen on top of the sheet would have made the card
@@ -97,6 +109,9 @@ final class TGSheetHostViewController: UIViewController {
       isCoveredByPresentation = false
       cardController?.endAppearanceTransition()
     }
+    
+    // Only now is it in its final place, which determines the vertical bar
+    cardController?.updateSheetBarCloseButton()
   }
   
   // MARK: - Layout
