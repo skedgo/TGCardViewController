@@ -1231,7 +1231,10 @@ extension TGCardViewController {
       completion: { _ in
         self.updateCardScrolling(allow: animateTo.position == .extended, view: cardView)
         self.previousCardPosition = animateTo.position
-        oldTop?.view?.alpha = 0
+        if let oldView = oldTop?.view, oldView !== self.topCardView {
+          // Only if it's still covered, i.e., it wasn't popped back to already
+          self.detachCoveredCardView(oldView)
+        }
         if notify {
           oldTop?.card.didDisappear(animated: animated)
           top.didAppear(animated: animated)
@@ -1325,7 +1328,9 @@ extension TGCardViewController {
     }
     
     // 4. Determine and set new position of the card wrapper (relative to header!)
-    newTop?.view?.alpha = 1
+    if let newView = newTop?.view {
+      reattachCardView(newView, below: topView)
+    }
 
     // We only animate to the previous position if the card obscures the map
     updateCardStructure(card: newTop?.view, position: newTop?.lastPosition)
@@ -1931,6 +1936,42 @@ extension TGCardViewController {
     let card = cardElement?.card ?? topCard
     let isForceExtended = card?.mapManager == nil
     panner.isEnabled = !isForceExtended
+  }
+  
+}
+
+// MARK: - Covered cards
+
+extension TGCardViewController {
+  
+  /// Takes the view of a card that's covered by another card out of the view
+  /// hierarchy, so that it doesn't take part in layout, rendering or
+  /// accessibility while it can't be seen.
+  ///
+  /// The view stays alive, as `cards` holds on to it, so it keeps its state, such
+  /// as its scroll position, and gets put back by `reattachCardView(_:below:)`
+  /// when the card above it gets popped.
+  func detachCoveredCardView(_ cardView: TGCardView) {
+    cardView.alpha = 0
+    cardView.removeFromSuperview()
+  }
+  
+  /// Puts the view of a card that's about to be revealed back into the view
+  /// hierarchy, underneath the card that's about to go away.
+  func reattachCardView(_ cardView: TGCardView, below topView: UIView?) {
+    if cardView.superview !== cardWrapperContent {
+      UIView.performWithoutAnimation {
+        // The card wrapper might have changed size in the meantime
+        cardView.frame = cardWrapperContent.bounds
+        if let topView, topView.superview === cardWrapperContent {
+          cardWrapperContent.insertSubview(cardView, belowSubview: topView)
+        } else {
+          cardWrapperContent.addSubview(cardView)
+        }
+        cardView.layoutIfNeeded()
+      }
+    }
+    cardView.alpha = 1
   }
   
 }
