@@ -49,9 +49,9 @@ class ExampleCityCard : TGPlainCard {
   private var isFavorite = false
   
   /// Only shown next to a vertical bar, e.g., on the iPhone Duo. A real card
-  /// would show them itself when `showsBarActions` is `false`.
+  /// would show them itself when `showsVerticalBarActions` is `false`.
   private func updateBarActions() {
-    barActions = [
+    verticalBarActions = [
       UIAction(
         title: isFavorite ? "Remove Favourite" : "Add Favourite",
         image: UIImage(systemName: isFavorite ? "star.fill" : "star")

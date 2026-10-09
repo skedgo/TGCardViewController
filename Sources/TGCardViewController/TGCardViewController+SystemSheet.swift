@@ -206,7 +206,7 @@ extension TGCardViewController {
     sheetBackgroundView = nil
     sheetTargetPosition = nil
     sheetDetentValues = [:]
-    updateSheetBarItems()
+    updateVerticalBarItems()
 
     let moveCardsBack = { [self] in
       guard let content = cardWrapperContent else { return assertionFailure() }
@@ -348,7 +348,7 @@ extension TGCardViewController {
   /// Tells the sheet which scroll view to track for scrolling vs. resizing.
   func updateSheetContentScrollView() {
     sheetHost?.setContentScrollView(topCardView?.contentScrollView)
-    updateSheetBarItems()
+    updateVerticalBarItems()
   }
 
 }
@@ -364,28 +364,28 @@ extension TGCardViewController {
   /// are in a system sheet next to a vertical bar, this hides the close buttons
   /// in the top card's titles, and shows a stand-in in the bar, below the
   /// status bar, which forwards taps to the card's own. The top card's
-  /// `barActions` follow below it.
+  /// `verticalBarActions` follow below it.
   ///
   /// The items stay in the bar at every height of the sheet. One copy of them
   /// is over the map, and another one on the sheet, where the sheet covers the
-  /// bar; see `syncSheetBarItems(sheetTop:)`.
-  func updateSheetBarItems() {
+  /// bar; see `syncVerticalBarItems(sheetTop:)`.
+  func updateVerticalBarItems() {
 #if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst) // Xcode 27 proxy; vertical bars are iPhone and iPad only
     guard #available(iOS 27.1, *) else { return }
     
     let barEdge = sheetHost?.traitCollection.verticalBarEdge ?? .unspecified
     let showsBar = sheetHost != nil && barEdge != .unspecified
-    updateShowsBarActions(showsBar)
+    updateShowsVerticalBarActions(showsBar)
     
     let closeButtons: [UIButton]
     let currentCloseButton: UIButton?
     let actions: [UIAction]
-    let paging: TGBarItemsView.Paging?
+    let paging: TGVerticalBarItemsView.Paging?
     if let pageCard = topCard as? TGPageCard {
       // Hide them on all pages, so they don't show up while paging
       closeButtons = pageCard.cards.compactMap { $0.cardView?.dismissButton }
       currentCloseButton = pageCard.currentCard.cardView?.dismissButton
-      actions = pageCard.barActions + pageCard.currentCard.barActions
+      actions = pageCard.verticalBarActions + pageCard.currentCard.verticalBarActions
       let index = pageCard.currentPageIndex
       paging = pageCard.cards.count > 1
         ? .init(hasPrevious: index > 0, hasNext: index < pageCard.cards.count - 1)
@@ -393,7 +393,7 @@ extension TGCardViewController {
     } else {
       currentCloseButton = topCardView?.dismissButton
       closeButtons = [currentCloseButton].compactMap { $0 }
-      actions = topCard?.barActions ?? []
+      actions = topCard?.verticalBarActions ?? []
       paging = nil
     }
     
@@ -404,11 +404,11 @@ extension TGCardViewController {
     else {
       suppressedCloseButtons.forEach { Self.setCloseButton($0, suppressed: false) }
       suppressedCloseButtons = []
-      mapBarItems?.removeFromSuperview()
-      mapBarItems = nil
-      sheetBarItems?.removeFromSuperview()
-      sheetBarItems = nil
-      barItemsEdge = nil
+      mapVerticalBarItems?.removeFromSuperview()
+      mapVerticalBarItems = nil
+      sheetVerticalBarItems?.removeFromSuperview()
+      sheetVerticalBarItems = nil
+      verticalBarItemsEdge = nil
       return
     }
     
@@ -420,34 +420,34 @@ extension TGCardViewController {
     suppressedCloseButtons = closeButtons
     
     let edge: NSDirectionalRectEdge = barEdge == .leading ? .leading : .trailing
-    let mapItems: TGBarItemsView
-    let sheetItems: TGBarItemsView
-    if let existingMap = mapBarItems, let existingSheet = sheetBarItems, barItemsEdge == edge, existingMap.superview === view, existingSheet.superview === host.view {
+    let mapItems: TGVerticalBarItemsView
+    let sheetItems: TGVerticalBarItemsView
+    if let existingMap = mapVerticalBarItems, let existingSheet = sheetVerticalBarItems, verticalBarItemsEdge == edge, existingMap.superview === view, existingSheet.superview === host.view {
       mapItems = existingMap
       sheetItems = existingSheet
     } else {
-      mapBarItems?.removeFromSuperview()
-      sheetBarItems?.removeFromSuperview()
+      mapVerticalBarItems?.removeFromSuperview()
+      sheetVerticalBarItems?.removeFromSuperview()
       
       // In the bar along the edge of the screen, below the status bar
       mapItems = makeBarItemsView()
       mapItems.translatesAutoresizingMaskIntoConstraints = false
       view.addSubview(mapItems)
-      let guide = view.layoutGuide(for: .bar(onEdge: edge, extent: TGBarItemsView.itemSize))
+      let guide = view.layoutGuide(for: .bar(onEdge: edge, extent: TGVerticalBarItemsView.itemSize))
       NSLayoutConstraint.activate([
         mapItems.topAnchor.constraint(equalTo: guide.topAnchor),
         mapItems.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
         mapItems.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
-        mapItems.widthAnchor.constraint(equalToConstant: TGBarItemsView.itemSize),
+        mapItems.widthAnchor.constraint(equalToConstant: TGVerticalBarItemsView.itemSize),
       ])
       
       // Positioned to match `mapItems` whenever the sheet lays out
       sheetItems = makeBarItemsView()
       host.view.addSubview(sheetItems)
       
-      mapBarItems = mapItems
-      sheetBarItems = sheetItems
-      barItemsEdge = edge
+      mapVerticalBarItems = mapItems
+      sheetVerticalBarItems = sheetItems
+      verticalBarItemsEdge = edge
     }
     
     let style = topCard?.style ?? .default
@@ -457,7 +457,7 @@ extension TGCardViewController {
     host.view.bringSubviewToFront(sheetItems)
     
     view.layoutIfNeeded()
-    syncSheetBarItems(sheetTop: host.view.convert(host.view.bounds, to: view).minY)
+    syncVerticalBarItems(sheetTop: host.view.convert(host.view.bounds, to: view).minY)
 #endif
   }
   
@@ -468,10 +468,10 @@ extension TGCardViewController {
   /// it's being dragged.
   ///
   /// - Parameter sheetTop: The top of the sheet in this controller's view
-  func syncSheetBarItems(sheetTop: CGFloat) {
+  func syncVerticalBarItems(sheetTop: CGFloat) {
     guard
-      let mapItems = mapBarItems,
-      let sheetItems = sheetBarItems,
+      let mapItems = mapVerticalBarItems,
+      let sheetItems = sheetVerticalBarItems,
       let host = sheetHost
     else { return }
     
@@ -499,9 +499,9 @@ extension TGCardViewController {
     }
   }
   
-  private func makeBarItemsView() -> TGBarItemsView {
-    TGBarItemsView { [weak self] in
-      self?.forwardBarCloseButtonTap()
+  private func makeBarItemsView() -> TGVerticalBarItemsView {
+    TGVerticalBarItemsView { [weak self] in
+      self?.forwardVerticalBarCloseTap()
     } onPage: { [weak self] forward in
       guard let pageCard = self?.topCard as? TGPageCard else { return }
       if forward {
@@ -512,18 +512,18 @@ extension TGCardViewController {
     }
   }
   
-  /// Tells the cards in the stack whether bar actions are shown, so that they
-  /// can leave them out of their content.
-  private func updateShowsBarActions(_ shows: Bool) {
+  /// Tells the cards in the stack whether vertical bar actions are shown, so
+  /// that they can leave them out of their content.
+  private func updateShowsVerticalBarActions(_ shows: Bool) {
     for card in cards.map(\.card) {
       let pages = (card as? TGPageCard)?.cards ?? []
-      for card in [card] + pages where card.showsBarActions != shows {
-        card.showsBarActions = shows
+      for card in [card] + pages where card.showsVerticalBarActions != shows {
+        card.showsVerticalBarActions = shows
       }
     }
   }
   
-  private func forwardBarCloseButtonTap() {
+  private func forwardVerticalBarCloseTap() {
     let closeButton: UIButton?
     if let pageCard = topCard as? TGPageCard {
       closeButton = pageCard.currentCard.cardView?.dismissButton
@@ -546,7 +546,7 @@ extension TGCardViewController {
 /// A card's items in a vertical bar, like the system's for a navigation bar:
 /// the close button and, for paging cards, buttons for the previous and next
 /// page at the top, and the bar actions at the bottom, all icon-only.
-final class TGBarItemsView: UIView {
+final class TGVerticalBarItemsView: UIView {
   
   struct Paging {
     var hasPrevious: Bool
@@ -557,8 +557,8 @@ final class TGBarItemsView: UIView {
   /// in, which matches the system's close buttons
   static let itemSize: CGFloat = 44
   
-  /// The size that icons of bar actions get scaled to fit in, unless they're
-  /// symbol images
+  /// The size that icons of vertical bar actions get scaled to fit in, unless
+  /// they're symbol images
   private static let iconSize: CGFloat = 20
   
   init(onClose: @escaping () -> Void, onPage: @escaping (_ forward: Bool) -> Void) {
@@ -638,7 +638,7 @@ final class TGBarItemsView: UIView {
   ///   - source: The card's close button that `closeButton` stands in for
   ///   - style: The card's style
   ///   - paging: Where a page card is at, if the card is paging
-  ///   - actions: The bar actions
+  ///   - actions: The vertical bar actions
   @available(iOS 26.0, *)
   func update(closeButtonLike source: UIButton?, style: TGCardStyle, paging: Paging?, actions: [UIAction]) {
     TGCard.configureCloseButton(closeButton, style: style)
@@ -1020,7 +1020,7 @@ extension TGCardViewController {
     // rather than jumping ahead.
     view.layoutIfNeeded()
     
-    syncSheetBarItems(sheetTop: sheetTop)
+    syncVerticalBarItems(sheetTop: sheetTop)
   }
   
   /// Like the classic card does while dragging, fade the card's content from

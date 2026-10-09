@@ -175,16 +175,16 @@ open class TGCardViewController: UIViewController {
   
   /// The top card's close button and bar actions, placed in the vertical bar
   /// on devices that have one, e.g., iPhone Duo. This one is over the map...
-  var mapBarItems: TGBarItemsView?
+  var mapVerticalBarItems: TGVerticalBarItemsView?
   
   /// Shows the top card's `expandedBackgroundColor` across the whole sheet,
   /// including below a vertical bar, where the cards themselves don't go
   var sheetBackgroundView: UIView?
   
   /// ... and this one is on the sheet, for when that covers the vertical bar.
-  var sheetBarItems: TGBarItemsView?
+  var sheetVerticalBarItems: TGVerticalBarItemsView?
   
-  var barItemsEdge: NSDirectionalRectEdge?
+  var verticalBarItemsEdge: NSDirectionalRectEdge?
   
   /// The close buttons in the titles of the top card, hidden while the bar
   /// items stand in for them
@@ -1150,7 +1150,7 @@ extension TGCardViewController {
     updateCardFloatingViewContent(card: top)
     
     // Before the new card fades in, so that its own close button doesn't
-    updateSheetBarItems()
+    updateVerticalBarItems()
     
     // The previous call can cause a glitch where the render loop is run, if
     // the cards to certain things. To avoid this, we revert back to the old
@@ -1368,7 +1368,7 @@ extension TGCardViewController {
         newView.alpha = 0 // and cross-fade below
       }
     }
-    updateSheetBarItems()
+    updateVerticalBarItems()
 
     // We only animate to the previous position if the card obscures the map
     updateCardStructure(card: newTop?.view, position: newTop?.lastPosition)
@@ -2100,8 +2100,8 @@ extension TGCardViewController {
       // hide the card and disable all card-based interaction
       if let sheetHost = self.sheetHost {
         sheetHost.presentationController?.containerView?.alpha = show ? 1 : 0
-        self.mapBarItems?.alpha = show ? 1 : 0
-        self.mapBarItems?.isUserInteractionEnabled = show
+        self.mapVerticalBarItems?.alpha = show ? 1 : 0
+        self.mapVerticalBarItems?.isUserInteractionEnabled = show
       } else {
         self.panner.isEnabled = show
         self.cardWrapperShadow?.isUserInteractionEnabled = show
