@@ -160,11 +160,13 @@ extension TGCardViewController {
 
     // The cards keep the height they'd have when extended, and the sheet clips
     // them, rather than relaying them out whenever the sheet changes its height.
+    // Horizontally, they stay within the safe area, which keeps them clear of
+    // a vertical bar, e.g., on an iPhone Duo.
     let heightConstraint = content.heightAnchor.constraint(equalToConstant: estimatedSheetContentHeight(in: host))
     NSLayoutConstraint.activate([
       content.topAnchor.constraint(equalTo: host.view.topAnchor),
-      content.leadingAnchor.constraint(equalTo: host.view.leadingAnchor),
-      content.trailingAnchor.constraint(equalTo: host.view.trailingAnchor),
+      content.leadingAnchor.constraint(equalTo: host.view.safeAreaLayoutGuide.leadingAnchor),
+      content.trailingAnchor.constraint(equalTo: host.view.safeAreaLayoutGuide.trailingAnchor),
       heightConstraint,
     ])
     sheetContentHeightConstraint = heightConstraint
