@@ -1,0 +1,1179 @@
+//
+//  TGCardViewController+SystemSheet.swift
+//  TGCardViewController
+//
+//  Created by Adrian Schoenig on 9/10/2026.
+//  Copyright © 2026 SkedGo Pty Ltd. All rights reserved.
+//
+
+import UIKit
+
+extension TGCardViewController {
+
+  /// How a ``TGCardViewController`` presents its cards.
+  public enum PresentationStyle {
+
+    /// Shows the cards in a system sheet (`UISheetPresentationController`) on
+    /// iOS 27 and later, and uses ``classic`` otherwise.
+    ///
+    /// The sheet adapts to the size classes by itself: at the bottom in compact
+    /// width, e.g., an iPhone in portrait, and on the leading edge otherwise,
+    /// e.g., on iPad or an iPhone in landscape, like Maps.
+    ///
+    /// Sheets aren't used in ``Mode-swift.enum/sidebar`` mode, on Mac Catalyst
+    /// or visionOS, or when the card controller is itself presented other than
+    /// full screen.
+    case automatic
+
+    /// The card controller positions the cards itself, and they're dragged using
+    /// its own gestures.
+    case classic
+  }
+
+  /// Whether the cards are currently shown in a system sheet.
+  ///
+  /// See ``presentationStyle``. Doesn't change with the size classes, but the
+  /// sheet comes and goes with the cards, and while the controller is hidden.
+  public var usesSystemSheet: Bool {
+    sheetHost != nil
+  }
+
+  /// The view controller that's presented on top of the cards, if any.
+  ///
+  /// Use this instead of `presentedViewController` to check if something covers
+  /// the cards: when the cards are shown in a system sheet, the sheet itself is
+  /// the `presentedViewController` of this controller.
+  public var presentedOverlayViewController: UIViewController? {
+    if let sheetHost, presentedViewController === sheetHost {
+      return sheetHost.presentedViewController
+    } else {
+      return presentedViewController
+    }
+  }
+
+  /// The view that contains the cards' views.
+  ///
+  /// Use this if you need to add views that are positioned relative to views of a
+  /// card. When the cards are shown in a system sheet, this is the sheet's view;
+  /// otherwise it's this controller's `view`.
+  public var cardOverlayView: UIView {
+    sheetHost?.view ?? view
+  }
+
+}
+
+// MARK: - Deciding when to use a sheet
+
+extension TGCardViewController {
+
+  /// Whether the cards should be in a system sheet. Doesn't depend on the size
+  /// classes, as the sheet adapts to those by itself.
+  var wantsSystemSheet: Bool {
+#if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst) // Xcode 27 proxy, for the sheet placement API
+    guard
+      #available(iOS 27.0, *),
+      presentationStyle == .automatic,
+      mode == .floating
+    else { return false }
+
+    // Don't show a sheet from a sheet. Being presented full screen is fine.
+    let outermost = sequence(first: self as UIViewController, next: \.parent).reduce(self as UIViewController) { $1 }
+    if outermost.presentingViewController != nil,
+       ![.fullScreen, .overFullScreen].contains(outermost.modalPresentationStyle) {
+      return false
+    }
+
+    return true
+#else
+    return false
+#endif
+  }
+
+  /// The sheet's width where it's not full width, like Maps'
+  static let sheetPreferredWidth: CGFloat = 400
+  
+  /// Sets up the sheet once, so that UIKit adapts it to the size class: full
+  /// width at the bottom in compact width, and narrower on the leading edge
+  /// otherwise, e.g., on iPad and phones in landscape, like Maps.
+  ///
+  /// - Note: Needs to be called before presenting.
+  private func configureSheetSizing(_ host: TGSheetHostViewController) {
+#if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst)
+    guard #available(iOS 27.0, *), let sheet = host.sheetPresentationController else { return }
+    sheet.preferredPlacement = .leading
+    // The width follows the preferred content size, when floating (rather
+    // than following the readable width) and when attached to an edge. Both
+    // are ignored in compact width, where the sheet spans the full width.
+    sheet.prefersPageSizing = false
+    sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+    // The height doesn't matter, as the detents decide it, but needs to be set,
+    // as UIKit ignores a preferred content size without one
+    host.preferredContentSize = CGSize(width: Self.sheetPreferredWidth, height: 1_000)
+#endif
+  }
+
+  /// Installs or removes the system sheet, as appropriate for the current state.
+  ///
+  /// Safe to call often: it does nothing if the sheet is already in the right state,
+  /// and it defers changes it can't make yet, e.g., while something is presented.
+  func updateSystemSheetPresentation() {
+    guard isViewLoaded else { return }
+
+    let wantsSheet = wantsSystemSheet && topCardView != nil
+    if wantsSheet, sheetHost == nil {
+      installSystemSheet()
+    } else if !wantsSheet, sheetHost != nil {
+      uninstallSystemSheet(animated: topCardView == nil && isVisible)
+    } else if !wantsSheet, isAwaitingSystemSheet {
+      revealClassicCards()
+    }
+  }
+
+  private func revealClassicCards() {
+    guard isAwaitingSystemSheet else { return }
+    isAwaitingSystemSheet = false
+    toggleCardWrappers(hide: topCardView == nil)
+  }
+
+}
+
+// MARK: - Installing and removing the sheet
+
+extension TGCardViewController {
+
+  private func installSystemSheet() {
+    guard
+      isVisible,
+      view.window != nil,
+      presentedViewController == nil,
+      transitionCoordinator == nil,
+      let content = cardWrapperContent
+    else {
+      // We'll try again later, e.g., after the presented view controller got
+      // dismissed. Until then, show the cards in the classic way, as we don't
+      // know when that'll be.
+      revealClassicCards()
+      return
+    }
+
+    let position = cardPosition
+
+    let host = TGSheetHostViewController(cardController: self)
+    host.loadViewIfNeeded()
+    syncSheetHostAppearance(host)
+
+    // 1. Move the cards into the sheet. The card wrapper stays where it is, but
+    //    invisible, and it'll mirror the top edge of the sheet. That way all the
+    //    map buttons, the header and the map's insets keep working as before.
+    savedCardContentConstraints = cardWrapperShadow.constraints.filter {
+      $0.firstItem === content || $0.secondItem === content
+    }
+    content.removeFromSuperview()
+    host.view.addSubview(content)
+    content.translatesAutoresizingMaskIntoConstraints = false
+
+    // The cards keep the height they'd have when extended, and the sheet clips
+    // them, rather than relaying them out whenever the sheet changes its height.
+    // Horizontally, they stay within the safe area, and clear of the column
+    // of a vertical bar, e.g., on an iPhone Duo; see `syncVerticalBarItems`.
+    let heightConstraint = content.heightAnchor.constraint(equalToConstant: estimatedSheetContentHeight(in: host))
+    let leftConstraint = content.leftAnchor.constraint(equalTo: host.view.safeAreaLayoutGuide.leftAnchor)
+    let rightConstraint = host.view.safeAreaLayoutGuide.rightAnchor.constraint(equalTo: content.rightAnchor)
+    NSLayoutConstraint.activate([
+      content.topAnchor.constraint(equalTo: host.view.topAnchor),
+      leftConstraint,
+      rightConstraint,
+      heightConstraint,
+    ])
+    sheetContentHeightConstraint = heightConstraint
+    sheetContentLeftConstraint = leftConstraint
+    sheetContentRightConstraint = rightConstraint
+
+    // 2. Configure the sheet
+    sheetHost = host
+    isAwaitingSystemSheet = false
+
+#if !os(visionOS) // No detents on visionOS, where cards never use a sheet
+    if let sheet = host.sheetPresentationController {
+      sheet.delegate = host
+      sheet.prefersScrollingExpandsWhenScrolledToEdge = true
+      sheet.prefersEdgeAttachedInCompactHeight = true
+      sheetTargetPosition = position
+      applySheetConfiguration(to: sheet, selecting: position)
+    }
+#endif
+
+    // 3. Hand over the chrome
+    updateCardChromeForPresentationStyle()
+    updateForNewPosition(position: position)
+    updateSheetContentScrollView()
+
+    configureSheetSizing(host)
+    super.present(host, animated: false)
+  }
+
+  /// Moves the cards back into this controller's view and removes the sheet.
+  ///
+  /// If something's presented on top of the sheet, this does nothing. Call
+  /// ``updateSystemSheetPresentation()`` again once that's gone.
+  func uninstallSystemSheet(animated: Bool) {
+    guard let host = sheetHost, host.presentedViewController == nil else { return }
+
+    let position = cardPosition
+    sheetHost = nil
+    sheetBackgroundView = nil
+    sheetTargetPosition = nil
+    sheetDetentValues = [:]
+    updateVerticalBarItems()
+
+    let moveCardsBack = { [self] in
+      guard let content = cardWrapperContent else { return assertionFailure() }
+
+      content.removeFromSuperview()
+      cardWrapperShadow.insertSubview(content, aboveSubview: cardWrapperEffectView)
+      NSLayoutConstraint.activate(savedCardContentConstraints)
+      savedCardContentConstraints = []
+      sheetContentHeightConstraint = nil
+      sheetContentLeftConstraint = nil
+      sheetContentRightConstraint = nil
+
+      updateCardChromeForPresentationStyle()
+    }
+
+    host.allowsDismissingSheet = true
+    if host.isBeingDismissed {
+      // E.g., when we're dismissed ourselves, which takes the sheet along
+      moveCardsBack()
+    } else if animated {
+      super.dismiss(animated: true, completion: moveCardsBack)
+    } else {
+      moveCardsBack()
+      super.dismiss(animated: false)
+    }
+
+    // Put the card where the sheet was
+    let location = cardLocation(forDesired: position, direction: .up)
+    mapViewController.additionalSafeAreaInsets = updateCardPosition(y: location.y)
+    view.setNeedsUpdateConstraints()
+    updateCardScrolling(allow: location.position == .extended, view: topCardView)
+    updateMapShadow(for: location.position)
+    updateForNewPosition(position: location.position)
+  }
+
+  /// Gestures, effects, grab handles and corners differ between the classic
+  /// presentation and the sheet.
+  private func updateCardChromeForPresentationStyle() {
+    let inSheet = usesSystemSheet
+
+    // The sheet provides the material, so the card wrapper is a placeholder
+    if inSheet {
+      if savedCardWrapperEffect == nil {
+        savedCardWrapperEffect = cardWrapperEffectView.effect
+      }
+      cardWrapperEffectView.effect = nil
+    } else if let effect = savedCardWrapperEffect {
+      cardWrapperEffectView.effect = effect
+      savedCardWrapperEffect = nil
+    }
+    cardWrapperShadow.isUserInteractionEnabled = !inSheet
+    toggleCardWrappers(hide: topCardView == nil)
+
+    // The sheet does the dragging
+    mapShadowTapper.isEnabled = !inSheet && mode == .floating
+    if inSheet {
+      panner.isEnabled = false
+    } else {
+      updatePannerInteractivity()
+      if !isSheetDraggingEnabled {
+        panner.isEnabled = false
+      }
+    }
+
+#if !os(visionOS)
+    // Popping by swiping from the edge should also work on the sheet, not just
+    // on the map. The sheet's recognizer goes away with the sheet.
+    if let sheetView = sheetHost?.view, !(sheetView.gestureRecognizers ?? []).contains(where: { $0 is UIScreenEdgePanGestureRecognizer }) {
+      let sheetEdgePanner = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(popMaybe))
+      sheetEdgePanner.edges = edgePanner.edges
+      sheetEdgePanner.isEnabled = edgePanner.isEnabled
+      sheetView.addGestureRecognizer(sheetEdgePanner)
+    }
+#endif
+
+    updateMapShadow(for: inSheet ? .collapsed : cardPosition)
+    updateGrabHandleVisibility()
+    updateCardScrolling(allow: inSheet || cardPosition == .extended, view: topCardView)
+
+    for cardView in cards.compactMap(\.view) {
+      applyPresentationStyle(to: cardView)
+      cardView.adjustContentAlpha(to: contentAlpha(for: cardPosition))
+    }
+
+    // Card-attached floating views need to be next to the card
+    if cardFloatingView.superview != nil {
+      cardFloatingView.removeFromSuperview()
+      updateCardFloatingViewContent(card: topCard)
+    }
+
+    view.setNeedsLayout()
+  }
+
+  func applyPresentationStyle(to cardView: TGCardView) {
+    guard #available(iOS 26.0, visionOS 26.0, *) else { return }
+    
+    if usesSystemSheet {
+      // The sheet rounds and clips its content
+      cardView.cornerConfiguration = .corners(radius: .fixed(0))
+      cardView.clipsToBounds = false
+    } else if mode == .floating {
+      // Match the corners of the glass behind the card, so that cards with a
+      // non-clear background don't stick out at the corners
+      cardView.cornerConfiguration = cardWrapperEffectView.cornerConfiguration
+      cardView.clipsToBounds = true
+    }
+  }
+  
+  /// The classic card hides everything but its title when collapsed, as the rest
+  /// would show below the screen's safe area. The sheet clips that itself.
+  func contentAlpha(for position: TGCardPosition) -> CGFloat {
+    position != .collapsed ? 1 : 0
+  }
+  
+  func forcesSeparatorHidden(for position: TGCardPosition) -> Bool {
+    !usesSystemSheet && position == .collapsed
+  }
+  
+  /// The view that card transitions add their temporary views to
+  var cardTransitionContainer: UIView? {
+    usesSystemSheet ? cardWrapperContent.superview : cardWrapperShadow.superview
+  }
+  
+  /// The view that card transitions add their temporary views next to
+  var cardTransitionAnchor: UIView {
+    usesSystemSheet ? cardWrapperContent : cardWrapperShadow
+  }
+
+  private func syncSheetHostAppearance(_ host: TGSheetHostViewController) {
+    if host.view.tintColor != view.tintColor {
+      host.view.tintColor = view.tintColor
+    }
+    if host.overrideUserInterfaceStyle != overrideUserInterfaceStyle {
+      host.overrideUserInterfaceStyle = overrideUserInterfaceStyle
+    }
+  }
+
+  /// Tells the sheet which scroll view to track for scrolling vs. resizing.
+  func updateSheetContentScrollView() {
+    sheetHost?.setContentScrollView(topCardView?.contentScrollView)
+    updateVerticalBarItems()
+  }
+
+}
+
+// MARK: - Bar items next to a vertical bar
+
+extension TGCardViewController {
+  
+  /// On devices with a vertical bar, e.g., the iPhone Duo's outer display, the
+  /// system puts a sheet's close button and its navigation bar's items into
+  /// that bar. Cards have their close buttons in their titles, which end up
+  /// under the status bar when the sheet is at full height. So while the cards
+  /// are in a system sheet next to a vertical bar, this hides the close buttons
+  /// in the top card's titles, and shows a stand-in in the bar, below the
+  /// status bar, which forwards taps to the card's own. The top card's
+  /// `verticalBarActions` follow below it.
+  ///
+  /// The items stay in the bar at every height of the sheet. One copy of them
+  /// is over the map, and another one on the sheet, where the sheet covers the
+  /// bar; see `syncVerticalBarItems(sheetTop:)`.
+  func updateVerticalBarItems() {
+#if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst) // Xcode 27 proxy; vertical bars are iPhone and iPad only
+    guard #available(iOS 27.1, *) else { return }
+    
+    let barEdge = sheetHost?.traitCollection.verticalBarEdge ?? .unspecified
+    let showsBar = sheetHost != nil && barEdge != .unspecified
+    updateShowsVerticalBarActions(showsBar)
+    
+    let closeButtons: [UIButton]
+    let currentCloseButton: UIButton?
+    let actions: [UIAction]
+    let paging: TGVerticalBarItemsView.Paging?
+    if let pageCard = topCard as? TGPageCard {
+      // Hide them on all pages, so they don't show up while paging
+      closeButtons = pageCard.cards.compactMap { $0.cardView?.dismissButton }
+      currentCloseButton = pageCard.currentCard.cardView?.dismissButton
+      actions = pageCard.verticalBarActions + pageCard.currentCard.verticalBarActions
+      let index = pageCard.currentPageIndex
+      paging = pageCard.cards.count > 1
+        ? .init(hasPrevious: index > 0, hasNext: index < pageCard.cards.count - 1)
+        : nil
+    } else {
+      currentCloseButton = topCardView?.dismissButton
+      closeButtons = [currentCloseButton].compactMap { $0 }
+      actions = topCard?.verticalBarActions ?? []
+      paging = nil
+    }
+    
+    guard
+      showsBar,
+      let host = sheetHost,
+      currentCloseButton != nil || paging != nil || !actions.isEmpty
+    else {
+      suppressedCloseButtons.forEach { Self.setCloseButton($0, suppressed: false) }
+      suppressedCloseButtons = []
+      if let host = sheetHost {
+        keepSheetContentClear(ofBarColumn: nil, in: host.view)
+      }
+      mapVerticalBarItems?.removeFromSuperview()
+      mapVerticalBarItems = nil
+      sheetVerticalBarItems?.removeFromSuperview()
+      sheetVerticalBarItems = nil
+      verticalBarItemsEdge = nil
+      return
+    }
+    
+    // Swap which buttons are hidden in the titles
+    for button in suppressedCloseButtons where !closeButtons.contains(button) {
+      Self.setCloseButton(button, suppressed: false)
+    }
+    closeButtons.forEach { Self.setCloseButton($0, suppressed: true) }
+    suppressedCloseButtons = closeButtons
+    
+    let edge: NSDirectionalRectEdge = barEdge == .leading ? .leading : .trailing
+    let mapItems: TGVerticalBarItemsView
+    let sheetItems: TGVerticalBarItemsView
+    if let existingMap = mapVerticalBarItems, let existingSheet = sheetVerticalBarItems, verticalBarItemsEdge == edge, existingMap.superview === view, existingSheet.superview === host.view {
+      mapItems = existingMap
+      sheetItems = existingSheet
+    } else {
+      mapVerticalBarItems?.removeFromSuperview()
+      sheetVerticalBarItems?.removeFromSuperview()
+      
+      // In the bar along the edge of the screen, below the status bar
+      mapItems = makeBarItemsView()
+      mapItems.translatesAutoresizingMaskIntoConstraints = false
+      view.addSubview(mapItems)
+      let guide = view.layoutGuide(for: .bar(onEdge: edge, extent: TGVerticalBarItemsView.itemSize))
+      NSLayoutConstraint.activate([
+        mapItems.topAnchor.constraint(equalTo: guide.topAnchor),
+        mapItems.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
+        mapItems.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
+        mapItems.widthAnchor.constraint(equalToConstant: TGVerticalBarItemsView.itemSize),
+      ])
+      
+      // Positioned to match `mapItems` whenever the sheet lays out
+      sheetItems = makeBarItemsView()
+      host.view.addSubview(sheetItems)
+      
+      mapVerticalBarItems = mapItems
+      sheetVerticalBarItems = sheetItems
+      verticalBarItemsEdge = edge
+    }
+    
+    let style = topCard?.style ?? .default
+    mapItems.update(closeButtonLike: currentCloseButton, style: style, paging: paging, actions: actions)
+    sheetItems.update(closeButtonLike: currentCloseButton, style: style, paging: paging, actions: actions)
+    view.bringSubviewToFront(mapItems)
+    host.view.bringSubviewToFront(sheetItems)
+    
+    view.layoutIfNeeded()
+    syncVerticalBarItems(sheetTop: host.view.convert(host.view.bounds, to: view).minY)
+#endif
+  }
+  
+  /// Puts the sheet's copy of the bar items where the map's are, and shows
+  /// each item on whichever of the two is in front of the bar at its position:
+  /// the map above the sheet's top, the sheet below it. The sheet's copy gets
+  /// clipped by the sheet. Called whenever the sheet lays out, including while
+  /// it's being dragged.
+  ///
+  /// - Parameter sheetTop: The top of the sheet in this controller's view
+  func syncVerticalBarItems(sheetTop: CGFloat) {
+    guard
+      let mapItems = mapVerticalBarItems,
+      let sheetItems = sheetVerticalBarItems,
+      let host = sheetHost
+    else { return }
+    
+    let frame = host.view.convert(mapItems.frame, from: view)
+    if sheetItems.frame != frame {
+      sheetItems.frame = frame
+    }
+    sheetItems.layoutIfNeeded()
+    keepSheetContentClear(ofBarColumn: frame, in: host.view)
+    
+    // Groups fade as a whole, so they don't get cut in half
+    for (mapGroup, sheetGroup) in zip(mapItems.groups, sheetItems.groups) {
+      let groupFrame = mapGroup.convert(mapGroup.bounds, to: view)
+      mapGroup.alpha = groupFrame.minY < sheetTop ? 1 : 0
+      sheetGroup.alpha = groupFrame.maxY > sheetTop ? 1 : 0
+    }
+    
+    // Buttons are tappable where they're mostly visible
+    for (mapButton, sheetButton) in zip(mapItems.buttons, sheetItems.buttons) {
+      let buttonFrame = mapButton.convert(mapButton.bounds, to: view)
+      let mapOwnsButton = buttonFrame.midY < sheetTop
+      mapButton.isUserInteractionEnabled = mapOwnsButton
+      mapButton.accessibilityElementsHidden = !mapOwnsButton
+      sheetButton.isUserInteractionEnabled = !mapOwnsButton
+      sheetButton.accessibilityElementsHidden = mapOwnsButton
+    }
+  }
+  
+  /// Insets the cards in the sheet, so that they don't go under the column of
+  /// the vertical bar. The safe area covers that column for a bar on the
+  /// trailing edge, but not for one on the leading edge, e.g., on an unfolded
+  /// iPhone Duo when the app is on the left screen.
+  ///
+  /// - Parameters:
+  ///   - column: The bar's items in `hostView`'s coordinates, or `nil` if
+  ///     there's no vertical bar
+  ///   - hostView: The sheet's view
+  func keepSheetContentClear(ofBarColumn column: CGRect?, in hostView: UIView) {
+    var left: CGFloat = 0
+    var right: CGFloat = 0
+    if let column, !column.isEmpty {
+      let safe = hostView.safeAreaInsets
+      if column.midX < hostView.bounds.midX {
+        left = max(0, column.maxX - safe.left)
+      } else {
+        right = max(0, hostView.bounds.width - safe.right - column.minX)
+      }
+    }
+    if let constraint = sheetContentLeftConstraint, abs(constraint.constant - left) > 0.5 {
+      constraint.constant = left
+    }
+    if let constraint = sheetContentRightConstraint, abs(constraint.constant - right) > 0.5 {
+      constraint.constant = right
+    }
+  }
+  
+  private func makeBarItemsView() -> TGVerticalBarItemsView {
+    TGVerticalBarItemsView { [weak self] in
+      self?.forwardVerticalBarCloseTap()
+    } onPage: { [weak self] forward in
+      guard let pageCard = self?.topCard as? TGPageCard else { return }
+      if forward {
+        pageCard.moveForward()
+      } else {
+        pageCard.moveBackward()
+      }
+    }
+  }
+  
+  /// Tells the cards in the stack whether vertical bar actions are shown, so
+  /// that they can leave them out of their content.
+  private func updateShowsVerticalBarActions(_ shows: Bool) {
+    for card in cards.map(\.card) {
+      let pages = (card as? TGPageCard)?.cards ?? []
+      for card in [card] + pages where card.showsVerticalBarActions != shows {
+        card.showsVerticalBarActions = shows
+      }
+    }
+  }
+  
+  private func forwardVerticalBarCloseTap() {
+    let closeButton: UIButton?
+    if let pageCard = topCard as? TGPageCard {
+      closeButton = pageCard.currentCard.cardView?.dismissButton
+    } else {
+      closeButton = topCardView?.dismissButton
+    }
+    closeButton?.sendActions(for: .touchUpInside)
+  }
+  
+  /// Hides a close button in a card's title, without changing its layout, nor
+  /// its `isHidden`, which says whether the card should have a close button.
+  private static func setCloseButton(_ button: UIButton, suppressed: Bool) {
+    button.alpha = suppressed ? 0 : 1
+    button.isUserInteractionEnabled = !suppressed
+    button.accessibilityElementsHidden = suppressed
+  }
+  
+}
+
+/// A card's items in a vertical bar, like the system's for a navigation bar:
+/// the close button and, for paging cards, buttons for the previous and next
+/// page at the top, and the bar actions at the bottom, all icon-only.
+final class TGVerticalBarItemsView: UIView {
+  
+  struct Paging {
+    var hasPrevious: Bool
+    var hasNext: Bool
+  }
+  
+  /// The size of each item, and the width of the bar region they're centred
+  /// in, which matches the system's close buttons
+  static let itemSize: CGFloat = 44
+  
+  /// The size that icons of vertical bar actions get scaled to fit in, unless
+  /// they're symbol images
+  private static let iconSize: CGFloat = 20
+  
+  init(onClose: @escaping () -> Void, onPage: @escaping (_ forward: Bool) -> Void) {
+    closeButton = Self.makeButton()
+    closeSlot = UIView()
+    previousButton = Self.makeButton()
+    nextButton = Self.makeButton()
+    pagingGroup = Self.makeGroup(with: [previousButton, nextButton])
+    actionsStack = Self.makeStack()
+    actionsGroup = Self.makeGroup(with: actionsStack)
+    super.init(frame: .zero)
+    
+    closeButton.addAction(UIAction { _ in onClose() }, for: .touchUpInside)
+    previousButton.addAction(UIAction { _ in onPage(false) }, for: .primaryActionTriggered)
+    nextButton.addAction(UIAction { _ in onPage(true) }, for: .primaryActionTriggered)
+    previousButton.accessibilityLabel = NSLocalizedString("Previous card", bundle: TGCardViewController.bundle, comment: "")
+    nextButton.accessibilityLabel = NSLocalizedString("Next card", bundle: TGCardViewController.bundle, comment: "")
+    
+    // The slot keeps its space when a page has no close button, so that the
+    // paging buttons don't move around while paging
+    closeSlot.translatesAutoresizingMaskIntoConstraints = false
+    closeSlot.addSubview(closeButton)
+    NSLayoutConstraint.activate([
+      closeButton.topAnchor.constraint(equalTo: closeSlot.topAnchor),
+      closeButton.bottomAnchor.constraint(equalTo: closeSlot.bottomAnchor),
+      closeButton.leadingAnchor.constraint(equalTo: closeSlot.leadingAnchor),
+      closeButton.trailingAnchor.constraint(equalTo: closeSlot.trailingAnchor),
+    ])
+    
+    let topStack = UIStackView(arrangedSubviews: [closeSlot, pagingGroup])
+    topStack.axis = .vertical
+    topStack.alignment = .center
+    topStack.spacing = 8
+    topStack.translatesAutoresizingMaskIntoConstraints = false
+    addSubview(topStack)
+    addSubview(actionsGroup)
+    
+    NSLayoutConstraint.activate([
+      topStack.topAnchor.constraint(equalTo: topAnchor),
+      topStack.centerXAnchor.constraint(equalTo: centerXAnchor),
+      actionsGroup.bottomAnchor.constraint(equalTo: bottomAnchor),
+      actionsGroup.centerXAnchor.constraint(equalTo: centerXAnchor),
+    ])
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  private let closeButton: UIButton
+  private let closeSlot: UIView
+  private let previousButton: UIButton
+  private let nextButton: UIButton
+  private let pagingGroup: UIView
+  private let actionsStack: UIStackView
+  private let actionsGroup: UIView
+  private var actionButtons: [UIButton] = []
+  private var actions: [UIAction] = []
+  
+  /// The items that show or hide as a whole, from top to bottom
+  var groups: [UIView] {
+    [closeSlot, pagingGroup, actionsGroup]
+  }
+  
+  /// All buttons from top to bottom, including hidden ones
+  var buttons: [UIButton] {
+    [closeButton, previousButton, nextButton] + actionButtons
+  }
+  
+  /// Lets touches through, except on the items
+  override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    let hit = super.hitTest(point, with: event)
+    return hit === self ? nil : hit
+  }
+  
+  /// - Parameters:
+  ///   - source: The card's close button that `closeButton` stands in for
+  ///   - style: The card's style
+  ///   - paging: Where a page card is at, if the card is paging
+  ///   - actions: The vertical bar actions
+  @available(iOS 26.0, *)
+  func update(closeButtonLike source: UIButton?, style: TGCardStyle, paging: Paging?, actions: [UIAction]) {
+    TGCard.configureCloseButton(closeButton, style: style)
+    closeButton.accessibilityLabel = source?.accessibilityLabel
+      ?? NSLocalizedString("Close card", bundle: TGCardViewController.bundle, comment: "")
+    closeButton.isSpringLoaded = source?.isSpringLoaded ?? false
+    closeButton.isHidden = source?.isHidden ?? true
+    closeSlot.isHidden = closeButton.isHidden && paging == nil
+    
+    pagingGroup.isHidden = paging == nil
+    Self.configure(previousButton, image: UIImage(systemName: "chevron.left"))
+    Self.configure(nextButton, image: UIImage(systemName: "chevron.right"))
+    previousButton.isEnabled = paging?.hasPrevious ?? false
+    nextButton.isEnabled = paging?.hasNext ?? false
+    
+    // Reuse the action buttons, which perform whichever action is at their
+    // index, so that updating an action doesn't flicker.
+    self.actions = actions
+    actionsGroup.isHidden = actions.isEmpty
+    while actionButtons.count < actions.count {
+      let index = actionButtons.count
+      let button = Self.makeButton()
+      button.addAction(UIAction { [weak self, weak button] _ in
+        guard let self, let button, index < self.actions.count else { return }
+        button.sendAction(self.actions[index])
+      }, for: .primaryActionTriggered)
+      actionsStack.addArrangedSubview(button)
+      actionButtons.append(button)
+    }
+    while actionButtons.count > actions.count {
+      actionButtons.removeLast().removeFromSuperview()
+    }
+    for (button, action) in zip(actionButtons, actions) {
+      Self.configure(button, image: Self.icon(action.image), isDestructive: action.attributes.contains(.destructive))
+      button.accessibilityLabel = action.title
+      button.isEnabled = !action.attributes.contains(.disabled)
+      button.isSelected = action.state == .on
+    }
+  }
+  
+  private static func makeButton() -> UIButton {
+    let button = UIButton(type: .system)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      button.widthAnchor.constraint(equalToConstant: itemSize),
+      button.heightAnchor.constraint(equalToConstant: itemSize),
+    ])
+    return button
+  }
+  
+  private static func makeStack(with buttons: [UIButton] = []) -> UIStackView {
+    let stack = UIStackView(arrangedSubviews: buttons)
+    stack.axis = .vertical
+    stack.alignment = .center
+    return stack
+  }
+  
+  private static func makeGroup(with buttons: [UIButton]) -> UIView {
+    makeGroup(with: makeStack(with: buttons))
+  }
+  
+  /// Buttons sharing one capsule, like the system groups bar items
+  private static func makeGroup(with stack: UIStackView) -> UIView {
+    let group: UIVisualEffectView
+    if #available(iOS 26.0, visionOS 26.0, *) {
+#if os(visionOS)
+      group = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
+#else
+      let glass = UIGlassEffect()
+      glass.isInteractive = true
+      group = UIVisualEffectView(effect: glass)
+#endif
+      group.cornerConfiguration = .capsule()
+    } else {
+      group = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
+      group.layer.cornerRadius = itemSize / 2
+      group.clipsToBounds = true
+    }
+    group.translatesAutoresizingMaskIntoConstraints = false
+    
+    stack.translatesAutoresizingMaskIntoConstraints = false
+    group.contentView.addSubview(stack)
+    NSLayoutConstraint.activate([
+      stack.topAnchor.constraint(equalTo: group.contentView.topAnchor),
+      stack.bottomAnchor.constraint(equalTo: group.contentView.bottomAnchor),
+      stack.leadingAnchor.constraint(equalTo: group.contentView.leadingAnchor),
+      stack.trailingAnchor.constraint(equalTo: group.contentView.trailingAnchor),
+      group.widthAnchor.constraint(equalToConstant: itemSize),
+    ])
+    return group
+  }
+  
+  /// Icon-only and monochrome, matching the close button, but on the group's
+  /// capsule rather than one of its own
+  private static func configure(_ button: UIButton, image: UIImage?, isDestructive: Bool = false) {
+    var config = UIButton.Configuration.plain()
+    config.image = image
+    config.imagePlacement = .all
+    config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: iconSize, weight: .medium)
+    config.imagePadding = 0
+    config.contentInsets = .zero
+    config.baseForegroundColor = isDestructive ? .systemRed : .label
+    button.configuration = config
+  }
+  
+  /// Scales icons that aren't symbols, so they match the symbols' size
+  private static func icon(_ image: UIImage?) -> UIImage? {
+    guard
+      let image,
+      !image.isSymbolImage,
+      image.size.width > 0, image.size.height > 0
+    else { return image }
+    
+    let scale = min(iconSize / image.size.width, iconSize / image.size.height)
+    guard abs(scale - 1) > 0.01 else { return image }
+    
+    let size = CGSize(width: (image.size.width * scale).rounded(), height: (image.size.height * scale).rounded())
+    let scaled = UIGraphicsImageRenderer(size: size).image { _ in
+      image.draw(in: CGRect(origin: .zero, size: size))
+    }
+    return scaled.withRenderingMode(image.renderingMode)
+  }
+  
+}
+
+// MARK: - Routing presentations
+
+extension TGCardViewController {
+  
+  /// Presents on top of the sheet, or whatever is on top of it.
+  ///
+  /// The sheet is this controller's `presentedViewController`, so presenting
+  /// from here directly would fail.
+  func routePresentation(of viewControllerToPresent: UIViewController, above sheetHost: TGSheetHostViewController, animated: Bool, completion: (() -> Void)?) {
+    // A presented view controller defines a presentation context, so presenting
+    // over the current context would only cover the sheet.
+    switch viewControllerToPresent.modalPresentationStyle {
+    case .currentContext:     viewControllerToPresent.modalPresentationStyle = .fullScreen
+    case .overCurrentContext: viewControllerToPresent.modalPresentationStyle = .overFullScreen
+    default:                  break
+    }
+    
+    var presenter: UIViewController = sheetHost
+    while let next = presenter.presentedViewController, !next.isBeingDismissed {
+      presenter = next
+    }
+    
+    if presenter === sheetHost {
+      sheetHost.presentDirectly(viewControllerToPresent, animated: animated, completion: completion)
+    } else {
+      presenter.present(viewControllerToPresent, animated: animated, completion: completion)
+    }
+  }
+  
+  /// Dismisses what's on top of the sheet, but never the sheet itself.
+  func routeDismissal(above sheetHost: TGSheetHostViewController, animated: Bool, completion: (() -> Void)?) {
+    if sheetHost.presentedViewController != nil {
+      sheetHost.dismissPresented(animated: animated) { [weak self] in
+        completion?()
+        self?.updateSystemSheetPresentation()
+      }
+    } else if let presenting = presentingViewController {
+      // Nothing's on top of the sheet, but we're presented ourselves. Like
+      // UIKit, dismiss us then, which takes the sheet along.
+      presenting.dismiss(animated: animated, completion: completion)
+    } else {
+      // Nothing to dismiss
+      completion?()
+    }
+  }
+  
+}
+
+// MARK: - Detents
+
+#if !os(visionOS) // No detents on visionOS, where cards never use a sheet
+extension TGCardPosition {
+
+  var sheetDetentIdentifier: UISheetPresentationController.Detent.Identifier {
+    .init("tg.\(rawValue)")
+  }
+
+  init?(sheetDetentIdentifier identifier: UISheetPresentationController.Detent.Identifier?) {
+    guard let raw = identifier?.rawValue, raw.hasPrefix("tg.") else { return nil }
+    self.init(rawValue: String(raw.dropFirst(3)))
+  }
+
+}
+#endif
+
+extension TGCardViewController {
+
+#if !os(visionOS) // No detents on visionOS, where cards never use a sheet
+
+  /// The positions that the sheet can rest at, smallest first.
+  ///
+  /// - Parameter position: The position the sheet should rest at
+  private func sheetPositions(selecting position: TGCardPosition) -> [TGCardPosition] {
+    let forceExtended = topCard?.mapManager == nil
+    if forceExtended || !isSheetDraggingEnabled {
+      // Pin the sheet where it should be
+      return [position]
+    } else {
+      return [.collapsed, .peaking, .extended]
+    }
+  }
+
+  private func makeSheetDetent(for position: TGCardPosition) -> UISheetPresentationController.Detent {
+    .custom(identifier: position.sheetDetentIdentifier) { [weak self] context in
+      MainActor.assumeIsolated {
+        self?.sheetDetentValue(for: position, in: context) ?? context.maximumDetentValue
+      }
+    }
+  }
+
+  private func sheetDetentValue(for position: TGCardPosition, in context: any UISheetPresentationControllerDetentResolutionContext) -> CGFloat {
+    let maximum = context.maximumDetentValue
+
+    var extended = maximum
+    if isShowingHeader {
+      // Keep the header visible above the sheet
+      let headerBottom = headerViewTopConstraint.constant + headerViewHeightConstraint.constant
+      let available = view.bounds.height - view.safeAreaInsets.bottom - headerBottom - Constants.sheetSpacingBelowHeader
+      extended = min(extended, available)
+    }
+
+    // Shows the title, with as much space below it as above it, where the
+    // sheet floats. A taller sheet attaches to the bottom edge and adds the
+    // bottom safe area below the title, so there it ends where the header does.
+    var collapsed = topCardView?.headerHeight(for: .collapsed) ?? 0
+    if let balanced = topCardView?.sheetCollapsedHeight(), balanced <= Constants.sheetMaximumFloatingHeight {
+      collapsed = balanced
+    }
+    collapsed = max(Constants.minCardHeightWhenCollapsed, collapsed)
+
+    var peaking = UISheetPresentationController.Detent.medium().resolvedValue(in: context) ?? 0
+    if peaking <= 0 || peaking >= extended {
+      peaking = extended / 2
+    }
+
+    // Keep them in order, and remember them all, as only the detents the sheet
+    // currently uses get resolved.
+    let values: [TGCardPosition: CGFloat] = [
+      .collapsed: collapsed,
+      .peaking: max(peaking, collapsed + 1),
+      .extended: max(extended, peaking + 1, collapsed + 2),
+    ]
+    sheetDetentValues = values
+    return values[position] ?? maximum
+  }
+
+  /// Updates the sheet's detents and selected detent.
+  ///
+  /// Doesn't animate by itself; call this from within `animateChanges` if needed.
+  private func applySheetConfiguration(to sheet: UISheetPresentationController, selecting position: TGCardPosition) {
+    let positions = sheetPositions(selecting: position)
+    let identifiers = positions.map(\.sheetDetentIdentifier)
+
+    if sheet.detents.map(\.identifier) != identifiers {
+      sheet.detents = positions.map(makeSheetDetent(for:))
+    } else {
+      sheet.invalidateDetents()
+    }
+
+    let selected = positions.contains(position) ? position : (positions.last ?? .extended)
+    if sheet.selectedDetentIdentifier != selected.sheetDetentIdentifier {
+      sheet.selectedDetentIdentifier = selected.sheetDetentIdentifier
+    }
+
+    // Never dim, so that the map and the header stay interactive
+    if sheet.largestUndimmedDetentIdentifier != identifiers.last {
+      sheet.largestUndimmedDetentIdentifier = identifiers.last
+    }
+
+    let showGrabber = positions.count > 1
+    if sheet.prefersGrabberVisible != showGrabber {
+      sheet.prefersGrabberVisible = showGrabber
+    }
+  }
+
+#endif
+
+  /// Moves the sheet to the provided position, or refreshes it in place.
+  ///
+  /// - Parameters:
+  ///   - position: Where the sheet should rest; defaults to where it's going or
+  ///       resting already
+  ///   - animated: Whether to animate the change
+  ///   - completion: Called once the sheet has moved
+  func applySheetPosition(_ position: TGCardPosition? = nil, animated: Bool, completion: (() -> Void)? = nil) {
+#if os(visionOS)
+    completion?()
+#else
+    guard let sheet = sheetHost?.sheetPresentationController else {
+      completion?()
+      return
+    }
+
+    let target = position ?? sheetTargetPosition ?? cardPosition
+    sheetTargetPosition = target
+
+    guard animated else {
+      applySheetConfiguration(to: sheet, selecting: target)
+      completion?()
+      return
+    }
+
+    CATransaction.begin()
+    CATransaction.setCompletionBlock(completion)
+    sheet.animateChanges {
+      self.applySheetConfiguration(to: sheet, selecting: target)
+    }
+    CATransaction.commit()
+#endif
+  }
+
+  /// The sheet's position, if the cards are shown in a sheet.
+  var sheetPosition: TGCardPosition? {
+#if os(visionOS)
+    return nil
+#else
+    guard let sheet = sheetHost?.sheetPresentationController else { return nil }
+    return TGCardPosition(sheetDetentIdentifier: sheet.selectedDetentIdentifier)
+      ?? TGCardPosition(sheetDetentIdentifier: sheet.detents.first?.identifier)
+#endif
+  }
+
+  /// The height of the sheet when it rests at the provided position, if known.
+  func sheetHeight(for position: TGCardPosition) -> CGFloat? {
+    sheetDetentValues[position].map { $0 + view.safeAreaInsets.bottom }
+  }
+
+  private func estimatedSheetContentHeight(in host: TGSheetHostViewController) -> CGFloat {
+    let extended = sheetHeight(for: .extended) ?? (view.bounds.height - extendedMinY)
+    return max(extended, host.view.bounds.height)
+  }
+
+}
+
+// MARK: - Following the sheet
+
+extension TGCardViewController {
+
+  /// Called whenever the sheet lays out, including while it's being dragged.
+  func sheetHostDidLayoutSubviews() {
+    guard
+      let host = sheetHost,
+      let window = view.window,
+      host.view.window === window
+    else { return }
+
+    syncSheetHostAppearance(host)
+
+    // Content height follows the extended detent
+    if let heightConstraint = sheetContentHeightConstraint {
+      let height = estimatedSheetContentHeight(in: host)
+      if abs(heightConstraint.constant - height) > 0.5 {
+        heightConstraint.constant = height
+      }
+    }
+
+    // A sheet that doesn't span the width keeps the map clear next to it,
+    // rather than below it
+    let sheetFrame = host.view.convert(host.view.bounds, to: view)
+    if sheetFrame.width < view.bounds.width * 0.75 {
+      var insets = UIEdgeInsets.zero
+      if view.effectiveUserInterfaceLayoutDirection == .rightToLeft {
+        insets.right = max(0, view.bounds.maxX - sheetFrame.minX - view.safeAreaInsets.right)
+      } else {
+        insets.left = max(0, sheetFrame.maxX - view.safeAreaInsets.left)
+      }
+      if mapViewController.additionalSafeAreaInsets != insets {
+        mapViewController.additionalSafeAreaInsets = insets
+      }
+      fadeCardContent(forSheetTop: sheetFrame.minY)
+      syncVerticalBarItems(sheetTop: sheetFrame.minY)
+      return
+    }
+
+    // The invisible card wrapper mirrors the top of the sheet, which moves the
+    // map buttons and the map's insets along with the sheet. Like the card
+    // wrapper, its position is relative to the bottom of the header.
+    let sheetTop = host.view.convert(host.view.bounds, to: view).minY
+    let y = sheetTop - max(0, headerView.frame.maxY)
+    if abs(cardWrapperDesiredTopConstraint.constant - y) > 0.5 {
+      let insets = updateCardPosition(y: y)
+      if mapViewController.additionalSafeAreaInsets != insets {
+        mapViewController.additionalSafeAreaInsets = insets
+      }
+    }
+    
+    fadeMapFloatingViews(forSheetTop: sheetTop)
+    fadeCardContent(forSheetTop: sheetTop)
+    
+    // When the sheet settles, this is called once from within the sheet's
+    // animation. Laying out now has the map buttons and insets follow along,
+    // rather than jumping ahead.
+    view.layoutIfNeeded()
+    
+    syncVerticalBarItems(sheetTop: sheetTop)
+  }
+  
+  /// Like the classic card does while dragging, fade the card's content from
+  /// visible at the peaking height to hidden at the collapsed one, where the
+  /// sheet only shows the card's title.
+  private func fadeCardContent(forSheetTop sheetTop: CGFloat) {
+    guard
+      let cardView = topCardView,
+      let collapsedHeight = sheetHeight(for: .collapsed),
+      let peakingHeight = sheetHeight(for: .peaking),
+      peakingHeight > collapsedHeight
+    else { return }
+    
+    let height = view.bounds.height - sheetTop
+    let alpha = min(1, max(0, (height - collapsedHeight) / (peakingHeight - collapsedHeight)))
+    updateSheetBackground(alpha: alpha)
+    
+    if let current = cardView.contentScrollView?.alpha, abs(current - alpha) < 0.01 {
+      return
+    }
+    cardView.adjustContentAlpha(to: alpha)
+  }
+  
+  /// Shows the top card's `expandedBackgroundColor` across the whole sheet
+  private func updateSheetBackground(alpha: CGFloat) {
+    guard let host = sheetHost, let color = topCard?.style.expandedBackgroundColor else {
+      sheetBackgroundView?.removeFromSuperview()
+      sheetBackgroundView = nil
+      return
+    }
+    
+    let background: UIView
+    if let existing = sheetBackgroundView, existing.superview === host.view {
+      background = existing
+    } else {
+      sheetBackgroundView?.removeFromSuperview()
+      background = UIView()
+      background.isUserInteractionEnabled = false
+      background.translatesAutoresizingMaskIntoConstraints = false
+      host.view.insertSubview(background, at: 0)
+      NSLayoutConstraint.activate([
+        background.topAnchor.constraint(equalTo: host.view.topAnchor),
+        background.bottomAnchor.constraint(equalTo: host.view.bottomAnchor),
+        background.leadingAnchor.constraint(equalTo: host.view.leadingAnchor),
+        background.trailingAnchor.constraint(equalTo: host.view.trailingAnchor),
+      ])
+      sheetBackgroundView = background
+    }
+    if background.backgroundColor != color {
+      background.backgroundColor = color
+    }
+    if abs(background.alpha - alpha) > 0.01 {
+      background.alpha = alpha
+    }
+  }
+  
+  /// Like the classic card does while dragging, fade out the map's buttons as
+  /// the sheet moves up from the peaking position, so that they don't end up
+  /// under the status bar.
+  private func fadeMapFloatingViews(forSheetTop sheetTop: CGFloat) {
+    guard
+      allowFloatingViews,
+      let peakingHeight = sheetHeight(for: .peaking),
+      let extendedHeight = sheetHeight(for: .extended)
+    else { return }
+    
+    let peakingTop = view.bounds.height - peakingHeight
+    let extendedTop = view.bounds.height - extendedHeight
+    guard peakingTop > extendedTop else { return }
+    
+    let fade = min(1, max(0, (peakingTop - sheetTop) / ((peakingTop - extendedTop) * 0.3)))
+    topFloatingViewWrapper.alpha = 1 - fade
+    bottomFloatingViewWrapper.alpha = 1 - fade
+  }
+
+  /// Called when the user dragged the sheet to a different detent.
+  func sheetDidChangeSelectedDetent() {
+    guard let position = sheetPosition else { return }
+    sheetTargetPosition = position
+
+    UIView.animate(withDuration: Constants.tapAnimationDuration) {
+      self.updateFloatingViewsVisibility(for: position)
+    }
+    topCard?.mapManager?.edgePadding = mapEdgePadding(for: position)
+    topCard?.didMove(to: position, animated: true)
+    updateForNewPosition(position: position)
+  }
+
+}
