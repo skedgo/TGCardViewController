@@ -368,6 +368,7 @@ extension TGCardViewController {
   /// is over the map, and another one on the sheet, where the sheet covers the
   /// bar; see `syncSheetBarItems(sheetTop:)`.
   func updateSheetBarItems() {
+#if compiler(>=6.4) // Xcode 27 proxy, which has the vertical bar APIs
     guard #available(iOS 27.1, *) else { return }
     
     let barEdge = sheetHost?.traitCollection.verticalBarEdge ?? .unspecified
@@ -455,6 +456,7 @@ extension TGCardViewController {
     
     view.layoutIfNeeded()
     syncSheetBarItems(sheetTop: host.view.convert(host.view.bounds, to: view).minY)
+#endif
   }
   
   /// Puts the sheet's copy of the bar items where the map's are, and shows

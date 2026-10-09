@@ -62,6 +62,7 @@ final class TGSheetHostViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+#if compiler(>=6.4) // Xcode 27 proxy, which has the vertical bar APIs
     if #available(iOS 27.1, *) {
       // The close button follows the vertical bar, e.g., when folding an
       // iPhone Duo
@@ -69,6 +70,7 @@ final class TGSheetHostViewController: UIViewController {
         host.cardController?.updateSheetBarItems()
       }
     }
+#endif
   }
   
   // MARK: - Appearance
