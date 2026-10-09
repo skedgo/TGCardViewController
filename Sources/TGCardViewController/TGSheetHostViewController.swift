@@ -44,7 +44,7 @@ final class TGSheetHostViewController: UIViewController {
     let view = UIView()
     view.backgroundColor = .clear
     view.clipsToBounds = true
-    if #available(iOS 26.0, *) {
+    if #available(iOS 26.0, visionOS 26.0, *) {
       // The sheet rounds its background but doesn't clip what's in it, so cards
       // with opaque content would stick out at its corners.
       view.cornerConfiguration = .corners(radius: .containerConcentric())
@@ -62,7 +62,7 @@ final class TGSheetHostViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-#if compiler(>=6.4) // Xcode 27 proxy, which has the vertical bar APIs
+#if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst) // Xcode 27 proxy; vertical bars are iPhone and iPad only
     if #available(iOS 27.1, *) {
       // The close button follows the vertical bar, e.g., when folding an
       // iPhone Duo
@@ -170,9 +170,11 @@ final class TGSheetHostViewController: UIViewController {
 
 extension TGSheetHostViewController: UISheetPresentationControllerDelegate {
 
+#if !os(visionOS) // No detents on visionOS, where cards never use a sheet
   func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
     cardController?.sheetDidChangeSelectedDetent()
   }
+#endif
 
   func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
     false

@@ -175,6 +175,7 @@ extension TGCardViewController {
     sheetHost = host
     isAwaitingSystemSheet = false
 
+#if !os(visionOS) // No detents on visionOS, where cards never use a sheet
     if let sheet = host.sheetPresentationController {
       sheet.delegate = host
       sheet.prefersScrollingExpandsWhenScrolledToEdge = true
@@ -183,6 +184,7 @@ extension TGCardViewController {
       sheetTargetPosition = position
       applySheetConfiguration(to: sheet, selecting: position)
     }
+#endif
 
     // 3. Hand over the chrome
     updateCardChromeForPresentationStyle()
@@ -368,7 +370,7 @@ extension TGCardViewController {
   /// is over the map, and another one on the sheet, where the sheet covers the
   /// bar; see `syncSheetBarItems(sheetTop:)`.
   func updateSheetBarItems() {
-#if compiler(>=6.4) // Xcode 27 proxy, which has the vertical bar APIs
+#if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst) // Xcode 27 proxy; vertical bars are iPhone and iPad only
     guard #available(iOS 27.1, *) else { return }
     
     let barEdge = sheetHost?.traitCollection.verticalBarEdge ?? .unspecified
@@ -701,7 +703,7 @@ final class TGBarItemsView: UIView {
   /// Buttons sharing one capsule, like the system groups bar items
   private static func makeGroup(with stack: UIStackView) -> UIView {
     let group: UIVisualEffectView
-    if #available(iOS 26.0, *) {
+    if #available(iOS 26.0, visionOS 26.0, *) {
 #if os(visionOS)
       group = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
 #else
@@ -812,6 +814,7 @@ extension TGCardViewController {
 
 // MARK: - Detents
 
+#if !os(visionOS) // No detents on visionOS, where cards never use a sheet
 extension TGCardPosition {
 
   var sheetDetentIdentifier: UISheetPresentationController.Detent.Identifier {
@@ -824,8 +827,11 @@ extension TGCardPosition {
   }
 
 }
+#endif
 
 extension TGCardViewController {
+
+#if !os(visionOS) // No detents on visionOS, where cards never use a sheet
 
   /// The positions that the sheet can rest at, smallest first.
   ///
@@ -913,6 +919,8 @@ extension TGCardViewController {
     }
   }
 
+#endif
+
   /// Moves the sheet to the provided position, or refreshes it in place.
   ///
   /// - Parameters:
@@ -921,6 +929,9 @@ extension TGCardViewController {
   ///   - animated: Whether to animate the change
   ///   - completion: Called once the sheet has moved
   func applySheetPosition(_ position: TGCardPosition? = nil, animated: Bool, completion: (() -> Void)? = nil) {
+#if os(visionOS)
+    completion?()
+#else
     guard let sheet = sheetHost?.sheetPresentationController else {
       completion?()
       return
@@ -941,13 +952,18 @@ extension TGCardViewController {
       self.applySheetConfiguration(to: sheet, selecting: target)
     }
     CATransaction.commit()
+#endif
   }
 
   /// The sheet's position, if the cards are shown in a sheet.
   var sheetPosition: TGCardPosition? {
+#if os(visionOS)
+    return nil
+#else
     guard let sheet = sheetHost?.sheetPresentationController else { return nil }
     return TGCardPosition(sheetDetentIdentifier: sheet.selectedDetentIdentifier)
       ?? TGCardPosition(sheetDetentIdentifier: sheet.detents.first?.identifier)
+#endif
   }
 
   /// The height of the sheet when it rests at the provided position, if known.
