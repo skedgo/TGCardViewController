@@ -44,6 +44,11 @@ final class TGSheetHostViewController: UIViewController {
     let view = UIView()
     view.backgroundColor = .clear
     view.clipsToBounds = true
+    if #available(iOS 26.0, *) {
+      // The sheet rounds its background but doesn't clip what's in it, so cards
+      // with opaque content would stick out at its corners.
+      view.cornerConfiguration = .corners(radius: .containerConcentric())
+    }
     self.view = view
   }
 
