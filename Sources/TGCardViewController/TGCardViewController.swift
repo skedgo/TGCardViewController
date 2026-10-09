@@ -107,6 +107,9 @@ open class TGCardViewController: UIViewController {
 
     /// The space between the header and a system sheet, when the sheet is extended.
     static let sheetSpacingBelowHeader: CGFloat = 8
+    
+    /// Pushing and popping cross-fade between cards in a system sheet
+    static let sheetCrossFadeDuration = 0.25
   }
   
   public enum Mode {
@@ -1060,9 +1063,10 @@ extension TGCardViewController {
     
       // 4. Place the new view coming, preparing to animate in from the bottom
       cardView.frame = cardWrapperContent.bounds
-      if animated, let sheetHost {
-        // Come in from the bottom of the sheet
-        cardView.frame.origin.y = sheetHost.view.bounds.height
+      if animated, usesSystemSheet {
+        // Cross-fade in place, as the sheet is already there. Sliding up a card
+        // within the sheet would look odd.
+        cardView.alpha = 0
       } else if animated {
         let offset = cardView.convert(.init(x: 0, y: mapViewWrapper.frame.maxY), to: cardWrapperShadow).y
         cardView.frame.origin.y = offset
@@ -1161,7 +1165,7 @@ extension TGCardViewController {
     // old. Only do that if the previous transition completed, i.e., we didn't
     // already have such a shadow.
     
-    if let oldTop, animated, let cardView, cardTransitionShadow == nil {
+    if let oldTop, animated, let cardView, cardTransitionShadow == nil, !usesSystemSheet {
       if #available(iOS 26.0, visionOS 26.0, *), let oldView = oldTop.view, let container = cardTransitionContainer, let snapshot = oldView.snapshotView(afterScreenUpdates: false) {
         var oldFrame = oldView.bounds
         oldFrame.origin = oldView.convert(oldView.bounds.origin, to: container)
@@ -1191,6 +1195,11 @@ extension TGCardViewController {
 
       guard let cardView else { return }
       self.updateMapShadow(for: animateTo.position)
+      if self.usesSystemSheet {
+        cardView.alpha = 1
+        oldTop?.view?.alpha = 0
+        return
+      }
       cardView.frame = self.cardWrapperContent.bounds
       self.cardWrapperEffectView.frame = cardView.frame
       self.cardTransitionShadow?.alpha = 0.15
@@ -1213,9 +1222,9 @@ extension TGCardViewController {
     applySheetPosition(animateTo.position, animated: animated)
     
     UIView.animate(
-      withDuration: animated ? Constants.pushAnimationDuration : 0,
+      withDuration: animated ? (usesSystemSheet ? Constants.sheetCrossFadeDuration : Constants.pushAnimationDuration) : 0,
       delay: 0,
-      usingSpringWithDamping: 0.75,
+      usingSpringWithDamping: usesSystemSheet ? 1 : 0.75,
       initialSpringVelocity: 0,
       options: [.curveEaseInOut],
       animations: {
@@ -1330,6 +1339,9 @@ extension TGCardViewController {
     // 4. Determine and set new position of the card wrapper (relative to header!)
     if let newView = newTop?.view {
       reattachCardView(newView, below: topView)
+      if animated, usesSystemSheet {
+        newView.alpha = 0 // and cross-fade below
+      }
     }
 
     // We only animate to the previous position if the card obscures the map
@@ -1366,7 +1378,7 @@ extension TGCardViewController {
     // 5. Do the transition, optionally animated.
     // We animate the view moving back down to the bottom
     // we also temporarily insert a shadow view again, if there's a card below    
-    if animated, cardTransitionShadow == nil, let topView {
+    if animated, cardTransitionShadow == nil, let topView, !usesSystemSheet {
       if #available(iOS 26.0, visionOS 26.0, *), let container = cardTransitionContainer, let snapshot = topView.snapshotView(afterScreenUpdates: false) {
         topView.alpha = 0
         var newFrame = topView.bounds
@@ -1395,7 +1407,10 @@ extension TGCardViewController {
       self.toggleCardWrappers(hide: newTop?.view == nil, prepareOnly: true)
 
       self.updateMapShadow(for: animateTo)
-      if #unavailable(iOS 26.0) {
+      if self.usesSystemSheet {
+        topView?.alpha = 0
+        newTop?.view?.alpha = 1
+      } else if #unavailable(iOS 26.0) {
         self.cardTransitionShadow?.alpha = 0
         topView?.frame.origin.y = self.cardWrapperContent.frame.maxY
       } else {
@@ -1413,7 +1428,7 @@ extension TGCardViewController {
     applySheetPosition(animateTo, animated: animated)
     
     UIView.animate(
-      withDuration: animated ? Constants.pushAnimationDuration * 1.25 : 0,
+      withDuration: animated ? (usesSystemSheet ? Constants.sheetCrossFadeDuration : Constants.pushAnimationDuration * 1.25) : 0,
       delay: 0,
       usingSpringWithDamping: 1,
       initialSpringVelocity: 0,

@@ -264,9 +264,14 @@ extension TGCardViewController {
     }
 
 #if !os(visionOS)
-    // Popping by swiping from the edge needs to work where the cards are
-    edgePanner.view?.removeGestureRecognizer(edgePanner)
-    cardOverlayView.addGestureRecognizer(edgePanner)
+    // Popping by swiping from the edge should also work on the sheet, not just
+    // on the map. The sheet's recognizer goes away with the sheet.
+    if let sheetView = sheetHost?.view, !(sheetView.gestureRecognizers ?? []).contains(where: { $0 is UIScreenEdgePanGestureRecognizer }) {
+      let sheetEdgePanner = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(popMaybe))
+      sheetEdgePanner.edges = edgePanner.edges
+      sheetEdgePanner.isEnabled = edgePanner.isEnabled
+      sheetView.addGestureRecognizer(sheetEdgePanner)
+    }
 #endif
 
     updateMapShadow(for: inSheet ? .collapsed : cardPosition)
