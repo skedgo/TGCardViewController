@@ -299,9 +299,6 @@ extension TGCardViewController {
   }
 
   func applyPresentationStyle(to cardView: TGCardView) {
-    // The sheet shows the background itself, as the cards stay in its safe area
-    cardView.isExpandedBackgroundSuppressed = usesSystemSheet
-    
     guard #available(iOS 26.0, visionOS 26.0, *) else { return }
     
     if usesSystemSheet {

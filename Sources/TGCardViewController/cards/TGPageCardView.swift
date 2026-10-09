@@ -210,10 +210,6 @@ class TGPageCardView: TGCardView {
     cardViews.forEach { $0.contentScrollView?.isScrollEnabled = allowScrolling }
   }
   
-  override var isExpandedBackgroundSuppressed: Bool {
-    didSet { cardViews.forEach { $0.isExpandedBackgroundSuppressed = isExpandedBackgroundSuppressed } }
-  }
-  
   override func adjustContentAlpha(to value: CGFloat) {
     // not calling super on purpose.
     cardViews.forEach { $0.adjustContentAlpha(to: value) }

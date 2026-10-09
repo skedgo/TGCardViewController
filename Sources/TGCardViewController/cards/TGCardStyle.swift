@@ -43,15 +43,17 @@ public struct TGCardStyle {
     }
   }()
   
-  /// Colour to fade in behind the card as it moves up from collapsed, and
-  /// which fully shows when the card is peaking or extended. Defaults to `nil`,
-  /// i.e., none.
+  /// Colour to fade in behind the card in a system sheet, as the sheet moves
+  /// up from collapsed, and which fully shows when it's peaking or extended.
+  /// Defaults to `nil`, i.e., none.
   ///
   /// Use this when `backgroundColor` is clear, so that the content of a raised
   /// card sits on a calm background rather than on whatever shines through
-  /// from the map, while a collapsed card still shows its material.
+  /// the sheet's glass from the map, while a collapsed sheet still shows its
+  /// material.
   ///
-  /// - Note: Not used on Mac Catalyst, where cards are always clear.
+  /// - Note: Only used when the cards show in a system sheet; the classic card
+  ///   keeps its own look.
   public var expandedBackgroundColor: UIColor? = nil
   
   /// Colour to use for the grab handle on the card, defaults to system secondary label color

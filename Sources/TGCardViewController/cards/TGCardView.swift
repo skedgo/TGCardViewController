@@ -284,46 +284,7 @@ public class TGCardView: TGCornerView, TGPreferrableView {
     backgroundColor = .clear
     #else
     backgroundColor = style.backgroundColor
-    applyExpandedBackground(style.expandedBackgroundColor)
     #endif
-  }
-  
-  /// Shows `TGCardStyle.expandedBackgroundColor` behind everything, faded in
-  /// along with the content, see `adjustContentAlpha(to:)`
-  private var expandedBackgroundView: UIView?
-  
-  /// Set while the card is in a system sheet, which shows the expanded
-  /// background itself, across its full width
-  var isExpandedBackgroundSuppressed = false {
-    didSet { expandedBackgroundView?.isHidden = isExpandedBackgroundSuppressed }
-  }
-  
-  private func applyExpandedBackground(_ color: UIColor?) {
-    guard let color else {
-      expandedBackgroundView?.removeFromSuperview()
-      expandedBackgroundView = nil
-      return
-    }
-    
-    let background: UIView
-    if let existing = expandedBackgroundView {
-      background = existing
-    } else {
-      background = UIView()
-      background.isUserInteractionEnabled = false
-      background.isHidden = isExpandedBackgroundSuppressed
-      background.alpha = contentScrollView?.alpha ?? 0
-      background.translatesAutoresizingMaskIntoConstraints = false
-      insertSubview(background, at: 0)
-      NSLayoutConstraint.activate([
-        background.topAnchor.constraint(equalTo: topAnchor),
-        background.bottomAnchor.constraint(equalTo: bottomAnchor),
-        background.leadingAnchor.constraint(equalTo: leadingAnchor),
-        background.trailingAnchor.constraint(equalTo: trailingAnchor),
-      ])
-      expandedBackgroundView = background
-    }
-    background.backgroundColor = color
   }
   
   // MARK: - Content view configuration
@@ -368,7 +329,6 @@ public class TGCardView: TGCornerView, TGPreferrableView {
     owningCard?.willAdjustContentAlpha(value)
     
     contentScrollView?.alpha = value
-    expandedBackgroundView?.alpha = value
   }
   
 }
