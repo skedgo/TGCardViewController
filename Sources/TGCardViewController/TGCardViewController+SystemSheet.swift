@@ -201,7 +201,7 @@ extension TGCardViewController {
     sheetHost = nil
     sheetTargetPosition = nil
     sheetDetentValues = [:]
-    updateSheetBarCloseButton()
+    updateSheetBarItems()
 
     let moveCardsBack = { [self] in
       guard let content = cardWrapperContent else { return assertionFailure() }
@@ -340,51 +340,66 @@ extension TGCardViewController {
   /// Tells the sheet which scroll view to track for scrolling vs. resizing.
   func updateSheetContentScrollView() {
     sheetHost?.setContentScrollView(topCardView?.contentScrollView)
-    updateSheetBarCloseButton()
+    updateSheetBarItems()
   }
 
 }
 
-// MARK: - Close button in the vertical bar
+// MARK: - Bar items next to a vertical bar
 
 extension TGCardViewController {
   
-  /// The width of the bar region that the close button is centred in, which
-  /// matches the system's close buttons.
-  private static let barCloseButtonExtent: CGFloat = 44
-  
   /// On devices with a vertical bar, e.g., the iPhone Duo's outer display, the
-  /// system puts a sheet's close button into that bar, below the status bar
-  /// when the sheet is at full height. Cards have their close buttons in their
-  /// titles, which then end up under the status bar. So while the cards are in
-  /// a system sheet next to a vertical bar, this hides the close buttons in the
-  /// top card's titles, and shows a stand-in where the system puts its close
-  /// buttons, which forwards taps to the card's own.
-  func updateSheetBarCloseButton() {
+  /// system puts a sheet's close button and its navigation bar's items into
+  /// that bar. Cards have their close buttons in their titles, which end up
+  /// under the status bar when the sheet is at full height. So while the cards
+  /// are in a system sheet next to a vertical bar, this hides the close buttons
+  /// in the top card's titles, and shows a stand-in in the bar, below the
+  /// status bar, which forwards taps to the card's own. The top card's
+  /// `barActions` follow below it.
+  ///
+  /// The items stay in the bar at every height of the sheet. One copy of them
+  /// is over the map, and another one on the sheet, where the sheet covers the
+  /// bar; see `syncSheetBarItems(sheetTop:)`.
+  func updateSheetBarItems() {
     guard #available(iOS 27.1, *) else { return }
+    
+    let barEdge = sheetHost?.traitCollection.verticalBarEdge ?? .unspecified
+    let showsBar = sheetHost != nil && barEdge != .unspecified
+    updateShowsBarActions(showsBar)
     
     let closeButtons: [UIButton]
     let currentCloseButton: UIButton?
+    let actions: [UIAction]
+    let paging: TGBarItemsView.Paging?
     if let pageCard = topCard as? TGPageCard {
       // Hide them on all pages, so they don't show up while paging
       closeButtons = pageCard.cards.compactMap { $0.cardView?.dismissButton }
       currentCloseButton = pageCard.currentCard.cardView?.dismissButton
+      actions = pageCard.barActions + pageCard.currentCard.barActions
+      let index = pageCard.currentPageIndex
+      paging = pageCard.cards.count > 1
+        ? .init(hasPrevious: index > 0, hasNext: index < pageCard.cards.count - 1)
+        : nil
     } else {
       currentCloseButton = topCardView?.dismissButton
       closeButtons = [currentCloseButton].compactMap { $0 }
+      actions = topCard?.barActions ?? []
+      paging = nil
     }
     
-    let barEdge = sheetHost?.traitCollection.verticalBarEdge ?? .unspecified
     guard
+      showsBar,
       let host = sheetHost,
-      barEdge != .unspecified,
-      let currentCloseButton
+      currentCloseButton != nil || paging != nil || !actions.isEmpty
     else {
       suppressedCloseButtons.forEach { Self.setCloseButton($0, suppressed: false) }
       suppressedCloseButtons = []
-      sheetBarCloseButton?.removeFromSuperview()
-      sheetBarCloseButton = nil
-      sheetBarCloseButtonEdge = nil
+      mapBarItems?.removeFromSuperview()
+      mapBarItems = nil
+      sheetBarItems?.removeFromSuperview()
+      sheetBarItems = nil
+      barItemsEdge = nil
       return
     }
     
@@ -395,36 +410,107 @@ extension TGCardViewController {
     closeButtons.forEach { Self.setCloseButton($0, suppressed: true) }
     suppressedCloseButtons = closeButtons
     
-    // The stand-in, centred at the top of the bar region, which follows the
-    // bar: in it at full height, at the top of the sheet otherwise
     let edge: NSDirectionalRectEdge = barEdge == .leading ? .leading : .trailing
-    let barButton: UIButton
-    if let existing = sheetBarCloseButton, sheetBarCloseButtonEdge == edge, existing.superview === host.view {
-      barButton = existing
+    let mapItems: TGBarItemsView
+    let sheetItems: TGBarItemsView
+    if let existingMap = mapBarItems, let existingSheet = sheetBarItems, barItemsEdge == edge, existingMap.superview === view, existingSheet.superview === host.view {
+      mapItems = existingMap
+      sheetItems = existingSheet
     } else {
-      sheetBarCloseButton?.removeFromSuperview()
-      barButton = UIButton(type: .system)
-      barButton.translatesAutoresizingMaskIntoConstraints = false
-      barButton.addAction(UIAction { [weak self] _ in
-        self?.forwardBarCloseButtonTap()
-      }, for: .touchUpInside)
-      host.view.addSubview(barButton)
+      mapBarItems?.removeFromSuperview()
+      sheetBarItems?.removeFromSuperview()
       
-      let guide = host.view.layoutGuide(for: .bar(onEdge: edge, extent: Self.barCloseButtonExtent))
+      // In the bar along the edge of the screen, below the status bar
+      mapItems = makeBarItemsView()
+      mapItems.translatesAutoresizingMaskIntoConstraints = false
+      view.addSubview(mapItems)
+      let guide = view.layoutGuide(for: .bar(onEdge: edge, extent: TGBarItemsView.itemSize))
       NSLayoutConstraint.activate([
-        barButton.topAnchor.constraint(equalTo: guide.topAnchor),
-        barButton.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
+        mapItems.topAnchor.constraint(equalTo: guide.topAnchor),
+        mapItems.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
+        mapItems.centerXAnchor.constraint(equalTo: guide.centerXAnchor),
+        mapItems.widthAnchor.constraint(equalToConstant: TGBarItemsView.itemSize),
       ])
-      sheetBarCloseButton = barButton
-      sheetBarCloseButtonEdge = edge
+      
+      // Positioned to match `mapItems` whenever the sheet lays out
+      sheetItems = makeBarItemsView()
+      host.view.addSubview(sheetItems)
+      
+      mapBarItems = mapItems
+      sheetBarItems = sheetItems
+      barItemsEdge = edge
     }
     
-    TGCard.configureCloseButton(barButton, style: topCard?.style ?? .default)
-    barButton.accessibilityLabel = currentCloseButton.accessibilityLabel
-      ?? NSLocalizedString("Close card", bundle: TGCardViewController.bundle, comment: "")
-    barButton.isSpringLoaded = currentCloseButton.isSpringLoaded
-    barButton.isHidden = currentCloseButton.isHidden
-    host.view.bringSubviewToFront(barButton)
+    let style = topCard?.style ?? .default
+    mapItems.update(closeButtonLike: currentCloseButton, style: style, paging: paging, actions: actions)
+    sheetItems.update(closeButtonLike: currentCloseButton, style: style, paging: paging, actions: actions)
+    view.bringSubviewToFront(mapItems)
+    host.view.bringSubviewToFront(sheetItems)
+    
+    view.layoutIfNeeded()
+    syncSheetBarItems(sheetTop: host.view.convert(host.view.bounds, to: view).minY)
+  }
+  
+  /// Puts the sheet's copy of the bar items where the map's are, and shows
+  /// each item on whichever of the two is in front of the bar at its position:
+  /// the map above the sheet's top, the sheet below it. The sheet's copy gets
+  /// clipped by the sheet. Called whenever the sheet lays out, including while
+  /// it's being dragged.
+  ///
+  /// - Parameter sheetTop: The top of the sheet in this controller's view
+  func syncSheetBarItems(sheetTop: CGFloat) {
+    guard
+      let mapItems = mapBarItems,
+      let sheetItems = sheetBarItems,
+      let host = sheetHost
+    else { return }
+    
+    let frame = host.view.convert(mapItems.frame, from: view)
+    if sheetItems.frame != frame {
+      sheetItems.frame = frame
+    }
+    sheetItems.layoutIfNeeded()
+    
+    // Groups fade as a whole, so they don't get cut in half
+    for (mapGroup, sheetGroup) in zip(mapItems.groups, sheetItems.groups) {
+      let groupFrame = mapGroup.convert(mapGroup.bounds, to: view)
+      mapGroup.alpha = groupFrame.minY < sheetTop ? 1 : 0
+      sheetGroup.alpha = groupFrame.maxY > sheetTop ? 1 : 0
+    }
+    
+    // Buttons are tappable where they're mostly visible
+    for (mapButton, sheetButton) in zip(mapItems.buttons, sheetItems.buttons) {
+      let buttonFrame = mapButton.convert(mapButton.bounds, to: view)
+      let mapOwnsButton = buttonFrame.midY < sheetTop
+      mapButton.isUserInteractionEnabled = mapOwnsButton
+      mapButton.accessibilityElementsHidden = !mapOwnsButton
+      sheetButton.isUserInteractionEnabled = !mapOwnsButton
+      sheetButton.accessibilityElementsHidden = mapOwnsButton
+    }
+  }
+  
+  private func makeBarItemsView() -> TGBarItemsView {
+    TGBarItemsView { [weak self] in
+      self?.forwardBarCloseButtonTap()
+    } onPage: { [weak self] forward in
+      guard let pageCard = self?.topCard as? TGPageCard else { return }
+      if forward {
+        pageCard.moveForward()
+      } else {
+        pageCard.moveBackward()
+      }
+    }
+  }
+  
+  /// Tells the cards in the stack whether bar actions are shown, so that they
+  /// can leave them out of their content.
+  private func updateShowsBarActions(_ shows: Bool) {
+    for card in cards.map(\.card) {
+      let pages = (card as? TGPageCard)?.cards ?? []
+      for card in [card] + pages where card.showsBarActions != shows {
+        card.showsBarActions = shows
+      }
+    }
   }
   
   private func forwardBarCloseButtonTap() {
@@ -443,6 +529,227 @@ extension TGCardViewController {
     button.alpha = suppressed ? 0 : 1
     button.isUserInteractionEnabled = !suppressed
     button.accessibilityElementsHidden = suppressed
+  }
+  
+}
+
+/// A card's items in a vertical bar, like the system's for a navigation bar:
+/// the close button and, for paging cards, buttons for the previous and next
+/// page at the top, and the bar actions at the bottom, all icon-only.
+final class TGBarItemsView: UIView {
+  
+  struct Paging {
+    var hasPrevious: Bool
+    var hasNext: Bool
+  }
+  
+  /// The size of each item, and the width of the bar region they're centred
+  /// in, which matches the system's close buttons
+  static let itemSize: CGFloat = 44
+  
+  /// The size that icons of bar actions get scaled to fit in, unless they're
+  /// symbol images
+  private static let iconSize: CGFloat = 20
+  
+  init(onClose: @escaping () -> Void, onPage: @escaping (_ forward: Bool) -> Void) {
+    closeButton = Self.makeButton()
+    closeSlot = UIView()
+    previousButton = Self.makeButton()
+    nextButton = Self.makeButton()
+    pagingGroup = Self.makeGroup(with: [previousButton, nextButton])
+    actionsStack = Self.makeStack()
+    actionsGroup = Self.makeGroup(with: actionsStack)
+    super.init(frame: .zero)
+    
+    closeButton.addAction(UIAction { _ in onClose() }, for: .touchUpInside)
+    previousButton.addAction(UIAction { _ in onPage(false) }, for: .primaryActionTriggered)
+    nextButton.addAction(UIAction { _ in onPage(true) }, for: .primaryActionTriggered)
+    previousButton.accessibilityLabel = NSLocalizedString("Previous card", bundle: TGCardViewController.bundle, comment: "")
+    nextButton.accessibilityLabel = NSLocalizedString("Next card", bundle: TGCardViewController.bundle, comment: "")
+    
+    // The slot keeps its space when a page has no close button, so that the
+    // paging buttons don't move around while paging
+    closeSlot.translatesAutoresizingMaskIntoConstraints = false
+    closeSlot.addSubview(closeButton)
+    NSLayoutConstraint.activate([
+      closeButton.topAnchor.constraint(equalTo: closeSlot.topAnchor),
+      closeButton.bottomAnchor.constraint(equalTo: closeSlot.bottomAnchor),
+      closeButton.leadingAnchor.constraint(equalTo: closeSlot.leadingAnchor),
+      closeButton.trailingAnchor.constraint(equalTo: closeSlot.trailingAnchor),
+    ])
+    
+    let topStack = UIStackView(arrangedSubviews: [closeSlot, pagingGroup])
+    topStack.axis = .vertical
+    topStack.alignment = .center
+    topStack.spacing = 8
+    topStack.translatesAutoresizingMaskIntoConstraints = false
+    addSubview(topStack)
+    addSubview(actionsGroup)
+    
+    NSLayoutConstraint.activate([
+      topStack.topAnchor.constraint(equalTo: topAnchor),
+      topStack.centerXAnchor.constraint(equalTo: centerXAnchor),
+      actionsGroup.bottomAnchor.constraint(equalTo: bottomAnchor),
+      actionsGroup.centerXAnchor.constraint(equalTo: centerXAnchor),
+    ])
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  private let closeButton: UIButton
+  private let closeSlot: UIView
+  private let previousButton: UIButton
+  private let nextButton: UIButton
+  private let pagingGroup: UIView
+  private let actionsStack: UIStackView
+  private let actionsGroup: UIView
+  private var actionButtons: [UIButton] = []
+  private var actions: [UIAction] = []
+  
+  /// The items that show or hide as a whole, from top to bottom
+  var groups: [UIView] {
+    [closeSlot, pagingGroup, actionsGroup]
+  }
+  
+  /// All buttons from top to bottom, including hidden ones
+  var buttons: [UIButton] {
+    [closeButton, previousButton, nextButton] + actionButtons
+  }
+  
+  /// Lets touches through, except on the items
+  override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    let hit = super.hitTest(point, with: event)
+    return hit === self ? nil : hit
+  }
+  
+  /// - Parameters:
+  ///   - source: The card's close button that `closeButton` stands in for
+  ///   - style: The card's style
+  ///   - paging: Where a page card is at, if the card is paging
+  ///   - actions: The bar actions
+  @available(iOS 26.0, *)
+  func update(closeButtonLike source: UIButton?, style: TGCardStyle, paging: Paging?, actions: [UIAction]) {
+    TGCard.configureCloseButton(closeButton, style: style)
+    closeButton.accessibilityLabel = source?.accessibilityLabel
+      ?? NSLocalizedString("Close card", bundle: TGCardViewController.bundle, comment: "")
+    closeButton.isSpringLoaded = source?.isSpringLoaded ?? false
+    closeButton.isHidden = source?.isHidden ?? true
+    closeSlot.isHidden = closeButton.isHidden && paging == nil
+    
+    pagingGroup.isHidden = paging == nil
+    Self.configure(previousButton, image: UIImage(systemName: "chevron.left"))
+    Self.configure(nextButton, image: UIImage(systemName: "chevron.right"))
+    previousButton.isEnabled = paging?.hasPrevious ?? false
+    nextButton.isEnabled = paging?.hasNext ?? false
+    
+    // Reuse the action buttons, which perform whichever action is at their
+    // index, so that updating an action doesn't flicker.
+    self.actions = actions
+    actionsGroup.isHidden = actions.isEmpty
+    while actionButtons.count < actions.count {
+      let index = actionButtons.count
+      let button = Self.makeButton()
+      button.addAction(UIAction { [weak self, weak button] _ in
+        guard let self, let button, index < self.actions.count else { return }
+        button.sendAction(self.actions[index])
+      }, for: .primaryActionTriggered)
+      actionsStack.addArrangedSubview(button)
+      actionButtons.append(button)
+    }
+    while actionButtons.count > actions.count {
+      actionButtons.removeLast().removeFromSuperview()
+    }
+    for (button, action) in zip(actionButtons, actions) {
+      Self.configure(button, image: Self.icon(action.image), isDestructive: action.attributes.contains(.destructive))
+      button.accessibilityLabel = action.title
+      button.isEnabled = !action.attributes.contains(.disabled)
+      button.isSelected = action.state == .on
+    }
+  }
+  
+  private static func makeButton() -> UIButton {
+    let button = UIButton(type: .system)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      button.widthAnchor.constraint(equalToConstant: itemSize),
+      button.heightAnchor.constraint(equalToConstant: itemSize),
+    ])
+    return button
+  }
+  
+  private static func makeStack(with buttons: [UIButton] = []) -> UIStackView {
+    let stack = UIStackView(arrangedSubviews: buttons)
+    stack.axis = .vertical
+    stack.alignment = .center
+    return stack
+  }
+  
+  private static func makeGroup(with buttons: [UIButton]) -> UIView {
+    makeGroup(with: makeStack(with: buttons))
+  }
+  
+  /// Buttons sharing one capsule, like the system groups bar items
+  private static func makeGroup(with stack: UIStackView) -> UIView {
+    let group: UIVisualEffectView
+    if #available(iOS 26.0, *) {
+#if os(visionOS)
+      group = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
+#else
+      let glass = UIGlassEffect()
+      glass.isInteractive = true
+      group = UIVisualEffectView(effect: glass)
+#endif
+      group.cornerConfiguration = .capsule()
+    } else {
+      group = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
+      group.layer.cornerRadius = itemSize / 2
+      group.clipsToBounds = true
+    }
+    group.translatesAutoresizingMaskIntoConstraints = false
+    
+    stack.translatesAutoresizingMaskIntoConstraints = false
+    group.contentView.addSubview(stack)
+    NSLayoutConstraint.activate([
+      stack.topAnchor.constraint(equalTo: group.contentView.topAnchor),
+      stack.bottomAnchor.constraint(equalTo: group.contentView.bottomAnchor),
+      stack.leadingAnchor.constraint(equalTo: group.contentView.leadingAnchor),
+      stack.trailingAnchor.constraint(equalTo: group.contentView.trailingAnchor),
+      group.widthAnchor.constraint(equalToConstant: itemSize),
+    ])
+    return group
+  }
+  
+  /// Icon-only and monochrome, matching the close button, but on the group's
+  /// capsule rather than one of its own
+  private static func configure(_ button: UIButton, image: UIImage?, isDestructive: Bool = false) {
+    var config = UIButton.Configuration.plain()
+    config.image = image
+    config.imagePlacement = .all
+    config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: iconSize, weight: .medium)
+    config.imagePadding = 0
+    config.contentInsets = .zero
+    config.baseForegroundColor = isDestructive ? .systemRed : .label
+    button.configuration = config
+  }
+  
+  /// Scales icons that aren't symbols, so they match the symbols' size
+  private static func icon(_ image: UIImage?) -> UIImage? {
+    guard
+      let image,
+      !image.isSymbolImage,
+      image.size.width > 0, image.size.height > 0
+    else { return image }
+    
+    let scale = min(iconSize / image.size.width, iconSize / image.size.height)
+    guard abs(scale - 1) > 0.01 else { return image }
+    
+    let size = CGSize(width: (image.size.width * scale).rounded(), height: (image.size.height * scale).rounded())
+    let scaled = UIGraphicsImageRenderer(size: size).image { _ in
+      image.draw(in: CGRect(origin: .zero, size: size))
+    }
+    return scaled.withRenderingMode(image.renderingMode)
   }
   
 }
@@ -683,6 +990,8 @@ extension TGCardViewController {
     // animation. Laying out now has the map buttons and insets follow along,
     // rather than jumping ahead.
     view.layoutIfNeeded()
+    
+    syncSheetBarItems(sheetTop: sheetTop)
   }
   
   /// Like the classic card does while dragging, fade out the map's buttons as

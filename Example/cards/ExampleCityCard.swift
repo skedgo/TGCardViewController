@@ -8,6 +8,7 @@
 
 import Foundation
 import MapKit
+import UIKit
 
 import TGCardViewController
 
@@ -42,6 +43,32 @@ class ExampleCityCard : TGPlainCard {
   init(city: City) {
     self.city = city
     super.init(title: .default(city.title, nil, nil), mapManager: city.manager)
+    updateBarActions()
+  }
+  
+  private var isFavorite = false
+  
+  /// Only shown next to a vertical bar, e.g., on the iPhone Duo. A real card
+  /// would show them itself when `showsBarActions` is `false`.
+  private func updateBarActions() {
+    barActions = [
+      UIAction(
+        title: isFavorite ? "Remove Favourite" : "Add Favourite",
+        image: UIImage(systemName: isFavorite ? "star.fill" : "star")
+      ) { [weak self] _ in
+        self?.isFavorite.toggle()
+        self?.updateBarActions()
+      },
+      UIAction(
+        title: "Share",
+        image: UIImage(systemName: "square.and.arrow.up")
+      ) { [weak self] action in
+        guard let self else { return }
+        let activity = UIActivityViewController(activityItems: [city.title], applicationActivities: nil)
+        activity.popoverPresentationController?.sourceItem = action.sender as? UIPopoverPresentationControllerSourceItem
+        controller?.present(activity, animated: true)
+      },
+    ]
   }
   
 }

@@ -168,13 +168,17 @@ open class TGCardViewController: UIViewController {
   /// Set while pushing or popping, which update the sheet in one go
   var isTransitioningCards = false
   
-  /// Stand-in for the top card's close button, placed where the system puts
-  /// close buttons on devices with a vertical bar, e.g., iPhone Duo
-  var sheetBarCloseButton: UIButton?
-  var sheetBarCloseButtonEdge: NSDirectionalRectEdge?
+  /// The top card's close button and bar actions, placed in the vertical bar
+  /// on devices that have one, e.g., iPhone Duo. This one is over the map...
+  var mapBarItems: TGBarItemsView?
   
-  /// The close buttons in the titles of the top card, hidden while
-  /// `sheetBarCloseButton` stands in for them
+  /// ... and this one is on the sheet, for when that covers the vertical bar.
+  var sheetBarItems: TGBarItemsView?
+  
+  var barItemsEdge: NSDirectionalRectEdge?
+  
+  /// The close buttons in the titles of the top card, hidden while the bar
+  /// items stand in for them
   var suppressedCloseButtons: [UIButton] = []
   
   /// A Boolean value that specifies whether the close buttons
@@ -1137,7 +1141,7 @@ extension TGCardViewController {
     updateCardFloatingViewContent(card: top)
     
     // Before the new card fades in, so that its own close button doesn't
-    updateSheetBarCloseButton()
+    updateSheetBarItems()
     
     // The previous call can cause a glitch where the render loop is run, if
     // the cards to certain things. To avoid this, we revert back to the old
@@ -1355,7 +1359,7 @@ extension TGCardViewController {
         newView.alpha = 0 // and cross-fade below
       }
     }
-    updateSheetBarCloseButton()
+    updateSheetBarItems()
 
     // We only animate to the previous position if the card obscures the map
     updateCardStructure(card: newTop?.view, position: newTop?.lastPosition)
@@ -2087,6 +2091,8 @@ extension TGCardViewController {
       // hide the card and disable all card-based interaction
       if let sheetHost = self.sheetHost {
         sheetHost.presentationController?.containerView?.alpha = show ? 1 : 0
+        self.mapBarItems?.alpha = show ? 1 : 0
+        self.mapBarItems?.isUserInteractionEnabled = show
       } else {
         self.panner.isEnabled = show
         self.cardWrapperShadow?.isUserInteractionEnabled = show

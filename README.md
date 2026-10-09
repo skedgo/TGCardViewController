@@ -98,6 +98,8 @@ Because the sheet is the card controller's `presentedViewController`:
 - Use `presentedOverlayViewController` to check what's presented on top of the cards, instead of `presentedViewController`.
 - Use `cardOverlayView` instead of `view` for views that you constrain to views inside a card, e.g., tooltips.
 
+On devices with a vertical bar, such as the iPhone Duo's outer display (iOS 27.1+), the system puts a sheet's bar items into that bar. The card controller does the same for cards, like Mail does: the top card's close button moves to the top of the bar, followed by buttons for the previous and next page of a `TGPageCard`, and the card's `barActions` go to the bottom of the bar as icon-only buttons. They stay in the bar at every height of the sheet, and the cards stay clear of it. Cards can observe `showsBarActions` to leave those actions out of their own content while they're in the bar.
+
 ## Specs
 
 ### 1. Basic functionality of cards

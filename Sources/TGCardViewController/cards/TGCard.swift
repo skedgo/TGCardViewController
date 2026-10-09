@@ -252,6 +252,31 @@ open class TGCard: UIResponder, TGPreferrableView {
   ///
   /// - SeeAlso: `floatingCardToolBarItems`
   public var floatingCardToolBarAlignment: FloatingCardToolBarAlignment = .center
+  
+  /// Secondary actions of the card, e.g., for sharing or adding a favourite,
+  /// which the card controller can show outside of the card.
+  ///
+  /// On devices with a vertical bar, e.g., the iPhone Duo's outer display, and
+  /// while the cards are in a system sheet, the top card's bar actions show as
+  /// icon-only buttons in that bar, below the close button, like a navigation
+  /// bar's items would. Otherwise they're not shown, so the card should then
+  /// show them itself; `showsBarActions` says which applies.
+  ///
+  /// The actions' titles are used as the buttons' accessibility labels. To
+  /// update a button, e.g., when toggling a favourite, set new actions.
+  ///
+  /// For a `TGPageCard`, the bar shows its own actions followed by those of
+  /// the current page.
+  public var barActions: [UIAction] = [] {
+    didSet { controller?.updateSheetBarItems() }
+  }
+  
+  /// Whether the card controller shows the card's `barActions` outside of the
+  /// card, while it's on top. If so, the card shouldn't show them itself.
+  ///
+  /// Supports key-value observing, as this can change while the card is
+  /// showing, e.g., when rotating the device.
+  @objc public internal(set) dynamic var showsBarActions: Bool = false
 
   /// Builds the card's optional header which will be pinned to the top
   ///

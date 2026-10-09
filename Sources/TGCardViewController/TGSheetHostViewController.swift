@@ -66,7 +66,7 @@ final class TGSheetHostViewController: UIViewController {
       // The close button follows the vertical bar, e.g., when folding an
       // iPhone Duo
       registerForTraitChanges(UITraitCollection.systemTraitsAffectingVerticalBarEdge) { (host: TGSheetHostViewController, _: UITraitCollection) in
-        host.cardController?.updateSheetBarCloseButton()
+        host.cardController?.updateSheetBarItems()
       }
     }
   }
@@ -111,7 +111,7 @@ final class TGSheetHostViewController: UIViewController {
     }
     
     // Only now is it in its final place, which determines the vertical bar
-    cardController?.updateSheetBarCloseButton()
+    cardController?.updateSheetBarItems()
   }
   
   // MARK: - Layout
