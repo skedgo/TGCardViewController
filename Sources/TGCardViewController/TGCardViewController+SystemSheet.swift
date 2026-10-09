@@ -201,6 +201,7 @@ extension TGCardViewController {
 
     let position = cardPosition
     sheetHost = nil
+    sheetBackgroundView = nil
     sheetTargetPosition = nil
     sheetDetentValues = [:]
     updateSheetBarItems()
@@ -282,7 +283,7 @@ extension TGCardViewController {
     updateCardScrolling(allow: inSheet || cardPosition == .extended, view: topCardView)
 
     for cardView in cards.compactMap(\.view) {
-      applyCorners(to: cardView)
+      applyPresentationStyle(to: cardView)
       cardView.adjustContentAlpha(to: contentAlpha(for: cardPosition))
     }
 
@@ -295,7 +296,10 @@ extension TGCardViewController {
     view.setNeedsLayout()
   }
 
-  func applyCorners(to cardView: TGCardView) {
+  func applyPresentationStyle(to cardView: TGCardView) {
+    // The sheet shows the background itself, as the cards stay in its safe area
+    cardView.isExpandedBackgroundSuppressed = usesSystemSheet
+    
     guard #available(iOS 26.0, visionOS 26.0, *) else { return }
     
     if usesSystemSheet {
@@ -1014,10 +1018,45 @@ extension TGCardViewController {
     
     let height = view.bounds.height - sheetTop
     let alpha = min(1, max(0, (height - collapsedHeight) / (peakingHeight - collapsedHeight)))
+    updateSheetBackground(alpha: alpha)
+    
     if let current = cardView.contentScrollView?.alpha, abs(current - alpha) < 0.01 {
       return
     }
     cardView.adjustContentAlpha(to: alpha)
+  }
+  
+  /// Shows the top card's `expandedBackgroundColor` across the whole sheet
+  private func updateSheetBackground(alpha: CGFloat) {
+    guard let host = sheetHost, let color = topCard?.style.expandedBackgroundColor else {
+      sheetBackgroundView?.removeFromSuperview()
+      sheetBackgroundView = nil
+      return
+    }
+    
+    let background: UIView
+    if let existing = sheetBackgroundView, existing.superview === host.view {
+      background = existing
+    } else {
+      sheetBackgroundView?.removeFromSuperview()
+      background = UIView()
+      background.isUserInteractionEnabled = false
+      background.translatesAutoresizingMaskIntoConstraints = false
+      host.view.insertSubview(background, at: 0)
+      NSLayoutConstraint.activate([
+        background.topAnchor.constraint(equalTo: host.view.topAnchor),
+        background.bottomAnchor.constraint(equalTo: host.view.bottomAnchor),
+        background.leadingAnchor.constraint(equalTo: host.view.leadingAnchor),
+        background.trailingAnchor.constraint(equalTo: host.view.trailingAnchor),
+      ])
+      sheetBackgroundView = background
+    }
+    if background.backgroundColor != color {
+      background.backgroundColor = color
+    }
+    if abs(background.alpha - alpha) > 0.01 {
+      background.alpha = alpha
+    }
   }
   
   /// Like the classic card does while dragging, fade out the map's buttons as

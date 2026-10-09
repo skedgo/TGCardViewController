@@ -292,6 +292,12 @@ public class TGCardView: TGCornerView, TGPreferrableView {
   /// along with the content, see `adjustContentAlpha(to:)`
   private var expandedBackgroundView: UIView?
   
+  /// Set while the card is in a system sheet, which shows the expanded
+  /// background itself, across its full width
+  var isExpandedBackgroundSuppressed = false {
+    didSet { expandedBackgroundView?.isHidden = isExpandedBackgroundSuppressed }
+  }
+  
   private func applyExpandedBackground(_ color: UIColor?) {
     guard let color else {
       expandedBackgroundView?.removeFromSuperview()
@@ -305,6 +311,7 @@ public class TGCardView: TGCornerView, TGPreferrableView {
     } else {
       background = UIView()
       background.isUserInteractionEnabled = false
+      background.isHidden = isExpandedBackgroundSuppressed
       background.alpha = contentScrollView?.alpha ?? 0
       background.translatesAutoresizingMaskIntoConstraints = false
       insertSubview(background, at: 0)

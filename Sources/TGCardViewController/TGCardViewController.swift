@@ -177,6 +177,10 @@ open class TGCardViewController: UIViewController {
   /// on devices that have one, e.g., iPhone Duo. This one is over the map...
   var mapBarItems: TGBarItemsView?
   
+  /// Shows the top card's `expandedBackgroundColor` across the whole sheet,
+  /// including below a vertical bar, where the cards themselves don't go
+  var sheetBackgroundView: UIView?
+  
   /// ... and this one is on the sheet, for when that covers the vertical bar.
   var sheetBarItems: TGBarItemsView?
   
@@ -1091,7 +1095,7 @@ extension TGCardViewController {
         
         cardWrapperEffectView.frame.origin.y = offset
       }
-      applyCorners(to: cardView)
+      applyPresentationStyle(to: cardView)
       cardWrapperContent.addSubview(cardView)
       
       // Give AutoLayout a nudge to layout the card view, now that we have
