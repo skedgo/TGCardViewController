@@ -33,9 +33,11 @@ class ExampleCardViewController: TGCardViewController {
     if ProcessInfo.processInfo.arguments.contains("-classicCards") {
       presentationStyle = .classic
     }
-    // Pass `-avoidVerticalBar` to keep the sheet beside the vertical bar on
-    // an iPhone Duo
-    sheetAvoidsVerticalBar = ProcessInfo.processInfo.arguments.contains("-avoidVerticalBar")
+    // Pass `-sheetUnderVerticalBar` to let the sheet extend underneath the
+    // vertical bar on an iPhone Duo
+    if ProcessInfo.processInfo.arguments.contains("-sheetUnderVerticalBar") {
+      sheetAvoidsVerticalBar = false
+    }
     
     #if targetEnvironment(macCatalyst)
     mode = .sidebar
