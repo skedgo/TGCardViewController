@@ -390,6 +390,9 @@ extension TGCardViewController {
 #if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst) // Xcode 27 proxy; vertical bars are iPhone and iPad only
     guard #available(iOS 27.1, *) else { return }
     
+    // The bar coming or going changes the space beside it
+    fitSheetBesideVerticalBar()
+
     let barEdge = sheetHost?.traitCollection.verticalBarEdge ?? .unspecified
     let showsBar = sheetHost != nil && barEdge != .unspecified
     updateShowsVerticalBarActions(showsBar)
@@ -502,6 +505,11 @@ extension TGCardViewController {
     sheetItems.layoutIfNeeded()
     keepSheetContentClear(ofBarColumn: frame, in: host.view)
     
+    // When the sheet stays beside the bar, the map's items are always in front
+    let sheetFrame = host.view.convert(host.view.bounds, to: view)
+    let barFrame = mapItems.frame
+    let sheetTop = sheetFrame.maxX <= barFrame.minX || sheetFrame.minX >= barFrame.maxX ? .greatestFiniteMagnitude : sheetTop
+    
     // Groups fade as a whole, so they don't get cut in half
     for (mapGroup, sheetGroup) in zip(mapItems.groups, sheetItems.groups) {
       let groupFrame = mapGroup.convert(mapGroup.bounds, to: view)
@@ -517,6 +525,38 @@ extension TGCardViewController {
       mapButton.accessibilityElementsHidden = !mapOwnsButton
       sheetButton.isUserInteractionEnabled = !mapOwnsButton
       sheetButton.accessibilityElementsHidden = mapOwnsButton
+    }
+  }
+  
+  /// Keeps the sheet beside a vertical bar, if ``sheetAvoidsVerticalBar`` is
+  /// set, by narrowing the view that UIKit lays out the sheet in, so the sheet
+  /// sizes itself to the space next to the bar. Touches in the bar's column
+  /// then go to what's behind the sheet, i.e., the map and the bar's items.
+  func fitSheetBesideVerticalBar() {
+    guard
+      sheetAvoidsVerticalBar,
+      let host = sheetHost,
+      let container = host.sheetPresentationController?.containerView,
+      let window = view.window
+    else { return }
+    
+    var available = window.bounds
+#if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst)
+    if #available(iOS 27.1, *), traitCollection.verticalBarEdge != .unspecified {
+      let edge: NSDirectionalRectEdge = traitCollection.verticalBarEdge == .leading ? .leading : .trailing
+      let guide = view.layoutGuide(for: .bar(onEdge: edge, extent: TGVerticalBarItemsView.itemSize))
+      let column = view.convert(guide.layoutFrame, to: window)
+      if column.midX < window.bounds.midX {
+        available.size.width = window.bounds.maxX - column.maxX
+        available.origin.x = column.maxX
+      } else {
+        available.size.width = column.minX - window.bounds.minX
+      }
+    }
+#endif
+    
+    if container.frame != available {
+      container.frame = available
     }
   }
   
@@ -1038,6 +1078,8 @@ extension TGCardViewController {
       let window = view.window,
       host.view.window === window
     else { return }
+
+    fitSheetBesideVerticalBar()
 
     syncSheetHostAppearance(host)
 
