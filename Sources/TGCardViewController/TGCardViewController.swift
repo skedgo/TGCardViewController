@@ -192,6 +192,9 @@ open class TGCardViewController: UIViewController {
   /// edge, where the bottom map buttons then ignore the bar's safe area inset,
   /// like the collapsed card's title does
   var bottomFloatingViewIgnoresVerticalBar = false
+  
+  /// Where the vertical bar is, if any, see `updateLayoutForVerticalBar`
+  var verticalBarColumnGuide: (edge: NSDirectionalRectEdge, guide: UILayoutGuide)?
 
   /// The close buttons in the titles of the top card, hidden while the bar
   /// items stand in for them

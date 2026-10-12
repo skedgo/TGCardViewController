@@ -422,9 +422,10 @@ extension TGCardViewController {
       suppressedCloseButtons.forEach { Self.setCloseButton($0, suppressed: false) }
       suppressedCloseButtons = []
       if let host = sheetHost {
-        keepSheetContentClear(ofBarColumn: nil, in: host.view)
+        updateLayoutForVerticalBar(sheetTop: host.view.convert(host.view.bounds, to: view).minY)
+      } else {
+        letBottomFloatingViewIgnoreVerticalBar(false)
       }
-      letBottomFloatingViewIgnoreVerticalBar(false)
       mapVerticalBarItems?.removeFromSuperview()
       mapVerticalBarItems = nil
       sheetVerticalBarItems?.removeFromSuperview()
@@ -490,6 +491,8 @@ extension TGCardViewController {
   ///
   /// - Parameter sheetTop: The top of the sheet in this controller's view
   func syncVerticalBarItems(sheetTop: CGFloat) {
+    updateLayoutForVerticalBar(sheetTop: sheetTop)
+    
     guard
       let mapItems = mapVerticalBarItems,
       let sheetItems = sheetVerticalBarItems,
@@ -502,12 +505,9 @@ extension TGCardViewController {
     }
     sheetItems.layoutIfNeeded()
     
-    // When collapsed, the sheet only shows the card's title, which can then
-    // use the full width, and the card's actions aren't shown in the bar
+    // When collapsed, the card's actions aren't shown in the bar
     let expansion = sheetExpansion(forSheetTop: sheetTop) ?? 1
     let isCollapsed = expansion < 0.01
-    keepSheetContentClear(ofBarColumn: frame, in: host.view, isCollapsed: isCollapsed)
-    letBottomFloatingViewIgnoreVerticalBar(isCollapsed && !isBarOnLeadingEdge(frame, in: host.view))
     
     // Groups fade as a whole, so they don't get cut in half
     for (mapGroup, sheetGroup) in zip(mapItems.groups, sheetItems.groups) {
@@ -533,6 +533,35 @@ extension TGCardViewController {
       actions.isUserInteractionEnabled = expansion > 0.5
       actions.accessibilityElementsHidden = isCollapsed
     }
+  }
+  
+  /// Keeps the cards and the bottom map buttons clear of a vertical bar, if
+  /// there's one, except when the sheet is collapsed, where they use the full
+  /// width. That's independent of whether the top card has anything to show
+  /// in the bar.
+  ///
+  /// - Parameter sheetTop: The top of the sheet in this controller's view
+  func updateLayoutForVerticalBar(sheetTop: CGFloat) {
+    guard let host = sheetHost else { return }
+    
+    var column: CGRect? = nil
+#if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst)
+    if #available(iOS 27.1, *), host.traitCollection.verticalBarEdge != .unspecified {
+      let edge: NSDirectionalRectEdge = host.traitCollection.verticalBarEdge == .leading ? .leading : .trailing
+      if verticalBarColumnGuide?.edge != edge {
+        verticalBarColumnGuide = (edge, view.layoutGuide(for: .bar(onEdge: edge, extent: TGVerticalBarItemsView.itemSize)))
+      }
+      if let guide = verticalBarColumnGuide?.guide {
+        column = host.view.convert(guide.layoutFrame, from: view)
+      }
+    }
+#endif
+    
+    // When collapsed, the sheet only shows the card's title, which can then
+    // use the full width, as can the map buttons above it
+    let isCollapsed = (sheetExpansion(forSheetTop: sheetTop) ?? 1) < 0.01
+    keepSheetContentClear(ofBarColumn: column, in: host.view, isCollapsed: isCollapsed)
+    letBottomFloatingViewIgnoreVerticalBar(isCollapsed && column.map { !isBarOnLeadingEdge($0, in: host.view) } ?? false)
   }
   
   private func isBarOnLeadingEdge(_ column: CGRect, in hostView: UIView) -> Bool {
