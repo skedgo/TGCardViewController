@@ -222,6 +222,8 @@ extension TGCardViewController {
     let position = cardPosition
     sheetHost = nil
     sheetBackgroundView = nil
+    headerSheetBackgroundView?.removeFromSuperview()
+    headerSheetBackgroundView = nil
     sheetTargetPosition = nil
     sheetDetentValues = [:]
     updateVerticalBarItems()
@@ -1224,8 +1226,11 @@ extension TGCardViewController {
     return host.view.convert(host.view.bounds, to: view).maxY
   }
   
-  /// Shows the top card's `expandedBackgroundColor` across the whole sheet
+  /// Shows the top card's `expandedBackgroundColor` across the whole sheet,
+  /// and the header above it, so that the header matches the card below
   private func updateSheetBackground(alpha: CGFloat) {
+    updateHeaderBackground(alpha: alpha)
+    
     guard let host = sheetHost, let color = topCard?.style.expandedBackgroundColor else {
       sheetBackgroundView?.removeFromSuperview()
       sheetBackgroundView = nil
@@ -1255,6 +1260,53 @@ extension TGCardViewController {
     if abs(background.alpha - alpha) > 0.01 {
       background.alpha = alpha
     }
+  }
+  
+  /// Puts the same background behind the header as `updateSheetBackground`
+  /// puts behind the card: between the header's glass and its content, as the
+  /// sheet's is between its glass and the card
+  private func updateHeaderBackground(alpha: CGFloat) {
+    guard let color = topCard?.style.expandedBackgroundColor else {
+      headerSheetBackgroundView?.removeFromSuperview()
+      headerSheetBackgroundView = nil
+      return
+    }
+    
+    let container = headerEffectView.contentView
+    let background: UIView
+    if let existing = headerSheetBackgroundView, existing.superview === container {
+      background = existing
+    } else {
+      headerSheetBackgroundView?.removeFromSuperview()
+      background = UIView()
+      background.isUserInteractionEnabled = false
+      background.translatesAutoresizingMaskIntoConstraints = false
+      container.insertSubview(background, at: 0)
+      NSLayoutConstraint.activate([
+        background.topAnchor.constraint(equalTo: container.topAnchor),
+        background.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+        background.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+        background.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+      ])
+      headerSheetBackgroundView = background
+      matchHeaderBackgroundCorners()
+    }
+    if background.backgroundColor != color {
+      background.backgroundColor = color
+    }
+    if abs(background.alpha - alpha) > 0.01 {
+      background.alpha = alpha
+    }
+  }
+  
+  /// The header's glass doesn't clip its content to its rounded corners, so
+  /// give the background the same corners
+  func matchHeaderBackgroundCorners() {
+#if !os(visionOS)
+    if #available(iOS 26.0, *), let background = headerSheetBackgroundView {
+      background.cornerConfiguration = headerEffectView.cornerConfiguration
+    }
+#endif
   }
   
   /// Like the classic card does while dragging, fade out the map's buttons as

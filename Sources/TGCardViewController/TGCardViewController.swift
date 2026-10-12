@@ -169,6 +169,8 @@ open class TGCardViewController: UIViewController {
   /// when above a system sheet; see `updateHeaderForSheet`
   var headerCardEdgeConstraints: [NSLayoutConstraint] = []
   var headerScreenEdgeConstraints: [NSLayoutConstraint] = []
+  /// Matches the background of the card in the system sheet; see `updateHeaderBackground`
+  var headerSheetBackgroundView: UIView?
   var headerSheetAlignedConstraints: [NSLayoutConstraint] = []
   var headerEffectToScreenTopConstraints: [NSLayoutConstraint] = []
   var headerEffectToHeaderTopConstraints: [NSLayoutConstraint] = []
@@ -2569,6 +2571,7 @@ extension TGCardViewController {
       )
     }
 #endif
+    matchHeaderBackgroundCorners()
   }
   
   /// Whether the header floats right above a system sheet that's on the side
