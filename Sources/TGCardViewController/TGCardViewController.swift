@@ -155,15 +155,6 @@ open class TGCardViewController: UIViewController {
   /// - Warning: Set before `viewDidLoad` is called.
   public var presentationStyle: PresentationStyle = .automatic
   
-  /// Whether the system sheet stays beside a vertical bar, e.g., on an iPhone
-  /// Duo, rather than extending underneath it, which is what UIKit does by
-  /// itself. Defaults to `true`.
-  ///
-  /// The vertical bar's items then always sit over the map, next to the sheet.
-  ///
-  /// - Warning: Set before `viewDidLoad` is called.
-  public var sheetAvoidsVerticalBar: Bool = true
-  
   // MARK: System sheet state, see `TGCardViewController+SystemSheet.swift`
   
   /// Hosts the cards while they're shown in a system sheet
