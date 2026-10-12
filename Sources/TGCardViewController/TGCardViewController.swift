@@ -108,8 +108,7 @@ open class TGCardViewController: UIViewController {
     /// The space between the header and a system sheet, when the sheet is extended.
     static let sheetSpacingBelowHeader: CGFloat = 8
     
-    /// The extra space around a header's content, when the header spans the
-    /// top of the screen above a system sheet
+    /// The extra space around a header's content above a system sheet
     static let sheetHeaderContentInset: CGFloat = 8
     
     /// The tallest a collapsed sheet can be while it still floats above the
@@ -170,6 +169,12 @@ open class TGCardViewController: UIViewController {
   /// when above a system sheet; see `updateHeaderForSheet`
   var headerCardEdgeConstraints: [NSLayoutConstraint] = []
   var headerScreenEdgeConstraints: [NSLayoutConstraint] = []
+  var headerSheetAlignedConstraints: [NSLayoutConstraint] = []
+  var headerEffectToScreenTopConstraints: [NSLayoutConstraint] = []
+  var headerEffectToHeaderTopConstraints: [NSLayoutConstraint] = []
+  /// The distance between the side of the screen and a system sheet on that
+  /// side, which a header above the sheet keeps to the top
+  var headerSheetGap: CGFloat = 8
   var savedCardContentConstraints: [NSLayoutConstraint] = []
   var savedCardWrapperEffect: UIVisualEffect?
   var sheetDetentValues: [TGCardPosition: CGFloat] = [:]
@@ -2388,7 +2393,9 @@ extension TGCardViewController {
   }
   
   private func adjustHeaderPositioningConstraint() {
-    if cardIsNextToMap(in: traitCollection) {
+    if headerFloatsAboveSheet {
+      headerViewTopConstraint.constant = topOverlap + headerSheetGap
+    } else if cardIsNextToMap(in: traitCollection) {
       headerViewTopConstraint.constant = topOverlap + Constants.floatingHeaderTopMargin
     } else {
       headerViewTopConstraint.constant = 0
@@ -2399,6 +2406,8 @@ extension TGCardViewController {
     let contentSize = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     if headerSpansTopAboveSheet {
       headerViewHeightConstraint.constant = contentSize.height + topOverlap + 2 * Constants.sheetHeaderContentInset
+    } else if headerFloatsAboveSheet {
+      headerViewHeightConstraint.constant = contentSize.height + 2 * Constants.sheetHeaderContentInset
     } else if cardIsNextToMap(in: traitCollection) {
       headerViewHeightConstraint.constant = contentSize.height
     } else {
@@ -2476,7 +2485,7 @@ extension TGCardViewController {
     headerView.addSubview(content)
     let contentSize = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     content.heightAnchor.constraint(equalToConstant: contentSize.height).isActive = true
-    let inset = headerSpansTopAboveSheet ? Constants.sheetHeaderContentInset : 0
+    let inset = usesSystemSheet ? Constants.sheetHeaderContentInset : 0
     content.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: inset).isActive = true
     headerView.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: inset).isActive = true
     headerView.bottomAnchor.constraint(equalTo: content.bottomAnchor, constant: inset).isActive = true
@@ -2491,9 +2500,15 @@ extension TGCardViewController {
   /// Above a system sheet, the header spans the full width of the screen, with
   /// square corners, like a toolbar; its content keeps clear of the safe area,
   /// e.g., of a vertical bar.
+  /// Above a system sheet, the header either spans the full width of the
+  /// screen with square corners, like a toolbar, in compact width; or it
+  /// floats right above the sheet, aligned with it, when the sheet is on the
+  /// side of the screen. Its content keeps clear of the safe area, e.g., of a
+  /// vertical bar.
   private func updateHeaderForSheet() {
     guard let superview = headerView.superview else { return }
     let spansTop = headerSpansTopAboveSheet
+    let floatsAboveSheet = headerFloatsAboveSheet
     
     if headerCardEdgeConstraints.isEmpty {
       let horizontal: [NSLayoutConstraint.Attribute] = [.leading, .trailing]
@@ -2505,30 +2520,92 @@ extension TGCardViewController {
         headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
         headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       ]
+      headerSheetAlignedConstraints = [
+        headerView.leftAnchor.constraint(equalTo: view.leftAnchor),
+        headerView.widthAnchor.constraint(equalToConstant: 0),
+      ]
+      headerEffectToScreenTopConstraints = superview.constraints.filter {
+        $0.firstItem === headerEffectView && $0.firstAttribute == .top && $0.secondItem !== headerView
+      }
+      headerEffectToHeaderTopConstraints = [
+        headerEffectView.topAnchor.constraint(equalTo: headerView.topAnchor),
+      ]
     }
+    
+    let horizontal = spansTop ? headerScreenEdgeConstraints
+      : floatsAboveSheet ? headerSheetAlignedConstraints
+      : headerCardEdgeConstraints
+    NSLayoutConstraint.deactivate(
+      [headerScreenEdgeConstraints, headerSheetAlignedConstraints, headerCardEdgeConstraints]
+        .flatMap { $0 }
+        .filter { !horizontal.contains($0) }
+    )
+    NSLayoutConstraint.activate(horizontal)
+    
+    if floatsAboveSheet {
+      NSLayoutConstraint.deactivate(headerEffectToScreenTopConstraints)
+      NSLayoutConstraint.activate(headerEffectToHeaderTopConstraints)
+    } else {
+      NSLayoutConstraint.deactivate(headerEffectToHeaderTopConstraints)
+      NSLayoutConstraint.activate(headerEffectToScreenTopConstraints)
+    }
+    
     if spansTop {
-      NSLayoutConstraint.deactivate(headerCardEdgeConstraints)
-      NSLayoutConstraint.activate(headerScreenEdgeConstraints)
       headerView.layer.cornerRadius = 0
       headerView.subviews
         .compactMap { $0 as? TGHeaderView }
         .forEach { $0.layer.cornerRadius = 0 }
-    } else {
-      NSLayoutConstraint.deactivate(headerScreenEdgeConstraints)
-      NSLayoutConstraint.activate(headerCardEdgeConstraints)
     }
     
 #if !os(visionOS)
     if #available(iOS 26.0, *) {
       let radius = UICornerRadius.fixed(spansTop ? 0 : Constants.iOS26CornerRadius)
+      let topRadius = floatsAboveSheet ? radius : nil
       headerEffectView.cornerConfiguration = .corners(
-        topLeftRadius: nil,
-        topRightRadius: nil,
+        topLeftRadius: topRadius,
+        topRightRadius: topRadius,
         bottomLeftRadius: radius,
         bottomRightRadius: radius
       )
     }
 #endif
+  }
+  
+  /// Whether the header floats right above a system sheet that's on the side
+  /// of the screen, e.g., on iPad
+  var headerFloatsAboveSheet: Bool {
+    usesSystemSheet && cardIsNextToMap(in: traitCollection)
+  }
+  
+  /// Aligns a header that floats above the system sheet with the sheet, and
+  /// keeps the same distance to the top as the sheet does to the side
+  ///
+  /// - Parameter sheetFrame: The sheet's frame in this controller's view
+  func alignHeader(withSheetFrame sheetFrame: CGRect) {
+    guard headerFloatsAboveSheet, headerSheetAlignedConstraints.count == 2 else { return }
+    
+    let gap: CGFloat
+    if sheetFrame.midX < view.bounds.midX {
+      gap = sheetFrame.minX - view.safeAreaInsets.left
+    } else {
+      gap = view.bounds.maxX - view.safeAreaInsets.right - sheetFrame.maxX
+    }
+    var changed = false
+    if abs(headerSheetAlignedConstraints[0].constant - sheetFrame.minX) > 0.5 {
+      headerSheetAlignedConstraints[0].constant = sheetFrame.minX
+      changed = true
+    }
+    if abs(headerSheetAlignedConstraints[1].constant - sheetFrame.width) > 0.5 {
+      headerSheetAlignedConstraints[1].constant = sheetFrame.width
+      changed = true
+    }
+    if abs(headerSheetGap - max(0, gap)) > 0.5 {
+      headerSheetGap = max(0, gap)
+      changed = true
+    }
+    if changed {
+      updateHeaderConstraints()
+    }
   }
   
   private func updateStatusBar(headerIsVisible: Bool, preferredStyle: UIStatusBarStyle? = nil) {

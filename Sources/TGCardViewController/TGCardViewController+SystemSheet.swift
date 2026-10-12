@@ -1162,6 +1162,7 @@ extension TGCardViewController {
       if mapViewController.additionalSafeAreaInsets != insets {
         mapViewController.additionalSafeAreaInsets = insets
       }
+      alignHeader(withSheetFrame: sheetFrame)
       fadeCardContent(forSheetTop: sheetFrame.minY)
       syncVerticalBarItems(sheetTop: sheetFrame.minY)
       return
