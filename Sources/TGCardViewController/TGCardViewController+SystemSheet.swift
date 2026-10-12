@@ -618,17 +618,32 @@ extension TGCardViewController {
       }
     }
     
+    var changed = false
     var newAdditional = additional
     newAdditional.left = safeLeft - systemLeft
     newAdditional.right = safeRight - systemRight
     if abs(newAdditional.left - additional.left) > 0.5 || abs(newAdditional.right - additional.right) > 0.5 {
       host.additionalSafeAreaInsets = newAdditional
+      changed = true
     }
     if let constraint = sheetContentLeftConstraint, abs(constraint.constant - left) > 0.5 {
       constraint.constant = left
+      changed = true
     }
     if let constraint = sheetContentRightConstraint, abs(constraint.constant - right) > 0.5 {
       constraint.constant = right
+      changed = true
+    }
+    
+    // This typically runs while the sheet lays out, after the cards in it
+    // have been laid out already, and the sheet's last layout pass when it
+    // settles doesn't necessarily get followed by another one. So make sure
+    // the cards pick up the change.
+    if changed {
+      DispatchQueue.main.async { [weak host] in
+        host?.view.setNeedsLayout()
+        host?.view.layoutIfNeeded()
+      }
     }
   }
   
