@@ -108,6 +108,10 @@ open class TGCardViewController: UIViewController {
     /// The space between the header and a system sheet, when the sheet is extended.
     static let sheetSpacingBelowHeader: CGFloat = 8
     
+    /// The extra space around a header's content, when the header spans the
+    /// top of the screen above a system sheet
+    static let sheetHeaderContentInset: CGFloat = 8
+    
     /// The tallest a collapsed sheet can be while it still floats above the
     /// bottom edge, rather than attaching to it with the bottom safe area added
     /// below the content. Observed on iOS 26 for custom detents.
@@ -162,6 +166,10 @@ open class TGCardViewController: UIViewController {
   var sheetContentHeightConstraint: NSLayoutConstraint?
   var sheetContentLeftConstraint: NSLayoutConstraint?
   var sheetContentRightConstraint: NSLayoutConstraint?
+  /// Header edges pinned to the card, swapped for those pinned to the screen
+  /// when above a system sheet; see `updateHeaderForSheet`
+  var headerCardEdgeConstraints: [NSLayoutConstraint] = []
+  var headerScreenEdgeConstraints: [NSLayoutConstraint] = []
   var savedCardContentConstraints: [NSLayoutConstraint] = []
   var savedCardWrapperEffect: UIVisualEffect?
   var sheetDetentValues: [TGCardPosition: CGFloat] = [:]
@@ -2357,6 +2365,7 @@ extension TGCardViewController {
     headerView.subviews
       .compactMap { $0 as? TGHeaderView }
       .forEach { applyCornerStyle(to: $0) }
+    updateHeaderForSheet()
     
     updateStatusBar(headerIsVisible: isShowingHeader)
 
@@ -2388,7 +2397,9 @@ extension TGCardViewController {
   
   private func adjustHeaderHeightConstraint(toFit content: UIView) {
     let contentSize = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-    if cardIsNextToMap(in: traitCollection) {
+    if headerSpansTopAboveSheet {
+      headerViewHeightConstraint.constant = contentSize.height + topOverlap + 2 * Constants.sheetHeaderContentInset
+    } else if cardIsNextToMap(in: traitCollection) {
       headerViewHeightConstraint.constant = contentSize.height
     } else {
       headerViewHeightConstraint.constant = contentSize.height + topOverlap
@@ -2465,9 +2476,59 @@ extension TGCardViewController {
     headerView.addSubview(content)
     let contentSize = content.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     content.heightAnchor.constraint(equalToConstant: contentSize.height).isActive = true
-    content.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
-    content.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
-    content.bottomAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
+    let inset = headerSpansTopAboveSheet ? Constants.sheetHeaderContentInset : 0
+    content.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: inset).isActive = true
+    headerView.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: inset).isActive = true
+    headerView.bottomAnchor.constraint(equalTo: content.bottomAnchor, constant: inset).isActive = true
+  }
+  
+  /// Whether the header spans the top of the screen above a system sheet, i.e.,
+  /// in compact width, rather than floating above a card next to the map
+  var headerSpansTopAboveSheet: Bool {
+    usesSystemSheet && !cardIsNextToMap(in: traitCollection)
+  }
+  
+  /// Above a system sheet, the header spans the full width of the screen, with
+  /// square corners, like a toolbar; its content keeps clear of the safe area,
+  /// e.g., of a vertical bar.
+  private func updateHeaderForSheet() {
+    guard let superview = headerView.superview else { return }
+    let spansTop = headerSpansTopAboveSheet
+    
+    if headerCardEdgeConstraints.isEmpty {
+      let horizontal: [NSLayoutConstraint.Attribute] = [.leading, .trailing]
+      headerCardEdgeConstraints = superview.constraints.filter {
+        $0.firstItem === headerView && $0.secondItem === cardWrapperShadow
+        && horizontal.contains($0.firstAttribute)
+      }
+      headerScreenEdgeConstraints = [
+        headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+        headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      ]
+    }
+    if spansTop {
+      NSLayoutConstraint.deactivate(headerCardEdgeConstraints)
+      NSLayoutConstraint.activate(headerScreenEdgeConstraints)
+      headerView.layer.cornerRadius = 0
+      headerView.subviews
+        .compactMap { $0 as? TGHeaderView }
+        .forEach { $0.layer.cornerRadius = 0 }
+    } else {
+      NSLayoutConstraint.deactivate(headerScreenEdgeConstraints)
+      NSLayoutConstraint.activate(headerCardEdgeConstraints)
+    }
+    
+#if !os(visionOS)
+    if #available(iOS 26.0, *) {
+      let radius = UICornerRadius.fixed(spansTop ? 0 : Constants.iOS26CornerRadius)
+      headerEffectView.cornerConfiguration = .corners(
+        topLeftRadius: nil,
+        topRightRadius: nil,
+        bottomLeftRadius: radius,
+        bottomRightRadius: radius
+      )
+    }
+#endif
   }
   
   private func updateStatusBar(headerIsVisible: Bool, preferredStyle: UIStatusBarStyle? = nil) {
