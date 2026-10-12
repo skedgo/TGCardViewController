@@ -1179,8 +1179,15 @@ extension TGCardViewController {
       peakingHeight > collapsedHeight
     else { return nil }
     
-    let height = view.bounds.height - sheetTop
+    let height = sheetBottom - sheetTop
     return min(1, max(0, (height - collapsedHeight) / (peakingHeight - collapsedHeight)))
+  }
+  
+  /// The bottom of the sheet in this controller's view, which can float above
+  /// the bottom edge, so heights are measured from there
+  private var sheetBottom: CGFloat {
+    guard let host = sheetHost, host.view.window != nil else { return view.bounds.height }
+    return host.view.convert(host.view.bounds, to: view).maxY
   }
   
   /// Shows the top card's `expandedBackgroundColor` across the whole sheet
@@ -1226,8 +1233,8 @@ extension TGCardViewController {
       let extendedHeight = sheetHeight(for: .extended)
     else { return }
     
-    let peakingTop = view.bounds.height - peakingHeight
-    let extendedTop = view.bounds.height - extendedHeight
+    let peakingTop = sheetBottom - peakingHeight
+    let extendedTop = sheetBottom - extendedHeight
     guard peakingTop > extendedTop else { return }
     
     let fade = min(1, max(0, (peakingTop - sheetTop) / ((peakingTop - extendedTop) * 0.3)))
