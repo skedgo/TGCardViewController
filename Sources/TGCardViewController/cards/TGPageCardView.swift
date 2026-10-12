@@ -60,6 +60,23 @@ class TGPageCardView: TGCardView {
     // The pages keep their contents in the safe area themselves, so the pager
     // mustn't shift them
     pager.contentInsetAdjustmentBehavior = keepsContentInSafeArea ? .never : .automatic
+    passSafeAreaToPages()
+  }
+  
+  override func safeAreaInsetsDidChange() {
+    super.safeAreaInsetsDidChange()
+    passSafeAreaToPages()
+  }
+  
+  /// The page hosts get the safe area of the system, e.g., of a vertical bar
+  /// on the trailing edge, but not what a parent view controller adds, e.g.,
+  /// the sheet for a vertical bar on the leading edge. So tell them what they
+  /// should have, and they make up the difference.
+  private func passSafeAreaToPages() {
+    let insets = keepsContentInSafeArea
+      ? UIEdgeInsets(top: 0, left: safeAreaInsets.left, bottom: 0, right: safeAreaInsets.right)
+      : .zero
+    pageHosts.forEach { $0.horizontalSafeArea = insets }
   }
   
   override func didMoveToWindow() {
@@ -74,6 +91,7 @@ class TGPageCardView: TGCardView {
     let parent = window == nil ? nil : sequence(first: self as UIView, next: \.superview)
       .lazy.compactMap { $0.next as? UIViewController }
       .first
+    passSafeAreaToPages()
     for host in pageHosts where host.parent !== parent {
       if host.parent != nil {
         host.willMove(toParent: nil)
@@ -411,6 +429,19 @@ private final class TGPageHostViewController: UIViewController {
   
   let cardView: TGCardView
   
+  /// The horizontal safe area that the page should have, see
+  /// `TGPageCardView.passSafeAreaToPages`
+  var horizontalSafeArea: UIEdgeInsets = .zero {
+    didSet {
+      guard horizontalSafeArea != oldValue else { return }
+      updateAdditionalSafeArea()
+    }
+  }
+  
+  /// Set while UIKit hasn't applied the last change of the additional safe
+  /// area yet, during which the safe area doesn't reflect it
+  private var isAwaitingSafeArea = false
+  
   init(cardView: TGCardView) {
     self.cardView = cardView
     super.init(nibName: nil, bundle: nil)
@@ -432,6 +463,36 @@ private final class TGPageHostViewController: UIViewController {
       view.bottomAnchor.constraint(equalTo: cardView.bottomAnchor),
     ])
     self.view = view
+  }
+  
+  override func viewSafeAreaInsetsDidChange() {
+    super.viewSafeAreaInsetsDidChange()
+    isAwaitingSafeArea = false
+    updateAdditionalSafeArea()
+  }
+  
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    isAwaitingSafeArea = false
+  }
+  
+  private func updateAdditionalSafeArea() {
+    guard isViewLoaded, !isAwaitingSafeArea else { return }
+    
+    // What UIKit passes on, without what we add
+    let safe = view.safeAreaInsets
+    let inheritedLeft = safe.left - additionalSafeAreaInsets.left
+    let inheritedRight = safe.right - additionalSafeAreaInsets.right
+    
+    var additional = additionalSafeAreaInsets
+    additional.left = max(0, horizontalSafeArea.left - inheritedLeft)
+    additional.right = max(0, horizontalSafeArea.right - inheritedRight)
+    guard abs(additional.left - additionalSafeAreaInsets.left) > 0.5
+      || abs(additional.right - additionalSafeAreaInsets.right) > 0.5
+    else { return }
+    
+    isAwaitingSafeArea = true
+    additionalSafeAreaInsets = additional
   }
   
 }
