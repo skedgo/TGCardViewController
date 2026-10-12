@@ -500,7 +500,12 @@ extension TGCardViewController {
       sheetItems.frame = frame
     }
     sheetItems.layoutIfNeeded()
-    keepSheetContentClear(ofBarColumn: frame, in: host.view)
+    
+    // When collapsed, the sheet only shows the card's title, which can then
+    // use the full width, and the card's actions aren't shown in the bar
+    let expansion = sheetExpansion(forSheetTop: sheetTop) ?? 1
+    let isCollapsed = expansion < 0.01
+    keepSheetContentClear(ofBarColumn: frame, in: host.view, isCollapsed: isCollapsed)
     
     // Groups fade as a whole, so they don't get cut in half
     for (mapGroup, sheetGroup) in zip(mapItems.groups, sheetItems.groups) {
@@ -518,6 +523,14 @@ extension TGCardViewController {
       sheetButton.isUserInteractionEnabled = !mapOwnsButton
       sheetButton.accessibilityElementsHidden = mapOwnsButton
     }
+    
+    // The card's actions fade in along with its content
+    for items in [mapItems, sheetItems] {
+      let actions = items.actionsGroup
+      actions.alpha *= expansion
+      actions.isUserInteractionEnabled = expansion > 0.5
+      actions.accessibilityElementsHidden = isCollapsed
+    }
   }
   
   /// Insets the cards in the sheet, so that they don't go under the column of
@@ -529,12 +542,17 @@ extension TGCardViewController {
   ///   - column: The bar's items in `hostView`'s coordinates, or `nil` if
   ///     there's no vertical bar
   ///   - hostView: The sheet's view
-  func keepSheetContentClear(ofBarColumn column: CGRect?, in hostView: UIView) {
+  ///   - isCollapsed: Whether the sheet is collapsed, which shows only the
+  ///     card's title, so it uses the full width, ignoring the bar
+  func keepSheetContentClear(ofBarColumn column: CGRect?, in hostView: UIView, isCollapsed: Bool = false) {
     var left: CGFloat = 0
     var right: CGFloat = 0
     if let column, !column.isEmpty {
       let safe = hostView.safeAreaInsets
-      if column.midX < hostView.bounds.midX {
+      if isCollapsed {
+        left = -safe.left
+        right = -safe.right
+      } else if column.midX < hostView.bounds.midX {
         left = max(0, column.maxX - safe.left)
       } else {
         right = max(0, hostView.bounds.width - safe.right - column.minX)
@@ -663,7 +681,8 @@ final class TGVerticalBarItemsView: UIView {
   private let nextButton: UIButton
   private let pagingGroup: UIView
   private let actionsStack: UIStackView
-  private let actionsGroup: UIView
+  /// The group with the card's actions, at the bottom
+  let actionsGroup: UIView
   private var actionButtons: [UIButton] = []
   private var actions: [UIAction] = []
   
@@ -1094,21 +1113,26 @@ extension TGCardViewController {
   /// visible at the peaking height to hidden at the collapsed one, where the
   /// sheet only shows the card's title.
   private func fadeCardContent(forSheetTop sheetTop: CGFloat) {
-    guard
-      let cardView = topCardView,
-      let collapsedHeight = sheetHeight(for: .collapsed),
-      let peakingHeight = sheetHeight(for: .peaking),
-      peakingHeight > collapsedHeight
-    else { return }
-    
-    let height = view.bounds.height - sheetTop
-    let alpha = min(1, max(0, (height - collapsedHeight) / (peakingHeight - collapsedHeight)))
+    guard let cardView = topCardView, let alpha = sheetExpansion(forSheetTop: sheetTop) else { return }
     updateSheetBackground(alpha: alpha)
     
     if let current = cardView.contentScrollView?.alpha, abs(current - alpha) < 0.01 {
       return
     }
     cardView.adjustContentAlpha(to: alpha)
+  }
+  
+  /// How far the sheet is raised, from 0 when collapsed to 1 when peaking or
+  /// higher, if the heights are known
+  func sheetExpansion(forSheetTop sheetTop: CGFloat) -> CGFloat? {
+    guard
+      let collapsedHeight = sheetHeight(for: .collapsed),
+      let peakingHeight = sheetHeight(for: .peaking),
+      peakingHeight > collapsedHeight
+    else { return nil }
+    
+    let height = view.bounds.height - sheetTop
+    return min(1, max(0, (height - collapsedHeight) / (peakingHeight - collapsedHeight)))
   }
   
   /// Shows the top card's `expandedBackgroundColor` across the whole sheet
