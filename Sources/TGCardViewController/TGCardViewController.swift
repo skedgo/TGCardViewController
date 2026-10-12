@@ -2562,7 +2562,10 @@ extension TGCardViewController {
 #if !os(visionOS)
     if #available(iOS 26.0, *) {
       let radius = UICornerRadius.fixed(spansTop ? 0 : Constants.iOS26CornerRadius)
-      let topRadius = floatsAboveSheet ? radius : nil
+      // Floating near the top of the screen, follow its rounded corners
+      let topRadius: UICornerRadius? = floatsAboveSheet
+        ? .containerConcentric(minimum: Constants.iOS26CornerRadius)
+        : nil
       headerEffectView.cornerConfiguration = .corners(
         topLeftRadius: topRadius,
         topRightRadius: topRadius,
