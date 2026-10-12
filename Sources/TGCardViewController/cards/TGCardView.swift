@@ -102,6 +102,62 @@ public class TGCardView: TGCornerView, TGPreferrableView {
     contentSeparator?.backgroundColor = .opaqueSeparator
   }
   
+  override public func didMoveToWindow() {
+    super.didMoveToWindow()
+    
+    // In a system sheet, cards span the sheet's full width, so that the
+    // backgrounds of their contents and their scroll indicators can extend
+    // under a vertical bar. The title and content then stay in the safe area,
+    // as do the contents of the cells.
+    let isInSheet = sequence(first: self as UIView, next: \.superview)
+      .contains { $0.next is TGSheetHostViewController }
+    keepsContentInSafeArea = isInSheet
+  }
+  
+  // MARK: - Safe area
+  
+  /// Whether the title and content stay within the horizontal safe area,
+  /// rather than spanning the card's full width
+  private(set) var keepsContentInSafeArea = false {
+    didSet {
+      guard keepsContentInSafeArea != oldValue else { return }
+      updateSafeAreaConstraints()
+    }
+  }
+  
+  /// Called when `keepsContentInSafeArea` changes; subclasses with more content
+  /// to keep in the safe area override this and call `super`
+  func updateSafeAreaConstraints() {
+    updateTitleSafeAreaConstraints()
+  }
+  
+  private var titleEdgeConstraints: [NSLayoutConstraint] = []
+  private var titleSafeAreaConstraints: [NSLayoutConstraint] = []
+  
+  private func updateTitleSafeAreaConstraints() {
+    guard let placeholder = titleViewPlaceholder, placeholder.superview === self else { return }
+    
+    if titleEdgeConstraints.isEmpty {
+      let horizontal: [NSLayoutConstraint.Attribute] = [.leading, .trailing, .left, .right]
+      titleEdgeConstraints = constraints.filter {
+        ($0.firstItem === placeholder && $0.secondItem === self && horizontal.contains($0.firstAttribute))
+        || ($0.secondItem === placeholder && $0.firstItem === self && horizontal.contains($0.secondAttribute))
+      }
+      titleSafeAreaConstraints = [
+        placeholder.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+        safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: placeholder.trailingAnchor),
+      ]
+    }
+    
+    if keepsContentInSafeArea {
+      NSLayoutConstraint.deactivate(titleEdgeConstraints)
+      NSLayoutConstraint.activate(titleSafeAreaConstraints)
+    } else {
+      NSLayoutConstraint.deactivate(titleSafeAreaConstraints)
+      NSLayoutConstraint.activate(titleEdgeConstraints)
+    }
+  }
+  
   // MARK: - Content Configuration
   
   /// Updates the title and subtitle, when the `.default` title was used.

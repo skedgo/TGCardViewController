@@ -560,7 +560,7 @@ extension TGCardViewController {
     // When collapsed, the sheet only shows the card's title, which can then
     // use the full width, as can the map buttons above it
     let isCollapsed = (sheetExpansion(forSheetTop: sheetTop) ?? 1) < 0.01
-    keepSheetContentClear(ofBarColumn: column, in: host.view, isCollapsed: isCollapsed)
+    keepSheetContentClear(ofBarColumn: column, in: host, isCollapsed: isCollapsed)
     letBottomFloatingViewIgnoreVerticalBar(isCollapsed && column.map { !isBarOnLeadingEdge($0, in: host.view) } ?? false)
   }
   
@@ -581,30 +581,48 @@ extension TGCardViewController {
     }
   }
   
-  /// Insets the cards in the sheet, so that they don't go under the column of
-  /// the vertical bar. The safe area covers that column for a bar on the
-  /// trailing edge, but not for one on the leading edge, e.g., on an unfolded
-  /// iPhone Duo when the app is on the left screen.
+  /// Lets the cards in the sheet span its full width, including under the
+  /// column of the vertical bar, while their contents stay clear of it: the
+  /// safe area on the bar's side covers the column, and cards keep their titles
+  /// and cell contents within the safe area. That way only backgrounds and the
+  /// scroll indicator extend under the bar, like in Apple's apps.
+  ///
+  /// The system's safe area covers that column for a bar on the trailing edge,
+  /// but not for one on the leading edge, e.g., on an unfolded iPhone Duo when
+  /// the app is on the left screen, so the sheet host's additional safe area
+  /// makes up the difference.
   ///
   /// - Parameters:
-  ///   - column: The bar's items in `hostView`'s coordinates, or `nil` if
+  ///   - column: The bar's items in `host`'s view's coordinates, or `nil` if
   ///     there's no vertical bar
-  ///   - hostView: The sheet's view
+  ///   - host: The sheet's view controller
   ///   - isCollapsed: Whether the sheet is collapsed, which shows only the
   ///     card's title, so it uses the full width, ignoring the bar
-  func keepSheetContentClear(ofBarColumn column: CGRect?, in hostView: UIView, isCollapsed: Bool = false) {
+  func keepSheetContentClear(ofBarColumn column: CGRect?, in host: TGSheetHostViewController, isCollapsed: Bool = false) {
+    let hostView = host.view!
+    let additional = host.additionalSafeAreaInsets
+    let systemLeft = hostView.safeAreaInsets.left - additional.left
+    let systemRight = hostView.safeAreaInsets.right - additional.right
+    
+    var safeLeft = systemLeft
+    var safeRight = systemRight
     var left: CGFloat = 0
     var right: CGFloat = 0
     if let column, !column.isEmpty {
-      let safe = hostView.safeAreaInsets
-      if isCollapsed {
-        left = -safe.left
-        right = -safe.right
-      } else if column.midX < hostView.bounds.midX {
-        left = max(0, column.maxX - safe.left)
+      if column.midX < hostView.bounds.midX {
+        safeLeft = isCollapsed ? 0 : max(systemLeft, column.maxX)
+        left = -safeLeft
       } else {
-        right = max(0, hostView.bounds.width - safe.right - column.minX)
+        safeRight = isCollapsed ? 0 : max(systemRight, hostView.bounds.width - column.minX)
+        right = -safeRight
       }
+    }
+    
+    var newAdditional = additional
+    newAdditional.left = safeLeft - systemLeft
+    newAdditional.right = safeRight - systemRight
+    if abs(newAdditional.left - additional.left) > 0.5 || abs(newAdditional.right - additional.right) > 0.5 {
+      host.additionalSafeAreaInsets = newAdditional
     }
     if let constraint = sheetContentLeftConstraint, abs(constraint.constant - left) > 0.5 {
       constraint.constant = left
