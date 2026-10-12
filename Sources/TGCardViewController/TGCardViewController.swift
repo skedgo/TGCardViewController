@@ -188,6 +188,11 @@ open class TGCardViewController: UIViewController {
   
   var verticalBarItemsEdge: NSDirectionalRectEdge?
   
+  /// Set while a collapsed sheet is next to a vertical bar on the trailing
+  /// edge, where the bottom map buttons then ignore the bar's safe area inset,
+  /// like the collapsed card's title does
+  var bottomFloatingViewIgnoresVerticalBar = false
+
   /// The close buttons in the titles of the top card, hidden while the bar
   /// items stand in for them
   var suppressedCloseButtons: [UIButton] = []
@@ -2270,7 +2275,7 @@ extension TGCardViewController {
     }
   }
 
-  private func updateFloatingViewsConstraints() {
+  func updateFloatingViewsConstraints() {
     if cardIsNextToMap(in: traitCollection) {
       bottomFloatingViewBottomConstraint.constant = deviceIsiPhoneX() ? 0 : 8
       bottomFloatingViewTrailingToSafeAreaConstraint.constant = deviceIsiPhoneX() ? 0 : 8
@@ -2281,6 +2286,11 @@ extension TGCardViewController {
       bottomFloatingViewTrailingToSafeAreaConstraint.constant = 8
       topFloatingViewTrailingToSafeAreaConstraint.constant = 8
       topFloatingViewTopConstraint.constant = 8
+    }
+    
+    if bottomFloatingViewIgnoresVerticalBar {
+      let trailingInset = view.effectiveUserInterfaceLayoutDirection == .rightToLeft ? view.safeAreaInsets.left : view.safeAreaInsets.right
+      bottomFloatingViewTrailingToSafeAreaConstraint.constant -= trailingInset
     }
   }
   

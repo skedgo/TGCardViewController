@@ -424,6 +424,7 @@ extension TGCardViewController {
       if let host = sheetHost {
         keepSheetContentClear(ofBarColumn: nil, in: host.view)
       }
+      letBottomFloatingViewIgnoreVerticalBar(false)
       mapVerticalBarItems?.removeFromSuperview()
       mapVerticalBarItems = nil
       sheetVerticalBarItems?.removeFromSuperview()
@@ -506,6 +507,7 @@ extension TGCardViewController {
     let expansion = sheetExpansion(forSheetTop: sheetTop) ?? 1
     let isCollapsed = expansion < 0.01
     keepSheetContentClear(ofBarColumn: frame, in: host.view, isCollapsed: isCollapsed)
+    letBottomFloatingViewIgnoreVerticalBar(isCollapsed && !isBarOnLeadingEdge(frame, in: host.view))
     
     // Groups fade as a whole, so they don't get cut in half
     for (mapGroup, sheetGroup) in zip(mapItems.groups, sheetItems.groups) {
@@ -530,6 +532,23 @@ extension TGCardViewController {
       actions.alpha *= expansion
       actions.isUserInteractionEnabled = expansion > 0.5
       actions.accessibilityElementsHidden = isCollapsed
+    }
+  }
+  
+  private func isBarOnLeadingEdge(_ column: CGRect, in hostView: UIView) -> Bool {
+    let isOnLeft = column.midX < hostView.bounds.midX
+    return hostView.effectiveUserInterfaceLayoutDirection == .rightToLeft ? !isOnLeft : isOnLeft
+  }
+  
+  /// Lets the bottom map buttons move into the vertical bar's column, while
+  /// the sheet is collapsed next to a bar on the trailing edge, so that they
+  /// line up with the collapsed sheet below them
+  private func letBottomFloatingViewIgnoreVerticalBar(_ ignore: Bool) {
+    guard ignore != bottomFloatingViewIgnoresVerticalBar else { return }
+    bottomFloatingViewIgnoresVerticalBar = ignore
+    updateFloatingViewsConstraints()
+    UIView.animate(withDuration: Constants.tapAnimationDuration) {
+      self.view.layoutIfNeeded()
     }
   }
   
