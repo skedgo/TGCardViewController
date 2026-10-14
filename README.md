@@ -72,6 +72,35 @@ Provides a card-based view controller for mapping applications where the card's 
       }
     ```
 
+### System sheets on iOS 27+
+
+By default (`presentationStyle = .automatic`), on iOS 27 and later the cards are shown in a system sheet (`UISheetPresentationController`). The sheet adapts to the size classes by itself, like Maps':
+
+| | Presentation |
+|---|---|
+| Compact width, e.g., iPhone in portrait | Sheet at the bottom, full width |
+| Otherwise, e.g., iPad or iPhone in landscape | Sheet on the leading edge, 400pt wide |
+| Mac Catalyst, visionOS, `mode = .sidebar` | Classic |
+| The card controller is itself presented, but not full screen | Classic |
+| iOS 26 and earlier, or built with Xcode 26 and earlier | Classic |
+
+Set `presentationStyle` to `.classic` to opt out. Check `usesSystemSheet` for what's currently in use.
+
+Cards, map managers, headers, map buttons and paging work the same in both. Differences with a system sheet:
+
+- The map isn't dimmed and stays interactive when the card is extended.
+- The sheet provides the grab handle, the material, the corners and the dragging.
+- When a header is showing, the extended card stops below it.
+- Sheets presented by cards (e.g., with detents) stack on top of the card's sheet.
+
+Because the sheet is the card controller's `presentedViewController`:
+
+- `present(_:animated:completion:)` and `dismiss(animated:completion:)` on the card controller present on top of the sheet, and dismiss what's on top of it, but never the sheet itself.
+- Use `presentedOverlayViewController` to check what's presented on top of the cards, instead of `presentedViewController`.
+- Use `cardOverlayView` instead of `view` for views that you constrain to views inside a card, e.g., tooltips.
+
+On devices with a vertical bar, such as the iPhone Duo's outer display (iOS 27.1+), the system puts a sheet's bar items into that bar. The card controller does the same for cards, like Mail does: the top card's close button moves to the top of the bar, followed by buttons for the previous and next page of a `TGPageCard`, and the card's `verticalBarActions` go to the bottom of the bar as icon-only buttons. They stay in the bar at every height of the sheet, and the cards stay clear of it. Cards can observe `showsVerticalBarActions` to leave those actions out of their own content while they're in the bar.
+
 ## Specs
 
 ### 1. Basic functionality of cards

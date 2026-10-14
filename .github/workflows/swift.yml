@@ -39,4 +39,4 @@ jobs:
       - name: Build Example
         run: |
           cd Example
-          set -o pipefail && xcodebuild build -scheme 'Example' -destination 'platform=iOS Simulator,name=iPhone 16' | xcbeautify
+          set -o pipefail && xcodebuild build -scheme 'Example' -destination 'generic/platform=iOS Simulator' | xcbeautify

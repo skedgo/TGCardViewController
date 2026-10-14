@@ -52,3 +52,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+
+/// Required on iOS 27, which no longer launches apps without scene support.
+/// The window and its root view controller come from `Main.storyboard`.
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+  
+  var window: UIWindow?
+  
+}

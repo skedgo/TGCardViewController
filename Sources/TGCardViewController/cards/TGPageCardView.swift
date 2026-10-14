@@ -35,9 +35,13 @@ class TGPageCardView: TGCardView {
 
   weak var delegate: TGPageCardViewDelegate?
   
+  /// Hosts each page in its own view controller, ordered as provided, i.e.,
+  /// logically first one first; not by how it appears.
+  private var pageHosts: [TGPageHostViewController] = []
+  
   /// The card views, ordered as provided, i.e., logically first one first; not by how it appears.
   var cardViews: [TGCardView] {
-    (contentView.subviews as? [TGCardView]) ?? []
+    pageHosts.map(\.cardView)
   }
   
   private var pageCount: Int {
@@ -48,6 +52,56 @@ class TGPageCardView: TGCardView {
     let cardViews = self.cardViews
     guard index >= 0, index <= cardViews.count else { return nil }
     return cardViews[index]
+  }
+  
+  override func updateSafeAreaConstraints() {
+    super.updateSafeAreaConstraints()
+    
+    // The pages keep their contents in the safe area themselves, so the pager
+    // mustn't shift them
+    pager.contentInsetAdjustmentBehavior = keepsContentInSafeArea ? .never : .automatic
+    passSafeAreaToPages()
+  }
+  
+  override func safeAreaInsetsDidChange() {
+    super.safeAreaInsetsDidChange()
+    passSafeAreaToPages()
+  }
+  
+  /// The page hosts get the safe area of the system, e.g., of a vertical bar
+  /// on the trailing edge, but not what a parent view controller adds, e.g.,
+  /// the sheet for a vertical bar on the leading edge. So tell them what they
+  /// should have, and they make up the difference.
+  private func passSafeAreaToPages() {
+    let insets = keepsContentInSafeArea
+      ? UIEdgeInsets(top: 0, left: safeAreaInsets.left, bottom: 0, right: safeAreaInsets.right)
+      : .zero
+    pageHosts.forEach { $0.horizontalSafeArea = insets }
+  }
+  
+  override func didMoveToWindow() {
+    super.didMoveToWindow()
+    
+    // UIKit only passes the safe area and layout margins of the pager on to
+    // its content at the edges of that content, so all but the first and last
+    // page would miss them. View controllers get them from their position on
+    // screen instead, so each page is hosted in a child view controller of
+    // whichever view controller this card is in, e.g., the card controller or
+    // the sheet.
+    let parent = window == nil ? nil : sequence(first: self as UIView, next: \.superview)
+      .lazy.compactMap { $0.next as? UIViewController }
+      .first
+    passSafeAreaToPages()
+    for host in pageHosts where host.parent !== parent {
+      if host.parent != nil {
+        host.willMove(toParent: nil)
+        host.removeFromParent()
+      }
+      if let parent {
+        parent.addChild(host)
+        host.didMove(toParent: parent)
+      }
+    }
   }
   
   private var topView: UIView?
@@ -64,9 +118,9 @@ class TGPageCardView: TGCardView {
     
     var currentContent: UIView?
     
-    for aContent in contentView.subviews {
-      if aContent.frame.contains(pager.contentOffset) {
-        currentContent = aContent
+    for host in pageHosts {
+      if host.view.frame.contains(pager.contentOffset) {
+        currentContent = host.cardView
       }
     }
     
@@ -123,7 +177,7 @@ class TGPageCardView: TGCardView {
     //       layout the child card when it's becoming visible soon.
     // See: https://gitlab.com/SkedGo/tripgo-cards-ios/issues/3
     
-    let contents = pageCard.cards.map { card -> UIView in
+    let contents = pageCard.cards.map { card -> TGCardView in
       guard let view = card.buildCardView() else {
         preconditionFailure("Can only include cards in a page view that have a card!")
       }
@@ -137,7 +191,8 @@ class TGPageCardView: TGCardView {
       return view
     }
     
-    fill(with: contents)
+    pageHosts = contents.map(TGPageHostViewController.init(cardView:))
+    fill(with: pageHosts.map(\.view))
     
     // Page card doesn't always start with page 0. So we keep a reference
     // to the first page index, which can then be used at a later point.
@@ -362,6 +417,82 @@ extension TGPageCardView: UIScrollViewDelegate {
     let topMost = cardView(index: logical)
     self.accessibilityElements = [topMost].compactMap { $0 }
     self.topView = topMost
+  }
+  
+}
+
+// MARK: -
+
+/// Hosts a page of a page card, so that it gets the safe area and layout
+/// margins of where it is on screen
+private final class TGPageHostViewController: UIViewController {
+  
+  let cardView: TGCardView
+  
+  /// The horizontal safe area that the page should have, see
+  /// `TGPageCardView.passSafeAreaToPages`
+  var horizontalSafeArea: UIEdgeInsets = .zero {
+    didSet {
+      guard horizontalSafeArea != oldValue else { return }
+      updateAdditionalSafeArea()
+    }
+  }
+  
+  /// Set while UIKit hasn't applied the last change of the additional safe
+  /// area yet, during which the safe area doesn't reflect it
+  private var isAwaitingSafeArea = false
+  
+  init(cardView: TGCardView) {
+    self.cardView = cardView
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  override func loadView() {
+    let view = UIView()
+    view.backgroundColor = .clear
+    cardView.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(cardView)
+    NSLayoutConstraint.activate([
+      cardView.topAnchor.constraint(equalTo: view.topAnchor),
+      cardView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+      view.trailingAnchor.constraint(equalTo: cardView.trailingAnchor),
+      view.bottomAnchor.constraint(equalTo: cardView.bottomAnchor),
+    ])
+    self.view = view
+  }
+  
+  override func viewSafeAreaInsetsDidChange() {
+    super.viewSafeAreaInsetsDidChange()
+    isAwaitingSafeArea = false
+    updateAdditionalSafeArea()
+  }
+  
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    isAwaitingSafeArea = false
+  }
+  
+  private func updateAdditionalSafeArea() {
+    guard isViewLoaded, !isAwaitingSafeArea else { return }
+    
+    // What UIKit passes on, without what we add
+    let safe = view.safeAreaInsets
+    let inheritedLeft = safe.left - additionalSafeAreaInsets.left
+    let inheritedRight = safe.right - additionalSafeAreaInsets.right
+    
+    var additional = additionalSafeAreaInsets
+    additional.left = max(0, horizontalSafeArea.left - inheritedLeft)
+    additional.right = max(0, horizontalSafeArea.right - inheritedRight)
+    guard abs(additional.left - additionalSafeAreaInsets.left) > 0.5
+      || abs(additional.right - additionalSafeAreaInsets.right) > 0.5
+    else { return }
+    
+    isAwaitingSafeArea = true
+    additionalSafeAreaInsets = additional
   }
   
 }

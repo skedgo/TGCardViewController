@@ -102,6 +102,62 @@ public class TGCardView: TGCornerView, TGPreferrableView {
     contentSeparator?.backgroundColor = .opaqueSeparator
   }
   
+  override public func didMoveToWindow() {
+    super.didMoveToWindow()
+    
+    // In a system sheet, cards span the sheet's full width, so that the
+    // backgrounds of their contents and their scroll indicators can extend
+    // under a vertical bar. The title and content then stay in the safe area,
+    // as do the contents of the cells.
+    let isInSheet = sequence(first: self as UIView, next: \.superview)
+      .contains { $0.next is TGSheetHostViewController }
+    keepsContentInSafeArea = isInSheet
+  }
+  
+  // MARK: - Safe area
+  
+  /// Whether the title and content stay within the horizontal safe area,
+  /// rather than spanning the card's full width
+  private(set) var keepsContentInSafeArea = false {
+    didSet {
+      guard keepsContentInSafeArea != oldValue else { return }
+      updateSafeAreaConstraints()
+    }
+  }
+  
+  /// Called when `keepsContentInSafeArea` changes; subclasses with more content
+  /// to keep in the safe area override this and call `super`
+  func updateSafeAreaConstraints() {
+    updateTitleSafeAreaConstraints()
+  }
+  
+  private var titleEdgeConstraints: [NSLayoutConstraint] = []
+  private var titleSafeAreaConstraints: [NSLayoutConstraint] = []
+  
+  private func updateTitleSafeAreaConstraints() {
+    guard let placeholder = titleViewPlaceholder, placeholder.superview === self else { return }
+    
+    if titleEdgeConstraints.isEmpty {
+      let horizontal: [NSLayoutConstraint.Attribute] = [.leading, .trailing, .left, .right]
+      titleEdgeConstraints = constraints.filter {
+        ($0.firstItem === placeholder && $0.secondItem === self && horizontal.contains($0.firstAttribute))
+        || ($0.secondItem === placeholder && $0.firstItem === self && horizontal.contains($0.secondAttribute))
+      }
+      titleSafeAreaConstraints = [
+        placeholder.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+        safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: placeholder.trailingAnchor),
+      ]
+    }
+    
+    if keepsContentInSafeArea {
+      NSLayoutConstraint.deactivate(titleEdgeConstraints)
+      NSLayoutConstraint.activate(titleSafeAreaConstraints)
+    } else {
+      NSLayoutConstraint.deactivate(titleSafeAreaConstraints)
+      NSLayoutConstraint.activate(titleEdgeConstraints)
+    }
+  }
+  
   // MARK: - Content Configuration
   
   /// Updates the title and subtitle, when the `.default` title was used.
@@ -225,6 +281,53 @@ public class TGCardView: TGCornerView, TGPreferrableView {
       
     default:
       return scrollView.superview?.convert(scrollView.frame, to: self).minY ?? scrollView.frame.minY
+    }
+  }
+  
+  /// The height of the card when collapsed in a system sheet: down to the end
+  /// of the title's content, plus as much space as there is above it, where
+  /// the sheet shows its grabber.
+  ///
+  /// This looks at what the title draws, rather than at its bounds, as title
+  /// views can have different margins at their top and bottom, e.g., to sit
+  /// close to a grab handle, or to leave room before the content.
+  func sheetCollapsedHeight() -> CGFloat {
+    let header = headerHeight(for: .collapsed)
+    guard let titleView else { return header }
+    
+    let content = Self.drawnFrame(of: titleView, in: self)
+    guard
+      !content.isNull,
+      content.minY >= 0,
+      content.maxY <= header + 0.5
+    else { return header }
+    
+    return content.maxY + content.minY
+  }
+  
+  /// The frame of what a view and its subviews draw, ignoring empty space
+  /// of container views
+  private static func drawnFrame(of view: UIView, in target: UIView) -> CGRect {
+    guard !view.isHidden, view.alpha > 0.01, !view.bounds.isEmpty else { return .null }
+    
+    let drawsItself: Bool
+    switch view {
+    case let label as UILabel:
+      drawsItself = !(label.text ?? "").isEmpty || label.attributedText.map { $0.length > 0 } ?? false
+    case let imageView as UIImageView:
+      drawsItself = imageView.image != nil
+    case is UIControl:
+      drawsItself = true
+    default:
+      drawsItself = (view.backgroundColor.map { $0.cgColor.alpha > 0 } ?? false)
+        || view.layer.borderWidth > 0
+    }
+    if drawsItself {
+      return view.convert(view.bounds, to: target)
+    }
+    
+    return view.subviews.reduce(CGRect.null) {
+      $0.union(drawnFrame(of: $1, in: target))
     }
   }
   

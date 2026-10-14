@@ -48,11 +48,35 @@ class TGPlainCardView: TGCardView {
     if let content = contentView {
       content.translatesAutoresizingMaskIntoConstraints = false
       self.contentView.addSubview(content)
-      content.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
       content.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
-      self.contentView.trailingAnchor.constraint(equalTo: content.trailingAnchor).isActive = true
       self.contentView.bottomAnchor.constraint(equalTo: content.bottomAnchor).isActive = true
+      contentEdgeConstraints = [
+        content.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+        self.contentView.trailingAnchor.constraint(equalTo: content.trailingAnchor),
+      ]
+      contentSafeAreaConstraints = [
+        content.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+        safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: content.trailingAnchor),
+      ]
+      updateSafeAreaConstraints()
     }
   }
-  
+
+  // MARK: - Safe area
+
+  private var contentEdgeConstraints: [NSLayoutConstraint] = []
+  private var contentSafeAreaConstraints: [NSLayoutConstraint] = []
+
+  override func updateSafeAreaConstraints() {
+    super.updateSafeAreaConstraints()
+
+    if keepsContentInSafeArea {
+      NSLayoutConstraint.deactivate(contentEdgeConstraints)
+      NSLayoutConstraint.activate(contentSafeAreaConstraints)
+    } else {
+      NSLayoutConstraint.deactivate(contentSafeAreaConstraints)
+      NSLayoutConstraint.activate(contentEdgeConstraints)
+    }
+  }
+
 }
