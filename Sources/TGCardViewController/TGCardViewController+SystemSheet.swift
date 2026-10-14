@@ -142,11 +142,23 @@ extension TGCardViewController {
 extension TGCardViewController {
 
   private func installSystemSheet() {
+    // Can't present while a transition is under way, e.g., when this got
+    // pushed onto a navigation stack, as `viewDidAppear` gets called before
+    // that transition fully completes. Keep the cards hidden and try again
+    // right after it, rather than showing them the classic way.
+    if let coordinator = transitionCoordinator {
+      coordinator.animate(alongsideTransition: nil) { [weak self] _ in
+        DispatchQueue.main.async {
+          self?.updateSystemSheetPresentation()
+        }
+      }
+      return
+    }
+    
     guard
       isVisible,
       view.window != nil,
       presentedViewController == nil,
-      transitionCoordinator == nil,
       let content = cardWrapperContent
     else {
       // We'll try again later, e.g., after the presented view controller got
