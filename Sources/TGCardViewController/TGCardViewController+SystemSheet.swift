@@ -27,6 +27,10 @@ extension TGCardViewController {
 
     /// The card controller positions the cards itself, and they're dragged using
     /// its own gestures.
+    ///
+    /// Has no effect on iOS 27 and later, where cards always show in a system
+    /// sheet. On earlier versions, ``automatic`` does the same.
+    @available(iOS, deprecated: 27.0, message: "Cards always show in a system sheet on iOS 27 and later; earlier versions use the classic presentation anyway.")
     case classic
   }
 
@@ -72,7 +76,6 @@ extension TGCardViewController {
 #if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst) // Xcode 27 proxy, for the sheet placement API
     guard
       #available(iOS 27.0, *),
-      presentationStyle == .automatic,
       mode == .floating
     else { return false }
 
@@ -124,15 +127,7 @@ extension TGCardViewController {
       installSystemSheet()
     } else if !wantsSheet, sheetHost != nil {
       uninstallSystemSheet(animated: topCardView == nil && isVisible)
-    } else if !wantsSheet, isAwaitingSystemSheet {
-      revealClassicCards()
     }
-  }
-
-  private func revealClassicCards() {
-    guard isAwaitingSystemSheet else { return }
-    isAwaitingSystemSheet = false
-    toggleCardWrappers(hide: topCardView == nil)
   }
 
 }
@@ -142,17 +137,28 @@ extension TGCardViewController {
 extension TGCardViewController {
 
   private func installSystemSheet() {
+    // Can't present while a transition is under way, e.g., when this got
+    // pushed onto a navigation stack, as `viewDidAppear` gets called before
+    // that transition fully completes. Keep the cards hidden and try again
+    // right after it, rather than showing them the classic way.
+    if let coordinator = transitionCoordinator {
+      coordinator.animate(alongsideTransition: nil) { [weak self] _ in
+        DispatchQueue.main.async {
+          self?.updateSystemSheetPresentation()
+        }
+      }
+      return
+    }
+    
     guard
       isVisible,
       view.window != nil,
       presentedViewController == nil,
-      transitionCoordinator == nil,
       let content = cardWrapperContent
     else {
       // We'll try again later, e.g., after the presented view controller got
-      // dismissed. Until then, show the cards in the classic way, as we don't
-      // know when that'll be.
-      revealClassicCards()
+      // dismissed. Until then, the cards stay hidden, as they never show the
+      // classic way when we want a sheet.
       return
     }
 
@@ -191,7 +197,6 @@ extension TGCardViewController {
 
     // 2. Configure the sheet
     sheetHost = host
-    isAwaitingSystemSheet = false
 
 #if !os(visionOS) // No detents on visionOS, where cards never use a sheet
     if let sheet = host.sheetPresentationController {
