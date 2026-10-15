@@ -74,7 +74,7 @@ Provides a card-based view controller for mapping applications where the card's 
 
 ### System sheets on iOS 27+
 
-By default (`presentationStyle = .automatic`), on iOS 27 and later the cards are shown in a system sheet (`UISheetPresentationController`). The sheet adapts to the size classes by itself, like Maps':
+On iOS 27 and later, the cards are shown in a system sheet (`UISheetPresentationController`). The sheet adapts to the size classes by itself, like Maps':
 
 | | Presentation |
 |---|---|
@@ -84,7 +84,7 @@ By default (`presentationStyle = .automatic`), on iOS 27 and later the cards are
 | The card controller is itself presented, but not full screen | Classic |
 | iOS 26 and earlier, or built with Xcode 26 and earlier | Classic |
 
-Set `presentationStyle` to `.classic` to opt out. Check `usesSystemSheet` for what's currently in use.
+This can't be turned off: `presentationStyle` and its `.classic` option are deprecated on iOS 27, and will be removed once that's the minimum. Check `usesSystemSheet` for what's currently in use.
 
 Cards, map managers, headers, map buttons and paging work the same in both. Differences with a system sheet:
 

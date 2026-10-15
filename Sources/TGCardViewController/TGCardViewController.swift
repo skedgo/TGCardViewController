@@ -155,7 +155,9 @@ open class TGCardViewController: UIViewController {
   /// uses system sheets on iOS 27+. Check ``usesSystemSheet`` for what's
   /// currently used.
   ///
-  /// - Warning: Set before `viewDidLoad` is called.
+  /// - Note: Has no effect: cards always show in a system sheet on iOS 27 and
+  ///   later, and the classic way before.
+  @available(iOS, deprecated: 27.0, message: "Cards always show in a system sheet on iOS 27 and later; earlier versions use the classic presentation anyway.")
   public var presentationStyle: PresentationStyle = .automatic
   
   // MARK: System sheet state, see `TGCardViewController+SystemSheet.swift`
@@ -182,10 +184,6 @@ open class TGCardViewController: UIViewController {
   var sheetDetentValues: [TGCardPosition: CGFloat] = [:]
   var sheetTargetPosition: TGCardPosition?
   var isSheetDraggingEnabled = true
-  
-  /// Set while the initial cards wait for the sheet, so that they don't flash up
-  /// in the classic presentation first
-  var isAwaitingSystemSheet = false
   
   /// Set while pushing or popping, which update the sheet in one go
   var isTransitioningCards = false
@@ -728,9 +726,7 @@ open class TGCardViewController: UIViewController {
         didAddInitialCards = true
         
         // These get pushed the classic way and move into the sheet once we've
-        // appeared. Keep them hidden until then.
-        isAwaitingSystemSheet = wantsSystemSheet
-        
+        // appeared. They're hidden until then, see `toggleCardWrappers`.
         initialCards.forEach { push($0, animated: false, allowToNotify: $0 == initialCards.last, completionHandler: nil) }
       }
       
@@ -900,8 +896,9 @@ open class TGCardViewController: UIViewController {
     } else {
       sidebarBackground.alpha = 0
     }
-    // With a system sheet, the card wrapper is just an invisible placeholder
-    cardWrapperShadow.alpha = hide || usesSystemSheet || isAwaitingSystemSheet ? 0 : 1
+    // With a system sheet, the card wrapper is just an invisible placeholder,
+    // and it stays invisible while waiting for the sheet to be presented
+    cardWrapperShadow.alpha = hide || usesSystemSheet || wantsSystemSheet ? 0 : 1
 
     if !prepareOnly {
       if mode == .sidebar {

@@ -28,12 +28,6 @@ class ExampleCardViewController: TGCardViewController {
     
     navigationButtonsAreSpringLoaded = true
     
-    // Pass `-classicCards` as a launch argument to compare with the classic
-    // presentation, where the cards aren't in a system sheet.
-    if ProcessInfo.processInfo.arguments.contains("-classicCards") {
-      presentationStyle = .classic
-    }
-    
     #if targetEnvironment(macCatalyst)
     mode = .sidebar
     #endif
