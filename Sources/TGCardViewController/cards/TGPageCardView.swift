@@ -58,8 +58,10 @@ class TGPageCardView: TGCardView {
     super.updateSafeAreaConstraints()
     
     // The pages keep their contents in the safe area themselves, so the pager
-    // mustn't shift them
+    // mustn't shift them, and its scroll indicator can go right to the bottom
+    // edge, like those of the pages go right to the side
     pager.contentInsetAdjustmentBehavior = keepsContentInSafeArea ? .never : .automatic
+    pager.automaticallyAdjustsScrollIndicatorInsets = !keepsContentInSafeArea
     passSafeAreaToPages()
   }
   
