@@ -82,9 +82,12 @@ On iOS 27 and later, the cards are shown in a system sheet (`UISheetPresentation
 | Otherwise, e.g., iPad or iPhone in landscape | Sheet on the leading edge, 400pt wide |
 | Mac Catalyst, visionOS, `mode = .sidebar` | Classic |
 | The card controller is itself presented, but not full screen | Classic |
+| `presentationStyle = .embedded`, e.g., for cards in a tab | Classic |
 | iOS 26 and earlier, or built with Xcode 26 and earlier | Classic |
 
-This can't be turned off: `presentationStyle` and its `.classic` option are deprecated on iOS 27, and will be removed once that's the minimum. Check `usesSystemSheet` for what's currently in use.
+A system sheet is presented on top of everything, including a tab bar. So when the card controller is the content of a tab, or otherwise shares the screen with a bar that should stay usable, set `presentationStyle = .embedded` before its view loads. The cards then stay within the card controller's view, behind the bar, and a collapsed card keeps its title above the bar.
+
+Other than that, the sheet can't be turned off: the `.classic` option of `presentationStyle` is deprecated on iOS 27, and will be removed once that's the minimum. Check `usesSystemSheet` for what's currently in use.
 
 Cards, map managers, headers, map buttons and paging work the same in both. Differences with a system sheet:
 

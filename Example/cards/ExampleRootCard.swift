@@ -13,9 +13,12 @@ import TGCardViewController
 
 class ExampleRootCard : TGTableCard {
   
-  fileprivate let source = DataSource()
+  fileprivate let source: DataSource
   
-  init() {
+  /// - Parameter offersTabs: Whether to offer showing the cards in a tab
+  init(offersTabs: Bool = true) {
+    source = DataSource(offersTabs: offersTabs)
+
     let title: CardTitle
     #if targetEnvironment(macCatalyst)
     title = .none
@@ -25,7 +28,12 @@ class ExampleRootCard : TGTableCard {
     super.init(title: title, dataSource: source, delegate: source, mapManager: TGMapManager.nuremberg, initialPosition: .collapsed)
     
     source.onSelect = { item in
-      self.controller?.push(item.card)
+      switch item.destination {
+      case .card(let card):
+        self.controller?.push(card)
+      case .tabs:
+        self.controller?.present(ExampleTabBarController(), animated: true)
+      }
     }
     handleMacSelection = source.handleSelection
 
@@ -117,21 +125,31 @@ extension UIButton {
 
 fileprivate class DataSource : NSObject, UITableViewDelegate, UITableViewDataSource {
   
-  typealias Item = (title: String, card: TGCard)
+  enum Destination {
+    case card(TGCard)
+    case tabs
+  }
+  
+  typealias Item = (title: String, destination: Destination)
   
   var onSelect: ((Item) -> Void)?
   
-  let items: [Item] = {
+  let items: [Item]
+  
+  init(offersTabs: Bool) {
     var items: [Item] = [
-      (title: "Show Table",   card: ExampleTableCard()),
-      (title: "Show Pages",   card: ExamplePageCard()),
-      (title: "Custom title", card: ExampleCustomTitleCard()),
+      (title: "Show Table",   destination: .card(ExampleTableCard())),
+      (title: "Show Pages",   destination: .card(ExamplePageCard())),
+      (title: "Custom title", destination: .card(ExampleCustomTitleCard())),
     ]
     if #available(iOS 16.0, *) {
-      items.append((title: "Show Erlking", card: ExampleChildCard()))
+      items.append((title: "Show Erlking", destination: .card(ExampleChildCard())))
     }
-    return items
-  }()
+    if offersTabs {
+      items.append((title: "Show in tab", destination: .tabs))
+    }
+    self.items = items
+  }
   
   func handleSelection(_ indexPath: IndexPath) {
     onSelect?(items[indexPath.row])

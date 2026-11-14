@@ -155,9 +155,11 @@ open class TGCardViewController: UIViewController {
   /// uses system sheets on iOS 27+. Check ``usesSystemSheet`` for what's
   /// currently used.
   ///
-  /// - Note: Has no effect: cards always show in a system sheet on iOS 27 and
-  ///   later, and the classic way before.
-  @available(iOS, deprecated: 27.0, message: "Cards always show in a system sheet on iOS 27 and later; earlier versions use the classic presentation anyway.")
+  /// Set this to ``PresentationStyle-swift.enum/embedded`` when this
+  /// controller's view shares the screen with a bar that should stay usable,
+  /// e.g., when it's the content of a tab, as a system sheet covers that bar.
+  ///
+  /// - Warning: Set before `viewDidLoad` is called.
   public var presentationStyle: PresentationStyle = .automatic
   
   // MARK: System sheet state, see `TGCardViewController+SystemSheet.swift`
