@@ -91,16 +91,37 @@ struct PresentationStyleTests {
     #expect(cardTop + titleHeight <= tabBarTop + 0.5)
   }
 
+  /// An iPad keeps its size classes when rotating, so only the size changes
+  @Test func embeddedCardKeepsPositionWhenViewResizes() async throws {
+    let controller = makeCardController(initialPosition: .peaking)
+    controller.presentationStyle = .embedded
+    let window = show(controller)
+    defer { window.isHidden = true }
+    try await settle()
+
+    #expect(controller.cardPosition == .peaking)
+    let yBefore = controller.cardWrapperDesiredTopConstraint.constant
+
+    window.frame.size.height -= 300
+    window.layoutIfNeeded()
+    try await settle()
+
+    let y = controller.cardWrapperDesiredTopConstraint.constant
+    #expect(y < yBefore)
+    #expect(abs(y - controller.cardLocation(forDesired: .peaking, direction: .up).y) < 0.5)
+    #expect(controller.cardPosition == .peaking)
+  }
+
   // MARK: - Helpers
 
-  private func makeCardController() -> TGCardViewController {
+  private func makeCardController(initialPosition: TGCardPosition = .collapsed) -> TGCardViewController {
     let controller = TGCardViewController(nibName: "TGCardViewController", bundle: TGCardViewController.bundle)
     controller.rootCard = TGPlainCard(
       title: "Title",
       subtitle: "Subtitle",
       contentView: UIView(),
       mapManager: TGMapManager(),
-      initialPosition: .collapsed
+      initialPosition: initialPosition
     )
     return controller
   }
