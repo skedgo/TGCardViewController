@@ -19,6 +19,10 @@ let package = Package(
     .target(
       name: "TGCardViewController",
       dependencies: []
-    )
+    ),
+    .testTarget(
+      name: "TGCardViewControllerTests",
+      dependencies: ["TGCardViewController"]
+    ),
   ]
 )

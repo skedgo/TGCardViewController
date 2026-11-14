@@ -155,9 +155,11 @@ open class TGCardViewController: UIViewController {
   /// uses system sheets on iOS 27+. Check ``usesSystemSheet`` for what's
   /// currently used.
   ///
-  /// - Note: Has no effect: cards always show in a system sheet on iOS 27 and
-  ///   later, and the classic way before.
-  @available(iOS, deprecated: 27.0, message: "Cards always show in a system sheet on iOS 27 and later; earlier versions use the classic presentation anyway.")
+  /// Set this to ``PresentationStyle-swift.enum/embedded`` when this
+  /// controller's view shares the screen with a bar that should stay usable,
+  /// e.g., when it's the content of a tab, as a system sheet covers that bar.
+  ///
+  /// - Warning: Set before `viewDidLoad` is called.
   public var presentationStyle: PresentationStyle = .automatic
   
   // MARK: System sheet state, see `TGCardViewController+SystemSheet.swift`
@@ -392,6 +394,9 @@ open class TGCardViewController: UIViewController {
   private var isPopping = false
   
   fileprivate var previousCardPosition: TGCardPosition?
+  
+  /// The height of the view that the card was last positioned for
+  private var cardPositionedForHeight: CGFloat?
   
   var cards = [(card: TGCard, lastPosition: TGCardPosition, view: TGCardView?)]()
 
@@ -683,19 +688,25 @@ open class TGCardViewController: UIViewController {
     }, completion: nil)
   }
   
+  /// Puts the card back where it last rested, as the y of a position depends
+  /// on the view's height and size classes
+  private func restoreCardPosition() {
+    guard let previous = previousCardPosition, !usesSystemSheet else { return }
+    
+    // Note: Ideally, we'd determine the direction by whether the available
+    // height of VC increased or decreased, but for simplicity just using
+    // `up` is fine.
+    let location = cardLocation(forDesired: previous, direction: .up)
+    mapViewController.additionalSafeAreaInsets = updateCardPosition(y: location.y)
+  }
+  
   override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
     
     cardWrapperHeightConstraint.constant = extendedMinY * -1
     
     // When trait collection changes, try to keep the same card position
-    if let previous = previousCardPosition, !usesSystemSheet {
-      // Note: Ideally, we'd determine the direction by whether the available
-      // height of VC increased or decreased, but for simplicity just using
-      // `up` is fine.
-      let location = cardLocation(forDesired: previous, direction: .up)
-      mapViewController.additionalSafeAreaInsets = updateCardPosition(y: location.y)
-    }
+    restoreCardPosition()
 
     // The position of a card's header also depends on size classes
     updateHeaderStyle()
@@ -729,6 +740,14 @@ open class TGCardViewController: UIViewController {
         // appeared. They're hidden until then, see `toggleCardWrappers`.
         initialCards.forEach { push($0, animated: false, allowToNotify: $0 == initialCards.last, completionHandler: nil) }
       }
+      
+      // Where a position is depends on the height, which can change without
+      // the size classes changing, e.g., when rotating an iPad
+      let height = view.bounds.height
+      if mode == .floating, let positionedFor = cardPositionedForHeight, positionedFor != height {
+        restoreCardPosition()
+      }
+      cardPositionedForHeight = height
       
       fixPositioning()
       

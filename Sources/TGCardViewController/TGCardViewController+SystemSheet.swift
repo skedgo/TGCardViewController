@@ -28,10 +28,21 @@ extension TGCardViewController {
     /// The card controller positions the cards itself, and they're dragged using
     /// its own gestures.
     ///
-    /// Has no effect on iOS 27 and later, where cards always show in a system
-    /// sheet. On earlier versions, ``automatic`` does the same.
-    @available(iOS, deprecated: 27.0, message: "Cards always show in a system sheet on iOS 27 and later; earlier versions use the classic presentation anyway.")
+    /// Has no effect on iOS 27 and later, where cards show in a system sheet
+    /// unless they're ``embedded``. On earlier versions, ``automatic`` does the
+    /// same.
+    @available(iOS, deprecated: 27.0, message: "Cards show in a system sheet on iOS 27 and later, unless they're embedded; earlier versions use the classic presentation anyway.")
     case classic
+
+    /// The cards stay within the card controller's view on every version of
+    /// iOS: the card controller positions them itself, like before iOS 27.
+    ///
+    /// Use this when the card controller's view shares the screen with a bar
+    /// that should stay usable, e.g., when it's the content of a tab. A system
+    /// sheet is presented on top of everything, including the tab bar, while
+    /// embedded cards stay behind the bar, with a collapsed card's title above
+    /// it, as long as the bar is part of the view's bottom safe area.
+    case embedded
   }
 
   /// Whether the cards are currently shown in a system sheet.
@@ -76,6 +87,7 @@ extension TGCardViewController {
 #if compiler(>=6.4) && os(iOS) && !targetEnvironment(macCatalyst) // Xcode 27 proxy, for the sheet placement API
     guard
       #available(iOS 27.0, *),
+      presentationStyle != .embedded,
       mode == .floating
     else { return false }
 
